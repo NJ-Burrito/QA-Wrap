@@ -1,0 +1,214 @@
+{
+  "id": "the-tools",
+  "kind": "feature",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 21,
+  "seconds": 42,
+  "sampleRate": 48000,
+  "source": "generated from storyboard/the-tools.storyboard.json (rev round-3) by cues-from-storyboard.mjs; lines and anchors are the storyboard's own shots[].vo, shifted onto the delivered timeline (poster card 2.000 s in front, end card 2.000 s at the back)",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "targetLufs": -26.9,
+    "sections": [
+      {
+        "name": "preroll",
+        "fromBar": 1,
+        "toBar": 2,
+        "note": "the 2.000 s poster card: the pad and the logo mnemonic only. No kick, no bass, no hats, no plucks; the first hit is on the cut out of the card"
+      },
+      {
+        "name": "intro",
+        "fromBar": 2,
+        "toBar": 4,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 4,
+        "toBar": 19,
+        "note": "kick + bass + 16th hats"
+      },
+      {
+        "name": "lift",
+        "fromBar": 19,
+        "toBar": 20,
+        "note": "plucks up an octave, FM index down, shimmer in"
+      },
+      {
+        "name": "out",
+        "fromBar": 20,
+        "toBar": 22,
+        "note": "single hit, then ring out under the end card, which now holds the spoken close"
+      }
+    ],
+    "swells": [
+      {
+        "endSec": 36,
+        "dur": 1,
+        "gain": 0.45,
+        "note": "reverse swell into the lift and the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 19,
+      "singleHitBar": 20,
+      "ringOut": true
+    },
+    "padGain": 0.126,
+    "padSections": [
+      "preroll",
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band."
+  },
+  "voice": {
+    "voice": "Aoede",
+    "fallback": "Kore",
+    "targetLufs": -15,
+    "lines": [
+      {
+        "n": 1,
+        "text": "Nineteen tools, filed by what you are trying to do.",
+        "atSec": 2.4,
+        "delivery": "firm",
+        "shot": 1,
+        "shotInSec": 2,
+        "shotOutSec": 6.5
+      },
+      {
+        "n": 2,
+        "text": "Capture, Check, Design and Break: the four things you are trying to do.",
+        "atSec": 6.5,
+        "delivery": "bright",
+        "shot": 2,
+        "shotInSec": 6.5,
+        "shotOutSec": 11.5
+      },
+      {
+        "n": 3,
+        "text": "Simple shows the five a first day needs. Expert shows all of them.",
+        "atSec": 11.5,
+        "delivery": "bright",
+        "shot": 3,
+        "shotInSec": 11.5,
+        "shotOutSec": 16.5
+      },
+      {
+        "n": 4,
+        "text": "Every one of them works on the page you are standing on, logged in and mid-flow.",
+        "atSec": 16.5,
+        "delivery": "bright",
+        "shot": 4,
+        "shotInSec": 16.5,
+        "shotOutSec": 22.5
+      },
+      {
+        "n": 5,
+        "text": "Whatever you press, the finding lands in the same report.",
+        "atSec": 22.5,
+        "delivery": "warm",
+        "shot": 5,
+        "shotInSec": 22.5,
+        "shotOutSec": 26.5
+      },
+      {
+        "n": 6,
+        "text": "The meter beside each group answers what a list cannot: what you have not done.",
+        "atSec": 26.5,
+        "delivery": "bright",
+        "shot": 6,
+        "shotInSec": 26.5,
+        "shotOutSec": 32
+      },
+      {
+        "n": 7,
+        "text": "Four films, one for each group, go through them one at a time.",
+        "atSec": 32,
+        "delivery": "warm",
+        "shot": 7,
+        "shotInSec": 32,
+        "shotOutSec": 36.5
+      },
+      {
+        "n": 8,
+        "text": "QA Wrap. Every failure, traced.",
+        "atSec": 36.7,
+        "delivery": "warm, unhurried, final. Not a sell",
+        "shot": 8,
+        "shotInSec": 36.5,
+        "shotOutSec": 42
+      }
+    ],
+    "note": "The commercial's final recipe: one Gemini request per line, one voice and one delivery instruction, the gate selecting by shot fit among contour-passing draws, the clean chain with a +6 dB bell at 3.9 kHz whose gain is inside the voice trim.",
+    "provider": "gemini",
+    "model": "google/gemini-3.1-flash-tts-preview via openrouter /v1/audio/speech",
+    "rate": "+0%",
+    "pitch": "-8Hz",
+    "presenceBellDb": 6,
+    "captionMode": "per-line"
+  },
+  "seed": 20260908,
+  "rests": [
+    {
+      "fromSec": 0,
+      "toSec": 2.4,
+      "why": "the head of the stem: the poster card, then the logo mnemonic; the first word lands at 2.40"
+    },
+    {
+      "fromSec": 5.1,
+      "toSec": 6.5,
+      "why": "the rest the shot table plans after line 1 - shot 1 is 4.50 s for a 10-word line"
+    },
+    {
+      "fromSec": 10.19,
+      "toSec": 11.5,
+      "why": "the rest the shot table plans after line 2 - shot 2 is 5.00 s for a 13-word line"
+    },
+    {
+      "fromSec": 15.19,
+      "toSec": 16.5,
+      "why": "the rest the shot table plans after line 3 - shot 3 is 5.00 s for a 13-word line"
+    },
+    {
+      "fromSec": 21.18,
+      "toSec": 22.5,
+      "why": "the rest the shot table plans after line 4 - shot 4 is 6.00 s for a 16-word line"
+    },
+    {
+      "fromSec": 25.2,
+      "toSec": 26.5,
+      "why": "the rest the shot table plans after line 5 - shot 5 is 4.00 s for a 10-word line"
+    },
+    {
+      "fromSec": 30.85,
+      "toSec": 32,
+      "why": "the rest the shot table plans after line 6 - shot 6 is 5.50 s for a 15-word line"
+    },
+    {
+      "fromSec": 35.69,
+      "toSec": 36.7,
+      "why": "the rest the shot table plans after line 7 - shot 7 is 4.50 s for a 13-word line"
+    },
+    {
+      "fromSec": 37.75,
+      "toSec": 42,
+      "why": "the tail: the end card's ring-out after the spoken close"
+    }
+  ],
+  "revision": "round-3 (+2s poster, +2s end card)"
+}

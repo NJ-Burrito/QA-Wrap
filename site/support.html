@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support · QA Wrap</title>
+<meta name="description" content="How to get help with QA Wrap: the four things that fix most of it, the Report a problem flow, what to attach, and what you can expect back.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/thmanyah.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-lang="en">
+<a class="skip" href="#main">Skip to content · انتقل إلى المحتوى</a>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA Wrap">
+        <g transform="translate(-2 3.5)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path class="mark-ring" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+          <path class="mark-check" d="M36 36L42.5 44L55 20"/>
+        </g>
+      </svg>
+      QA Wrap
+    </a>
+    <div class="masthead-right">
+      <nav aria-label="Site">
+        <ul>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="./" aria-current="page">Support</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="privacy.html">Privacy</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="terms.html">Terms</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="trust.html">Trust</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="./" aria-current="page">الدعم</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="privacy.html">الخصوصية</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="terms.html">الشروط</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="trust.html">الثقة</a></li>
+        </ul>
+      </nav>
+      <button type="button" id="lang-toggle" class="lang-toggle">
+        <span data-lang-block="en" lang="en" dir="ltr">العربية</span>
+        <span data-lang-block="ar" lang="ar" dir="rtl">English</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+
+    <!-- ============================== ENGLISH ============================== -->
+    <div data-lang-block="en" lang="en" dir="ltr">
+
+    <section class="hero">
+      <h1>Support</h1>
+      <p class="lead prose">Published and maintained by Nader Alzghoul. This page says how to get
+        a fix quickly, and what you can expect back. It does not promise anything that cannot be
+        delivered by one person.</p>
+    </section>
+
+    <section>
+      <h2>Fix it yourself first, in about a minute</h2>
+      <p class="prose">Four things account for most of what gets reported, and all four are faster
+        to try than to describe.</p>
+      <div class="prose">
+        <h3>1. Reload the extension</h3>
+        <p><code>chrome://extensions</code>, then the reload arrow on the QA Wrap card.</p>
+        <p>Chrome caches the service worker inside the browser profile and will keep running the
+          old one after an update. The symptom is specific and misleading: <em>some</em> things
+          work and others answer nothing at all, usually with <em>"the message port closed before
+          a response was received"</em> in the console. It is not a crash and it is not your
+          profile. It is yesterday's backend talking to today's interface.</p>
+
+        <h3>2. Reload the page you are testing</h3>
+        <p>Content scripts only inject when a page loads. A tab that was already open when you
+          installed or reloaded the extension has none, and every page-scoped tool will tell you to
+          reload. That message is literal, not generic.</p>
+
+        <h3>3. Check it is awake</h3>
+        <p>The extension records nothing until you wake it, <strong>per browser window</strong>. A
+          second window is a second decision. If every tool is greyed out, that is the switch, and
+          the card at the top of the popup says so.</p>
+
+        <h3>4. Look at the worker's own console</h3>
+        <p><code>chrome://extensions</code>, then <strong>Inspect views: service worker</strong>.
+          It opens onto a banner with the build number, what the worker currently thinks is
+          happening, and a <code>qaw</code> handle you can type into:</p>
+        <pre><code>qaw.state()      // what the worker thinks is happening
+qaw.sessions()   // every session it has stored
+qaw.used()       // which tools this session has used
+qaw.handlers()   // every message it answers to
+qaw.wake()       // arm the current window without the popup</code></pre>
+        <p>If <code>qaw.about.build</code> is not the version on the extensions card, go back to
+          step 1. That one check has cost this project two separate afternoons. Builds before
+          3.1.0 called the same handle <code>njb</code>, and it still answers to that.</p>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Reporting</p>
+      <h2>Report a problem, from inside the product</h2>
+      <div class="prose">
+        <p>The popup carries a plain <strong>Report a problem</strong> button, for the person who
+          found the issue rather than the person who tests for a living: a colleague, a client, or
+          a tester on a build without the repository beside them. It opens a single page: one box
+          to describe what went wrong in a sentence or two, one button to send it.</p>
+        <p>You do not have to gather evidence by hand. The moment that page opens, QA Wrap attaches,
+          without asking:</p>
+        <ul>
+          <li>a screenshot of the page in front of you;</li>
+          <li>its address, and any errors it reported in its console;</li>
+          <li>your browser and screen size.</li>
+        </ul>
+        <p><strong>Send it</strong> posts through whatever tracker or chat webhook you already
+          configured in Settings, if any. <strong>Save it instead</strong> keeps everything as a
+          session on your machine and sends nothing. If nothing is configured, that is the honest
+          outcome of pressing Send too: it is saved, and you are told so plainly rather than shown
+          a spinner that never finishes.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Getting it to Nader Alzghoul</h3>
+        <p>Most reporters have no tracker configured, which means the write-up above sits on your
+          machine until you send it somewhere. Open the session's report, use <strong>Raw
+          export</strong> to save it as <strong>Markdown</strong>, and email that file together with
+          a screenshot to naderalzghoulbusiness@gmail.com, or
+          through naderalzghoulbusiness@gmail.com however you
+          already reach the maintainer. There is no ticket system on this website: nothing is
+          uploaded anywhere by the product itself, so there is nothing for one to read until you
+          attach the file yourself.</p>
+      </div>
+
+      <div class="prose">
+        <p><strong>What the export does and does not contain, plainly:</strong> a Markdown session
+          export holds what you did on the page under test, in your own words, and the evidence QA
+          Wrap gathered automatically. It contains no cookie values and no password field values,
+          by construction (the <a href="privacy.html">privacy policy</a> is the mechanism). It is
+          <strong>not</strong> a scrubbed document, though: it does contain the URLs you visited and
+          the values you typed into ordinary, non-password fields on the page you were testing.
+          <strong>Read it before you send it.</strong> If the page under test carried a real
+          customer's data and you were not using QA Wrap's masking, that data is in the export, the
+          same way it would be in a screen recording or a bug report written by hand. Mask what
+          matters before you record, or redact the export file afterwards; this support flow cannot
+          do either for you.</p>
+        <p><strong>Please do not send a token, a webhook URL or a cookie value.</strong> Nothing
+          here ever needs one to reproduce a bug, and a credential in a message is a credential you
+          now have to rotate.</p>
+      </div>
+
+      <div class="prose">
+        <h3>What makes a report actionable</h3>
+        <p>In rough order of how much time each one saves, on top of what the flow above already
+          attaches:</p>
+        <ol>
+          <li><strong>The build.</strong> <code>qaw.about.build</code> in the worker console, or the
+            number on the extensions card.</li>
+          <li><strong>The browser and version.</strong> Chrome or Edge, and the version number
+            (see <em>Known limits</em> below). It is the difference between a bug and an
+            expected refusal.</li>
+          <li><strong>What you pressed, and what happened instead.</strong> "Nothing happened" is a
+            real and useful answer. Say it plainly rather than guessing at a cause.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Diagnostics</p>
+      <h2>What the product will tell you about itself</h2>
+      <p class="prose">Nothing is uploaded, so nobody can look up what happened on your machine.
+        These are the ways to find out locally. From the repository, if you have it:</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Command</th><th scope="col">What it does</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row"><code>npm test</code></th><td>Hundreds of assertions, no browser and no network, in seconds.</td></tr>
+            <tr><th scope="row"><code>node tools/clickthrough.mjs</code></th><td>Presses every button in the interface.</td></tr>
+            <tr><th scope="row"><code>node tools/diagnose.mjs</code></th><td>Runs against the real database and the running worker.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Known limits</p>
+      <h2>Things that are decisions, not bugs</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Limit</th><th scope="col">Why</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">No WebKit or Firefox is launched from the extension</th>
+              <td>An extension cannot start a process. The session exports as a runnable Playwright project instead, where the real engines exist.</td>
+            </tr>
+            <tr>
+              <th scope="row">Branch coverage is not reported</th>
+              <td>V8 block coverage cannot tell an unexecuted <code>else</code> from an unexecuted early return, and a number that is nearly branch coverage gets quoted as branch coverage.</td>
+            </tr>
+            <tr>
+              <th scope="row">A recording will not start on a tab you have not just used the extension on</th>
+              <td>Chrome's protection, not ours. Click the QA Wrap icon while that tab is in front, then press Record.</td>
+            </tr>
+            <tr>
+              <th scope="row">The QA Wrap bar is hidden while a bare video is fullscreen</th>
+              <td>A fullscreen video, audio or image element has no room for children, so the bar cannot sit inside it. Leave fullscreen and it is back.</td>
+            </tr>
+            <tr>
+              <th scope="row">The first request on a page may escape a rule</th>
+              <td>Rules reach the page a few milliseconds after <code>document_start</code>. Inherent to the platform.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="hr">
+
+    <section>
+      <p class="eyebrow">Response</p>
+      <h2>What you can expect back</h2>
+      <p class="prose">QA Wrap is a single-maintainer tool with no paid support contract as
+        standard. The table below is stated as intentions, because that is what they are. If your
+        organisation needs a contractual service level, this is not it on its own, and that is a
+        real reason to ask.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Kind of report</th><th scope="col">Intention</th><th scope="col">The honest caveat</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Acknowledgement</th><td>Within a few working days</td><td>One person, one timezone, and other work</td></tr>
+            <tr><th scope="row">A bug that loses recorded data</th><td>The highest priority there is</td><td>The only class of bug that would justify dropping everything</td></tr>
+            <tr><th scope="row">A bug that blocks a feature entirely</th><td>Next release</td><td>"Next release" is not a date</td></tr>
+            <tr><th scope="row">Anything cosmetic, or an enhancement</th><td>The roadmap, or never</td><td>The roadmap is a list of intentions in priority order, and says so</td></tr>
+            <tr><th scope="row">A security issue</th><td>Same day if it is reachable from a page</td><td>Report it privately, not in a shared channel</td></tr>
+            <tr><th scope="row">Availability</th><td>None promised</td><td>There is no on-call and no rota</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="prose">
+        <h3>Not offered, said plainly</h3>
+        <ul>
+          <li>No uptime commitment, because there is nothing hosted to be up.</li>
+          <li>No data recovery. Nobody has a copy of your sessions. Export what matters.</li>
+          <li>No guaranteed compatibility with a future Chrome. Manifest V3 is still moving, and the
+            test suite is the early warning system.</li>
+        </ul>
+
+        <h3>Reporting a security issue</h3>
+        <p>Privately, to the maintainer, not in a shared channel and not in a ticket anybody can
+          read. The surface worth knowing: the extension holds <code>&lt;all_urls&gt;</code>,
+          patches <code>fetch</code> and <code>XMLHttpRequest</code> in every page, and can read
+          cookies. It records nothing until armed, per window, and goes back to that state when the
+          browser closes. The thing genuinely worth reporting is <strong>anything that acts while the
+          extension is asleep</strong>. That is the boundary the whole design rests on.</p>
+      </div>
+    </section>
+
+    </div>
+    <!-- ============================== ARABIC ================================ -->
+    <div data-lang-block="ar" lang="ar" dir="rtl">
+
+    <section class="hero">
+      <h1>الدعم</h1>
+      <p class="lead prose">من نشر وصيانة نادر الزغول. تقول هذه الصفحة كيف تحصل على إصلاح
+        بسرعة، وما يمكنك توقعه ردا. لا تعد بشيء لا يستطيع شخص واحد إنجازه.</p>
+    </section>
+
+    <section>
+      <h2>أصلحها بنفسك أولا، خلال دقيقة تقريبا</h2>
+      <p class="prose">أربعة أمور تفسر معظم ما يبلغ عنه، وتجربة كل واحد منها أسرع من وصفه.</p>
+      <div class="prose">
+        <h3>1. أعد تحميل الامتداد</h3>
+        <p><code>chrome://extensions</code>، ثم سهم إعادة التحميل على بطاقة QA Wrap.</p>
+        <p>يخزن Chrome العامل الخدمي مؤقتا داخل ملف المتصفح، ويستمر في تشغيل النسخة القديمة بعد
+          التحديث. العرض محدد ومضلل: تعمل <em>بعض</em> الأشياء ولا تجيب أخرى إطلاقا، غالبا
+          مع عبارة <em>"أغلقت منفذ الرسالة قبل استلام رد"</em> في وحدة التحكم. ليس عطلا وليس ملفك.
+          إنه واجهة خلفية من الأمس تتحدث إلى واجهة اليوم.</p>
+
+        <h3>2. أعد تحميل الصفحة التي تختبرها</h3>
+        <p>لا تحقن النصوص البرمجية إلا عند تحميل الصفحة. تبويب كان مفتوحا بالفعل حين ثبت
+          الامتداد أو أعدت تحميله لا يحمل منها شيئا، وكل أداة خاصة بالصفحة ستطلب منك إعادة التحميل.
+          تلك الرسالة حرفية، لا عامة.</p>
+
+        <h3>3. تحقق من أنها مستيقظة</h3>
+        <p>لا يسجل الامتداد شيئا حتى توقظه، <strong>لكل نافذة متصفح على حدة</strong>. نافذة ثانية
+          قرار ثان. إن كانت كل الأدوات رمادية اللون، فذلك هو المفتاح، والبطاقة أعلى القائمة
+          المنبثقة تقول ذلك.</p>
+
+        <h3>4. انظر إلى وحدة تحكم العامل نفسها</h3>
+        <p><code>chrome://extensions</code>، ثم <strong>Inspect views: service worker</strong>.
+          تفتح على شريط يحمل رقم البنية، وما يظن العامل حاليا أنه يحدث، ومقبض <code>qaw</code>
+          يمكنك الكتابة فيه:</p>
+        <pre><code>qaw.state()      // ما يظن العامل أنه يحدث
+qaw.sessions()   // كل جلسة خزنها
+qaw.used()       // أي أدوات استخدمتها هذه الجلسة
+qaw.handlers()   // كل رسالة يجيب عليها
+qaw.wake()       // سلح النافذة الحالية من دون القائمة المنبثقة</code></pre>
+        <p>إن لم يكن <code>qaw.about.build</code> هو النسخة الموجودة على بطاقة الإضافات، ارجع إلى
+          الخطوة 1. كلف هذا التحقق وحده هذا المشروع فترتي بعد ظهر منفصلتين. كانت البنيات قبل
+          3.1.0 تسمي المقبض نفسه <code>njb</code>، ولا يزال يجيب على ذلك.</p>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">الإبلاغ</p>
+      <h2>أبلغ عن مشكلة، من داخل المنتج</h2>
+      <div class="prose">
+        <p>تحمل القائمة المنبثقة زر <strong>أبلغ عن مشكلة</strong> بسيطا، لمن وجد المشكلة لا لمن
+          يختبر لكسب عيشه: زميل، أو عميل، أو مختبر على نسخة بلا المستودع بجانبه. يفتح صفحة واحدة:
+          مربع واحد لوصف ما حدث خطأ في جملة أو جملتين، وزر واحد لإرسالها.</p>
+        <p>لست مضطرا لجمع الأدلة يدويا. بمجرد فتح تلك الصفحة، يرفق QA Wrap، من دون أن يسألك:</p>
+        <ul>
+          <li>لقطة شاشة للصفحة أمامك؛</li>
+          <li>عنوانها، وأي أخطاء أبلغت عنها وحدة التحكم الخاصة بها؛</li>
+          <li>متصفحك ومقاس شاشتك.</li>
+        </ul>
+        <p><strong>أرسلها</strong> تودعها عبر أي أداة تتبع أو رابط دردشة خطافي أعددته مسبقا في
+          الإعدادات، إن وجد. <strong>احفظها بدلا من ذلك</strong> تبقي كل شيء جلسة على جهازك ولا
+          ترسل شيئا. إن لم يكن شيء معدا، فتلك هي النتيجة الصادقة لضغط "أرسل" أيضا: تحفظ،
+          وتخبر بذلك بوضوح بدل أن تعرض عليك عجلة تحميل لا تنتهي أبدا.</p>
+      </div>
+
+      <div class="panel">
+        <h3>إيصالها إلى نادر الزغول</h3>
+        <p>لا يملك معظم المبلغين أداة تتبع معدة، ما يعني أن ما كتبته أعلاه يبقى على جهازك
+          حتى ترسله إلى مكان ما. افتح تقرير الجلسة، استخدم <strong>التصدير الخام</strong> لحفظها
+          بصيغة <strong>Markdown</strong>، وأرسل ذلك الملف مع لقطة شاشة بالبريد الإلكتروني إلى
+          naderalzghoulbusiness@gmail.com، أو عبر
+          naderalzghoulbusiness@gmail.com بأي طريقة تصل بها إلى القائم على
+          الصيانة أصلا. لا يوجد نظام تذاكر على هذا الموقع: لا يرفع شيء إلى أي مكان من قبل
+          المنتج نفسه، فلا شيء ليقرأ حتى ترفق الملف بنفسك.</p>
+      </div>
+
+      <div class="prose">
+        <p><strong>ما يحتويه التصدير وما لا يحتويه، بوضوح:</strong> يحمل تصدير جلسة بصيغة Markdown
+          ما فعلته على الصفحة قيد الاختبار، بكلماتك أنت، والدليل الذي جمعه QA Wrap تلقائيا. لا
+          يحتوي على قيم كعكات (cookies) ولا قيم حقول كلمات المرور، بحكم البنية (سياسة
+          <a href="privacy.html">الخصوصية</a> هي الآلية). لكنه <strong>ليس</strong> مستندا منقحا
+          مع ذلك: يحتوي على العناوين التي زرتها والقيم التي كتبتها في حقول عادية غير حقول كلمات
+          المرور في الصفحة التي كنت تختبرها. <strong>اقرأه قبل أن ترسله.</strong> إن حملت الصفحة
+          قيد الاختبار بيانات عميل حقيقي ولم تكن تستخدم إخفاء QA Wrap، فتلك البيانات موجودة في
+          التصدير، تماما كما لو كانت في تسجيل شاشة أو تقرير عطل مكتوب يدويا. أخف ما يهم قبل
+          التسجيل، أو نقح ملف التصدير بعده؛ لا يستطيع مسار الدعم هذا فعل أي منهما نيابة عنك.</p>
+        <p><strong>من فضلك لا ترسل رمزا، أو رابط ويب هوك، أو قيمة كعكة.</strong> لا شيء هنا يحتاج
+          إلى واحد منها لإعادة إنتاج عطل، وأي بيانات اعتماد في رسالة أصبحت بيانات اعتماد عليك
+          تدويرها الآن.</p>
+      </div>
+
+      <div class="prose">
+        <h3>ما الذي يجعل التقرير قابلا للتنفيذ</h3>
+        <p>بترتيب تقريبي لمقدار الوقت الذي يوفره كل بند، فوق ما يرفقه المسار أعلاه بالفعل:</p>
+        <ol>
+          <li><strong>البنية.</strong> <code>qaw.about.build</code> في وحدة تحكم العامل، أو الرقم
+            على بطاقة الإضافات.</li>
+          <li><strong>المتصفح ونسخته.</strong> Chrome أو Edge، ورقم النسخة (انظر
+            <em>القيود المعروفة</em> أدناه). هو الفارق بين عطل ورفض متوقع.</li>
+          <li><strong>ما ضغطته، وما حدث بدلا منه.</strong> "لم يحدث شيء" إجابة حقيقية ومفيدة. قلها
+            بوضوح بدل تخمين سبب.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">التشخيص</p>
+      <h2>ما الذي سيخبرك به المنتج عن نفسه</h2>
+      <p class="prose">لا شيء يرفع، فلا أحد يستطيع البحث عما حدث على جهازك. هذه طرق معرفة ذلك
+        محليا. من المستودع، إن كان بحوزتك:</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">الأمر</th><th scope="col">ما يفعله</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row"><code>npm test</code></th><td>مئات التأكيدات، بلا متصفح وبلا شبكة، خلال ثوان.</td></tr>
+            <tr><th scope="row"><code>node tools/clickthrough.mjs</code></th><td>يضغط كل زر في الواجهة.</td></tr>
+            <tr><th scope="row"><code>node tools/diagnose.mjs</code></th><td>يعمل على قاعدة البيانات الحقيقية والعامل قيد التشغيل.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">قيود معروفة</p>
+      <h2>أمور هي قرارات، لا أعطال</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">القيد</th><th scope="col">السبب</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">لا يشغل WebKit ولا Firefox من الامتداد</th>
+              <td>لا يستطيع امتداد بدء عملية. تصدر الجلسة كمشروع Playwright قابل للتشغيل بدلا من ذلك، حيث توجد المحركات الحقيقية.</td>
+            </tr>
+            <tr>
+              <th scope="row">لا تبلغ تغطية الفروع</th>
+              <td>لا تستطيع تغطية كتل V8 التمييز بين <code>else</code> لم ينفذ وعودة مبكرة لم تنفذ، ورقم قريب من تغطية الفروع يقتبس على أنه تغطية فروع.</td>
+            </tr>
+            <tr>
+              <th scope="row">لن يبدأ تسجيل على تبويب لم تستخدم الامتداد عليه للتو</th>
+              <td>حماية من Chrome، لا منا. انقر أيقونة QA Wrap وذلك التبويب في المقدمة، ثم اضغط تسجيل.</td>
+            </tr>
+            <tr>
+              <th scope="row">أدوار مساحة العمل ليست أمانا</th>
+              <td>تفرض محليا، فيستطيع أي شخص تغيير إعداداته الخاصة. تمنع الأخطاء، لا الخبث، وتقول شاشة الاستيراد ذلك في كل مرة.</td>
+            </tr>
+            <tr>
+              <th scope="row">قد يفلت الطلب الأول على صفحة من قاعدة</th>
+              <td>تصل القواعد إلى الصفحة بعد بضع مللي ثانية من <code>document_start</code>. متأصل في المنصة.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="hr">
+
+    <section>
+      <p class="eyebrow">الاستجابة</p>
+      <h2>ما يمكنك توقعه ردا</h2>
+      <p class="prose">QA Wrap أداة يقوم عليها شخص واحد بلا عقد دعم مدفوع كإعداد افتراضي. الجدول
+        أدناه مذكور كنوايا، لأن ذلك ما هو عليه. إن احتاجت مؤسستك مستوى خدمة تعاقديا، فهذا وحده ليس
+        ذلك، وهذا سبب حقيقي للسؤال.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">نوع البلاغ</th><th scope="col">النية</th><th scope="col">التحفظ الصادق</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">الإقرار بالاستلام</th><td>خلال بضعة أيام عمل</td><td>شخص واحد، منطقة زمنية واحدة، وأعمال أخرى</td></tr>
+            <tr><th scope="row">عطل يفقد بيانات مسجلة</th><td>أعلى أولوية موجودة</td><td>الفئة الوحيدة من الأعطال التي تبرر ترك كل شيء آخر</td></tr>
+            <tr><th scope="row">عطل يمنع ميزة كاملة</th><td>الإصدار التالي</td><td>"الإصدار التالي" ليس تاريخا</td></tr>
+            <tr><th scope="row">أي شيء تجميلي، أو تحسين</th><td>خارطة الطريق، أو أبدا</td><td>خارطة الطريق قائمة نوايا مرتبة بالأولوية، وتقول ذلك</td></tr>
+            <tr><th scope="row">مشكلة أمنية</th><td>في اليوم نفسه إن كانت قابلة للوصول من صفحة</td><td>أبلغ عنها سرا، لا في قناة مشتركة</td></tr>
+            <tr><th scope="row">التوفر</th><td>لا وعد بشيء</td><td>لا مناوبة ولا جدول تناوب</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="prose">
+        <h3>غير مقدم، بوضوح</h3>
+        <ul>
+          <li>لا التزام بوقت تشغيل، لأنه لا شيء مستضاف ليكون قيد التشغيل.</li>
+          <li>لا استرجاع بيانات. لا أحد يملك نسخة من جلساتك. صدر ما يهمك.</li>
+          <li>لا ضمان توافق مع نسخة مستقبلية من Chrome. لا يزال Manifest V3 يتغير، ومجموعة
+            الاختبارات هي نظام الإنذار المبكر.</li>
+        </ul>
+
+        <h3>الإبلاغ عن مشكلة أمنية</h3>
+        <p>سرا، إلى القائم على الصيانة، لا في قناة مشتركة ولا في تذكرة يقرؤها أي أحد. السطح الجدير
+          بمعرفته: يحمل الامتداد إذن <code>&lt;all_urls&gt;</code>، ويصحح <code>fetch</code> و
+          <code>XMLHttpRequest</code> في كل صفحة، ويستطيع قراءة الكعكات. لا يسجل شيئا حتى يسلح، لكل نافذة
+          على حدة، ويعود إلى ذلك حين يغلق المتصفح. الشيء الجدير حقا بالإبلاغ عنه هو
+          <strong>أي شيء يعمل بينما الامتداد نائم</strong>. تلك هي الحدود التي يقوم عليها التصميم
+          كله.</p>
+      </div>
+    </section>
+
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-lang-block="en" lang="en" dir="ltr">QA Wrap &middot; Made by Nader Alzghoul</p>
+    <p data-lang-block="ar" lang="ar" dir="rtl">QA Wrap &middot; من تطوير نادر الزغول</p>
+    <ul data-lang-block="en" lang="en" dir="ltr">
+      <li><a href="./">Home</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="trust.html">Trust</a></li>
+    </ul>
+    <ul data-lang-block="ar" lang="ar" dir="rtl">
+      <li><a href="./">الرئيسية</a></li>
+      <li><a href="privacy.html">الخصوصية</a></li>
+      <li><a href="terms.html">الشروط</a></li>
+      <li><a href="trust.html">الثقة</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

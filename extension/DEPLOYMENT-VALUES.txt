@@ -1,0 +1,211 @@
+QA WRAP — VALUES TO SET BEFORE DEPLOYMENT
+=========================================
+Written 7 September 2026 for brief item G5. Kept accurate by
+`tools/test-deployment-values.mjs`, which re-reads every file and line below on
+every test run and fails if one of them has moved or changed. If you edit a
+value here, edit it in the file this names; this is a map, not a source.
+
+WHY A MAINTAINER'S NOTE IS IN THE PACKAGE YOU DOWNLOADED
+--------------------------------------------------------
+This is a note to whoever deploys QA Wrap, and it ships inside the extension on
+purpose. Three people open it and none of them is in the wrong place:
+
+  · a tester or an administrator, asking what this thing would send anywhere and
+    what a company deployment would have to change. Sections 1, 3 and 4 answer
+    it, and the short version is "nothing you did not type in yourself".
+  · a store or security reviewer, whose first question is what is in the package
+    that should not be. That is the second section below, kept in the package
+    rather than in a submission form only one reviewer would ever read.
+  · whoever rebuilds this for another company, who needs the eight strings in
+    section 1 and nothing else.
+
+There is nothing here a user must not see: no credential, no internal host, no
+private URL, no unreleased plan. Every value it names is already readable in the
+file it names it from, which is what makes this a map and not a leak. It stays
+in the package for that reason: `tools/lib-ship.mjs` ships it, and
+`tools/test-deployment-values.mjs` keeps every line of it true.
+
+
+WHAT THIS FILE IS FOR
+---------------------
+Somebody deploying QA Wrap for a company — a different publisher, a different
+support address, an internal build — needs to know exactly which strings are
+theirs to change and which are the product. Hunting for them through 120 files
+is how a build ships with somebody else's support mailbox in it.
+
+The short answer: **there are no credentials in this package, and eight
+strings you may want to change.** They are in section 1. Everything after that
+is here so nobody has to wonder whether it is a value or a fixture.
+
+WHAT IS NOT IN THIS PACKAGE, AND MUST NEVER BE
+----------------------------------------------
+  · No API token, password, webhook URL or private key. Every credential the
+    product uses is typed in by the tester and stored in `chrome.storage.local`
+    on their own machine. `tools/test-deployment-values.mjs` scans the shipped
+    tree for credential-shaped literals and fails the build if one appears.
+  · No telemetry endpoint, no licence check, no update ping. The product makes
+    no network request the tester did not ask for; `tools/test-independent.mjs`
+    proves it by walking the source.
+  · The Chrome signing key lives in `keys/`, outside this folder, and is not
+    packaged. `manifest.json` carries only the matching *public* key.
+
+
+1. IDENTITY AND PUBLIC URLS — change these for your own deployment
+------------------------------------------------------------------
+All of them are in ONE file, `brand/brand.json`. Edit it, then run
+`node tools/build-brand.mjs --write` (from extension/). That regenerates the
+data block in `core/product.js`, the manifest name and homepage, the "Made by"
+strings in both languages, the page footers and the console banner. The popup,
+the reports, the exports, the About panel and the store listing all follow.
+An empty URL or mailbox means "none": the link that reads it is hidden.
+
+  brand/brand.json:2   name            QA Wrap
+  brand/brand.json:3   code            QAW              (labels and filenames)
+  brand/brand.json:4   tagline         Every failure, traced.
+  brand/brand.json:7   extensionId     dbdhilacpjeojfnmdbnpcbmohkhgaihn
+  brand/brand.json:9   maker           Nader Alzghoul
+  brand/brand.json:11  urls            homepage, support, privacy, practice, trust, terms (empty today)
+  brand/brand.json:12  emails          support, security (empty today)
+
+  NOT YET PUBLISHED. No website is set. The Chrome Web Store requires a privacy
+  policy URL in the developer dashboard; PRIVACY.md is the text it must show.
+
+`manifest.json` repeats the name and (when set) the homepage because a JSON file
+cannot import a module; `tools/test-brand-sync.mjs` asserts they match.
+
+  manifest.json:7     description     the store's one-line description
+
+
+2. EXTENSION IDENTITY — set by the publisher, not by hand
+---------------------------------------------------------
+  manifest.json:6     key             the public half of the signing key. It
+                                      fixes the extension ID on every machine.
+                                      A different publisher generates their own
+                                      (`keys/README.md`) and replaces both this
+                                      and brand/brand.json:7.
+  brand/brand.json:7  extensionId     dbdhilacpjeojfnmdbnpcbmohkhgaihn
+                                      derived from the key above; the two must
+                                      agree or `describe()` reports a mismatch.
+  manifest.json:5     version         raised by the release, not by hand.
+                                      package.json carries the same number.
+
+
+3. ADMINISTRATOR POLICY — for a managed deployment
+--------------------------------------------------
+Pushed through Group Policy, a macOS configuration profile or your MDM, into
+`chrome.storage.managed`. Nothing here is edited in the package; the schema is
+what an administrator's tooling reads.
+
+  managed-schema.json          the schema Chrome validates a policy against
+  platform/settings.js:POLICY_DEFAULTS
+                               microphoneAllowed, default true. Set false to
+                               remove the microphone from this installation
+                               entirely: the option disappears and every
+                               recording path refuses to open one. For
+                               jurisdictions where recording a voice needs
+                               every party's consent (research/51d section 5).
+
+  platform/settings.js:472     hostPermissionsPolicy, default "ask". What the
+                               popup's Wake button may offer, and nothing more:
+                               "ask" is the current site with All sites beside
+                               it, "all" makes the first wake ask for every site
+                               in one press, "none" removes the request and says
+                               an administrator has decided. It grants nothing by
+                               itself. Chrome gives an administrator no way to
+                               hand a host permission to an extension on a
+                               tester's behalf, so a fleet that must have its
+                               sites pre-allowed grants them through Chrome's own
+                               ExtensionSettings policy and sets this to "none".
+                               The extension ships with access to no site at all:
+                               manifest.json has no host_permissions block and no
+                               content_scripts block, and declares <all_urls>
+                               under optional_host_permissions only.
+
+
+4. CREDENTIAL FIELDS — empty in the package, filled by the tester
+-----------------------------------------------------------------
+These are the defaults, and they are deliberately empty strings. Do not ship a
+build with any of them filled in: they would be readable by anyone who unzips
+the package, and a shared token is a shared account.
+
+  platform/settings.js:103  jira    { baseUrl, email, token, project, issueType, authMode }
+  platform/settings.js:104  slack   { webhookUrl, mention }
+  platform/settings.js       trackers  {}  — GitHub, GitLab, Azure, Trello, Asana,
+                                            ClickUp, Linear, Shortcut, YouTrack;
+                                            each holds its own token, all typed in
+                                            by the tester.
+
+Credentials are split out of the synced record and written to
+`chrome.storage.local` only (`splitSecrets` in `platform/settings.js`), so a token
+never travels between a tester's machines through Chrome Sync.
+
+
+5. PLACEHOLDER TEXT IN THE SETTINGS PAGE
+-----------------------------------------
+Examples shown inside empty fields. Nothing is stored and nothing is sent; they
+exist so a tester can see the shape of what to paste. Change them if your
+deployment uses a different tracker or a different naming convention.
+
+  options/options.html:91    e.g. Layla Haddad            (the tester's name)
+  options/options.html:488   https://yourteam.atlassian.net
+  options/options.html:501   you@example.com
+  options/options.html:505   from id.atlassian.com, under API tokens
+  options/options.html:509   QA                           (a project key)
+  options/options.html:524   https://hooks.slack.com/services/…
+  options/options.html:528   <!here> or <@U01ABCDEF>
+  options/options.html:576   Bug                          (an issue type)
+
+
+6. SAMPLE DATA THE TOOLS PRODUCE — product behaviour, not configuration
+------------------------------------------------------------------------
+These are values the product *generates* for a tester to try against the
+application under test. They are the feature, not a setting, and changing them
+changes what the tools do. Listed so nobody mistakes them for leftovers.
+
+  core/blackbox.js:181-185  the three e-mail partitions the equivalence
+                            designer offers, on `example.test` — a reserved
+                            domain (RFC 2606) that can never resolve to a real
+                            mailbox. Includes a Unicode local part, which is
+                            valid per RFC 6531 and is the interesting case.
+  content/data-injector.js  "Try nasty values": the edge-case catalogue, and
+                            the largest collection of sample data in the
+                            product. Group E owns this file.
+  core/tool-catalogue.json  the sixteen tools, their names and their one-line
+                            descriptions. Copy, not configuration; the films
+                            and the right-click menu both read it.
+
+Two internal placeholder hosts, which are parsing scaffolding and never
+requested. Neither can resolve.
+
+  core/istqb.js:510,512     https://placeholder.invalid — a base for `new URL`
+  core/exporters.js:537     the same, for reading a query string
+  background/handlers-tools.js:605
+                            https://example.test/ — the fake session used by
+                            "Test the connection", so a tracker can be checked
+                            without filing anything real.
+
+
+7. DEFAULTS WORTH REVIEWING FOR A COMPANY DEPLOYMENT
+-----------------------------------------------------
+Not secrets and not identity, but the four a company most often wants to change
+before handing the extension to a team. All in `platform/settings.js DEFAULTS`.
+
+  retentionDays              how long a session is kept. Resolved rather than
+                             defaulted, so an upgraded profile never inherits a
+                             deletion policy it did not agree to.
+  recordMic: false           the microphone. Off, and section 3 above can
+                             remove it entirely.
+  autoSubmitDefect: false    files the defect report to Jira the moment a
+                             session stops. The only setting that sends a
+                             document without a press for that document.
+  downloadFolder: ''         where files land. Empty means Downloads/QA Wrap.
+  systemNotifications: true  desktop notifications for recording, saving and
+                             sleep.
+
+
+8. WHERE NOTHING NEEDS EDITING
+-------------------------------
+  · `tools/**` is not packaged. Fixtures, hosts and sample tokens in there
+    never ship; `tools/lib-ship.mjs` decides what does.
+  · `brand/`, `icons/` are artwork, replaced wholesale for a rebrand.
+  · `LICENSE`, `NOTICE`, `THIRD_PARTY_NOTICES` — legal text, not values.

@@ -1,0 +1,2112 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "cat-capture",
+  "rev": "round-3",
+  "kind": "category",
+  "groupId": "capture",
+  "group": "Capture",
+  "tools": [
+    "shot",
+    "record",
+    "viewport",
+    "mask"
+  ],
+  "mode": "expert",
+  "batch": "cat",
+  "en": "Capture",
+  "ar": "الالتقاط",
+  "blurb": "Photograph it, film it, open it at another size, and cover the real names before any of it is recorded.",
+  "titleKey": "popup.groups.capture.label",
+  "chipKey": "popup.groups.capture.hint",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 58,
+  "seconds": 116.0,
+  "frames": 3480,
+  "aspects": [
+    "h"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    },
+    "REQUEST": {
+      "surface": "request",
+      "url": "api/api.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      }
+    }
+  },
+  "posterShot": {
+    "shot": 6,
+    "frame": 870,
+    "why": "Capture: the result of the first demonstration, visible in frame.",
+    "pass": "h"
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 6,
+    "frame": 870,
+    "why": "Capture: the result of the first demonstration, visible in frame."
+  },
+  "srt": "deliverables/tutorials/cat-capture-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "Capture. Keep the evidence.",
+      "inSec": 0.15,
+      "outSec": 7.5,
+      "inFrame": 4,
+      "outFrame": 225,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "Capture. Keep the evidence.",
+      "dwell": {
+        "needMs": 2227,
+        "gotMs": 7350,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "Photograph the page.",
+      "inSec": 7.5,
+      "outSec": 14.0,
+      "inFrame": 225,
+      "outFrame": 420,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Photograph the page.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 6500,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "Visible part, or all of it.",
+      "inSec": 14.0,
+      "outSec": 19.0,
+      "inFrame": 420,
+      "outFrame": 570,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Visible part, or all of it.",
+      "dwell": {
+        "needMs": 2227,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "Scrolled and stitched.",
+      "inSec": 19.0,
+      "outSec": 23.5,
+      "inFrame": 570,
+      "outFrame": 705,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Scrolled and stitched.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "The header appears once.",
+      "inSec": 23.5,
+      "outSec": 27.5,
+      "inFrame": 705,
+      "outFrame": 825,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The header appears once.",
+      "dwell": {
+        "needMs": 1996,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "The evidence that survives.",
+      "inSec": 27.5,
+      "outSec": 33.0,
+      "inFrame": 825,
+      "outFrame": 990,
+      "shots": [
+        6
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The evidence that survives.",
+      "dwell": {
+        "needMs": 2227,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 6,
+      "text": "Film the whole session.",
+      "inSec": 33.0,
+      "outSec": 38.0,
+      "inFrame": 990,
+      "outFrame": 1140,
+      "shots": [
+        7
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Film the whole session.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 7,
+      "text": "Mic, tab sound, webcam.",
+      "inSec": 38.0,
+      "outSec": 43.5,
+      "inFrame": 1140,
+      "outFrame": 1305,
+      "shots": [
+        8
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Mic, tab sound, webcam.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 8,
+      "text": "It runs while you work.",
+      "inSec": 43.5,
+      "outSec": 48.5,
+      "inFrame": 1305,
+      "outFrame": 1455,
+      "shots": [
+        9
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "It runs while you work.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 9,
+      "text": "No time limit.",
+      "inSec": 48.5,
+      "outSec": 54.0,
+      "inFrame": 1455,
+      "outFrame": 1620,
+      "shots": [
+        10
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "No time limit.",
+      "dwell": {
+        "needMs": 1350,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 10,
+      "text": "Kept with the session.",
+      "inSec": 54.0,
+      "outSec": 59.5,
+      "inFrame": 1620,
+      "outFrame": 1785,
+      "shots": [
+        11
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Kept with the session.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 11,
+      "text": "The same page, another size.",
+      "inSec": 59.5,
+      "outSec": 64.0,
+      "inFrame": 1785,
+      "outFrame": 1920,
+      "shots": [
+        12
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The same page, another size.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 12,
+      "text": "Phone, tablet, laptop.",
+      "inSec": 64.0,
+      "outSec": 69.5,
+      "inFrame": 1920,
+      "outFrame": 2085,
+      "shots": [
+        13
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Phone, tablet, laptop.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 13,
+      "text": "A real window. Real reflow.",
+      "inSec": 69.5,
+      "outSec": 74.5,
+      "inFrame": 2085,
+      "outFrame": 2235,
+      "shots": [
+        14
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "A real window. Real reflow.",
+      "dwell": {
+        "needMs": 2227,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 14,
+      "text": "Awake there too.",
+      "inSec": 74.5,
+      "outSec": 79.5,
+      "inFrame": 2235,
+      "outFrame": 2385,
+      "shots": [
+        15
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Awake there too.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 15,
+      "text": "Filed under Window sizes.",
+      "inSec": 79.5,
+      "outSec": 84.5,
+      "inFrame": 2385,
+      "outFrame": 2535,
+      "shots": [
+        16
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Filed under Window sizes.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 16,
+      "text": "Cover it before it moves.",
+      "inSec": 84.5,
+      "outSec": 89.5,
+      "inFrame": 2535,
+      "outFrame": 2685,
+      "shots": [
+        17
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Cover it before it moves.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 17,
+      "text": "Covered. Not blurred.",
+      "inSec": 89.5,
+      "outSec": 94.5,
+      "inFrame": 2685,
+      "outFrame": 2835,
+      "shots": [
+        18
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Covered. Not blurred.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 18,
+      "text": "It survives the reload.",
+      "inSec": 94.5,
+      "outSec": 99.0,
+      "inFrame": 2835,
+      "outFrame": 2970,
+      "shots": [
+        19
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "It survives the reload.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 19,
+      "text": "On in every picture.",
+      "inSec": 99.0,
+      "outSec": 104.0,
+      "inFrame": 2970,
+      "outFrame": 3120,
+      "shots": [
+        20
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "On in every picture.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 20,
+      "text": "It never reaches the report.",
+      "inSec": 104.0,
+      "outSec": 109.5,
+      "inFrame": 3120,
+      "outFrame": 3285,
+      "shots": [
+        21
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "It never reaches the report.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 21,
+      "text": "Nothing leaves this browser.",
+      "inSec": 109.5,
+      "outSec": 113.5,
+      "inFrame": 3285,
+      "outFrame": 3405,
+      "shots": [
+        22
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Nothing leaves this browser.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 22,
+      "text": "Every failure, traced.",
+      "inSec": 113.5,
+      "outSec": 116.0,
+      "inFrame": 3405,
+      "outFrame": 3480,
+      "shots": [
+        23
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 2500,
+        "ok": true
+      }
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0.0,
+      "outSec": 7.5,
+      "inFrame": 0,
+      "outFrame": 224,
+      "frames": 225,
+      "picture": "WALL. Expert, scrolled to the Capture heading: Keep the evidence, and its four rows.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "text",
+            "selector": ".activity[data-activity=\"capture\"] .activity-label",
+            "equals": "Capture"
+          },
+          {
+            "kind": "attr",
+            "selector": "#mode-expert",
+            "attr": "aria-pressed",
+            "equals": "true"
+          }
+        ]
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Capture keeps the evidence: four tools that take what happened on the page and put it in the session.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        },
+        {
+          "cue": "tick",
+          "atSec": 0.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 7.5,
+      "outSec": 14.0,
+      "inFrame": 225,
+      "outFrame": 419,
+      "frames": 195,
+      "picture": "PANEL. Photograph the page pressed; the row acknowledges.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"shot\"]"
+          }
+        ]
+      },
+      "chip": "Photograph the page",
+      "chipKey": "tools.shot.label",
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Photograph the page takes a picture of what you are testing and keeps it with the session.",
+        "startSec": 7.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 7.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 7.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "shot",
+        "title": "Photograph the page",
+        "startSec": 7.5
+      }
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 14.0,
+      "outSec": 19.0,
+      "inFrame": 420,
+      "outFrame": 569,
+      "frames": 150,
+      "picture": "PANEL. The Screenshot options disclosure opens on its two scopes.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Photograph the page",
+      "chipKey": "tools.shot.label",
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Two scopes on the card: the part on screen, or the whole thing.",
+        "startSec": 14.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 14.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 19.0,
+      "outSec": 23.5,
+      "inFrame": 570,
+      "outFrame": 704,
+      "frames": 135,
+      "picture": "STAGE. Whole page chosen; the long permits form scrolls under the capture and stitches.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-04"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Photograph the page",
+      "chipKey": "tools.shot.label",
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The whole page is scrolled and stitched into one tall image.",
+        "startSec": 19.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 19.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 23.5,
+      "outSec": 27.5,
+      "inFrame": 705,
+      "outFrame": 824,
+      "frames": 120,
+      "picture": "STAGE. The stitched image redraws with the sticky header rendered once at the top.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-05"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Photograph the page",
+      "chipKey": "tools.shot.label",
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Fixed headers appear once in it, not on every band.",
+        "startSec": 23.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 23.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 27.5,
+      "outSec": 33.0,
+      "inFrame": 825,
+      "outFrame": 989,
+      "frames": 165,
+      "picture": "REPORT, Screens and video. The tall image arrives in the gallery with its pixel size.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-06"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Photograph the page",
+      "chipKey": "tools.shot.label",
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The picture lands in the report, and long forms hide their bugs below the fold.",
+        "startSec": 27.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 27.8
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "barBeat": null,
+      "inSec": 33.0,
+      "outSec": 38.0,
+      "inFrame": 990,
+      "outFrame": 1139,
+      "frames": 150,
+      "picture": "PANEL. Record the screen pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-07"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"record\"]"
+          }
+        ]
+      },
+      "chip": "Record the screen",
+      "chipKey": "tools.record.label",
+      "caption": {
+        "span": 6,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Record the screen films this tab, or the whole screen, into a video.",
+        "startSec": 33.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 33.0
+        },
+        {
+          "cue": "tick",
+          "atSec": 33.4,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "record",
+        "title": "Record the screen",
+        "startSec": 33.0
+      }
+    },
+    {
+      "n": 8,
+      "barBeat": null,
+      "inSec": 38.0,
+      "outSec": 43.5,
+      "inFrame": 1140,
+      "outFrame": 1304,
+      "frames": 165,
+      "picture": "PANEL. The Video options disclosure opens on microphone, tab sound and webcam.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-08"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Record the screen",
+      "chipKey": "tools.record.label",
+      "caption": {
+        "span": 7,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Video options first, if you want your microphone, the tab's sound or your webcam.",
+        "startSec": 38.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 38.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "barBeat": null,
+      "inSec": 43.5,
+      "outSec": 48.5,
+      "inFrame": 1305,
+      "outFrame": 1454,
+      "frames": 150,
+      "picture": "PAIR. Panel left: the row recording, its timer climbing. Stage right: the permits form being filled.",
+      "capture": {
+        "rect": "PAIR",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "form": "side by side",
+            "placeSource": "bible 2.3",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 720
+                },
+                "place": {
+                  "x": 96,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-capture/h/shot-09/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 1080,
+                  "h": 720
+                },
+                "place": {
+                  "x": 660,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-capture/h/shot-09/STAGE"
+              }
+            ]
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [],
+        "member": "PANEL"
+      },
+      "chip": "Record the screen",
+      "chipKey": "tools.record.label",
+      "caption": {
+        "span": 8,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It runs while you work, and every tab in this window is held.",
+        "startSec": 43.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 43.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "barBeat": null,
+      "inSec": 48.5,
+      "outSec": 54.0,
+      "inFrame": 1455,
+      "outFrame": 1619,
+      "frames": 165,
+      "picture": "PANEL. The row pressed again; the recording stops and the row settles.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-10"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Record the screen",
+      "chipKey": "tools.record.label",
+      "caption": {
+        "span": 9,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "There is no time limit. Press it again to stop, or let the disk fill.",
+        "startSec": 48.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 48.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "barBeat": null,
+      "inSec": 54.0,
+      "outSec": 59.5,
+      "inFrame": 1620,
+      "outFrame": 1784,
+      "frames": 165,
+      "picture": "REPORT, Screens and video. The video row with its length beside the screenshots.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-11"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Record the screen",
+      "chipKey": "tools.record.label",
+      "caption": {
+        "span": 10,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The video is kept with the session, named for the run that made it.",
+        "startSec": 54.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 54.3
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "barBeat": null,
+      "inSec": 59.5,
+      "outSec": 64.0,
+      "inFrame": 1785,
+      "outFrame": 1919,
+      "frames": 135,
+      "picture": "PANEL. Check another size pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-12"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"viewport\"]"
+          }
+        ]
+      },
+      "chip": "Check another size",
+      "chipKey": "tools.viewport.label",
+      "caption": {
+        "span": 11,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Check another size opens this same page again in a real window.",
+        "startSec": 59.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 59.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 59.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "viewport",
+        "title": "Check another size",
+        "startSec": 59.5
+      }
+    },
+    {
+      "n": 13,
+      "barBeat": null,
+      "inSec": 64.0,
+      "outSec": 69.5,
+      "inFrame": 1920,
+      "outFrame": 2084,
+      "frames": 165,
+      "picture": "PANEL. The size list open: phone, tablet and laptop, with their pixel widths.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-13"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check another size",
+      "chipKey": "tools.viewport.label",
+      "caption": {
+        "span": 12,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Phone, tablet or laptop, at the sizes a browser really has, beside this one.",
+        "startSec": 64.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 64.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 14,
+      "barBeat": null,
+      "inSec": 69.5,
+      "outSec": 74.5,
+      "inFrame": 2085,
+      "outFrame": 2234,
+      "frames": 150,
+      "picture": "STAGE. The new window at phone width; the layout reflows and one label wraps out of its box.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-14"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check another size",
+      "chipKey": "tools.viewport.label",
+      "caption": {
+        "span": 13,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A real window that really reflows, not a zoomed picture of this one.",
+        "startSec": 69.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 69.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 15,
+      "barBeat": null,
+      "inSec": 74.5,
+      "outSec": 79.5,
+      "inFrame": 2235,
+      "outFrame": 2384,
+      "frames": 150,
+      "picture": "STAGE. The new window with the extension awake in it and the masked value still covered.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-15"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check another size",
+      "chipKey": "tools.viewport.label",
+      "caption": {
+        "span": 14,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It is awake there, and it is masked there, carrying the session on.",
+        "startSec": 74.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 74.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "barBeat": null,
+      "inSec": 79.5,
+      "outSec": 84.5,
+      "inFrame": 2385,
+      "outFrame": 2534,
+      "frames": 150,
+      "picture": "REPORT, Window sizes. The finding filed under its own heading, with the size it was found at.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-16"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Check another size",
+      "chipKey": "tools.viewport.label",
+      "caption": {
+        "span": 15,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "What you find is filed under Window sizes, never as a desktop bug.",
+        "startSec": 79.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 79.8
+        }
+      ]
+    },
+    {
+      "n": 17,
+      "barBeat": null,
+      "inSec": 84.5,
+      "outSec": 89.5,
+      "inFrame": 2535,
+      "outFrame": 2684,
+      "frames": 150,
+      "picture": "PANEL. Mask real data armed; the instruction appears on the row.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-capture/h/shot-17"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"mask\"]"
+          }
+        ]
+      },
+      "chip": "Mask real data",
+      "chipKey": "tools.mask.label",
+      "caption": {
+        "span": 16,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Mask real data covers anything on the page before it is ever recorded.",
+        "startSec": 84.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 84.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 84.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "mask",
+        "title": "Mask real data",
+        "startSec": 84.5
+      }
+    },
+    {
+      "n": 18,
+      "barBeat": null,
+      "inSec": 89.5,
+      "outSec": 94.5,
+      "inFrame": 2685,
+      "outFrame": 2834,
+      "frames": 150,
+      "picture": "STAGE. The applicant name clicked; a solid block covers the whole of it.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-18"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Mask real data",
+      "chipKey": "tools.mask.label",
+      "caption": {
+        "span": 17,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Click a real name, and a solid block covers the whole of it.",
+        "startSec": 89.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 89.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 19,
+      "barBeat": null,
+      "inSec": 94.5,
+      "outSec": 99.0,
+      "inFrame": 2835,
+      "outFrame": 2969,
+      "frames": 135,
+      "picture": "STAGE. The page reloads; the cover redraws in the same place.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-19"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Mask real data",
+      "chipKey": "tools.mask.label",
+      "caption": {
+        "span": 18,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It is covered, not blurred, and it survives every navigation after that.",
+        "startSec": 94.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 94.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 20,
+      "barBeat": null,
+      "inSec": 99.0,
+      "outSec": 104.0,
+      "inFrame": 2970,
+      "outFrame": 3119,
+      "frames": 150,
+      "picture": "STAGE. A screenshot is taken with the cover in it, and the video frame beside it.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-20"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Mask real data",
+      "chipKey": "tools.mask.label",
+      "caption": {
+        "span": 19,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Every screenshot and every frame of video is taken with the cover on.",
+        "startSec": 99.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 99.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 21,
+      "barBeat": null,
+      "inSec": 104.0,
+      "outSec": 109.5,
+      "inFrame": 3120,
+      "outFrame": 3284,
+      "frames": 165,
+      "picture": "REPORT, Masked in this session. The count of values masked by hand during this run.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-21"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Mask real data",
+      "chipKey": "tools.mask.label",
+      "caption": {
+        "span": 20,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Staging is full of real people, and the words underneath never reach the report.",
+        "startSec": 104.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 104.3
+        }
+      ]
+    },
+    {
+      "n": 22,
+      "barBeat": null,
+      "inSec": 109.5,
+      "outSec": 113.5,
+      "inFrame": 3285,
+      "outFrame": 3404,
+      "frames": 120,
+      "picture": "WALL. The Capture group again, its activity meter now filled.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-capture/h/shot-22"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 21,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Four tools, and none of what they took leaves this browser.",
+        "startSec": 109.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 109.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 23,
+      "barBeat": null,
+      "inSec": 113.5,
+      "outSec": 116.0,
+      "inFrame": 3405,
+      "outFrame": 3479,
+      "frames": 75,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 22,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 113.5,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 114.02,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 113.5,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 113.5,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 115.3,
+          "toSec": 116.0
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 113.7,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 113.5
+        },
+        {
+          "cue": "logo",
+          "atSec": 113.5
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 113.5
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 23,
+    "cuts": 22,
+    "cutsPer10s": 1.9,
+    "asl": 5.04,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 22,
+    "pauseBeforeCloseSec": 0.57,
+    "maxLineGapSec": 0.89,
+    "cutsPer10sRendered": 1.92
+  }
+}

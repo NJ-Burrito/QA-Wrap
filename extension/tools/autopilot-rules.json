@@ -1,0 +1,18 @@
+{
+  "_doc": "The 12 Autopilot & ADHD rules (CLAUDE.md, Nader 2026-10-11; requirements work/sdlc/requirements/REQ-1011-autopilot.md) mapped to the suites that enforce each. status is enforced or NOT ENFORCED (a rule whose test is a stub or a half; the summary prints AUTOPILOT RULES: n enforced, m NOT ENFORCED (list) and never hides it). Rules 4 and 5 are enforced since REQ-P2-1..3 (2026-10-12): the cap half of test-draft-and-cap and test-interrupted-and-keep run real code in plain Node. Every suite id must be a row in test-manifest.json (test-pipeline-manifest checks it).",
+  "version": 1,
+  "rules": [
+    { "rule": 1, "title": "One primary per state", "suites": ["test-next-primary"], "status": "enforced" },
+    { "rule": 2, "title": "Nothing hidden is lost (control budget, 2-click reach)", "suites": ["test-reach-popup"], "status": "enforced" },
+    { "rule": 3, "title": "Capture before classify (note capture, Alt chords, AltGr)", "suites": ["test-note-capture"], "status": "enforced" },
+    { "rule": 4, "title": "Nothing the tester typed or recorded is lost (draft survives, cap admits tester events)", "suites": ["test-draft-and-cap"], "status": "enforced" },
+    { "rule": 5, "title": "Interrupted work is shown, not hidden (crash card, kept sessions)", "suites": ["test-interrupted-and-keep"], "status": "enforced" },
+    { "rule": 6, "title": "State is always visible (badge, page indicator, timers)", "suites": ["test-recording-indicator", "test-page-indicator"], "status": "enforced" },
+    { "rule": 7, "title": "Nothing moves by itself (stable layout)", "suites": ["test-stable-layout"], "status": "enforced" },
+    { "rule": 8, "title": "The finish is one press and above the fold", "suites": ["test-done-card"], "status": "enforced" },
+    { "rule": 9, "title": "The copied report is already a bug report", "suites": ["test-copy-report"], "status": "enforced" },
+    { "rule": 10, "title": "Short (word budgets on the rendered DOM)", "suites": ["test-copy-length"], "status": "enforced" },
+    { "rule": 11, "title": "One name per thing (EN and AR change together, banned terms)", "suites": ["test-ui-names", "test-i18n"], "status": "enforced" },
+    { "rule": 12, "title": "Automation never widens capture or egress and never removes the human gate", "suites": ["test-autopilot-privacy", "test-autostart", "test-autoshot"], "status": "enforced" }
+  ]
+}

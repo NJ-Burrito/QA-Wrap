@@ -1,0 +1,26 @@
+{
+  "popup.auto.startLabel": "Also start recording by itself on this site",
+  "popup.auto.startConsent": "When you open this site, QA Wrap starts recording by itself. It records only what you do on this site, in this browser, shows a dot on the page, and stops after 30 minutes without activity. Untick to turn it off.",
+  "popup.auto.shotLabel": "Also take a screenshot on the first error of each kind",
+  "popup.auto.shotConsent": "When this site shows an error it has not shown before in this test, QA Wrap saves a screenshot of the tab you are looking at. Screenshots are not scanned for secrets and stay in this browser.",
+  "popup.auto.on": "On for this site.",
+  "popup.auto.off": "Off for this site.",
+  "popup.auto.pause": "Pause for 1 hour",
+  "popup.auto.resume": "Resume now",
+  "popup.auto.paused": "Paused. Recording by itself starts again at {time}.",
+  "popup.auto.idleStopped": "Stopped by itself after 30 minutes without activity.",
+  "popup.auto.running": "Recording started by itself on this site.",
+  "welcome.fact.auto": "Two things can start by themselves, only on sites you tick: recording, and a screenshot on a new error.",
+  "autopilot.caught": "Caught: {what}",
+  "autopilot.notBug": "Not a bug",
+  "options.auto.head": "Recording dot",
+  "options.auto.indicator": "Show the recording dot on pages",
+  "options.auto.indicatorHint": "A small dot with the minutes, drawn by QA Wrap while a test is recording. The page cannot see it. The sites that start recording or take screenshots by themselves are listed under Permissions.",
+  "options.auto.wake": "Wakes up",
+  "options.auto.starts": "Starts by itself",
+  "options.auto.shots": "Screenshot on error",
+  "options.auto.buffer": "2-minute buffer",
+  "__override": {
+    "options.remembered.title": "What each site may do by itself"
+  }
+}

@@ -1,0 +1,4 @@
+.update-card{margin:8px;gap:8px;flex-wrap:wrap}
+.update-notes{margin-block-start:4px}
+.update-notes[open]{max-height:9em;overflow:auto}
+.update-steps{margin:6px 0 0;padding-inline-start:1.2em}

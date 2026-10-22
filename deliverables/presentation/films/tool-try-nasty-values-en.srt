@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:04,033
+Bugs live at the edges.
+
+2
+00:00:04,233 --> 00:00:06,533
+The edges, brought to you.
+
+3
+00:00:06,733 --> 00:00:11,033
+Long. Arabic. Empty.
+
+4
+00:00:11,233 --> 00:00:12,833
+No inventing needed.
+
+5
+00:00:13,067 --> 00:00:16,000
+Every failure, traced.

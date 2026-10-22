@@ -1,0 +1,23 @@
+1
+00:00:02,400 --> 00:00:04,700
+An afternoon of guesses.
+
+2
+00:00:04,933 --> 00:00:05,667
+That afternoon, done.
+
+3
+00:00:05,867 --> 00:00:08,000
+Every control on the page.
+
+4
+00:00:08,767 --> 00:00:10,700
+Verified, or marked.
+
+5
+00:00:11,767 --> 00:00:14,833
+Three files, in the report.
+
+6
+00:00:15,767 --> 00:00:18,133
+Every failure, traced.

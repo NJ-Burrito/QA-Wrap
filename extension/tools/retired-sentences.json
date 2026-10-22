@@ -1,0 +1,33 @@
+{
+  "_note": "DEC-05: sentences the code contradicted or the house rules forbid. release-check fails if one returns in a shipped document, the store folder or the site. T-008 appends the rest of its seven; add new ones here, never in release-check.",
+  "sentences": [
+    { "text": "never records a password or a cookie value", "why": "cookie profiles are saved with values (T-008)" },
+    { "text": "Asleep means nothing runs", "why": "eight scripts are registered while asleep (T-008)" },
+    { "text": "Redacted at capture time", "why": "not true of every store (T-008)" },
+    { "text": "tamper-proof", "why": "the provenance token proves attribution, not integrity (DEC-04)" },
+    { "text": "evidence you can sign", "why": "public copy says a record of the session you can hand over (DEC-04)" },
+    { "text": "Passwords and cookie values are never recorded", "why": "cookie profiles are saved with values (T-008)" },
+    { "text": "It records no password field and no cookie value", "why": "cookie profiles are saved with values (T-008)" },
+    { "text": "nothing runs, hooks or reads until you say so", "why": "eight page scripts load while asleep (T-008)" },
+    { "text": "The extension does nothing until you wake it", "why": "page scripts load while asleep (T-008)" },
+    { "text": "It is inert until armed", "why": "page scripts load while asleep (T-008)" },
+    { "text": "**Inert until woken.**", "why": "page scripts load while asleep (T-008)" },
+    { "text": "the provenance token verifies an artefact has not been edited", "why": "the token proves attribution, not integrity (DEC-04)" },
+    { "text": "can ask again rather than assume", "why": "consentVersion is never compared (T-008)" },
+    { "text": "A first-run notice that has to be accepted before any tool runs", "why": "only the popup is gated (T-008)" },
+    { "text": "a runnable cross-browser project", "why": "no surface can start it (T-008)" },
+    { "text": "A runnable cross-browser Playwright project", "why": "no surface can start it (T-008)" },
+    { "text": "Chrome does not allow this permission to be optional", "why": "the listing says what debugger is for instead (T-006)" },
+    { "text": "turn it into evidence about that session", "why": "public copy says a record you can hand over (T-029)" },
+    { "text": "turn it into evidence:", "why": "public copy says a record you can hand over (T-029)" },
+    { "text": "لا يسجل كلمة مرور ولا قيمة كعكة", "why": "cookie profiles are saved with values (T-008), Arabic" },
+    { "text": "لا تسجل كلمات المرور ولا قيم الكعكات", "why": "cookie profiles are saved with values (T-008), Arabic" },
+    { "text": "لا يعمل شيء حتى توقظه", "why": "eight page scripts load while asleep (T-008), Arabic" },
+    { "text": "لا يفعل الامتداد شيئا حتى توقظه", "why": "page scripts load while asleep (T-008), Arabic" },
+    { "text": "خامل حتى يوقظ", "why": "page scripts load while asleep (T-008), Arabic" },
+    { "text": "مقاوم للعبث", "why": "the token proves attribution, not integrity (DEC-04), Arabic" },
+    { "text": "دليل يمكنك توقيعه", "why": "public copy says a record you can hand over (DEC-04), Arabic" },
+    { "text": "يتحقق الرمز من أن الأثر لم يعدل", "why": "the token proves attribution, not integrity (DEC-04), Arabic" },
+    { "text": "تحجب عند وقت الالتقاط", "why": "not true of every store (T-008), Arabic" }
+  ]
+}

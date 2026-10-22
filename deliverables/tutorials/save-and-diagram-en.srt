@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:04,500
+Everything the session made, in one folder.
+
+2
+00:00:04,733 --> 00:00:06,900
+Thirty formats, from bug to spec.
+
+3
+00:00:07,133 --> 00:00:09,067
+Named, dated, and yours.
+
+4
+00:00:09,300 --> 00:00:11,700
+And the session, drawn as the flow.
+
+5
+00:00:11,900 --> 00:00:14,700
+One A4 page: what happened, where it failed.

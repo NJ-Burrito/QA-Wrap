@@ -1,0 +1,10 @@
+{
+  "report.bar.copy": "انسخ التقرير",
+  "report.dup.expected": "وسمها المختبِر على أنها متوقعة",
+  "report.ev.expected": "وسم المختبِر مشكلة على أنها متوقعة",
+  "__override": {
+    "report.tabs.file": "قدّم تذكرة",
+    "report.v.tracedOne": "مشكلة واحدة",
+    "report.v.tracedMany": "{n} من المشكلات"
+  }
+}

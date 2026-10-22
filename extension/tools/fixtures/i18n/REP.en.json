@@ -1,0 +1,9 @@
+{
+  "report.bar.copy": "Copy report",
+  "report.dup.expected": "Marked expected by tester",
+  "report.ev.expected": "Marked a problem as expected",
+  "__override": {
+    "report.v.tracedOne": "1 problem",
+    "report.v.tracedMany": "{n} problems"
+  }
+}

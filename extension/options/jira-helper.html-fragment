@@ -1,0 +1,45 @@
+<!-- «Jira helper» (ui-1019). Injected into Settings > Integrations by jira-helper.js. Notifications are off until turned on. -->
+<div class="setting-row" id="jira-helper" data-kw="jira helper dropdown scroll rtl ltr direction notifications poll project mentions watched assigned labels linked">
+  <h3 data-i18n="options.jira.title">Jira helper</h3>
+  <p class="muted" data-i18n="options.jira.intro">Works on your Jira pages by itself. Notifications are off until you turn them on, and then ask only your own Jira address, using the Jira session you are already signed in to.</p>
+  <label class="switch">
+    <input type="checkbox" id="jh-dropdown" />
+    <span><strong data-i18n="options.jira.dropdown">Keep long lists still</strong><em data-i18n="options.jira.dropdownHint">A long list of statuses or options scrolls inside itself and the page stays where it is.</em></span>
+  </label>
+  <label class="switch">
+    <input type="checkbox" id="jh-rtl" />
+    <span><strong data-i18n="options.jira.rtl">RTL || LTR button on Jira pages</strong><em data-i18n="options.jira.rtlHint">A small button at the top of the page flips the page direction. Mixed Arabic and English lines keep their own order. Remembered for each address.</em></span>
+  </label>
+  <div class="two-up">
+    <label class="text-field">
+      <span data-i18n="options.jira.host">Your Jira address</span>
+      <input type="text" id="jh-host" dir="ltr" autocomplete="off" spellcheck="false" placeholder="yourteam.atlassian.net" list="jh-seen" />
+      <datalist id="jh-seen"></datalist>
+    </label>
+    <div class="perm-actions">
+      <button id="jh-allow" class="btn btn-secondary" type="button" data-i18n="options.jira.allow">Allow this address</button>
+      <button id="jh-check" class="btn btn-quiet" type="button" data-i18n="options.jira.check">Check connection</button>
+    </div>
+  </div>
+  <p class="range-note" id="jh-state" role="status" aria-live="polite"></p>
+  <label class="switch">
+    <input type="checkbox" id="jh-notify" />
+    <span><strong data-i18n="options.jira.notify">Show notifications for Jira changes</strong><em data-i18n="options.jira.notifyHint">Checks once a minute for changes, comments and new issues. Click a notification to open the issue.</em></span>
+  </label>
+  <label class="text-field">
+    <span data-i18n="options.jira.projects">Only these projects (keys, separated by commas)</span>
+    <input type="text" id="jh-projects" dir="ltr" autocomplete="off" spellcheck="false" placeholder="ABC, XYZ" />
+  </label>
+  <p class="range-note" data-i18n="options.jira.projectsHint">Left empty, every project counts.</p>
+  <p class="range-note"><strong data-i18n="options.jira.on">Notify me about</strong></p>
+  <label class="switch"><input type="checkbox" id="jh-on-assigned" /><span><strong data-i18n="options.jira.on.assigned">Issues assigned to me</strong></span></label>
+  <label class="switch"><input type="checkbox" id="jh-on-watched" /><span><strong data-i18n="options.jira.on.watched">Issues I watch</strong></span></label>
+  <label class="switch"><input type="checkbox" id="jh-on-mentions" /><span><strong data-i18n="options.jira.on.mentions">Comments that mention me</strong></span></label>
+  <label class="switch"><input type="checkbox" id="jh-on-labels" /><span><strong data-i18n="options.jira.on.labels">Issues with these labels</strong></span></label>
+  <label class="text-field">
+    <span data-i18n="options.jira.labels">Labels (separated by commas)</span>
+    <input type="text" id="jh-labels" dir="ltr" autocomplete="off" spellcheck="false" />
+  </label>
+  <label class="switch"><input type="checkbox" id="jh-on-related" /><span><strong data-i18n="options.jira.on.related">Issues linked to mine</strong></span></label>
+  <p class="range-note" data-i18n="options.jira.noneHint">With none of these ticked, every change in the chosen projects is shown.</p>
+</div>

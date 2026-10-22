@@ -1,0 +1,30 @@
+// Type-checks the plain-JS source via JSDoc, per research/56 decision 26.
+// No build step: this never emits, it only gates `npm test` on tsc's
+// opinion of core/**, platform/** and background/**.
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    // Off to start: the codebase has no type annotations yet, and turning
+    // strict on now would drown the real signal (implicit-any, wrong arity,
+    // a Promise never awaited) under thousands of "possibly undefined"
+    // complaints about untyped chrome.* callbacks and JSON-shaped objects.
+    // Ratchet this on later, file by file, once JSDoc coverage is further
+    // along and the easy noise is gone.
+    "strict": false,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["chrome"],
+    "skipLibCheck": true,
+    // Incremental (test pipeline P5, rehearsal R9): a warm run re-checks only what changed and reports the same errors
+    // (152 cold == warm). The cache is regenerable output, so it lives under the gitignored work/ folder, not here.
+    // A warm run exits 1 where a cold one exits 2, so gates count `error TS` lines and never read the exit code.
+    "incremental": true,
+    "tsBuildInfoFile": "../work/tsbuildinfo/types.tsbuildinfo"
+  },
+  "include": ["types/*.d.ts", "core/**/*.js", "platform/**/*.js", "background/**/*.js", "report/**/*.js", "options/**/*.js", "popup/**/*.js", "sidepanel/**/*.js"],
+  "exclude": ["vendor/**", "node_modules/**", "tools/**"]
+}

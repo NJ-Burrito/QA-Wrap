@@ -1,0 +1,52 @@
+/* QA Wrap — the workflow diagram editor. */
+body { margin: 0; background: var(--backdrop); background-attachment: fixed; color: var(--text); font-family: var(--font); font-size: 13px; }
+.app-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--glass-edge); background: var(--surface-glass-strong); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); position: sticky; top: 0; z-index: 5; }
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-name { font-weight: 800; font-size: 15px; }
+.bar-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.status { margin: 0; padding: 4px 16px; min-height: 22px; font-size: 12.5px; color: var(--text-muted); }
+.status.ok { color: var(--ok); } .status.err { color: var(--danger); }
+body.is-empty .work { display: block; }
+.work { display: grid; grid-template-columns: 300px 1fr; gap: 14px; padding: 8px 16px 24px; align-items: start; }
+/* MOTION.md "other pages" rule: one materialise for the main column on first
+   paint, no per-row stagger. */
+.work { animation: qaw-in-up var(--motion-base) var(--motion-ease) both; }
+@media (prefers-reduced-motion: reduce) { .work { animation: none !important; } }
+.tools .block { border: 1px solid var(--glass-edge); border-radius: var(--r-lg); padding: 10px 12px; margin-bottom: 10px; background: var(--surface-glass); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); }
+.tools h2 { margin: 0 0 6px; font-size: 13px; }
+.muted { color: var(--text-muted); font-size: 11.5px; line-height: 1.45; }
+.kind-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.kind-btn { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface); cursor: pointer; font: inherit; color: inherit; text-align: start; }
+.kind-btn:hover { border-color: var(--accent); }
+.kind-btn svg { width: 34px; height: 22px; flex: none; }
+.kind-btn span { font-size: 11.5px; line-height: 1.2; }
+.field { display: grid; gap: 4px; margin: 8px 0; font-size: 12px; }
+.field > span { font-weight: 600; }
+.field input, .field select, .field textarea { width: 100%; font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface); color: inherit; }
+.row-2 { display: flex; gap: 6px; align-items: center; }
+.swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+.swatch { width: 22px; height: 22px; border-radius: var(--r-md); border: 2px solid transparent; cursor: pointer; }
+.swatch[aria-pressed='true'] { border-color: var(--text); }
+.sheet-wrap { overflow: auto; background: var(--surface-sunken); border-radius: var(--r-lg); padding: 16px; min-height: 60vh; display: grid; place-items: start center; }
+.sheet { width: 1123px; height: 794px; transform-origin: top left; box-shadow: var(--shadow-2); background: #F1EFE9; } /* literal: the sheet is paper — it is exported and printed, so it stays paper in dark mode. `transform-origin: top left` is left physical too: the sheet is a fixed-size A4 canvas pinned `dir="ltr"` in diagram.html, and its own top-left corner, not a logical corner that would move under RTL. */
+.sheet svg { width: 100%; height: 100%; display: block; }
+.sheet [data-node] { cursor: grab; }
+/* A selected node gets a tight halo, not a glow. The first of the two filters
+   here was `drop-shadow(0 0 0 2px …)`, which is four lengths and therefore not
+   a valid drop-shadow at all — the browser dropped the whole declaration and
+   the selection was the 6px red bloom alone. */
+.sheet [data-node].selected > :first-child { filter: drop-shadow(0 0 1.5px var(--accent)) drop-shadow(0 0 1.5px var(--accent)); }
+.sheet [data-edge].selected path:not(.edge-hit) { stroke-width: 3.5; }
+/* Keyboard focus on a box or an arrow (D-1010-178): the sheet is paper in both themes, so the ring is the accent on paper. */
+.sheet [data-node]:focus-visible, .sheet [data-edge]:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.sheet [data-edge]:focus-visible path:not(.edge-hit) { stroke-width: 3.5; }
+.sheet.connecting [data-node] { cursor: crosshair; }
+.sheet.dragging [data-node] { cursor: grabbing; }
+@media (max-width: 900px) { .work { grid-template-columns: 1fr; } }
+@media print { .app-bar, .status, .tools { display: none; } .work { display: block; padding: 0; } .sheet-wrap { padding: 0; background: none; } .sheet { box-shadow: none; transform: none !important; } @page { size: A4 landscape; margin: 0; } }
+
+/* Nothing to draw: say so, and offer the way back. */
+.empty-state { display: grid; justify-items: center; text-align: center; gap: 10px; max-width: 460px; margin: 12vh auto; padding: 30px 28px; border: 1px dashed var(--border-strong); border-radius: var(--r-lg); }
+.empty-state h2 { margin: 6px 0 0; font-size: 18px; }
+.empty-state p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+.empty-state .btn { margin-top: 6px; }

@@ -1,0 +1,23 @@
+1
+00:00:02,400 --> 00:00:03,867
+Try it with a keyboard.
+
+2
+00:00:04,067 --> 00:00:06,000
+The DevTools engine.
+
+3
+00:00:06,233 --> 00:00:08,667
+What blocks a screen reader.
+
+4
+00:00:08,900 --> 00:00:11,600
+Twelve a machine cannot make.
+
+5
+00:00:11,800 --> 00:00:14,100
+In the report, with the rest.
+
+6
+00:00:15,767 --> 00:00:17,967
+Every failure, traced.

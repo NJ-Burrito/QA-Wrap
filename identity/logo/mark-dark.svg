@@ -1,0 +1,11 @@
+<!-- QA Wrap identity — mark, dark ground. Geometry from identity/tools/marks.mjs. © 2026 Nader Alzghoul. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="QA Wrap">
+  <style>
+    .ring{stroke:#ECEAE3}
+    .check{stroke:#FF8A6E}
+  </style>
+  <g transform="translate(-2 1)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path class="ring" stroke="#ECEAE3" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+    <path class="check" stroke="#FF8A6E" d="M36 36L42.5 44L55 20"/>
+  </g>
+</svg>

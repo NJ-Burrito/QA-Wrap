@@ -1,0 +1,2537 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "cat-check",
+  "rev": "round-3",
+  "kind": "category",
+  "groupId": "check",
+  "group": "Check",
+  "tools": [
+    "a11y",
+    "perf",
+    "links",
+    "whitebox",
+    "fineprint"
+  ],
+  "mode": "expert",
+  "batch": "cat",
+  "en": "Check",
+  "ar": "الفحص",
+  "blurb": "Accessibility, page speed, the links, the code that ran and the legal fine print, on the page you are standing on.",
+  "titleKey": "popup.groups.check.label",
+  "chipKey": "popup.groups.check.hint",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 69,
+  "seconds": 138.0,
+  "frames": 4140,
+  "aspects": [
+    "h"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    },
+    "REQUEST": {
+      "surface": "request",
+      "url": "api/api.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      }
+    }
+  },
+  "posterShot": {
+    "shot": 6,
+    "frame": 855,
+    "why": "Check: the result of the first demonstration, visible in frame.",
+    "pass": "h"
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 6,
+    "frame": 855,
+    "why": "Check: the result of the first demonstration, visible in frame."
+  },
+  "srt": "deliverables/tutorials/cat-check-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "Check. Let the machine look.",
+      "inSec": 0.15,
+      "outSec": 7.5,
+      "inFrame": 4,
+      "outFrame": 225,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "Check. Let the machine look.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 7350,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "What would stop somebody.",
+      "inSec": 7.5,
+      "outSec": 12.0,
+      "inFrame": 225,
+      "outFrame": 360,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "What would stop somebody.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "Screen reader. Keyboard. Colour.",
+      "inSec": 12.0,
+      "outSec": 17.5,
+      "inFrame": 360,
+      "outFrame": 525,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Screen reader. Keyboard. Colour.",
+      "dwell": {
+        "needMs": 2612,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "The same engine as DevTools.",
+      "inSec": 17.5,
+      "outSec": 22.0,
+      "inFrame": 525,
+      "outFrame": 660,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The same engine as DevTools.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "Ringed on the page.",
+      "inSec": 22.0,
+      "outSec": 27.0,
+      "inFrame": 660,
+      "outFrame": 810,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Ringed on the page.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "Twelve a machine cannot make.",
+      "inSec": 27.0,
+      "outSec": 32.5,
+      "inFrame": 810,
+      "outFrame": 975,
+      "shots": [
+        6
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Twelve a machine cannot make.",
+      "dwell": {
+        "needMs": 2381,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 6,
+      "text": "How it really drew.",
+      "inSec": 32.5,
+      "outSec": 37.0,
+      "inFrame": 975,
+      "outFrame": 1110,
+      "shots": [
+        7
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "How it really drew.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 7,
+      "text": "On your real network.",
+      "inSec": 37.0,
+      "outSec": 41.5,
+      "inFrame": 1110,
+      "outFrame": 1245,
+      "shots": [
+        8
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "On your real network.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 8,
+      "text": "As it is right now.",
+      "inSec": 41.5,
+      "outSec": 47.0,
+      "inFrame": 1245,
+      "outFrame": 1410,
+      "shots": [
+        9
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "As it is right now.",
+      "dwell": {
+        "needMs": 1650,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 9,
+      "text": "Lighthouse never signs in.",
+      "inSec": 47.0,
+      "outSec": 52.0,
+      "inFrame": 1410,
+      "outFrame": 1560,
+      "shots": [
+        10
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Lighthouse never signs in.",
+      "dwell": {
+        "needMs": 2150,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 10,
+      "text": "Behind the login.",
+      "inSec": 52.0,
+      "outSec": 57.5,
+      "inFrame": 1560,
+      "outFrame": 1725,
+      "shots": [
+        11
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Behind the login.",
+      "dwell": {
+        "needMs": 1458,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 11,
+      "text": "Ask every link.",
+      "inSec": 57.5,
+      "outSec": 62.5,
+      "inFrame": 1725,
+      "outFrame": 1875,
+      "shots": [
+        12
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Ask every link.",
+      "dwell": {
+        "needMs": 1350,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 12,
+      "text": "Does it still answer.",
+      "inSec": 62.5,
+      "outSec": 67.0,
+      "inFrame": 1875,
+      "outFrame": 2010,
+      "shots": [
+        13
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Does it still answer.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 13,
+      "text": "Broken, redirected, slow, fine.",
+      "inSec": 67.0,
+      "outSec": 71.5,
+      "inFrame": 2010,
+      "outFrame": 2145,
+      "shots": [
+        14
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Broken, redirected, slow, fine.",
+      "dwell": {
+        "needMs": 2535,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 14,
+      "text": "Other sites too.",
+      "inSec": 71.5,
+      "outSec": 77.0,
+      "inFrame": 2145,
+      "outFrame": 2310,
+      "shots": [
+        15
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Other sites too.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 15,
+      "text": "The bug nobody logs.",
+      "inSec": 77.0,
+      "outSec": 81.5,
+      "inFrame": 2310,
+      "outFrame": 2445,
+      "shots": [
+        16
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The bug nobody logs.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 16,
+      "text": "What actually ran.",
+      "inSec": 81.5,
+      "outSec": 86.0,
+      "inFrame": 2445,
+      "outFrame": 2580,
+      "shots": [
+        17
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "What actually ran.",
+      "dwell": {
+        "needMs": 1535,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 17,
+      "text": "Ready, or the reason why not.",
+      "inSec": 86.0,
+      "outSec": 91.0,
+      "inFrame": 2580,
+      "outFrame": 2730,
+      "shots": [
+        18
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Ready, or the reason why not.",
+      "dwell": {
+        "needMs": 2381,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 18,
+      "text": "The bar is expected.",
+      "inSec": 91.0,
+      "outSec": 96.0,
+      "inFrame": 2730,
+      "outFrame": 2880,
+      "shots": [
+        19
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The bar is expected.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 19,
+      "text": "Off when you stop.",
+      "inSec": 96.0,
+      "outSec": 101.5,
+      "inFrame": 2880,
+      "outFrame": 3045,
+      "shots": [
+        20
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Off when you stop.",
+      "dwell": {
+        "needMs": 1535,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 20,
+      "text": "The code you never reached.",
+      "inSec": 101.5,
+      "outSec": 106.0,
+      "inFrame": 3045,
+      "outFrame": 3180,
+      "shots": [
+        21
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The code you never reached.",
+      "dwell": {
+        "needMs": 2227,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 21,
+      "text": "The legal surface.",
+      "inSec": 106.0,
+      "outSec": 110.5,
+      "inFrame": 3180,
+      "outFrame": 3315,
+      "shots": [
+        22
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The legal surface.",
+      "dwell": {
+        "needMs": 1535,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 22,
+      "text": "Policies, consent, trackers.",
+      "inSec": 110.5,
+      "outSec": 115.0,
+      "inFrame": 3315,
+      "outFrame": 3450,
+      "shots": [
+        23
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Policies, consent, trackers.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 23,
+      "text": "Asked before it was stored.",
+      "inSec": 115.0,
+      "outSec": 120.5,
+      "inFrame": 3450,
+      "outFrame": 3615,
+      "shots": [
+        24
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Asked before it was stored.",
+      "dwell": {
+        "needMs": 2227,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 24,
+      "text": "Nine of the nineteen.",
+      "inSec": 120.5,
+      "outSec": 126.0,
+      "inFrame": 3615,
+      "outFrame": 3780,
+      "shots": [
+        25
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Nine of the nineteen.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 25,
+      "text": "Four asked, not ticked.",
+      "inSec": 126.0,
+      "outSec": 130.5,
+      "inFrame": 3780,
+      "outFrame": 3915,
+      "shots": [
+        26
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Four asked, not ticked.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 26,
+      "text": "All of it, one report.",
+      "inSec": 130.5,
+      "outSec": 134.5,
+      "inFrame": 3915,
+      "outFrame": 4035,
+      "shots": [
+        27
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "All of it, one report.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 27,
+      "text": "Every failure, traced.",
+      "inSec": 134.5,
+      "outSec": 138.0,
+      "inFrame": 4035,
+      "outFrame": 4140,
+      "shots": [
+        28
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 3500,
+        "ok": true
+      }
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0.0,
+      "outSec": 7.5,
+      "inFrame": 0,
+      "outFrame": 224,
+      "frames": 225,
+      "picture": "WALL. Expert, scrolled to the Check heading: Let the machine look, and its five rows.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "text",
+            "selector": ".activity[data-activity=\"check\"] .activity-label",
+            "equals": "Check"
+          },
+          {
+            "kind": "attr",
+            "selector": "#mode-expert",
+            "attr": "aria-pressed",
+            "equals": "true"
+          }
+        ]
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Check is where you let the machine look at what a person cannot, on the page you are on.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        },
+        {
+          "cue": "tick",
+          "atSec": 0.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 7.5,
+      "outSec": 12.0,
+      "inFrame": 225,
+      "outFrame": 359,
+      "frames": 135,
+      "picture": "PANEL. Check accessibility pressed; the Findings block begins to fill.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"a11y\"]"
+          }
+        ]
+      },
+      "chip": "Check accessibility",
+      "chipKey": "tools.a11y.label",
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Check accessibility lists what would stop somebody using this page at all.",
+        "startSec": 7.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 7.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 7.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "a11y",
+        "title": "Check accessibility",
+        "startSec": 7.5
+      }
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 12.0,
+      "outSec": 17.5,
+      "inFrame": 360,
+      "outFrame": 524,
+      "frames": 165,
+      "picture": "PANEL. The findings list with its rule names and element counts.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check accessibility",
+      "chipKey": "tools.a11y.label",
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "With a screen reader, with a keyboard alone, or with the colours it uses.",
+        "startSec": 12.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 12.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 17.5,
+      "outSec": 22.0,
+      "inFrame": 525,
+      "outFrame": 659,
+      "frames": 135,
+      "picture": "PANEL. The rule list open behind the findings.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-04"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check accessibility",
+      "chipKey": "tools.a11y.label",
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It runs the same engine Chrome DevTools uses, rule by rule.",
+        "startSec": 17.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 17.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 22.0,
+      "outSec": 27.0,
+      "inFrame": 660,
+      "outFrame": 809,
+      "frames": 150,
+      "picture": "PAIR. Panel left: a finding pressed. Stage right: the element scrolled into view and ringed.",
+      "capture": {
+        "rect": "PAIR",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "form": "side by side",
+            "placeSource": "bible 2.3",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 720
+                },
+                "place": {
+                  "x": 96,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-check/h/shot-05/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 1080,
+                  "h": 720
+                },
+                "place": {
+                  "x": 660,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-check/h/shot-05/STAGE"
+              }
+            ]
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [],
+        "member": "PANEL"
+      },
+      "chip": "Check accessibility",
+      "chipKey": "tools.a11y.label",
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Press a finding and the page scrolls it into view and rings it.",
+        "startSec": 22.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 22.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 27.0,
+      "outSec": 32.5,
+      "inFrame": 810,
+      "outFrame": 974,
+      "frames": 165,
+      "picture": "REPORT, Quality. The accessibility block with its rule counts.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-06"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Check accessibility",
+      "chipKey": "tools.a11y.label",
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The panel adds a full rule list and twelve checks a machine cannot make.",
+        "startSec": 27.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 27.3
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "barBeat": null,
+      "inSec": 32.5,
+      "outSec": 37.0,
+      "inFrame": 975,
+      "outFrame": 1109,
+      "frames": 135,
+      "picture": "PANEL. Check page speed pressed; the timings arrive on the row.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-07"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"perf\"]"
+          }
+        ]
+      },
+      "chip": "Check page speed",
+      "chipKey": "tools.perf.label",
+      "caption": {
+        "span": 6,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Check page speed measures how fast this page really drew and answered.",
+        "startSec": 32.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 32.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 32.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "perf",
+        "title": "Check page speed",
+        "startSec": 32.5
+      }
+    },
+    {
+      "n": 8,
+      "barBeat": null,
+      "inSec": 37.0,
+      "outSec": 41.5,
+      "inFrame": 1110,
+      "outFrame": 1244,
+      "frames": 135,
+      "picture": "PANEL. The timings and the request count on the card.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-08"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check page speed",
+      "chipKey": "tools.perf.label",
+      "caption": {
+        "span": 7,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Logged in, mid-flow, on your real network, with every request it made.",
+        "startSec": 37.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 37.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "barBeat": null,
+      "inSec": 41.5,
+      "outSec": 47.0,
+      "inFrame": 1245,
+      "outFrame": 1409,
+      "frames": 165,
+      "picture": "PAIR. Panel left: the request list building. Stage right: the permits form mid-flow, signed in.",
+      "capture": {
+        "rect": "PAIR",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "form": "side by side",
+            "placeSource": "bible 2.3",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 720
+                },
+                "place": {
+                  "x": 96,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-check/h/shot-09/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 1080,
+                  "h": 720
+                },
+                "place": {
+                  "x": 660,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-check/h/shot-09/STAGE"
+              }
+            ]
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [],
+        "member": "PANEL"
+      },
+      "chip": "Check page speed",
+      "chipKey": "tools.perf.label",
+      "caption": {
+        "span": 8,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It reads the page as it is right now, not as it loads cold.",
+        "startSec": 41.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 41.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "barBeat": null,
+      "inSec": 47.0,
+      "outSec": 52.0,
+      "inFrame": 1410,
+      "outFrame": 1559,
+      "frames": 150,
+      "picture": "PANEL. The numbers settle on the card.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-10"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check page speed",
+      "chipKey": "tools.perf.label",
+      "caption": {
+        "span": 9,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "That is the number Lighthouse cannot give you, because it never signs in.",
+        "startSec": 47.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 47.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "barBeat": null,
+      "inSec": 52.0,
+      "outSec": 57.5,
+      "inFrame": 1560,
+      "outFrame": 1724,
+      "frames": 165,
+      "picture": "REPORT, Quality. The page speed block with its numbers.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-11"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Check page speed",
+      "chipKey": "tools.perf.label",
+      "caption": {
+        "span": 10,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The slow page is usually the one behind the login, and this one is.",
+        "startSec": 52.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 52.3
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "barBeat": null,
+      "inSec": 57.5,
+      "outSec": 62.5,
+      "inFrame": 1725,
+      "outFrame": 1874,
+      "frames": 150,
+      "picture": "PANEL. Check the links pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-12"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"links\"]"
+          }
+        ]
+      },
+      "chip": "Check the links",
+      "chipKey": "tools.links.label",
+      "caption": {
+        "span": 11,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Check the links finds every link on the page and asks each one.",
+        "startSec": 57.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 57.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 57.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "links",
+        "title": "Check the links",
+        "startSec": 57.5
+      }
+    },
+    {
+      "n": 13,
+      "barBeat": null,
+      "inSec": 62.5,
+      "outSec": 67.0,
+      "inFrame": 1875,
+      "outFrame": 2009,
+      "frames": 135,
+      "picture": "PANEL. The counter climbs as each link answers.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-13"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check the links",
+      "chipKey": "tools.links.label",
+      "caption": {
+        "span": 12,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Whether it still answers, and how long it took to say so.",
+        "startSec": 62.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 62.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 14,
+      "barBeat": null,
+      "inSec": 67.0,
+      "outSec": 71.5,
+      "inFrame": 2010,
+      "outFrame": 2144,
+      "frames": 135,
+      "picture": "PANEL. The result splits four ways on the row: broken, redirected, slow, fine.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-14"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check the links",
+      "chipKey": "tools.links.label",
+      "caption": {
+        "span": 13,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Broken, redirected, slow, or fine, split four ways on the card.",
+        "startSec": 67.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 67.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 15,
+      "barBeat": null,
+      "inSec": 71.5,
+      "outSec": 77.0,
+      "inFrame": 2145,
+      "outFrame": 2309,
+      "frames": 165,
+      "picture": "STAGE. The broken link ringed where it sits in the page footer.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-15"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check the links",
+      "chipKey": "tools.links.label",
+      "caption": {
+        "span": 14,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It runs from the extension, so links out to other sites are tested too.",
+        "startSec": 71.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 71.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "barBeat": null,
+      "inSec": 77.0,
+      "outSec": 81.5,
+      "inFrame": 2310,
+      "outFrame": 2444,
+      "frames": 135,
+      "picture": "REPORT, Quality. The links block, with the broken one named.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-16"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Check the links",
+      "chipKey": "tools.links.label",
+      "caption": {
+        "span": 15,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Dead links are the bug every visitor finds and no tester logs.",
+        "startSec": 77.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 77.3
+        }
+      ]
+    },
+    {
+      "n": 17,
+      "barBeat": null,
+      "inSec": 81.5,
+      "outSec": 86.0,
+      "inFrame": 2445,
+      "outFrame": 2579,
+      "frames": 135,
+      "picture": "PANEL. Measure code coverage, with the Ready line on the card.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-17"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"whitebox\"]"
+          }
+        ]
+      },
+      "chip": "Measure code coverage",
+      "chipKey": "tools.whitebox.label",
+      "caption": {
+        "span": 16,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Measure code coverage shows which of this page's own JavaScript actually ran.",
+        "startSec": 81.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 81.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 81.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "whitebox",
+        "title": "Measure code coverage",
+        "startSec": 81.5
+      }
+    },
+    {
+      "n": 18,
+      "barBeat": null,
+      "inSec": 86.0,
+      "outSec": 91.0,
+      "inFrame": 2580,
+      "outFrame": 2729,
+      "frames": 150,
+      "picture": "PANEL. The Ready line answering for this page.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-18"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Measure code coverage",
+      "chipKey": "tools.whitebox.label",
+      "caption": {
+        "span": 17,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Ready on the card says in advance whether this page can be measured.",
+        "startSec": 86.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 86.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 19,
+      "barBeat": null,
+      "inSec": 91.0,
+      "outSec": 96.0,
+      "inFrame": 2730,
+      "outFrame": 2879,
+      "frames": 150,
+      "picture": "STAGE. Start pressed; Chrome's own debugger bar appears across the top of the window; the form is used.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-19"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Measure code coverage",
+      "chipKey": "tools.whitebox.label",
+      "caption": {
+        "span": 18,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Chrome puts a bar across the top while it runs. That is expected.",
+        "startSec": 91.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 91.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 20,
+      "barBeat": null,
+      "inSec": 96.0,
+      "outSec": 101.5,
+      "inFrame": 2880,
+      "outFrame": 3044,
+      "frames": 165,
+      "picture": "STAGE. Stop pressed; the debugger bar comes off the window.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-20"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Measure code coverage",
+      "chipKey": "tools.whitebox.label",
+      "caption": {
+        "span": 19,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It comes off the moment you stop, and nothing is attached until you start.",
+        "startSec": 96.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 96.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 21,
+      "barBeat": null,
+      "inSec": 101.5,
+      "outSec": 106.0,
+      "inFrame": 3045,
+      "outFrame": 3179,
+      "frames": 135,
+      "picture": "PANEL. The coverage result on the card: the percentage, and how many of how many functions ran.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-21"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Measure code coverage",
+      "chipKey": "tools.whitebox.label",
+      "caption": {
+        "span": 20,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Function by function, it shows the code your test never reached.",
+        "startSec": 101.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 101.8
+        }
+      ]
+    },
+    {
+      "n": 22,
+      "barBeat": null,
+      "inSec": 106.0,
+      "outSec": 110.5,
+      "inFrame": 3180,
+      "outFrame": 3314,
+      "frames": 135,
+      "picture": "PANEL. Check the fine print pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-22"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"fineprint\"]"
+          }
+        ]
+      },
+      "chip": "Check the fine print",
+      "chipKey": "tools.fineprint.label",
+      "caption": {
+        "span": 21,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Check the fine print reads the legal surface of the page.",
+        "startSec": 106.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 106.0
+        },
+        {
+          "cue": "tick",
+          "atSec": 106.4,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "fineprint",
+        "title": "Check the fine print",
+        "startSec": 106.0
+      }
+    },
+    {
+      "n": 23,
+      "barBeat": null,
+      "inSec": 110.5,
+      "outSec": 115.0,
+      "inFrame": 3315,
+      "outFrame": 3449,
+      "frames": 135,
+      "picture": "PANEL. The checklist filling row by row.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-23"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check the fine print",
+      "chipKey": "tools.fineprint.label",
+      "caption": {
+        "span": 22,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Policies, consent, trackers, and whether there is a real business behind it.",
+        "startSec": 110.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 110.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 24,
+      "barBeat": null,
+      "inSec": 115.0,
+      "outSec": 120.5,
+      "inFrame": 3450,
+      "outFrame": 3614,
+      "frames": 165,
+      "picture": "PAIR. Panel left: the checklist. Stage right: the fixture footer, its policy links and its cookie note.",
+      "capture": {
+        "rect": "PAIR",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "form": "side by side",
+            "placeSource": "bible 2.3",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 720
+                },
+                "place": {
+                  "x": 96,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-check/h/shot-24/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 1080,
+                  "h": 720
+                },
+                "place": {
+                  "x": 660,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-check/h/shot-24/STAGE"
+              }
+            ]
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [],
+        "member": "PANEL"
+      },
+      "chip": "Check the fine print",
+      "chipKey": "tools.fineprint.label",
+      "caption": {
+        "span": 23,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Was consent asked before anything was stored, and who else did the page call.",
+        "startSec": 115.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 115.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 25,
+      "barBeat": null,
+      "inSec": 120.5,
+      "outSec": 126.0,
+      "inFrame": 3615,
+      "outFrame": 3779,
+      "frames": 165,
+      "picture": "PANEL. The findings counted on the card.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-check/h/shot-25"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Check the fine print",
+      "chipKey": "tools.fineprint.label",
+      "caption": {
+        "span": 24,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Nine of the nineteen worries on a legal checklist are properties of the page.",
+        "startSec": 120.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 120.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 26,
+      "barBeat": null,
+      "inSec": 126.0,
+      "outSec": 130.5,
+      "inFrame": 3780,
+      "outFrame": 3914,
+      "frames": 135,
+      "picture": "REPORT. The fine print block, with the four unanswerable ones filed as questions.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-26"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Check the fine print",
+      "chipKey": "tools.fineprint.label",
+      "caption": {
+        "span": 25,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The four no browser can answer are filed as questions, not ticked.",
+        "startSec": 126.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 126.3
+        }
+      ]
+    },
+    {
+      "n": 27,
+      "barBeat": null,
+      "inSec": 130.5,
+      "outSec": 134.5,
+      "inFrame": 3915,
+      "outFrame": 4034,
+      "frames": 120,
+      "picture": "REPORT, Quality. All five blocks together with real counts, held.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-check/h/shot-27"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Check the fine print",
+      "chipKey": "tools.fineprint.label",
+      "caption": {
+        "span": 26,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Five machines looking, and all five findings land in one report.",
+        "startSec": 130.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 130.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 28,
+      "barBeat": null,
+      "inSec": 134.5,
+      "outSec": 138.0,
+      "inFrame": 4035,
+      "outFrame": 4139,
+      "frames": 105,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 27,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 134.5,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 135.02,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 134.5,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 134.5,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 137.3,
+          "toSec": 138.0
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 134.7,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 134.5
+        },
+        {
+          "cue": "logo",
+          "atSec": 134.5
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 134.5
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 28,
+    "cuts": 27,
+    "cutsPer10s": 1.96,
+    "asl": 4.93,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 27,
+    "pauseBeforeCloseSec": 0.57,
+    "maxLineGapSec": 0.88,
+    "cutsPer10sRendered": 1.97
+  }
+}

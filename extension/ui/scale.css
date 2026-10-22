@@ -1,0 +1,22 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* The size scale (ui/identity-tokens.css is a gated copy; the missing steps live here). Spacing in rem so text zoom scales it. */
+:root {
+  --sz-surface-w: 348px;   /* the popup and the float */
+  --sz-surface-min: 300px; /* the narrowest surface a layout is promised to hold */
+  --sz-hit: 44px;         /* the smallest tap target */
+  /* brand:begin (icon sizes, generated from brand/brand.json icons.ui) */
+  --sz-icon-s: 16px;
+  --sz-icon-m: 20px;
+  --sz-icon-l: 24px;
+  /* brand:end */
+  --sp-half: 0.375rem; /* 6px */
+  --sp-2h: 0.625rem;   /* 10px */
+  --sp-3h: 0.875rem;   /* 14px */
+  --t-fast: 120ms;
+  --t-base: 200ms;
+  --t-slow: 400ms;
+}
+/* Zero specificity: any rule that sized an icon before still wins; an icon with only width/height attributes follows the scale. */
+:where(.icon) { width: var(--sz-icon-m); height: var(--sz-icon-m); }
+:where(.icon.is-s) { width: var(--sz-icon-s); height: var(--sz-icon-s); }
+:where(.icon.is-l) { width: var(--sz-icon-l); height: var(--sz-icon-l); }

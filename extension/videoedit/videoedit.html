@@ -1,0 +1,273 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="videoedit.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../platform/i18n.js"></script>
+    <title data-i18n="videoedit.page.title">QA Wrap · Edit video</title>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <g id="i-pane"><rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" opacity=".16"/></g>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><use href="#i-pane"/><path d="M7 17L17 7M10 7h7v7" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="mirror"/></symbol>
+        <symbol id="i-rect" viewBox="0 0 24 24"><use href="#i-pane"/><rect x="5" y="7" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
+        <symbol id="i-line" viewBox="0 0 24 24"><use href="#i-pane"/><path d="M6 18L18 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></symbol>
+        <symbol id="i-step" viewBox="0 0 24 24"><use href="#i-pane"/><circle cx="12" cy="12" r="6" fill="none" stroke="currentColor" stroke-width="1.75"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></symbol>
+        <symbol id="i-marker" viewBox="0 0 24 24"><use href="#i-pane"/><rect x="5" y="10" width="14" height="5" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
+        <symbol id="i-redact" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="8" rx="1.5" fill="currentColor"/></symbol>
+        <symbol id="i-blur" viewBox="0 0 24 24"><use href="#i-pane"/><circle cx="9" cy="10" r="1.4" fill="currentColor"/><circle cx="15" cy="10" r="1.4" fill="currentColor"/><circle cx="12" cy="15" r="1.4" fill="currentColor"/><rect x="5" y="6" width="14" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
+        <symbol id="i-crop" viewBox="0 0 24 24"><use href="#i-pane"/><path d="M7 4v13a1 1 0 0 0 1 1h13M4 7h13a1 1 0 0 1 1 1v13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></symbol>
+        <symbol id="i-webcam" viewBox="0 0 24 24"><use href="#i-pane"/><rect x="4" y="5" width="16" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/><circle cx="16" cy="15" r="3.2" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
+      </defs>
+    </svg>
+    <h1 class="visually-hidden" data-i18n="videoedit.page.title">QA Wrap · Edit video</h1>
+    <header class="app-bar">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark.svg" alt="" width="22" height="22" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" id="subtitle" data-i18n="videoedit.subtitle.default">edit video</span>
+      </div>
+      <div class="bar-actions">
+        <button id="undo" class="btn btn-sm" disabled data-i18n="videoedit.header.undo">Undo</button>
+        <button id="redo" class="btn btn-sm" disabled data-i18n="videoedit.header.redo">Redo</button>
+        <button id="reset" class="btn btn-sm" data-i18n="videoedit.header.reset">Start over</button>
+        <button id="export" class="btn btn-sm btn-primary" data-i18n="videoedit.header.export">Export</button>
+        <button id="cancel" class="btn btn-sm" hidden data-i18n="videoedit.header.cancel">Cancel</button>
+      </div>
+    </header>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+    <!-- Which of the two clips this is: a real cam track, or baked pixels. -->
+    <p class="mode-note muted" id="mode-note"></p>
+
+    <main class="workspace">
+      <!--
+        The rail. The same vocabulary as the markup editor, because the shapes
+        are literally the same code (`core/shapes.js`) — a tester who has
+        pointed at a bug in a screenshot already knows this column.
+      -->
+      <nav class="rail" id="tools" aria-label="Editing tools" data-i18n-aria="videoedit.rail.ariaLabel">
+        <button class="tool-btn" data-tool="arrow" aria-pressed="true" title="Arrow: point at it" data-i18n-title="videoedit.tools.arrow.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg></span><em data-i18n="videoedit.tools.arrow.name">Arrow</em>
+        </button>
+        <button class="tool-btn" data-tool="shape" aria-pressed="false" title="Shapes and marks" data-i18n-title="videoedit.tools.shape.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-rect"/></svg></span><em data-i18n="videoedit.tools.shape.name">Shape</em>
+        </button>
+        <button class="tool-btn" data-tool="line" aria-pressed="false" title="Line" data-i18n-title="videoedit.tools.line.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-line"/></svg></span><em data-i18n="videoedit.tools.line.name">Line</em>
+        </button>
+        <button class="tool-btn" data-tool="text" aria-pressed="false" title="Text label" data-i18n-title="videoedit.tools.text.title">
+          <span aria-hidden="true">T</span><em data-i18n="videoedit.tools.text.name">Text</em>
+        </button>
+        <button class="tool-btn" data-tool="step" aria-pressed="false" title="Numbered step" data-i18n-title="videoedit.tools.step.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-step"/></svg></span><em data-i18n="videoedit.tools.step.name">Step</em>
+        </button>
+        <button class="tool-btn" data-tool="highlight" aria-pressed="false" title="Highlighter" data-i18n-title="videoedit.tools.highlight.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-marker"/></svg></span><em data-i18n="videoedit.tools.highlight.name">Marker</em>
+        </button>
+        <button class="tool-btn" data-tool="redact" aria-pressed="false" title="Redact: cover personal data with a solid block" data-i18n-title="videoedit.tools.redact.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-redact"/></svg></span><em data-i18n="videoedit.tools.redact.name">Redact</em>
+        </button>
+        <button class="tool-btn" data-tool="blur" aria-pressed="false" title="Soften: blur only; use Redact for personal data" data-i18n-title="videoedit.tools.blur.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-blur"/></svg></span><em data-i18n="videoedit.tools.blur.name">Soften</em>
+        </button>
+        <button class="tool-btn" data-tool="select" aria-pressed="false" title="Pick a mark, then drag it" data-i18n-title="videoedit.obj.select.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg></span><em data-i18n="videoedit.obj.select.name">Move</em>
+        </button>
+        <button class="tool-btn" data-tool="erase" aria-pressed="false" title="Click a mark to remove it" data-i18n-title="videoedit.obj.erase.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-redact"/></svg></span><em data-i18n="videoedit.obj.erase.name">Erase</em>
+        </button>
+        <button class="tool-btn" data-tool="crop" aria-pressed="false" title="Crop" data-i18n-title="videoedit.tools.crop.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-crop"/></svg></span><em data-i18n="videoedit.tools.crop.name">Crop</em>
+        </button>
+        <button class="tool-btn" data-tool="webcam" aria-pressed="false" title="Move the webcam inset" data-i18n-title="videoedit.tools.webcam.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-webcam"/></svg></span><em data-i18n="videoedit.tools.webcam.name">Webcam</em>
+        </button>
+      </nav>
+
+      <!--
+        Pinned to `dir="ltr"`, the same reasoning as the markup editor's stage:
+        the overlay canvas sits exactly on top of the video at source-pixel
+        coordinates, and a mirrored stage would put every shape somewhere else.
+      -->
+      <div class="stage-wrap">
+        <div class="stage" id="stage" dir="ltr">
+          <video id="video" playsinline preload="auto"></video>
+          <!--
+            The webcam, when the recorder gave it a track of its own. A second
+            element rather than pixels in the first: it is positioned in
+            percentages of the stage, so what the tester drags here is exactly
+            the rectangle the export draws from this video.
+          -->
+          <video id="cam" class="cam-layer" playsinline preload="auto" muted hidden></video>
+          <canvas id="overlay" tabindex="0" role="application" aria-label="Video frame: Enter places the current tool, arrow keys move it, plus and minus size it" data-i18n-aria="videoedit.stage.aria"></canvas>
+          <input type="text" id="text-input" class="text-input" hidden placeholder="Type, then Enter" data-i18n-placeholder="videoedit.textInput.placeholder" />
+        </div>
+
+        <div class="transport">
+          <button id="play" class="btn btn-sm" data-i18n="videoedit.transport.play">Play</button>
+          <span class="clock" id="clock">0:00 / 0:00</span>
+          <input type="range" id="scrub" min="0" max="1000" step="1" value="0" aria-label="Playhead" data-i18n-aria="videoedit.transport.scrubAria" />
+          <button id="cut-start" class="btn btn-sm" data-i18n="videoedit.transport.cutStart">Cut from here</button>
+          <button id="cut-end" class="btn btn-sm" disabled data-i18n="videoedit.transport.cutEnd">Cut to here</button>
+        </div>
+
+        <div class="timeline" id="timeline" role="img" aria-label="What is kept" data-i18n-aria="videoedit.timeline.ariaLabel"></div>
+        <p class="timeline-note muted" id="kept-note"></p>
+        <div class="obj-track" id="obj-track" aria-label="Marks on the timeline" data-i18n-aria="videoedit.obj.track"></div>
+
+        <div class="trim" role="group" aria-label="Trim the clip" data-i18n-aria="videoedit.trim.groupAria">
+          <label class="trim-field" for="trim-start"><span data-i18n="videoedit.trim.start">Starts at</span><output id="trim-start-out" for="trim-start">0:00</output></label>
+          <input type="range" id="trim-start" min="0" max="0" step="100" value="0" />
+          <label class="trim-field" for="trim-end"><span data-i18n="videoedit.trim.end">Ends at</span><output id="trim-end-out" for="trim-end">0:00</output></label>
+          <input type="range" id="trim-end" min="0" max="0" step="100" value="0" />
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="field-row obj-panel" id="obj-panel" hidden>
+          <p class="hint" data-i18n="videoedit.obj.hint">Scrub, then drag the mark or press Keyframe. It glides between keyframes.</p>
+          <div class="obj-btns">
+            <button type="button" class="btn btn-sm" id="obj-start" data-i18n="videoedit.obj.start">Start here</button>
+            <button type="button" class="btn btn-sm" id="obj-end" data-i18n="videoedit.obj.end">End here</button>
+            <button type="button" class="btn btn-sm" id="obj-key" data-i18n="videoedit.obj.key">Keyframe</button>
+            <button type="button" class="btn btn-sm" id="obj-remove" data-i18n="videoedit.obj.remove">Remove</button>
+          </div>
+          <label class="field-row" id="obj-text-row" hidden><span class="field-label" data-i18n="videoedit.obj.text">Text at this time</span>
+            <input type="text" id="obj-text" /></label>
+        </div>
+        <div class="field-row">
+          <span class="field-label" data-i18n="videoedit.shape.label">Shape</span>
+          <select id="shape" aria-label="Shape" data-i18n-aria="videoedit.shape.label"></select>
+        </div>
+
+        <div class="field-row">
+          <label class="field-label" for="colour" data-i18n="videoedit.colour.label">Colour</label>
+          <input type="color" id="colour" class="colour-custom" value="#e2ae38" />
+        </div>
+
+        <label class="field-row">
+          <span class="field-label" data-i18n="videoedit.thickness.label">Thickness</span>
+          <input type="range" id="width" min="1" max="24" step="1" value="4" />
+          <output id="width-out"></output>
+        </label>
+
+        <label class="field-row">
+          <span class="field-label" data-i18n="videoedit.textSize.label">Text size</span>
+          <input type="range" id="fontsize" min="10" max="72" step="1" value="24" />
+          <output id="fontsize-out"></output>
+        </label>
+
+        <label class="field-row">
+          <span class="field-label" data-i18n="videoedit.blurStrength.label">Soften strength</span>
+          <input type="range" id="blur" min="2" max="30" step="1" value="12" />
+          <output id="blur-out"></output>
+        </label>
+
+        <!--
+          When a mark is on screen, and not only where.
+
+          A shape on a video has a start and an end or it is a sticker over the
+          whole clip. The default is "from here to the end", because that is
+          what pointing at something that stays wrong means; the button next to
+          it narrows the mark to the block of video being watched.
+        -->
+        <div class="field-row">
+          <span class="field-label" data-i18n="videoedit.times.label">When the mark shows</span>
+          <p class="times" id="times"></p>
+          <button id="only-visible" class="btn btn-sm" data-i18n="videoedit.times.onlyVisible">Only while this block plays</button>
+        </div>
+
+        <label class="field-row check">
+          <input type="checkbox" id="mute" />
+          <span data-i18n="videoedit.mute.label">Drop the sound</span>
+        </label>
+
+        <!--
+          Two clips, two answers.
+
+          A clip whose recorder gave the webcam a track of its own has a layer
+          here: move it, size it, round it, hide it, and the export draws it
+          from the second video. A clip recorded before that has the face in
+          its pixels, and then the only honest answer is the patch below, which
+          says what it is.
+        -->
+        <div class="field-row" id="webcam-layer-panel" hidden>
+          <span class="field-label" data-i18n="videoedit.camLayer.label">Webcam layer</span>
+          <label class="check"><input type="checkbox" id="cam-hidden" /><span data-i18n="videoedit.camLayer.hide">Leave the face out</span></label>
+          <label class="check"><input type="checkbox" id="cam-round" /><span data-i18n="videoedit.camLayer.round">Round, not square</span></label>
+          <label class="field-row">
+            <span class="field-label" data-i18n="videoedit.camLayer.size">Size</span>
+            <input type="range" id="cam-size" min="8" max="60" step="1" value="22" />
+            <output id="cam-size-out"></output>
+          </label>
+          <p class="hint" data-i18n="videoedit.camLayer.hint">Arm the Webcam tool and drag the
+          inset anywhere on the picture; drag its bottom corner to resize.</p>
+        </div>
+
+        <div class="field-row" id="webcam-patch-panel">
+          <span class="field-label" data-i18n="videoedit.webcam.label">Webcam inset</span>
+          <select id="webcam-corner" aria-label="Where the webcam inset goes" data-i18n-aria="videoedit.webcam.cornerAria">
+            <option value="" data-i18n="videoedit.webcam.leaveIt">Leave it where it is</option>
+            <option value="top-left" data-i18n="videoedit.webcam.topLeft">Top left</option>
+            <option value="top-right" data-i18n="videoedit.webcam.topRight">Top right</option>
+            <option value="bottom-left" data-i18n="videoedit.webcam.bottomLeft">Bottom left</option>
+            <option value="bottom-right" data-i18n="videoedit.webcam.bottomRight">Bottom right</option>
+          </select>
+          <p class="hint" id="webcam-honest" data-i18n="videoedit.webcam.honest">
+            The inset is part of the picture, so moving it copies the square to
+            the corner you pick and blurs the space it came from.
+          </p>
+        </div>
+
+        <!--
+          The format, from the catalogue the product already probes.
+
+          The list is built in the script and not here on purpose: what a
+          browser can actually write is a run-time answer, and a menu that
+          offers a container this build has no encoder for is a file named
+          `.mp4` that is not one.
+        -->
+        <div class="field-row">
+          <span class="field-label" data-i18n="videoedit.format.label">Save it as</span>
+          <select id="format" aria-label="Export format" data-i18n-aria="videoedit.format.aria"></select>
+          <p class="hint" id="format-note"></p>
+        </div>
+
+        <div class="field-row">
+          <span class="field-label" data-i18n="videoedit.save.label">When the export is done</span>
+          <label class="check"><input type="radio" name="save-mode" id="save-copy" value="copy" checked /><span data-i18n="videoedit.save.copy">Keep both, save a copy</span></label>
+          <label class="check"><input type="radio" name="save-mode" id="save-replace" value="replace" /><span data-i18n="videoedit.save.replace">Replace the original</span></label>
+        </div>
+
+        <div class="field-row" id="progress-row" hidden>
+          <span class="field-label" data-i18n="videoedit.progress.label">Exporting</span>
+          <progress id="progress" max="100" value="0"></progress>
+          <output id="progress-out"></output>
+        </div>
+
+        <p class="hint">
+          <b data-i18n="videoedit.hint.blurTitle">Redact covers; soften only blurs.</b>
+          <span data-i18n="videoedit.hint.blurBody">Redact paints an opaque block over the frames in the exported clip. Soften blurs, and a blurred name can sometimes still be read, so do not use it for personal data.</span>
+        </p>
+
+        <p class="hint">
+          <span data-i18n="videoedit.hint.exportBody">The clip is re-encoded by playing it
+          once, so an export takes about as long as the video lasts.</span>
+        </p>
+      </aside>
+    </main>
+
+    <script src="../ui/sound.js"></script>
+    <script src="../ui/motion.js"></script>
+    <script type="module" src="videoedit.js"></script>
+  </body>
+</html>

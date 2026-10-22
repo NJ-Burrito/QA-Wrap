@@ -1,0 +1,15 @@
+1
+00:00:02,400 --> 00:00:04,200
+You fill this form forty times today.
+
+2
+00:00:04,400 --> 00:00:07,067
+One press: phone, IBAN and date, all shaped right.
+
+3
+00:00:09,767 --> 00:00:12,200
+Anything the browser still rejects is named first.
+
+4
+00:00:12,433 --> 00:00:14,833
+QA Wrap. Every failure, traced.

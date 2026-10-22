@@ -1,0 +1,3019 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "cat-design",
+  "rev": "round-3",
+  "kind": "category",
+  "groupId": "design",
+  "group": "Design",
+  "tools": [
+    "blackbox",
+    "inject",
+    "autofill",
+    "harvest",
+    "pick",
+    "diagram",
+    "spec",
+    "api"
+  ],
+  "mode": "expert",
+  "batch": "cat",
+  "en": "Design",
+  "ar": "التصميم",
+  "blurb": "The values worth testing, the locators a suite can use, the page read back as a map, a spec and a flow.",
+  "titleKey": "popup.groups.design.label",
+  "chipKey": "popup.groups.design.hint",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 86,
+  "seconds": 172.0,
+  "frames": 5160,
+  "aspects": [
+    "h"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    },
+    "REQUEST": {
+      "surface": "request",
+      "url": "api/api.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      }
+    }
+  },
+  "posterShot": {
+    "shot": 17,
+    "frame": 2460,
+    "why": "Design: the result of the first demonstration, visible in frame.",
+    "pass": "h"
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 17,
+    "frame": 2460,
+    "why": "Design: the result of the first demonstration, visible in frame."
+  },
+  "srt": "deliverables/tutorials/cat-design-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "Design. Values and locators.",
+      "inSec": 0.15,
+      "outSec": 6.0,
+      "inFrame": 4,
+      "outFrame": 180,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "Design. Values and locators.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 5850,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "The values worth testing.",
+      "inSec": 6.0,
+      "outSec": 10.5,
+      "inFrame": 180,
+      "outFrame": 315,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The values worth testing.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "What the field declares.",
+      "inSec": 10.5,
+      "outSec": 15.0,
+      "inFrame": 315,
+      "outFrame": 450,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "What the field declares.",
+      "dwell": {
+        "needMs": 1996,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "Classes, and their edges.",
+      "inSec": 15.0,
+      "outSec": 20.5,
+      "inFrame": 450,
+      "outFrame": 615,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Classes, and their edges.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "Four chosen beats forty random.",
+      "inSec": 20.5,
+      "outSec": 25.5,
+      "inFrame": 615,
+      "outFrame": 765,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Four chosen beats forty random.",
+      "dwell": {
+        "needMs": 2535,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "The awkward values.",
+      "inSec": 25.5,
+      "outSec": 30.0,
+      "inFrame": 765,
+      "outFrame": 900,
+      "shots": [
+        6
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The awkward values.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 6,
+      "text": "Long, Arabic, 1800, empty.",
+      "inSec": 30.0,
+      "outSec": 35.5,
+      "inFrame": 900,
+      "outFrame": 1065,
+      "shots": [
+        7
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Long, Arabic, 1800, empty.",
+      "dwell": {
+        "needMs": 2150,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 7,
+      "text": "It stays picked.",
+      "inSec": 35.5,
+      "outSec": 41.0,
+      "inFrame": 1065,
+      "outFrame": 1230,
+      "shots": [
+        8
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "It stays picked.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 8,
+      "text": "The edges, handed over.",
+      "inSec": 41.0,
+      "outSec": 45.5,
+      "inFrame": 1230,
+      "outFrame": 1365,
+      "shots": [
+        9
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The edges, handed over.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 9,
+      "text": "Every field at once.",
+      "inSec": 45.5,
+      "outSec": 50.5,
+      "inFrame": 1365,
+      "outFrame": 1515,
+      "shots": [
+        10
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Every field at once.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 10,
+      "text": "Designed, not random.",
+      "inSec": 50.5,
+      "outSec": 56.0,
+      "inFrame": 1515,
+      "outFrame": 1680,
+      "shots": [
+        11
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Designed, not random.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 11,
+      "text": "It does not press submit.",
+      "inSec": 56.0,
+      "outSec": 61.0,
+      "inFrame": 1680,
+      "outFrame": 1830,
+      "shots": [
+        12
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "It does not press submit.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 12,
+      "text": "Filled, rejected, left alone.",
+      "inSec": 61.0,
+      "outSec": 65.5,
+      "inFrame": 1830,
+      "outFrame": 1965,
+      "shots": [
+        13
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Filled, rejected, left alone.",
+      "dwell": {
+        "needMs": 2381,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 13,
+      "text": "Every control, read.",
+      "inSec": 65.5,
+      "outSec": 70.0,
+      "inFrame": 1965,
+      "outFrame": 2100,
+      "shots": [
+        14
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Every control, read.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 14,
+      "text": "Every locator verified.",
+      "inSec": 70.0,
+      "outSec": 75.0,
+      "inFrame": 2100,
+      "outFrame": 2250,
+      "shots": [
+        15
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Every locator verified.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 15,
+      "text": "Three files, ready.",
+      "inSec": 75.0,
+      "outSec": 80.5,
+      "inFrame": 2250,
+      "outFrame": 2415,
+      "shots": [
+        16
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Three files, ready.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 16,
+      "text": "That afternoon, done.",
+      "inSec": 80.5,
+      "outSec": 85.0,
+      "inFrame": 2415,
+      "outFrame": 2550,
+      "shots": [
+        17
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "That afternoon, done.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 17,
+      "text": "Point. Copy. Paste.",
+      "inSec": 85.0,
+      "outSec": 90.0,
+      "inFrame": 2550,
+      "outFrame": 2700,
+      "shots": [
+        18
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Point. Copy. Paste.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 18,
+      "text": "Click the thing.",
+      "inSec": 90.0,
+      "outSec": 94.0,
+      "inFrame": 2700,
+      "outFrame": 2820,
+      "shots": [
+        19
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Click the thing.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 19,
+      "text": "Several at once.",
+      "inSec": 94.0,
+      "outSec": 99.0,
+      "inFrame": 2820,
+      "outFrame": 2970,
+      "shots": [
+        20
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Several at once.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 20,
+      "text": "Matches one thing.",
+      "inSec": 99.0,
+      "outSec": 105.0,
+      "inFrame": 2970,
+      "outFrame": 3150,
+      "shots": [
+        21
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Matches one thing.",
+      "dwell": {
+        "needMs": 1535,
+        "gotMs": 6000,
+        "ok": true
+      }
+    },
+    {
+      "i": 21,
+      "text": "The session, as a flow.",
+      "inSec": 105.0,
+      "outSec": 110.5,
+      "inFrame": 3150,
+      "outFrame": 3315,
+      "shots": [
+        22
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The session, as a flow.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 22,
+      "text": "Start, steps, decision, end.",
+      "inSec": 110.5,
+      "outSec": 115.0,
+      "inFrame": 3315,
+      "outFrame": 3450,
+      "shots": [
+        23
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Start, steps, decision, end.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 23,
+      "text": "The red box, where it failed.",
+      "inSec": 115.0,
+      "outSec": 120.5,
+      "inFrame": 3450,
+      "outFrame": 3615,
+      "shots": [
+        24
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The red box, where it failed.",
+      "dwell": {
+        "needMs": 2381,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 24,
+      "text": "Every box moves.",
+      "inSec": 120.5,
+      "outSec": 126.5,
+      "inFrame": 3615,
+      "outFrame": 3795,
+      "shots": [
+        25
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Every box moves.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 6000,
+        "ok": true
+      }
+    },
+    {
+      "i": 25,
+      "text": "The page, as a spec.",
+      "inSec": 126.5,
+      "outSec": 131.0,
+      "inFrame": 3795,
+      "outFrame": 3930,
+      "shots": [
+        26
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The page, as a spec.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 26,
+      "text": "What the page declares.",
+      "inSec": 131.0,
+      "outSec": 136.0,
+      "inFrame": 3930,
+      "outFrame": 4080,
+      "shots": [
+        27
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "What the page declares.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 27,
+      "text": "Requirements with criteria.",
+      "inSec": 136.0,
+      "outSec": 140.5,
+      "inFrame": 4080,
+      "outFrame": 4215,
+      "shots": [
+        28
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Requirements with criteria.",
+      "dwell": {
+        "needMs": 2227,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 28,
+      "text": "Editing, not starting.",
+      "inSec": 140.5,
+      "outSec": 146.0,
+      "inFrame": 4215,
+      "outFrame": 4380,
+      "shots": [
+        29
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Editing, not starting.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 29,
+      "text": "As the logged-in user.",
+      "inSec": 146.0,
+      "outSec": 151.5,
+      "inFrame": 4380,
+      "outFrame": 4545,
+      "shots": [
+        30
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "As the logged-in user.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 30,
+      "text": "Write it and send it.",
+      "inSec": 151.5,
+      "outSec": 155.5,
+      "inFrame": 4545,
+      "outFrame": 4665,
+      "shots": [
+        31
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Write it and send it.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 31,
+      "text": "Re-send what it watched.",
+      "inSec": 155.5,
+      "outSec": 161.0,
+      "inFrame": 4665,
+      "outFrame": 4830,
+      "shots": [
+        32
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Re-send what it watched.",
+      "dwell": {
+        "needMs": 1996,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 32,
+      "text": "Status, time, headers.",
+      "inSec": 161.0,
+      "outSec": 165.5,
+      "inFrame": 4830,
+      "outFrame": 4965,
+      "shots": [
+        33
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Status, time, headers.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 33,
+      "text": "Material a suite can use.",
+      "inSec": 165.5,
+      "outSec": 169.5,
+      "inFrame": 4965,
+      "outFrame": 5085,
+      "shots": [
+        34
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Material a suite can use.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 34,
+      "text": "Every failure, traced.",
+      "inSec": 169.5,
+      "outSec": 172.0,
+      "inFrame": 5085,
+      "outFrame": 5160,
+      "shots": [
+        35
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 2500,
+        "ok": true
+      }
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0.0,
+      "outSec": 6.0,
+      "inFrame": 0,
+      "outFrame": 179,
+      "frames": 180,
+      "picture": "WALL. Expert, scrolled to the Design heading: Values, locators, the page map, and its eight rows.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "text",
+            "selector": ".activity[data-activity=\"design\"] .activity-label",
+            "equals": "Design"
+          },
+          {
+            "kind": "attr",
+            "selector": "#mode-expert",
+            "attr": "aria-pressed",
+            "equals": "true"
+          }
+        ]
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Design is the biggest group: values, locators, and the page read back as a map.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        },
+        {
+          "cue": "tick",
+          "atSec": 0.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 6.0,
+      "outSec": 10.5,
+      "inFrame": 180,
+      "outFrame": 314,
+      "frames": 135,
+      "picture": "PANEL. Design the values; Pick a field pressed and the row waits.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"blackbox\"]"
+          }
+        ]
+      },
+      "chip": "Design the values",
+      "chipKey": "tools.blackbox.label",
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Design the values points at a field and reads what it declares.",
+        "startSec": 6.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 6.0
+        },
+        {
+          "cue": "tick",
+          "atSec": 6.4,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "blackbox",
+        "title": "Design the values",
+        "startSec": 6.0
+      }
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 10.5,
+      "outSec": 15.0,
+      "inFrame": 315,
+      "outFrame": 449,
+      "frames": 135,
+      "picture": "STAGE. The quantity field clicked; its declared bounds read off the page.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Design the values",
+      "chipKey": "tools.blackbox.label",
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Its type, its minimum, its maximum, its options, whether it is required.",
+        "startSec": 10.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 10.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 15.0,
+      "outSec": 20.5,
+      "inFrame": 450,
+      "outFrame": 614,
+      "frames": 165,
+      "picture": "PANEL. The classes of input listed, with the exact value on every edge.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-04"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Design the values",
+      "chipKey": "tools.blackbox.label",
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Out come the distinct classes of input, and the exact value on every edge.",
+        "startSec": 15.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 15.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 20.5,
+      "outSec": 25.5,
+      "inFrame": 615,
+      "outFrame": 764,
+      "frames": 150,
+      "picture": "PANEL. Each value named with the class it stands for.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-05"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Design the values",
+      "chipKey": "tools.blackbox.label",
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Four chosen values cover more than forty random ones, and each is named.",
+        "startSec": 20.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 20.8
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 25.5,
+      "outSec": 30.0,
+      "inFrame": 765,
+      "outFrame": 899,
+      "frames": 135,
+      "picture": "PANEL. Try nasty values armed; the row says to click a field.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-06"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"inject\"]"
+          }
+        ]
+      },
+      "chip": "Try nasty values",
+      "chipKey": "tools.inject.label",
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Try nasty values offers the awkward values built for that exact field.",
+        "startSec": 25.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 25.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 25.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "inject",
+        "title": "Try nasty values",
+        "startSec": 25.5
+      }
+    },
+    {
+      "n": 7,
+      "barBeat": null,
+      "inSec": 30.0,
+      "outSec": 35.5,
+      "inFrame": 900,
+      "outFrame": 1064,
+      "frames": 165,
+      "picture": "STAGE. The date field picked; the list offered for it opens.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-07"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Try nasty values",
+      "chipKey": "tools.inject.label",
+      "caption": {
+        "span": 6,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Very long text, Arabic, a date in 1800, an emoji, or nothing at all.",
+        "startSec": 30.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 30.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "barBeat": null,
+      "inSec": 35.5,
+      "outSec": 41.0,
+      "inFrame": 1065,
+      "outFrame": 1229,
+      "frames": 165,
+      "picture": "STAGE. A value dropped into the field; the field stays picked and outlined.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-08"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Try nasty values",
+      "chipKey": "tools.inject.label",
+      "caption": {
+        "span": 7,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The field you picked stays picked, so the next value goes where the last did.",
+        "startSec": 35.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 35.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "barBeat": null,
+      "inSec": 41.0,
+      "outSec": 45.5,
+      "inFrame": 1230,
+      "outFrame": 1364,
+      "frames": 135,
+      "picture": "STAGE. The form rejects the value and shows its own error.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-09"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Try nasty values",
+      "chipKey": "tools.inject.label",
+      "caption": {
+        "span": 8,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Most bugs live at the edges, and this hands you the edges.",
+        "startSec": 41.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 41.3
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "barBeat": null,
+      "inSec": 45.5,
+      "outSec": 50.5,
+      "inFrame": 1365,
+      "outFrame": 1514,
+      "frames": 150,
+      "picture": "PANEL. Fill the form pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-10"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"autofill\"]"
+          }
+        ]
+      },
+      "chip": "Fill the form",
+      "chipKey": "tools.autofill.label",
+      "caption": {
+        "span": 9,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Fill the form fills every field at once, the way a tester would.",
+        "startSec": 45.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 45.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 45.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "autofill",
+        "title": "Fill the form",
+        "startSec": 45.5
+      }
+    },
+    {
+      "n": 11,
+      "barBeat": null,
+      "inSec": 50.5,
+      "outSec": 56.0,
+      "inFrame": 1515,
+      "outFrame": 1679,
+      "frames": 165,
+      "picture": "STAGE. The permits form filling field by field.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-11"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Fill the form",
+      "chipKey": "tools.autofill.label",
+      "caption": {
+        "span": 10,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A real phone number, an IBAN that passes its checksum, a date in range.",
+        "startSec": 50.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 50.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "barBeat": null,
+      "inSec": 56.0,
+      "outSec": 61.0,
+      "inFrame": 1680,
+      "outFrame": 1829,
+      "frames": 150,
+      "picture": "STAGE. The Arabic fields filled in Arabic; Submit is left alone.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-12"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Fill the form",
+      "chipKey": "tools.autofill.label",
+      "caption": {
+        "span": 11,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "In Arabic where the page is Arabic, and it does not press submit.",
+        "startSec": 56.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 56.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 13,
+      "barBeat": null,
+      "inSec": 61.0,
+      "outSec": 65.5,
+      "inFrame": 1830,
+      "outFrame": 1964,
+      "frames": 135,
+      "picture": "PANEL. The Result block: filled, rejected, left alone.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-13"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Fill the form",
+      "chipKey": "tools.autofill.label",
+      "caption": {
+        "span": 12,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Filled, rejected, or left alone: every field is named on the card.",
+        "startSec": 61.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 61.3
+        }
+      ]
+    },
+    {
+      "n": 14,
+      "barBeat": null,
+      "inSec": 65.5,
+      "outSec": 70.0,
+      "inFrame": 1965,
+      "outFrame": 2099,
+      "frames": 135,
+      "picture": "PANEL. Harvest the page pressed; the counter climbs.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-14"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"harvest\"]"
+          }
+        ]
+      },
+      "chip": "Harvest the page",
+      "chipKey": "tools.harvest.label",
+      "caption": {
+        "span": 13,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Harvest the page reads every button, link and field on it.",
+        "startSec": 65.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 65.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 65.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "harvest",
+        "title": "Harvest the page",
+        "startSec": 65.5
+      }
+    },
+    {
+      "n": 15,
+      "barBeat": null,
+      "inSec": 70.0,
+      "outSec": 75.0,
+      "inFrame": 2100,
+      "outFrame": 2249,
+      "frames": 150,
+      "picture": "STAGE. Each control ringed as it is read, and its locator checked against the page.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-15"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Harvest the page",
+      "chipKey": "tools.harvest.label",
+      "caption": {
+        "span": 14,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Each one gets a locator that has been checked against the page itself.",
+        "startSec": 70.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 70.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "barBeat": null,
+      "inSec": 75.0,
+      "outSec": 80.5,
+      "inFrame": 2250,
+      "outFrame": 2414,
+      "frames": 165,
+      "picture": "REPORT, Raw export. The three files listed with their sizes.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-16"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Harvest the page",
+      "chipKey": "tools.harvest.label",
+      "caption": {
+        "span": 15,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A page map, a Playwright page object, and a brief an AI can use.",
+        "startSec": 75.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 75.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 17,
+      "barBeat": null,
+      "inSec": 80.5,
+      "outSec": 85.0,
+      "inFrame": 2415,
+      "outFrame": 2549,
+      "frames": 135,
+      "picture": "REPORT. The page object open, its guesses marked in the margin.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-17"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Harvest the page",
+      "chipKey": "tools.harvest.label",
+      "caption": {
+        "span": 16,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "That is an afternoon of guessing selectors, done, with every guess marked.",
+        "startSec": 80.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 80.8
+        }
+      ]
+    },
+    {
+      "n": 18,
+      "barBeat": null,
+      "inSec": 85.0,
+      "outSec": 90.0,
+      "inFrame": 2550,
+      "outFrame": 2699,
+      "frames": 150,
+      "picture": "PANEL. Copy a locator armed; the page waits for a click.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-18"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"pick\"]"
+          }
+        ]
+      },
+      "chip": "Copy a locator",
+      "chipKey": "tools.pick.label",
+      "caption": {
+        "span": 17,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Copy a locator hands you the one line of code a test needs.",
+        "startSec": 85.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 85.0
+        },
+        {
+          "cue": "tick",
+          "atSec": 85.4,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "pick",
+        "title": "Copy a locator",
+        "startSec": 85.0
+      }
+    },
+    {
+      "n": 19,
+      "barBeat": null,
+      "inSec": 90.0,
+      "outSec": 94.0,
+      "inFrame": 2700,
+      "outFrame": 2819,
+      "frames": 120,
+      "picture": "STAGE. Submit clicked; the line is copied and the status confirms.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-19"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Copy a locator",
+      "chipKey": "tools.pick.label",
+      "caption": {
+        "span": 18,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Click the thing instead of writing the selector by hand.",
+        "startSec": 90.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 90.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 20,
+      "barBeat": null,
+      "inSec": 94.0,
+      "outSec": 99.0,
+      "inFrame": 2820,
+      "outFrame": 2969,
+      "frames": 150,
+      "picture": "STAGE. Three more controls shift-clicked, then Enter.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-20"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Copy a locator",
+      "chipKey": "tools.pick.label",
+      "caption": {
+        "span": 19,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Shift-click several, press Enter, and all of them are copied, one per line.",
+        "startSec": 94.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 94.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 21,
+      "barBeat": null,
+      "inSec": 99.0,
+      "outSec": 105.0,
+      "inFrame": 2970,
+      "outFrame": 3149,
+      "frames": 180,
+      "picture": "STAGE. The status line confirms each one matched exactly one element.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-21"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Copy a locator",
+      "chipKey": "tools.pick.label",
+      "caption": {
+        "span": 20,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Each one is checked to match one thing, and only one, before it is handed over.",
+        "startSec": 99.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 99.3
+        }
+      ]
+    },
+    {
+      "n": 22,
+      "barBeat": null,
+      "inSec": 105.0,
+      "outSec": 110.5,
+      "inFrame": 3150,
+      "outFrame": 3314,
+      "frames": 165,
+      "picture": "PANEL. Draw the flow pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-22"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"diagram\"]"
+          }
+        ]
+      },
+      "chip": "Draw the flow",
+      "chipKey": "tools.diagram.label",
+      "caption": {
+        "span": 21,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Draw the flow turns what you just did into a diagram on one page.",
+        "startSec": 105.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 105.0
+        },
+        {
+          "cue": "tick",
+          "atSec": 105.4,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "diagram",
+        "title": "Draw the flow",
+        "startSec": 105.0
+      }
+    },
+    {
+      "n": 23,
+      "barBeat": null,
+      "inSec": 110.5,
+      "outSec": 115.0,
+      "inFrame": 3315,
+      "outFrame": 3449,
+      "frames": 135,
+      "picture": "DIAGRAM. The A4 sheet generating from the session, box by box.",
+      "capture": {
+        "rect": "DIAGRAM",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-23"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Draw the flow",
+      "chipKey": "tools.diagram.label",
+      "caption": {
+        "span": 22,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Start, each step, a decision where the application answered, the end.",
+        "startSec": 110.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 110.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 24,
+      "barBeat": null,
+      "inSec": 115.0,
+      "outSec": 120.5,
+      "inFrame": 3450,
+      "outFrame": 3614,
+      "frames": 165,
+      "picture": "SHEET. The A4 sheet alone on the ground, the red failure box drawn last.",
+      "capture": {
+        "rect": "SHEET",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1018,
+              "h": 720
+            },
+            "place": {
+              "x": 451,
+              "y": 140
+            },
+            "placeSource": "A4 landscape fitted to the stage box height",
+            "clip": "film/capture/cat-design/h/shot-24"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Draw the flow",
+      "chipKey": "tools.diagram.label",
+      "caption": {
+        "span": 23,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A red box where it failed, and the user story beside it in Arabic.",
+        "startSec": 115.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 115.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 25,
+      "barBeat": null,
+      "inSec": 120.5,
+      "outSec": 126.5,
+      "inFrame": 3615,
+      "outFrame": 3794,
+      "frames": 180,
+      "picture": "DIAGRAM. A box is selected and reworded in the inspector; the sheet updates.",
+      "capture": {
+        "rect": "DIAGRAM",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-25"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Draw the flow",
+      "chipKey": "tools.diagram.label",
+      "caption": {
+        "span": 24,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A product owner asks for this picture, and a tester never has time to draw it.",
+        "startSec": 120.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 120.8
+        }
+      ]
+    },
+    {
+      "n": 26,
+      "barBeat": null,
+      "inSec": 126.5,
+      "outSec": 131.0,
+      "inFrame": 3795,
+      "outFrame": 3929,
+      "frames": 135,
+      "picture": "PANEL. Reverse-engineer the spec pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-26"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"spec\"]"
+          }
+        ]
+      },
+      "chip": "Reverse-engineer the spec",
+      "chipKey": "tools.spec.label",
+      "caption": {
+        "span": 25,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Reverse-engineer the spec reads this page back as a draft specification.",
+        "startSec": 126.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 126.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 126.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "spec",
+        "title": "Reverse-engineer the spec",
+        "startSec": 126.5
+      }
+    },
+    {
+      "n": 27,
+      "barBeat": null,
+      "inSec": 131.0,
+      "outSec": 136.0,
+      "inFrame": 3930,
+      "outFrame": 4079,
+      "frames": 150,
+      "picture": "REPORT, Raw export. Specification read back from the page: the requirements arriving, one per form and control.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-27"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Reverse-engineer the spec",
+      "chipKey": "tools.spec.label",
+      "caption": {
+        "span": 26,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Every form and what it accepts, every button, and where the links go.",
+        "startSec": 131.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 131.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 28,
+      "barBeat": null,
+      "inSec": 136.0,
+      "outSec": 140.5,
+      "inFrame": 4080,
+      "outFrame": 4214,
+      "frames": 135,
+      "picture": "REPORT, Raw export. The acceptance criteria under each requirement, Arabic beside English in the generated document.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-28"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Reverse-engineer the spec",
+      "chipKey": "tools.spec.label",
+      "caption": {
+        "span": 27,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Written up as requirements with acceptance criteria, in Arabic and English.",
+        "startSec": 136.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 136.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 29,
+      "barBeat": null,
+      "inSec": 140.5,
+      "outSec": 146.0,
+      "inFrame": 4215,
+      "outFrame": 4379,
+      "frames": 165,
+      "picture": "REPORT, Raw export. The guesses marked as guesses, scrolled.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-29"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Reverse-engineer the spec",
+      "chipKey": "tools.spec.label",
+      "caption": {
+        "span": 28,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Most software this old has no spec, and this leaves you editing a draft.",
+        "startSec": 140.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 140.8
+        }
+      ]
+    },
+    {
+      "n": 30,
+      "barBeat": null,
+      "inSec": 146.0,
+      "outSec": 151.5,
+      "inFrame": 4380,
+      "outFrame": 4544,
+      "frames": 165,
+      "picture": "PANEL. Send a request pressed; the request page opens.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-design/h/shot-30"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"api\"]"
+          }
+        ]
+      },
+      "chip": "Send a request",
+      "chipKey": "tools.api.label",
+      "caption": {
+        "span": 29,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Send a request calls the site's own API as the user who is logged in.",
+        "startSec": 146.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 146.0
+        },
+        {
+          "cue": "tick",
+          "atSec": 146.4,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "api",
+        "title": "Send a request",
+        "startSec": 146.0
+      }
+    },
+    {
+      "n": 31,
+      "barBeat": null,
+      "inSec": 151.5,
+      "outSec": 155.5,
+      "inFrame": 4545,
+      "outFrame": 4664,
+      "frames": 120,
+      "picture": "REQUEST. The request panel: method, URL, headers, body and the environment list.",
+      "capture": {
+        "rect": "REQUEST",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3, REPORT geometry (new surface, round 3)",
+            "clip": "film/capture/cat-design/h/shot-31"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Send a request",
+      "chipKey": "tools.api.label",
+      "caption": {
+        "span": 30,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Method, URL, headers, body, and environments with variables in them.",
+        "startSec": 151.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 151.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 32,
+      "barBeat": null,
+      "inSec": 155.5,
+      "outSec": 161.0,
+      "inFrame": 4665,
+      "outFrame": 4829,
+      "frames": 165,
+      "picture": "REQUEST. An endpoint this session watched is imported and one header changed.",
+      "capture": {
+        "rect": "REQUEST",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3, REPORT geometry (new surface, round 3)",
+            "clip": "film/capture/cat-design/h/shot-32"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Send a request",
+      "chipKey": "tools.api.label",
+      "caption": {
+        "span": 31,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Import an endpoint this session already watched, and re-send it with one header changed.",
+        "startSec": 155.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 155.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 33,
+      "barBeat": null,
+      "inSec": 161.0,
+      "outSec": 165.5,
+      "inFrame": 4830,
+      "outFrame": 4964,
+      "frames": 135,
+      "picture": "REPORT, Timeline. The answer with its status, its time and its headers, beside the traffic the page made on its own.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-33"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Send a request",
+      "chipKey": "tools.api.label",
+      "caption": {
+        "span": 32,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "No token is copied anywhere, and the answer goes into the timeline.",
+        "startSec": 161.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 161.3
+        }
+      ]
+    },
+    {
+      "n": 34,
+      "barBeat": null,
+      "inSec": 165.5,
+      "outSec": 169.5,
+      "inFrame": 4965,
+      "outFrame": 5084,
+      "frames": 120,
+      "picture": "WALL. The Design group again, its activity meter filled.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-design/h/shot-34"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 33,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Eight tools, and every one hands back something a suite can use.",
+        "startSec": 165.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 165.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 35,
+      "barBeat": null,
+      "inSec": 169.5,
+      "outSec": 172.0,
+      "inFrame": 5085,
+      "outFrame": 5159,
+      "frames": 75,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 34,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 169.5,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 170.02,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 169.5,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 169.5,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 171.3,
+          "toSec": 172.0
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 169.7,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 169.5
+        },
+        {
+          "cue": "logo",
+          "atSec": 169.5
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 169.5
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 35,
+    "cuts": 34,
+    "cutsPer10s": 1.98,
+    "asl": 4.91,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 34,
+    "pauseBeforeCloseSec": 0.24,
+    "maxLineGapSec": 0.88,
+    "cutsPer10sRendered": 1.99
+  }
+}

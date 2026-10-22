@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>open shadow roots</title>
+<body>
+<!-- D-1010-101: a light and a shadow element share a test id; another test id lives only in the shadow root. -->
+<button data-testid="dup" data-truth="dup-light">Pay</button>
+<div id="host"></div>
+<script>
+  const root = document.getElementById('host').attachShadow({ mode: 'open' });
+  root.innerHTML = '<button data-testid="dup" data-truth="dup-shadow">Pay</button>'
+    + '<button data-testid="shadow-only" data-truth="shadow-only">Go</button>'
+    + '<input placeholder="Shadow city" data-truth="shadow-city">';
+</script>
+</body></html>

@@ -1,0 +1,159 @@
+/* QA Wrap — the tutorials page. */
+body { margin: 0; background: var(--backdrop); background-attachment: fixed; color: var(--text); font-family: var(--font); font-size: 14px; }
+.app-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; border-bottom: 1px solid var(--glass-edge); background: var(--surface-glass-strong); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); position: sticky; top: 0; z-index: 6; }
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-name { font-weight: 800; font-size: 15px; }
+.bar-actions { display: flex; align-items: center; gap: 8px; }
+main { max-width: 1180px; margin: 0 auto; padding: 0 28px 56px; }
+/* MOTION.md "other pages" rule: one materialise for the main column on first
+   paint, no per-row stagger. */
+main { animation: qaw-in-up var(--motion-base) var(--motion-ease) both; }
+@media (prefers-reduced-motion: reduce) { main { animation: none !important; } }
+
+/* the hero: one claim, a lot of air */
+.hero { padding: 44px 0 30px; max-width: 760px; }
+.eyebrow { margin: 0 0 8px; font-size: 11px; letter-spacing: .16em; font-weight: 700; color: var(--text-muted); }
+.hero h1 { margin: 0 0 10px; font-size: 34px; line-height: 1.12; font-weight: 800; letter-spacing: -.5px; text-wrap: balance; }
+.lede { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--text-muted); }
+.section-head { font-size: 16px; margin: 8px 0 14px; }
+
+/* the films: the commercial across the top, the features in pairs beneath it.
+ *
+ * This was `repeat(auto-fill, minmax(288px, 1fr))` in an 1180px column, which
+ * resolves to four across and drops the last film onto a row of its own —
+ * equal cards in a grid, with the commercial indistinguishable from a
+ * two-minute feature about the cookie editor. `lessons.json` puts the trailer
+ * first and the recorder writes it that way, so the first card takes the full
+ * width and the features pair off underneath it. The order is the
+ * information: watch the whole product, then the part you came for.
+ */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.cards > .card:first-child { grid-column: 1 / -1; }
+/* An odd feature out spans the row rather than sitting in half of one.
+ *
+ * The first card is always full width, so the features pair off two at a time
+ * behind it and there is a leftover whenever the total is even — which it is
+ * now: one commercial and five features, six cards, the last of them alone in
+ * a half-width cell beside a hole. That is the stranded card sign 6 of
+ * `research/22-vibecoded-audit.md` was fixed to remove, arriving back through
+ * the count rather than through the rule.
+ *
+ * `:last-child:nth-child(even)` says exactly that and nothing more: it fires
+ * on six cards and not on five, so adding or dropping a film needs no edit
+ * here. It cannot catch the first card, because one card is `nth-child(odd)`.
+ */
+.cards > .card:last-child:nth-child(even) { grid-column: 1 / -1; }
+/* A card that spans the row takes the row's crop.
+ *
+ * The poster is 16:10 in a half-width cell, which is 1124px wide and 702px tall
+ * once the card spans — nearly twice the height of the commercial's hero above
+ * it, so the last feature became the biggest thing on the page. The crop is the
+ * hero's, and the hierarchy is carried where it belongs: THE PRODUCT against
+ * FEATURE 5, and the 21px title the commercial keeps to itself. */
+.cards > .card:last-child:nth-child(even) .poster { aspect-ratio: 21 / 8; }
+.cards > .card:first-child .poster { aspect-ratio: 21 / 8; }
+.cards > .card:first-child h3 { font-size: 21px; }
+@media (max-width: 720px) { .cards { grid-template-columns: minmax(0, 1fr); } .cards > .card:first-child .poster, .cards > .card:last-child:nth-child(even) .poster { aspect-ratio: 16 / 10; } }
+
+/* One section per popup group: the group's film, then its short tool films.
+ *
+ * The four category films are the spine of the page from round 3 on, so each
+ * gets a two-column block of its own — the card at reading size on one side,
+ * its chapters as a rail on the other — rather than a cell in a grid of
+ * equals. The rail is what makes a two-minute film usable: a tester who wants
+ * one tool presses its chapter instead of scrubbing.
+ */
+.group { margin-top: 38px; }
+.group .section-head { margin: 0 0 14px; }
+.film-wide { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(230px, 1fr); gap: 18px; align-items: start; }
+.film-wide .poster { aspect-ratio: 21 / 8; }
+.film-wide h3 { font-size: 20px; }
+.rail { border: 1px solid var(--glass-edge); border-radius: var(--r-lg); background: var(--surface-glass); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: var(--shadow-glass); padding: 12px 14px 14px; }
+.rail-head { margin: 0 0 8px; font-size: 11px; letter-spacing: .14em; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+.chapters { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.chapters .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; padding: 7px 9px; border: 0; border-radius: var(--r-md); background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; transition: background-color var(--dur-tap) var(--ease); }
+.chapters .ch:hover:not(:disabled), .chapters .ch:focus-visible { background: var(--surface-sunken); outline: none; }
+.chapters .ch:focus-visible { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent); }
+.chapters .ch:disabled { cursor: default; opacity: .55; }
+/* The time is a column, so eight chapters read as a list of starts and not as
+   eight sentences that each begin at a different x. `tabular-nums` keeps 1:07
+   and 0:09 the same width in both directions. */
+.chapters .at { flex: 0 0 auto; min-width: 3.4em; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
+.chapters .what { font-size: 13px; line-height: 1.35; }
+.sub-head { margin: 18px 0 10px; font-size: 11px; letter-spacing: .14em; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+
+/* The short tool films, which are a different kind of list.
+ *
+ * The rules above carry a hierarchy: one commercial across the top, the
+ * walkthroughs paired beneath it, the group's own film wide with its rail.
+ * That is right for a set somebody watches and wrong for twelve-second answers
+ * to "what does this button do", which is an index. So this grid says index:
+ * equal columns, no card bigger than any other, and no span rule to be tripped
+ * by a count.
+ *
+ * Deliberately its own selector rather than a modifier on `.cards`: every rule
+ * up there is written in terms of `:first-child` and `:last-child`, and each
+ * one would have to be re-scoped to exclude these sections.
+ */
+.tool-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.tool-cards .card h3 { font-size: 14.5px; }
+.tool-cards .card .body { padding: 11px 13px 13px; }
+.tool-cards .card p { font-size: 12px; }
+@media (max-width: 1080px) { .tool-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .film-wide { grid-template-columns: minmax(0, 1fr); } .film-wide .poster { aspect-ratio: 16 / 10; } }
+@media (max-width: 720px) { .tool-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.card { display: flex; flex-direction: column; text-align: start; padding: 0; border: 1px solid var(--glass-edge); border-radius: var(--r-lg); background: var(--surface-glass); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); box-shadow: var(--shadow-glass); overflow: hidden; cursor: pointer; font: inherit; color: inherit; transition: border-color var(--dur-tap) var(--ease), background-color var(--dur-tap) var(--ease); }
+/* The edge and the ground answer the pointer. The card used to rise 3px, which
+   on a wall of posters is a wall of things twitching as the cursor crosses. */
+.card:hover, .card:focus-visible { border-color: var(--accent); background: var(--surface-raised); outline: none; }
+.card:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
+.card .poster { position: relative; aspect-ratio: 16 / 10; background: var(--surface-sunken); overflow: hidden; }
+/* `object-position: top left` stays physical: it crops the recorded video frame
+   itself (where the panel sits in that frame), not a layout direction. */
+.card .poster img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+.card .play { position: absolute; inset-block-end: 12px; inset-inline-start: 12px; display: inline-flex; align-items: center; gap: 6px; padding-block: 6px; padding-inline: 9px 11px; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-text); font-size: 12px; font-weight: 700; }
+.card .dur { position: absolute; inset-block-end: 12px; inset-inline-end: 12px; padding: 4px 9px; border-radius: var(--r-pill); background: rgba(29,32,36,.82); color: #F1EFE9; font-size: 11.5px; font-weight: 600; } /* literal: the chip sits on a video poster, not on a themed surface */
+.card .body { padding: 13px 15px 15px; display: grid; gap: 5px; }
+.card .n { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--text-muted); }
+.card h3 { margin: 0; font-size: 16px; font-weight: 800; line-height: 1.25; }
+.card .ar { font-size: 14px; font-weight: 700; color: var(--text-muted); direction: rtl; }
+.card p { margin: 4px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--text-muted); }
+.card.is-open { border-color: var(--accent); }
+/* A film whose master has not landed in `tutorials/media/` yet.
+ *
+ * The card still carries the title, the blurb and the length, because those
+ * are facts about the film and they are what somebody is looking for; what it
+ * does not carry is an `<img>` and a play button pointed at a file that is not
+ * there. The poster slot keeps the ground the CSS draws, so the row does not
+ * reflow when the film arrives and the tile turns into a picture. */
+.card.is-pending { cursor: default; }
+.card.is-pending:hover { border-color: var(--border-strong); background: var(--surface); }
+.card.is-pending .poster { background: repeating-linear-gradient(135deg, var(--surface-sunken) 0 10px, var(--surface-raised) 10px 20px); }
+.card .play.soon { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border-strong); }
+
+/* The player's own chapter rail, under the chips. Same list, no box around it:
+   the film is already on screen, so the rail is a control and not a preview. */
+.feature-chapters { margin-top: 2px; }
+.feature-chapters .chapters { max-height: 210px; overflow-y: auto; }
+
+/* the player */
+.feature { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(240px, 1fr); gap: 22px; align-items: start; margin: 0 0 30px; padding: 18px; border: 1px solid var(--border-strong); border-radius: var(--r-lg); background: var(--surface); }
+.feature video { width: 100%; border-radius: var(--r-md); background: #1D2024; display: block; } /* literal: the letterbox behind a film is black in both themes, as every player's is */
+.feature video[hidden], .film-empty[hidden] { display: none; }
+.film-empty { display: grid; gap: 6px; align-content: center; min-height: 180px; padding: 20px; border: 1px dashed var(--border-strong); border-radius: var(--r-md); background: var(--surface); }
+.film-empty h3 { margin: 0; font-size: 17px; }
+.film-empty p { margin: 0; }
+.feature-meta { display: grid; gap: 8px; align-content: start; }
+.feature-meta h2 { margin: 0; font-size: 22px; font-weight: 800; line-height: 1.2; }
+.row { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { padding: 3px 9px; border-radius: var(--r-pill); border: 1px solid var(--border-strong); font-size: 11.5px; color: var(--text-muted); }
+.block.quiet { margin: 34px 0 0; padding: 18px 20px; border-radius: var(--r-lg); background: var(--surface-raised); border: 1px solid var(--border); }
+.block.quiet h2 { margin: 0 0 6px; font-size: 15px; }
+.block.quiet p { margin: 0; font-size: 13px; line-height: 1.6; max-width: 70ch; }
+.empty { padding: 26px; border: 1px dashed var(--border-strong); border-radius: var(--r-lg); color: var(--text-muted); font-size: 13.5px; line-height: 1.6; }
+.empty code { font-size: 12.5px; }
+.page-foot { display: flex; align-items: center; gap: 8px; padding: 14px 28px 22px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border); }
+@media (max-width: 860px) { .feature { grid-template-columns: 1fr; } .hero h1 { font-size: 27px; } }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+.i { width: 16px; height: 16px; vertical-align: -3px; flex: none; }

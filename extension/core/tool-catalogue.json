@@ -1,0 +1,163 @@
+{
+  "_comment": [
+    "The popup's eighteen tools, its four groups, and its order, for the",
+    "right-click menu. JSON and not a module on purpose: background/context-menus.js",
+    "is in the service worker's static boot graph, which MV3 re-parses on every",
+    "cold start, and tools/test-worker-imports.mjs holds that graph to a hard byte",
+    "ceiling. A file fetched at menu-build time is not in the graph at all - menus",
+    "are built on install and on startup, not at import - so this list costs the",
+    "boot nothing.",
+    "It is still a copy of popup/popup.js's TOOLS[] and GROUPS. tools/test-context-menus.mjs",
+    "reads this file and that literal and fails the moment they stop matching on",
+    "ids, labels, groups or order, so a rename in the popup cannot leave the menu",
+    "reading the old word.",
+    "label  must equal the popup's label, character for character.",
+    "send   the handler the popup's own card ends up calling, or one of four words",
+    "       for the tools whose card is not a single message: clip, coverage,",
+    "       diagram, break.",
+    "session  the result is kept with a session, so one has to be running. These",
+    "       stay visible with no session and say so in their title."
+  ],
+  "groups": [
+    {
+      "id": "capture",
+      "label": "Capture"
+    },
+    {
+      "id": "check",
+      "label": "Check"
+    },
+    {
+      "id": "design",
+      "label": "Design"
+    },
+    {
+      "id": "break",
+      "label": "Break"
+    }
+  ],
+  "tools": [
+    {
+      "tool": "shot",
+      "group": "capture",
+      "label": "Take a screenshot",
+      "send": "UQA_CAPTURE",
+      "session": true
+    },
+    {
+      "tool": "record",
+      "group": "capture",
+      "label": "Record the screen",
+      "send": "clip",
+      "session": true
+    },
+    {
+      "tool": "viewport",
+      "group": "capture",
+      "label": "Check another size",
+      "send": "UQA_OPEN_VIEWPORT"
+    },
+    {
+      "tool": "mask",
+      "group": "capture",
+      "label": "Mask real data",
+      "send": "UQA_MASK_PICK"
+    },
+    {
+      "tool": "a11y",
+      "group": "check",
+      "label": "Check accessibility",
+      "send": "UQA_SCAN_A11Y",
+      "session": true
+    },
+    {
+      "tool": "perf",
+      "group": "check",
+      "label": "Check page speed",
+      "send": "UQA_SCAN_PERF",
+      "session": true
+    },
+    {
+      "tool": "links",
+      "group": "check",
+      "label": "Check the links",
+      "send": "UQA_CHECK_LINKS",
+      "session": true
+    },
+    {
+      "tool": "whitebox",
+      "group": "check",
+      "label": "Measure code coverage",
+      "send": "coverage"
+    },
+    {
+      "tool": "fineprint",
+      "group": "check",
+      "label": "Check the fine print",
+      "send": "UQA_FINE_PRINT"
+    },
+    {
+      "tool": "blackbox",
+      "group": "design",
+      "label": "Design the values",
+      "send": "UQA_PARTITIONS"
+    },
+    {
+      "tool": "inject",
+      "group": "design",
+      "label": "Try nasty values",
+      "send": "UQA_INJECT"
+    },
+    {
+      "tool": "autofill",
+      "group": "design",
+      "label": "Fill the form",
+      "send": "UQA_AUTOFILL"
+    },
+    {
+      "tool": "harvest",
+      "group": "design",
+      "label": "Map the page",
+      "send": "UQA_HARVEST",
+      "session": true
+    },
+    {
+      "tool": "pick",
+      "group": "design",
+      "label": "Copy a locator",
+      "send": "UQA_PICK"
+    },
+    {
+      "tool": "diagram",
+      "group": "design",
+      "label": "Draw the flow",
+      "send": "diagram",
+      "session": true
+    },
+    {
+      "tool": "spec",
+      "group": "design",
+      "label": "Reverse-engineer the spec",
+      "send": "UQA_READ_SPEC"
+    },
+    {
+      "tool": "api",
+      "group": "design",
+      "label": "Send a request",
+      "send": "popup",
+      "session": true
+    },
+    {
+      "tool": "break",
+      "group": "break",
+      "label": "Break a request",
+      "send": "break"
+    },
+    {
+      "tool": "rtl",
+      "group": "break",
+      "label": "Stress the layout",
+      "send": "UQA_TOGGLE_RTL"
+    }
+  ]
+}

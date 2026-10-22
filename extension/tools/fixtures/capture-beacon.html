@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Capture beacon page</title></head>
+<body>
+<!-- served with Content-Security-Policy: connect-src 'none' (case 6 of tools/test-capture-live.mjs). A beacon here is blocked by the policy. -->
+<h1>Beacon page</h1>
+<button id="beacon" onclick="navigator.sendBeacon('/b', 'x'.repeat(4096))">Send beacon</button>
+</body>
+</html>

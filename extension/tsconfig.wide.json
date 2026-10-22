@@ -1,0 +1,9 @@
+// Second, wider non-strict config (T-065): the directories tsconfig.json does not cover.
+// tools/test-types-wide.mjs counts errors per directory and fails when any directory goes up.
+{
+  "extends": "./tsconfig.json",
+  // Its own cache file: the base config's would be shared and each run would discard the other's.
+  "compilerOptions": { "tsBuildInfoFile": "../work/tsbuildinfo/types-wide.tsbuildinfo" },
+  "include": ["types/*.d.ts", "content/**/*.js", "offscreen/**/*.js", "ui/**/*.js", "devtools/**/*.js", "annotate/**/*.js", "videoedit/**/*.js", "replay/**/*.js", "diagram/**/*.js"],
+  "exclude": ["vendor/**", "node_modules/**", "tools/**"]
+}

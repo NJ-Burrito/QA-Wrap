@@ -1,0 +1,36 @@
+﻿<!-- «AI writing» (S2, off by default). Injected into Settings > Integrations by ai-writing.js. -->
+<div class="setting-row" id="ai-writing" data-kw="ai writing title steps anthropic openai openrouter key model">
+  <h3 data-i18n="aiwrite.title">AI writing</h3>
+  <p class="muted" data-i18n="aiwrite.intro">Optional. Suggests a shorter title and clearer steps for a report, using your own account with the provider you pick. Off until you turn it on. It sends text only when you press the button in a report.</p>
+  <label class="switch">
+    <input type="checkbox" id="ai-on" />
+    <span><strong data-i18n="aiwrite.on">Turn AI writing on</strong><em data-i18n="aiwrite.onHint">Adds a «Suggest title and steps» button to the report. Nothing is sent from anywhere else.</em></span>
+  </label>
+  <div class="two-up">
+    <label class="text-field">
+      <span data-i18n="aiwrite.provider">Provider</span>
+      <select id="ai-provider">
+        <option value="anthropic">Anthropic</option>
+        <option value="openai">OpenAI</option>
+        <option value="openrouter">OpenRouter</option>
+      </select>
+    </label>
+    <label class="text-field">
+      <span data-i18n="aiwrite.model">Model (optional)</span>
+      <input type="text" id="ai-model" dir="ltr" autocomplete="off" spellcheck="false" />
+    </label>
+  </div>
+  <p class="range-note" data-i18n="aiwrite.modelHint">Left empty, the suggested model for the provider is used. If the provider retires it, type the name of a current one here.</p>
+  <div class="two-up">
+    <label class="text-field">
+      <span data-i18n="aiwrite.key">Your API key</span>
+      <input type="password" id="ai-key" dir="ltr" autocomplete="off" spellcheck="false" />
+    </label>
+    <div class="perm-actions">
+      <button id="ai-key-save" class="btn btn-secondary" type="button" data-i18n="aiwrite.keySave">Save key</button>
+      <button id="ai-key-remove" class="btn btn-quiet" type="button" data-i18n="aiwrite.keyRemove">Remove key</button>
+    </div>
+  </div>
+  <p class="range-note" id="ai-key-state" role="status" aria-live="polite"></p>
+  <p class="range-note" data-i18n="aiwrite.keyNote">The key stays on this computer. It is not synced, not exported and not in any report. Passwords and tokens in the text are masked before it is sent.</p>
+</div>

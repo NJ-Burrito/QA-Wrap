@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Capture dialog page</title></head>
+<body>
+<!-- r8-05-3 in tools/test-capture-live.mjs: a div with a click listener inside a role=dialog. The recorded step must target the div, not the dialog. -->
+<h1>Dialog page</h1>
+<div role="dialog" aria-label="Choose a plan" id="plan-dialog">
+  <div id="plan-card" class="card" style="padding:12px;border:1px solid #888;cursor:pointer;display:inline-block">Pro plan</div>
+  <p id="plan-out">None chosen</p>
+</div>
+<script>
+  document.getElementById('plan-card').addEventListener('click', () => { document.getElementById('plan-out').textContent = 'Pro chosen'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/*
+  The Seam: the DevTools panel as an evidence desk (console-redesign-1004, work/console-redesign-1004/00-direction.md).
+  One idea: evidence leaves through the seam of the brand ring. Added on top of panel.css; no id or hook changes.
+  Colour comes from the identity tokens (light and dark); direction from logical properties (Arabic RTL).
+*/
+
+/* ----------------------------------------------------------- ground + grain */
+
+body { position: relative; isolation: isolate; }
+
+/* Paper grain in light, slate grain in dark: SVG turbulence, no image file, no network. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) body::before { mix-blend-mode: screen; opacity: 0.04; }
+}
+:root[data-theme='dark'] body::before { mix-blend-mode: screen; opacity: 0.04; }
+
+.app-bar, #stage, .page-foot, .toast { position: relative; z-index: 1; }
+.page-foot { background: transparent; }
+
+/* --------------------------------------------------------------- watermark */
+
+.wm {
+  position: fixed;
+  z-index: 0;
+  inset-block-end: -16vmin;
+  inset-inline-end: -12vmin;
+  width: 66vmin;
+  height: 66vmin;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.06;
+}
+.wm svg { width: 100%; height: 100%; overflow: visible; }
+.wm-ring { stroke: var(--text); stroke-dasharray: 1; stroke-dashoffset: 0; }
+.wm-check { stroke: var(--fail); stroke-dasharray: 1; stroke-dashoffset: 0; }
+:root:dir(rtl) .wm, .wm:dir(rtl) { inset-inline-end: -12vmin; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .wm-ring { animation: seam-ring 1.8s cubic-bezier(.3, .1, .2, 1) both; }
+  .wm-check { animation: seam-check 0.7s cubic-bezier(.2, .8, .2, 1) 1.3s both; }
+  .wm { animation: seam-fade 1.2s ease-out both; }
+}
+@keyframes seam-ring { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes seam-check { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes seam-fade { from { opacity: 0; } to { opacity: 0.06; } }
+
+/* --------------------------------------------------------------- masthead */
+
+/* Always basalt, in light and in dark: the masthead is the one fixed point of the brand. Tokens are
+   re-pitched locally so every control inside keeps its contrast without a second set of button rules. */
+.app-bar {
+  --surface: #262b30; --surface-sunken: #15181b; --surface-raised: rgba(255, 255, 255, 0.06); /* literal: brand-fixed masthead, same in both themes */
+  --border: rgba(239, 237, 232, 0.16); --border-strong: #7a7f86; /* literal: brand-fixed masthead, same in both themes */
+  --text: #ecebe3; --text-muted: #b4bac0; /* literal: brand-fixed masthead, same in both themes */
+  --accent: #f1be5c; --accent-hover: #f3c670; --accent-text: #1d1405; --accent-ink: #f5d08a; /* literal: brand-fixed masthead, same in both themes */
+  --danger: #ff9270; --fail: #ff9270; /* literal: brand-fixed masthead, same in both themes */
+  color-scheme: dark;
+  color: var(--text);
+  background: linear-gradient(180deg, #1d2024 0%, #15181b 100%); /* literal: brand-fixed masthead, same in both themes */
+  border-bottom: 0;
+  padding: 10px 18px 12px;
+  gap: 10px 14px;
+  position: relative;
+  box-shadow: 0 6px 18px -10px rgba(21, 24, 27, 0.7);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* The seam under the masthead: petra for the ring, a gap, ochre for the check. */
+.app-bar::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #b5432b 0 58%, transparent 58% 61%, #e2ae38 61% 100%); /* literal: brand-fixed masthead, same in both themes */
+}
+:root:dir(rtl) .app-bar::after, .app-bar:dir(rtl)::after { transform: scaleX(-1); }
+
+.brand { gap: 10px; }
+.brand-mark { width: 28px; height: 28px; }
+.brand-name {
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #f1efe9; /* literal: brand-fixed masthead, same in both themes */
+}
+.brand-tag {
+  font-size: var(--t-micro);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #e2ae38; /* literal: brand-fixed masthead, same in both themes */
+  padding-inline-start: 10px;
+  border-inline-start: 1px solid rgba(239, 237, 232, 0.25);
+}
+.local-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--t-micro);
+  font-weight: 600;
+  color: #b4bac0; /* literal: brand-fixed masthead, same in both themes */
+  padding: 2px 9px;
+  border: 1px solid rgba(239, 237, 232, 0.18);
+  border-radius: var(--r-pill);
+}
+.local-pill::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7ed08a; /* literal: brand-fixed masthead, same in both themes */
+  box-shadow: 0 0 0 0 rgba(126, 208, 138, 0.5);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .local-pill::before { animation: seam-beat 2.8s ease-out infinite; }
+}
+@keyframes seam-beat {
+  0% { box-shadow: 0 0 0 0 rgba(126, 208, 138, 0.5); }
+  70%, 100% { box-shadow: 0 0 0 7px rgba(126, 208, 138, 0); }
+}
+
+.session-picker select { background: #262b30; border-color: rgba(239, 237, 232, 0.2); } /* literal: brand-fixed masthead, same in both themes */
+.export-label { color: #b4bac0; letter-spacing: 0.14em; } /* literal: brand-fixed masthead, same in both themes */
+.divider { background: rgba(239, 237, 232, 0.2); }
+.app-bar .danger-hover:hover { color: #ff9270; border-color: #ff9270; } /* literal: brand-fixed masthead, same in both themes */
+
+/* ------------------------------------------------------------ section tabs */
+
+#content { counter-reset: sec; }
+.block { position: relative; }
+.block-head h2 {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.block-head h2::before {
+  counter-increment: sec;
+  content: counter(sec, decimal-leading-zero);
+  font-family: var(--font);
+  font-size: var(--t-micro);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-text);
+  background: var(--accent);
+  padding: 2px 7px 2px 8px;
+  border-radius: var(--r-sm) var(--r-sm) var(--r-sm) 0;
+  align-self: center;
+}
+:root:dir(rtl) .block-head h2::before, .block-head:dir(rtl) h2::before { border-radius: var(--r-sm) var(--r-sm) 0 var(--r-sm); }
+.block-head h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  min-width: 24px;
+  background: linear-gradient(90deg, var(--border-strong), transparent);
+  opacity: 0.55;
+}
+:root:dir(rtl) .block-head h2::after, .block-head:dir(rtl) h2::after { background: linear-gradient(270deg, var(--border-strong), transparent); }
+.timeline-head h2 { flex-wrap: nowrap; }
+
+/* ------------------------------------------------------------------- stats */
+
+.stat {
+  position: relative;
+  padding: 12px var(--sp-3) 11px calc(var(--sp-3) + 3px);
+  border-radius: var(--r-md);
+  border-inline-start: 3px solid var(--accent);
+  overflow: hidden;
+}
+.stat::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: -5px;
+  width: 10px;
+  background: radial-gradient(circle at 50% 50%, var(--surface) 0 3.5px, transparent 4px) 0 0 / 10px 14px repeat-y;
+  opacity: 0.9;
+}
+.stat .v { font-family: var(--display); font-size: 26px; font-weight: 700; line-height: 1.1; }
+.stat .v.small { font-family: var(--font); font-size: var(--t-small); font-weight: 600; }
+.stat.bad { border-inline-start-color: var(--danger); }
+.stat.good { border-inline-start-color: var(--ok); }
+
+/* --------------------------------------------------------------- failures */
+
+.chain {
+  border-inline-start-width: 4px;
+  background: linear-gradient(100deg, var(--danger-soft) 0%, transparent 42%), var(--surface-raised);
+  box-shadow: var(--shadow-1);
+}
+.chain h3 { font-family: var(--display); font-size: 17px; font-weight: 700; }
+
+/* ---------------------------------------------------------------- timeline */
+
+/* A perforated receipt tape: a dashed rail, one node per event, petra where it broke. */
+#timeline { position: relative; padding-inline-start: 22px; }
+#timeline::before {
+  content: '';
+  position: absolute;
+  inset-block: 6px;
+  inset-inline-start: 5px;
+  width: 2px;
+  background: repeating-linear-gradient(to bottom, var(--border-strong) 0 5px, transparent 5px 10px);
+  opacity: 0.7;
+}
+.ev { position: relative; margin-inline-start: -22px; padding-inline-start: 32px; }
+/* .ev is content-visibility:auto, which clips paint to its box: the node sits inside it, on the rail. */
+.ev::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 11px;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+}
+.ev:hover::before { border-color: var(--accent); background: var(--accent); }
+.ev.fail::before { border-color: var(--danger); background: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
+.ev.overridden::before { border-color: var(--warn); }
+.ev .k { border-radius: var(--r-pill); }
+
+/* ------------------------------------------------------------ empty state */
+
+.empty-card {
+  border: 1px dashed var(--border-strong);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-1);
+}
+.empty-card h2 { font-family: var(--display); font-size: 26px; font-weight: 700; }
+.how-to { list-style: none; counter-reset: st; padding-inline-start: 0; gap: 10px; }
+.how-to li {
+  counter-increment: st;
+  display: block;
+  position: relative;
+  padding-inline-start: 38px;
+  min-height: 28px;
+}
+.how-to li::before {
+  content: counter(st);
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: -2px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-text);
+  background: var(--accent);
+  border-radius: 50% 50% 50% 4px;
+}
+:root:dir(rtl) .how-to li::before, .how-to:dir(rtl) li::before { border-radius: 50% 50% 4px 50%; }
+
+/* ----------------------------------------------------------------- details */
+
+.page-foot { padding-block-start: 10px; margin-block-start: 0; font-size: var(--t-micro); letter-spacing: 0.04em; }
+::selection { background: var(--accent); color: var(--accent-text); }
+#stage { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+
+@media (max-width: 700px) {
+  .brand-tag, .local-pill { display: none; }
+  .wm { opacity: 0.05; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wm, .wm-ring, .wm-check, .local-pill::before { animation: none; }
+}

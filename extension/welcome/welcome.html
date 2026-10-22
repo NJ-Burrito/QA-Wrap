@@ -1,0 +1,277 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<!--
+  The first-run notice, and the reason it is a page and not a paragraph.
+
+  `research/51d` section 1 is blunt about it: a Chrome Web Store listing, a
+  hosted policy and a README are all *outside* the product, and none of them
+  counts as disclosure. What counts is a notice shown in the product's own
+  interface, before anything is collected, followed by a specific affirmative
+  action — a person pressing a button that says they read it. That press is what
+  `UQA_CONSENT_ACCEPT` records, and until it lands the popup shows the consent
+  card and refuses to do anything else.
+
+  So this page is a gate, and it is written to be read rather than dismissed:
+  six facts, no marketing, and the two facts most likely to get somebody into
+  trouble — what the recording actually captures, and whose voice the microphone
+  can pick up — stated in plain words rather than buried in the policy.
+
+  Both languages, side by side, one row per fact. A tester in Amman and a store
+  reviewer in Mountain View are looking at the same screen, and neither half is
+  a translation stapled on afterwards: the pair is the unit, so a fact that
+  changes must change twice or not at all.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/scale.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <!-- The motion system: the duration and easing tokens, the keyframes and
+         the reduced-motion promise every other surface uses. This page has
+         almost no motion of its own, but the little it has has to be the same
+         little. -->
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="welcome.css" />
+    <script src="../ui/theme.js"></script>
+    <!--
+      The one surface that is not translated, because it is already in both
+      languages at once.
+
+      Every other page in the product now picks a language and shows one of
+      them (`platform/i18n.js`). This page shows the pair, side by side, on purpose:
+      the consent it records has to be readable by the tester in Amman and by
+      the store reviewer in Mountain View at the same time, from the same
+      screen, and a notice that is only in the language you happened to have
+      selected is a notice one of those two people never saw. So the i18n
+      script is loaded here only to stamp `lang` and `dir` on the root, which
+      turns the two columns around in Arabic (the Arabic side is first in the
+      source, so it lands on the right) and leaves both halves standing.
+    -->
+    <script src="../platform/i18n.js"></script>
+    <title data-i18n="welcome.page.title">Welcome to QA Wrap</title>
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="head">
+        <div class="brand">
+          <img class="brand-mark" src="../brand/mark.svg" alt="" width="26" height="26" />
+          <span class="brand-name">QA Wrap</span>
+          <span class="muted">by Nader Alzghoul</span>
+        </div>
+        <div class="shemagh" aria-hidden="true"></div>
+
+        <div class="pair head-pair">
+          <div class="side" dir="rtl" lang="ar">
+            <h1>مرحبًا بك في QA Wrap</h1>
+            <p class="lede">اقرأ هذا قبل أن تبدأ. هذه الصفحة تقول ما الذي يسجله البرنامج، وأين يبقى ما سجله.</p>
+          </div>
+          <div class="side" dir="ltr" lang="en">
+            <h1>Welcome to QA Wrap</h1>
+            <p class="lede">Read this before you start. It says what the tool records, and where what it records stays.</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Three facts, then the button. The full eight are one press away under the disclosure below, in both languages. -->
+      <ul class="key-facts" id="key-facts">
+        <li class="key">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar"><p><b>محلي أولًا.</b> كل ما يسجله QA Wrap يبقى داخل هذا المتصفح، بلا حساب ولا خادم.</p></div>
+            <div class="side" dir="ltr" lang="en"><p><b>Local first.</b> Everything QA Wrap records stays in this browser. No account, no server.</p></div>
+          </div>
+        </li>
+        <li class="key">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar"><p><b>لا يخرج شيء إلا إذا أرسلته أنت.</b> ملف تحفظه أو تذكرة ترفعها بنفسك.</p></div>
+            <div class="side" dir="ltr" lang="en"><p><b>Nothing leaves unless you send it.</b> A file you save, or a ticket you file yourself.</p></div>
+          </div>
+        </li>
+        <li class="key">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar"><p><b>يعمل فقط على موقع تسمح به.</b> وهو نائم حتى تضغط «اختبر هذا الموقع».</p></div>
+            <div class="side" dir="ltr" lang="en"><p><b>It works only on a site you allow.</b> It stays asleep until you press &ldquo;Test this site&rdquo;.</p></div>
+          </div>
+        </li>
+      </ul>
+
+      <!--
+        One control carries both labels, because there is one affirmative action
+        and splitting it into an Arabic button and an English button would make
+        two consents out of one. Each half is its own <bdi>: the middle dot
+        between an Arabic run and a Latin one is a neutral character, and without
+        an isolate the bidi algorithm hands it to whichever side wins, which is
+        how a separator ends up at the wrong end of a label.
+      -->
+      <footer class="actions" id="actions">
+        <button type="button" class="btn btn-primary btn-lg" id="accept"><bdi dir="rtl" lang="ar">فهمت</bdi> &middot; <bdi dir="ltr" lang="en">I understand</bdi></button>
+        <!-- No href here: welcome.js writes it from PRODUCT.urls.privacy, so the
+             address lives in one file and a placeholder can never ship as the
+             real one. It is still an anchor, so the address can be copied. -->
+        <a class="btn btn-quiet" id="privacy-web" target="_blank" rel="noopener"><bdi dir="rtl" lang="ar">سياسة الخصوصية على الإنترنت</bdi> &middot; <bdi dir="ltr" lang="en">The privacy page on the web</bdi></a>
+        <a class="btn btn-quiet" id="trust-web" target="_blank" rel="noopener"><bdi dir="rtl" lang="ar">كيف تتحقق بنفسك من الثقة</bdi> &middot; <bdi dir="ltr" lang="en">Trust: check it yourself</bdi></a>
+        <button type="button" class="btn btn-quiet" id="privacy-packaged"><bdi dir="rtl" lang="ar">النص المرفق مع الإضافة</bdi> &middot; <bdi dir="ltr" lang="en">The packaged privacy text</bdi></button>
+        <p class="pair note" id="note">
+          <span class="side muted" dir="rtl" lang="ar">يفتح النص المرفق ملف PRIVACY.md الموجود داخل هذه النسخة، بلا اتصال بالإنترنت.</span>
+          <span class="side muted" dir="ltr" lang="en">The packaged text opens PRIVACY.md from inside this build, with no network.</span>
+        </p>
+      </footer>
+
+      <details class="all-facts" id="all-facts">
+        <summary><bdi dir="rtl" lang="ar">التفاصيل كاملة (8 نقاط)</bdi> &middot; <bdi dir="ltr" lang="en">All the details (8 points)</bdi></summary>
+      <ol class="points">
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>محلي أولًا</h2>
+              <p>يسجل QA Wrap كل شيء ويحفظه داخل هذا المتصفح. لا حساب، ولا خادم، ولا تتبع.</p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>Local first</h2>
+              <p>QA Wrap records and stores everything in this browser. There is no account, no server, and no telemetry.</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>لا يغادر شيء جهازك إلا إذا أرسلته أنت</h2>
+              <p>ملف تصدير تحفظه بنفسك، أو تذكرة ترفعها إلى Jira أو إلى أداة تتبع أخرى أعددتها أنت.</p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>Nothing leaves the machine unless you send it</h2>
+              <p>An export you save, or a ticket you file to Jira or to another tracker you configured yourself.</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>ما الذي يلتقطه التسجيل</h2>
+              <p>الشاشة أو التبويب الذي تختاره، وصوت ذلك التبويب، والميكروفون إن شغلته، وما تكتبه على لوحة المفاتيح داخل الصفحة قيد الاختبار. وهناك أمران اختياريان متوقفان حتى تشغّلهما: ذاكرة الدقيقتين الأخيرتين وتبقى في ذاكرة الصفحة ولا تُكتب على القرص حتى تضغط «احفظ آخر دقيقتين»، وجسر الوكيل الذي يتيح لوكيل برمجة على هذا الحاسوب أن يقرأ جلساتك المحفوظة للقراءة فقط.</p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>What a recording captures</h2>
+              <p>The screen or the tab you choose, that tab&rsquo;s audio, the microphone if you switch it on, and the keystrokes typed into the page under test. Two optional extras stay off until you switch them on: a buffer that keeps the last 2 minutes of one site in that page&rsquo;s memory, never on disk until you press Save last 2 minutes, and an agent bridge that lets a coding agent on this computer read your saved sessions, read only.</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>الإخفاء يحمي البيانات الحقيقية</h2>
+              <p>يمكن إخفاء محتوى الحقول قبل حفظ أي شيء، وحقول كلمة المرور مخفية تلقائيًا.</p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>Masking protects real data</h2>
+              <p>Fields can be masked before anything is stored, and password fields are masked by default.</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>المواقع التي يُسمح له بدخولها</h2>
+              <p>يأتي QA Wrap بلا إذن دخول إلى أي موقع. الضغط على «اختبر هذا الموقع» في النافذة المنبثقة يطلب إذنًا للموقع الذي أنت فيه. مفتاح «مشغَّل» يعني هذا الموقع دائمًا. ويبقى الإذن قائمًا حتى تزيله: تعرض صفحة الإعدادات ما منحته، وتستطيع إعدادات الإضافات في Chrome سحبه. خيار «شغّل QA Wrap على هذا الموقع تلقائيًا في المرة القادمة» مغلق حتى تفعّله: يحفظ عنوان الموقع على هذا الجهاز فقط، وتعرض الإعدادات المواقع المحفوظة وتتيح إزالة أيٍّ منها. ويمكن لأمرين أن يبدآ تلقائيًا، وفقط في المواقع التي تحدّدها: التسجيل، ولقطة شاشة عند خطأ جديد.</p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>The sites it is allowed into</h2>
+              <p>QA Wrap ships with access to no websites. Pressing &ldquo;Test this site&rdquo; in the popup asks for the site you are on. The Awake switch always means this site. A grant lasts until you remove it: Settings lists what you have granted, and Chrome&rsquo;s own extension settings can revoke it. &ldquo;Wake up on this site by itself next time&rdquo; is off until you tick it: it keeps that site&rsquo;s address on this machine only, and Settings lists the remembered sites and removes any of them. Two things can start by themselves, only on sites you tick: recording, and a screenshot on a new error.</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>الميكروفون</h2>
+              <p>الميكروفون مغلق ما لم تشغله بنفسك، وقد يستلزم تسجيل صوت شخص آخر موافقته بحسب القانون المعمول به في مكانك. ويستطيع مسؤول النظام إغلاق الميكروفون على مستوى الجهاز كله.</p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>The microphone</h2>
+              <p>The microphone is off until you switch it on, and recording someone&rsquo;s voice may require their consent where you are. An administrator can switch the microphone off for the whole machine.</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>كم يبقى ما سُجِّل</h2>
+              <p>تُحذف الجلسات المنتهية تلقائيًا بعد 30 يومًا في التثبيت الجديد. يمكنك تغيير المدة من الإعدادات، والصفر يعني الإبقاء على كل شيء. التثبيت القديم يحتفظ بقيمته، والتحديث لا يبدأ بالحذف أبدًا. لا تُحذف جلسة قيد التسجيل أبدًا.</p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>How long recordings stay</h2>
+              <p>Finished sessions are deleted automatically after 30 days on a fresh install. Change the number in Settings; zero keeps everything. An install that existed before keeps the value it already had; an update never starts deleting. A session still recording is never touched.</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="point">
+          <div class="pair">
+            <div class="side" dir="rtl" lang="ar">
+              <h2>جرّبه على صفحة التجربة</h2>
+              <p>«صيد الأخطاء» لعبة تدريب داخل الإضافة بخمسة مستويات قصيرة: <a id="practice-link-ar" target="_blank" rel="noopener">افتح صفحة التجربة</a>. اضغط «اختبر هذا الموقع»، والعب مستوى، ثم اضغط «أوقف» وانسخ التقرير. <span id="rate-ar"><a id="rate-link-ar" target="_blank" rel="noopener">قيّم QA Wrap</a></span></p>
+            </div>
+            <div class="side" dir="ltr" lang="en">
+              <h2>Try it on the practice page</h2>
+              <p>Bug Hunt is a practice game inside the extension, with five short levels: <a id="practice-link" target="_blank" rel="noopener">open the practice page</a>. Press &ldquo;Test this site&rdquo;, play a level, then press Stop and copy the report. <span id="rate-en"><a id="rate-link" target="_blank" rel="noopener">Rate QA Wrap</a></span></p>
+            </div>
+          </div>
+        </li>
+      </ol>
+      </details>
+
+
+      <div class="pair done" id="done" hidden role="status" aria-live="polite">
+        <p class="side" dir="rtl" lang="ar"><b>شكرًا لك. الخطوة التالية: ثبّت QA Wrap ثم اضغط أيقونته.</b></p>
+        <p class="side" dir="ltr" lang="en"><b>Thank you. Next: pin QA Wrap, then click its icon.</b></p>
+        <!-- The pin hint: shown only while QA Wrap is off the toolbar (welcome.js asks chrome.action.getUserSettings, guarded). -->
+        <div id="pin-block" class="pin-block">
+        <!-- The visual hint: where the pin is, drawn as the browser's own toolbar. -->
+        <figure class="pin-hint" id="pin-hint" aria-hidden="true">
+          <svg viewBox="0 0 360 96" width="360" height="96" role="img" focusable="false">
+            <rect x="2" y="14" width="356" height="52" rx="26" class="pin-bar" />
+            <rect x="26" y="28" width="170" height="24" rx="12" class="pin-url" />
+            <g transform="translate(234 28)"><path class="pin-glyph" d="M2 6h6a3 3 0 1 1 6 0h6v6a3 3 0 1 0 0 6v6H2z" /></g>
+            <image href="../brand/mark.svg" x="286" y="26" width="26" height="26" />
+            <circle cx="299" cy="39" r="20" class="pin-ring" />
+            <text x="236" y="90" class="pin-num">1</text>
+            <text x="291" y="90" class="pin-num">2</text>
+          </svg>
+        </figure>
+        <ol class="pin-steps">
+          <li data-pin="default"><bdi dir="rtl" lang="ar">اضغط قطعة البازل في شريط المتصفح.</bdi> &middot; <bdi dir="ltr" lang="en">Click the puzzle piece in the browser bar.</bdi></li>
+          <li data-pin="default"><bdi dir="rtl" lang="ar">اضغط الدبوس بجانب QA Wrap، ثم اضغط أيقونته.</bdi> &middot; <bdi dir="ltr" lang="en">Click the pin beside QA Wrap, then click its icon.</bdi></li>
+          <li data-pin="edge" hidden><bdi dir="rtl" lang="ar">اضغط أيقونة الإضافات في شريط المتصفح.</bdi> &middot; <bdi dir="ltr" lang="en">Click the Extensions icon in the browser bar.</bdi></li>
+          <li data-pin="edge" hidden><bdi dir="rtl" lang="ar">اضغط العين بجانب QA Wrap لإظهاره، ثم اضغط أيقونته.</bdi> &middot; <bdi dir="ltr" lang="en">Click the eye beside QA Wrap to show it, then click its icon.</bdi></li>
+          <li data-pin="opera" hidden><bdi dir="rtl" lang="ar">اضغط مكعب الإضافات في شريط المتصفح أو الشريط الجانبي.</bdi> &middot; <bdi dir="ltr" lang="en">Click the cube (Extensions) icon in the bar or the sidebar.</bdi></li>
+          <li data-pin="opera" hidden><bdi dir="rtl" lang="ar">اضغط الدبوس بجانب QA Wrap، ثم اضغط أيقونته.</bdi> &middot; <bdi dir="ltr" lang="en">Click the pin beside QA Wrap, then click its icon.</bdi></li>
+          <li data-pin="safari" hidden><bdi dir="rtl" lang="ar">اختر عرض ثم تخصيص شريط الأدوات.</bdi> &middot; <bdi dir="ltr" lang="en">Choose View, then Customize Toolbar.</bdi></li>
+          <li data-pin="safari" hidden><bdi dir="rtl" lang="ar">اسحب QA Wrap إلى شريط الأدوات.</bdi> &middot; <bdi dir="ltr" lang="en">Drag QA Wrap into the toolbar.</bdi></li>
+        </ol>
+        </div>
+        <a class="btn btn-primary" id="done-practice" target="_blank" rel="noopener"><bdi dir="rtl" lang="ar">افتح صفحة التجربة</bdi> &middot; <bdi dir="ltr" lang="en">Open the practice page</bdi></a>
+        <button type="button" class="btn" id="close-tab"><bdi dir="rtl" lang="ar">إغلاق الصفحة</bdi> &middot; <bdi dir="ltr" lang="en">Close this tab</bdi></button>
+      </div>
+
+      <div class="pair failed" id="failed" hidden role="alert">
+        <p class="side" dir="rtl" lang="ar">تعذر حفظ موافقتك. حاول مرة أخرى.</p>
+        <p class="side" dir="ltr" lang="en">Your answer could not be saved. Try again.</p>
+      </div>
+
+      <p class="page-foot">
+        <img src="../brand/mark.svg" alt="" width="14" height="14" />
+        <span>QA Wrap</span><span class="made-by">Made by Nader Alzghoul</span>
+      </p>
+    </main>
+
+    <script type="module" src="welcome.js"></script>
+  </body>
+</html>

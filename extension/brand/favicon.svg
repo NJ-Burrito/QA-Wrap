@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="QA Wrap — variant A, small">
+  <rect width="64" height="64" rx="14" fill="#F1EFE9"/>
+  <g transform="translate(-2 1)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#1D2024" stroke-width="6" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+    <path stroke="#F1EFE9" stroke-width="14" d="M36.36 36.36L43.25 44.84L56.5 19.4"/>
+    <path stroke="#B5432B" stroke-width="6" d="M36.36 36.36L43.25 44.84L56.5 19.4"/>
+  </g>
+</svg>

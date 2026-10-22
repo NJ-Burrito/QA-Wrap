@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="QA Wrap — variant A">
+  <defs>
+    <linearGradient id="a-g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FDFCFA"/>
+      <stop offset="1" stop-color="#F1EFE9"/>
+    </linearGradient>
+    <linearGradient id="a-h" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x=".5" y=".5" width="63" height="63" rx="14" fill="url(#a-g)" stroke="#D8C6A4" stroke-width="1"/>
+  <path d="M14 1.5h36a13.5 13.5 0 0 1 13.5 13.5v14A28 28 0 0 1 14 1.5z" fill="url(#a-h)"/>
+  <g transform="translate(-2 1)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#1D2024" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+    <path stroke="#B5432B" d="M36 36L42.5 44L55 20"/>
+  </g>
+</svg>

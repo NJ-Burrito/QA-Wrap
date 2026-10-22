@@ -1,0 +1,988 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/scale.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/vfx.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="options.css" />
+    <link rel="stylesheet" href="integrations.css" />
+    <link rel="stylesheet" href="../ui/update-card.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../platform/i18n.js"></script>
+    <script src="../ui/dom.js"></script>
+    <script src="../ui/icons.js"></script>
+    <title data-i18n="options.page.title">QA Wrap settings</title>
+  </head>
+  <body>
+    <h1 class="visually-hidden" data-i18n="options.page.title">QA Wrap settings</h1>
+    <header class="app-bar">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark-small.svg" alt="" width="22" height="22" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" data-i18n="options.bar.settings">settings</span>
+      </div>
+      <div class="srch"><input id="q" type="search" autocomplete="off" data-i18n-placeholder="options.search.placeholder" placeholder="Search settings" data-i18n-aria="options.search.placeholder" aria-label="Search settings" /></div>
+      <div class="bar-actions">
+        <span class="save-state" id="save-state" role="status" aria-live="polite"></span>
+        <button id="theme" class="btn" title="Light, night, or follow your machine" data-i18n-title="common.theme.titleDefault"></button>
+        <button id="reset" class="btn btn-sm btn-ghost" data-i18n="options.bar.reset">Reset everything</button>
+      </div>
+    </header>
+
+    <div class="shell">
+      <nav class="rail" id="rail" role="tablist" data-i18n-aria="options.rail.aria" aria-label="Settings sections">
+        <p class="rail-title" data-i18n="options.rail.title">Settings</p>
+        <!-- No Tutorials entry: this rail is a table of contents for the
+             sections on this page, and the films are a page of their own now.
+             They are reached from the About card at the bottom, from the popup
+             footer, and from the first-run pointer.
+
+             17 Sept 2026 (R08, decision 114): these links are now a real tab
+             set. Each one still points at the section's own id, so an old
+             bookmark or an in-page link (e.g. Files' "Permissions" pointer)
+             keeps working exactly as before — options.js reads the hash,
+             opens the tab that owns it, and scrolls to it. -->
+        <a href="#sec-appearance" id="tab-appearance" data-rail="appearance" role="tab" aria-controls="sec-appearance" aria-selected="false" tabindex="-1" data-i18n="options.rail.appearance">Appearance and language</a>
+        <a href="#sec-sessions" id="tab-recording" data-rail="recording" role="tab" aria-controls="sec-sessions" aria-selected="false" tabindex="-1" data-i18n="options.rail.recording">Recording</a>
+        <a href="#sec-shortcuts" id="tab-tools" data-rail="tools" role="tab" aria-controls="sec-shortcuts" aria-selected="false" tabindex="-1" data-i18n="options.rail.tools">In-page tools</a>
+        <a href="#sec-files" id="tab-files" data-rail="files" role="tab" aria-controls="sec-files" aria-selected="false" tabindex="-1" data-i18n="options.rail.files">Files and capture</a>
+        <a href="#sec-integrations" id="tab-integrations" data-rail="integrations" role="tab" aria-controls="sec-integrations" aria-selected="false" tabindex="-1" data-i18n="options.rail.integrations">Integrations</a>
+        <a href="#sec-permissions" id="tab-privacy" data-rail="privacy" role="tab" aria-controls="sec-permissions" aria-selected="false" tabindex="-1" data-i18n="options.rail.privacy">Privacy and data</a>
+        <a href="#sec-updates" id="tab-updates" data-rail="updates" role="tab" aria-controls="sec-updates" aria-selected="false" tabindex="-1" data-i18n="options.rail.updates">Updates</a>
+        <a href="#about-card" id="tab-about" data-rail="about" role="tab" aria-controls="about-card" aria-selected="false" tabindex="-1" data-i18n="options.rail.about">About</a>
+      </nav>
+
+      <main>
+      <!--
+        The films used to be here: a card of six posters at the top of the
+        settings page, above every control. They are a thing you watch once and
+        a thing you scroll past every time after that, so they now live on their
+        own page and this is the one line that points at it.
+      -->
+      <!--
+        Language, first and on its own.
+
+        It is the one control on this page that changes every other control on
+        this page, which is why it is above them rather than filed under an
+        appearance heading: somebody who opened Settings because the interface
+        is in a language they do not read has to find it without reading the
+        interface. Its three options name themselves in their own scripts for
+        the same reason, and a `<select>` because that is what every other
+        small enumerated choice here already is.
+      -->
+      <!-- ============================================ shortcuts -->
+      <section class="card" id="sec-appearance" role="tabpanel" aria-labelledby="tab-appearance" tabindex="0" hidden>
+        <header class="card-head"><h2 data-i18n="options.appearance.title">Appearance and language</h2></header>
+        <h3 data-i18n="options.language.title" style="margin-bottom:4px">Language</h3>
+        <p class="muted" data-i18n="options.language.intro" style="margin-bottom:12px">
+          Which language QA Wrap writes its own screens in. It does not touch the page you are
+          testing, and it changes here without a reload.
+        </p>
+        <label class="field" style="margin-bottom:12px"><span data-i18n="options.language.label">Show QA Wrap in</span>
+          <select id="language">
+            <option value="auto" data-i18n="options.language.auto">Automatic (follow the browser)</option>
+            <option value="en" data-i18n="options.language.en">English</option>
+            <option value="ar" data-i18n="options.language.ar">العربية</option>
+          </select>
+        </label>
+        <p class="range-note" data-i18n="options.language.note" style="margin-bottom:12px">
+          Automatic follows the language your browser itself is set to. Reports and exported files
+          keep the wording they had: this is the interface, not the artefacts.
+        </p>
+        <div class="guided-divider"></div>
+        <h3 class="sub-head" data-i18n="options.appearance.themeHead">Theme</h3>
+        <p class="muted" data-i18n="options.appearance.themeNote">Light, night, or follow your machine. The button in the top bar cycles the same choice.</p>
+        <div class="guided-divider"></div>
+        <h3 class="sub-head" data-i18n="options.sound.head">Sound</h3>
+        <p class="muted">
+          <span id="sound-count" data-i18n="options.sound.countFallback">Short, quiet cues from a CC0 sound pack</span><span data-i18n="options.sound.intro1">, played from files that ship with the extension.</span> <b data-i18n="options.sound.scopeBold">Results and alerts is eight moments; Every click adds seven quiet touch sounds</b><span data-i18n="options.sound.intro2">. Neither plays in the in-page toolbar or while the microphone is on.</span>
+        </p>
+        <p class="muted" data-i18n="options.sound.offNote">
+          On by default, and additional to everything. Nothing is announced only by
+          sound, so switching it off costs nothing. That is the test for whether an
+          audio cue belongs in a tool at all.
+        </p>
+        <label class="check">
+          <input type="checkbox" id="soundEnabled" />
+          <span data-i18n="options.sound.enableLabel">Make a sound when something happens</span>
+        </label>
+        <div class="range-field" id="soundScope-field" role="radiogroup" aria-labelledby="soundScope-label">
+          <div class="range-head" id="soundScope-label" data-i18n="options.sound.scope.label">Which sounds</div>
+          <label class="check">
+            <input type="radio" name="soundScope" value="core" />
+            <span data-i18n="options.sound.scope.core">Results and alerts</span>
+          </label>
+          <label class="check">
+            <input type="radio" name="soundScope" value="all" />
+            <span data-i18n="options.sound.scope.all">Every click</span>
+          </label>
+        </div>
+        <label class="check">
+          <input type="checkbox" id="vfxEnabled" />
+          <span data-i18n="options.sound.vfxLabel">Show small motion effects: a pulse on a press, a ring on a success, a shake on a refusal</span>
+        </label>
+        <p class="muted" data-i18n="options.sound.vfxNote">
+          Effects are transforms and fades only, under half a second, and never run when your
+          system asks for reduced motion. They cost nothing measurable; the suites check.
+        </p>
+        <div class="range-field" id="soundVolume-field">
+          <div class="range-head"><label for="soundVolume" data-i18n="options.sound.volumeLabel">Volume</label><output id="soundVolume-out"></output></div>
+          <input type="range" id="soundVolume" />
+        </div>
+        <div class="sound-try" id="sound-try"></div>
+      </section>
+
+      <section class="card" id="sec-shortcuts" role="tabpanel" aria-labelledby="h-sec-shortcuts" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-shortcuts" data-i18n="options.shortcuts.title">Shortcuts</h2>
+          <p class="muted" data-i18n="options.shortcuts.intro">
+            Click a shortcut, then press the keys you want. Every shortcut needs at least one
+            modifier (Ctrl, Alt, Shift), otherwise it would fire while you type.
+          </p>
+        </header>
+
+        <label class="switch">
+          <input type="checkbox" id="keymapEnabled" />
+          <span><strong data-i18n="options.shortcuts.enable">Enable in-page shortcuts</strong><em data-i18n="options.shortcuts.enableHint">These work while a web page has focus.</em></span>
+        </label>
+
+        <div class="keymap" id="keymap"></div>
+
+        <div class="callout">
+          <h3 data-i18n="options.shortcuts.globalTitle">Global shortcuts</h3>
+          <p class="muted" data-i18n="options.shortcuts.globalNote">
+            These work even when the page is not focused. Chrome reserves the right to set
+            them, so they are edited in Chrome's own shortcuts page. An extension is not
+            allowed to change them for you.
+          </p>
+          <div class="commands" id="commands"></div>
+          <button id="open-shortcuts" class="btn btn-sm" data-i18n="options.shortcuts.openChrome">Open Chrome's shortcuts page</button>
+        </div>
+      </section>
+
+      <!-- ============================================ session -->
+      <section class="card" id="sec-sessions" role="tabpanel" aria-labelledby="h-sec-sessions" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-sessions" data-i18n="options.sessions.title">Sessions</h2>
+        <label class="text-field" style="margin-bottom:12px">
+          <span data-i18n="options.sessions.nameLabel">Your name, as the team folder shows it</span>
+          <input type="text" id="testerName" maxlength="60" data-i18n-placeholder="options.sessions.namePlaceholder" placeholder="e.g. Layla Haddad" autocomplete="off" />
+        </label>
+        <label class="text-field" style="margin-bottom:12px">
+          <span data-i18n="options.sessions.launchLabel">When the toolbar icon is clicked, open</span>
+          <select id="launchSurface">
+            <option value="float" data-i18n="options.sessions.launchFloat">A floating window: stays open over the page, never shrinks it</option>
+            <option value="panel" data-i18n="options.sessions.launchPanel">The side panel: docked beside the page</option>
+          </select>
+        </label>
+          <p class="muted" data-i18n="options.sessions.defaultsNote">Defaults applied when you start recording.</p>
+        </header>
+
+        <p class="range-note">
+          <b data-i18n="options.sessions.noLimitBold">Recording has no time limit.</b>
+          <span data-i18n="options.sessions.noLimitRest">A session runs until you press stop.
+          Screen recording is bounded only by disk space, which is reported below
+          before you start.</span>
+        </p>
+
+        <div class="range-field" data-setting="inputDebounceMs">
+          <div class="range-head">
+            <label for="inputDebounceMs" data-i18n="options.sessions.debounceLabel">Wait before recording a typed value</label>
+            <output id="inputDebounceMs-out"></output>
+          </div>
+          <input type="range" id="inputDebounceMs" />
+          <p class="range-note" data-i18n="options.sessions.debounceNote">Higher records fewer, more settled values. Lower catches fast typing.</p>
+        </div>
+
+        <div class="range-field" data-setting="causalWindowMs">
+          <div class="range-head">
+            <label for="causalWindowMs" data-i18n="options.sessions.causalLabel">Link a failure to an action within</label>
+            <output id="causalWindowMs-out"></output>
+          </div>
+          <input type="range" id="causalWindowMs" />
+          <p class="range-note" data-i18n="options.sessions.causalNote">How far back QA Wrap looks for the click that caused a failure. Raise it for slow servers.</p>
+        </div>
+      </section>
+
+      <!-- ============================================ layout stress -->
+      <section class="card" id="sec-stress" role="tabpanel" aria-labelledby="h-sec-stress" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-stress" data-i18n="options.stress.title">Layout stress</h2>
+          <p class="muted" data-i18n="options.stress.intro">What happens when you run the RTL / text-expansion check.</p>
+        </header>
+
+        <div class="range-field" data-setting="expandPercent">
+          <div class="range-head">
+            <label for="expandPercent" data-i18n="options.stress.expandLabel">Grow every label by</label>
+            <output id="expandPercent-out"></output>
+          </div>
+          <input type="range" id="expandPercent" />
+          <p class="range-note" id="expandPercent-note"></p>
+        </div>
+
+        <!--
+          `maxStressNodes` has been storable, clamped and documented in
+          platform/settings.js since the setting existed, and there has never been a
+          control for it: options.js loops `Object.keys(RANGES)` and skipped
+          straight past it because no element carried the id. A tester on a page
+          with fifty thousand nodes could not raise the ceiling, and had no way
+          to learn there was one.
+        -->
+        <div class="range-field" data-setting="maxStressNodes">
+          <div class="range-head">
+            <label for="maxStressNodes" data-i18n="options.stress.maxNodesLabel">Stop after</label>
+            <output id="maxStressNodes-out"></output>
+          </div>
+          <input type="range" id="maxStressNodes" />
+          <p class="range-note" id="maxStressNodes-note"></p>
+        </div>
+
+        <label class="switch"><input type="checkbox" id="rtlMirror" /><span><strong data-i18n="options.stress.mirror">Mirror to right-to-left</strong><em data-i18n="options.stress.mirrorHint">Reveals unmirrored icons and broken alignment.</em></span></label>
+        <label class="switch"><input type="checkbox" id="rtlAccent" /><span><strong data-i18n="options.stress.accent">Accent Latin text</strong><em data-i18n="options.stress.accentHint">Anything left unaccented is a hard-coded string.</em></span></label>
+        <label class="switch"><input type="checkbox" id="rtlBidi" /><span><strong data-i18n="options.stress.bidi">Add bidirectional marks</strong><em data-i18n="options.stress.bidiHint">Exposes text-isolation bugs in mixed content.</em></span></label>
+      </section>
+
+      <!-- ============================================ break a request -->
+      <section class="card" id="sec-break" role="tabpanel" aria-labelledby="h-sec-break" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-break" data-i18n="options.break.title">Break a request</h2>
+          <p class="muted" data-i18n="options.break.intro">Defaults for the "break the next request" tool.</p>
+        </header>
+
+        <div class="range-field" data-setting="breakDelayMs">
+          <div class="range-head">
+            <label for="breakDelayMs" data-i18n="options.break.delayLabel">Slow-response delay</label>
+            <output id="breakDelayMs-out"></output>
+          </div>
+          <input type="range" id="breakDelayMs" />
+        </div>
+
+        <div class="range-field" data-setting="breakRepeat">
+          <div class="range-head">
+            <label for="breakRepeat" data-i18n="options.break.repeatLabel">Apply to how many requests</label>
+            <output id="breakRepeat-out"></output>
+          </div>
+          <input type="range" id="breakRepeat" />
+          <p class="range-note" data-i18n="options.break.repeatNote">Drag to 0 to keep the rule on until you turn it off.</p>
+        </div>
+      </section>
+
+      <!-- ============================================ panel -->
+      <section class="card" id="sec-timeline" role="tabpanel" aria-labelledby="h-sec-timeline" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-timeline" data-i18n="options.timeline.title">Timeline</h2>
+          <p class="muted" data-i18n="options.timeline.intro">How the DevTools panel behaves on a long session.</p>
+        </header>
+
+        <div class="range-field" data-setting="maxTimelineRows">
+          <div class="range-head">
+            <label for="maxTimelineRows" data-i18n="options.timeline.rowsLabel">Show at most</label>
+            <output id="maxTimelineRows-out"></output>
+          </div>
+          <input type="range" id="maxTimelineRows" />
+          <p class="range-note" data-i18n="options.timeline.rowsNote">Older rows stay in the export; this only caps what is drawn.</p>
+        </div>
+
+        <div class="range-field" data-setting="screenshotWidth">
+          <div class="range-head">
+            <label for="screenshotWidth" data-i18n="options.timeline.shotWidthLabel">Screenshot thumbnail width</label>
+            <output id="screenshotWidth-out"></output>
+          </div>
+          <input type="range" id="screenshotWidth" />
+        </div>
+      </section>
+
+      <!-- ============================================ output -->
+      <!-- ============================================ permissions -->
+      <!--
+        One place to switch on everything the recorder needs, so nobody has to
+        go looking through Chrome's own settings.
+
+        Why here and nowhere else: recording happens in an offscreen document,
+        which Chrome never renders, so it has nowhere to draw a permission
+        prompt. `getUserMedia` there does not ask, it fails, with
+        `NotAllowedError` - which reads as "you refused" to somebody who was
+        never asked, and is why ticking Mic produced a silent clip with a
+        refusal nobody could act on. This page is a real tab (`open_in_tab`), so
+        the prompt has somewhere to appear, and the grant is per origin, so once
+        it is given the offscreen document's own calls simply succeed. Not the
+        popup: the popup closes the moment the permission bubble takes focus,
+        which cancels the request it just made.
+      -->
+      <section class="card" id="sec-permissions" role="tabpanel" aria-labelledby="h-sec-permissions" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-permissions" data-i18n="options.permissions.title">Permissions</h2>
+          <p class="muted" data-i18n="options.permissions.intro">
+            Everything the recorder needs, switched on from here. Each one is
+            asked for once and remembered by the browser.
+          </p>
+        </header>
+
+        <!--
+          Site access, first among the four because it is the one that has to be
+          given before any of the others matter.
+
+          QA Wrap installs with access to no website at all: `<all_urls>` is an
+          optional host permission (decision 8), and the popup's Wake button
+          asks for the site in front of the tester (one site at a time). This row is where the list
+          of what has been said yes to lives, and where it is taken back, since
+          revoking one origin is the one thing the wake card cannot offer.
+        -->
+        <div class="perm-row">
+          <span class="perm-dot" id="dot-sites" data-state="unknown" aria-hidden="true"></span>
+          <div class="perm-text">
+            <p class="perm-name" data-i18n="options.permissions.sitesName">Sites QA Wrap may work on</p>
+            <p class="range-note" id="state-sites" role="status" aria-live="polite" data-i18n="options.permissions.checking">Checking...</p>
+            <p class="range-note" data-i18n="options.permissions.sitesNote">
+              QA Wrap starts with access to nothing. Turning the switch on in the
+              popup asks for the site you are on, and that answer is remembered
+              until you take it back here. Putting QA Wrap to sleep does not
+              take it back: sleep stops the work, not the permission.
+            </p>
+            <ul class="site-list" id="site-list"></ul>
+          </div>
+          <div class="perm-actions">
+            <button id="revoke-sites" class="btn btn-quiet" type="button" data-i18n="options.permissions.revokeSites">Remove all</button>
+          </div>
+        </div>
+
+        <!-- "Remember this site" (opt-in in the popup, off by default): the sites QA Wrap wakes on by itself. Removing one here stops that; it does not remove the site grant above. -->
+        <div class="perm-row">
+          <span class="perm-dot" id="dot-remembered" data-state="unknown" aria-hidden="true"></span>
+          <div class="perm-text">
+            <p class="perm-name" data-i18n="options.remembered.title">What each site may do by itself</p>
+            <p class="range-note" id="state-remembered" role="status" aria-live="polite" data-i18n="options.remembered.none">None. You choose these in the popup with "Wake up on this site by itself next time".</p>
+            <ul class="site-list" id="remembered-list"></ul>
+          </div>
+          <div class="perm-actions">
+            <button id="forget-sites" class="btn btn-quiet" type="button" data-i18n="options.remembered.clear">Forget all</button>
+          </div>
+        </div>
+
+        <div class="perm-row">
+          <span class="perm-dot" id="dot-mic" data-state="unknown" aria-hidden="true"></span>
+          <div class="perm-text">
+            <p class="perm-name" data-i18n="options.permissions.micName">Microphone</p>
+            <p class="range-note" id="state-mic" role="status" aria-live="polite" data-i18n="options.permissions.checking">Checking...</p>
+            <p class="range-note" data-i18n="options.permissions.micNote">
+              For narrating what you are looking at while you record. Nothing is
+              recorded when you press this: the stream is opened to obtain the
+              permission and stopped again immediately.
+            </p>
+            <p class="range-note">
+              <b data-i18n="options.permissions.recordTimeBold">At record time Chrome asks nothing more.</b>
+              <span data-i18n="options.permissions.micRest">Once this is
+              allowed the recorder opens the microphone silently, every time.</span>
+            </p>
+          </div>
+          <button id="grant-mic" class="btn" type="button" data-i18n="options.permissions.grantMic">Allow the microphone</button>
+        </div>
+
+        <div class="perm-row">
+          <span class="perm-dot" id="dot-cam" data-state="unknown" aria-hidden="true"></span>
+          <div class="perm-text">
+            <p class="perm-name" data-i18n="options.permissions.camName">Camera</p>
+            <p class="range-note" id="state-cam" role="status" aria-live="polite" data-i18n="options.permissions.checking">Checking...</p>
+            <p class="range-note" data-i18n="options.permissions.camNote">
+              For the webcam inset in the corner of a recording. Asked for
+              separately from the microphone, so refusing one does not cost you
+              the other.
+            </p>
+            <p class="range-note">
+              <b data-i18n="options.permissions.recordTimeBold">At record time Chrome asks nothing more.</b>
+              <span data-i18n="options.permissions.camRest">The camera light
+              comes on while a clip that uses it is running, and not before.</span>
+            </p>
+          </div>
+          <button id="grant-cam" class="btn" type="button" data-i18n="options.permissions.grantCam">Allow the camera</button>
+        </div>
+
+        <div class="perm-row">
+          <span class="perm-dot" id="dot-screen" data-state="unknown" aria-hidden="true"></span>
+          <div class="perm-text">
+            <p class="perm-name" data-i18n="options.permissions.screenName">Screen recording</p>
+            <p class="range-note" id="state-screen" role="status" aria-live="polite" data-i18n="options.permissions.checking">Checking...</p>
+            <!--
+              This paragraph is the honest one. Two things Chrome does not allow,
+              and no amount of settings will change either: it always shows its
+              own source picker, and it never lets an extension capture a tab it
+              was not just invoked on.
+            -->
+            <p class="range-note">
+              <span data-i18n="options.permissions.screenNote1">Two things stay with Chrome and cannot be switched off here.</span>
+              <b data-i18n="options.permissions.screenAsksBold">Chrome always asks which screen or window to share</b><span data-i18n="options.permissions.screenNote2">, every
+              time, and no extension may choose one for you.</span>
+              <b data-i18n="options.permissions.screenTabBold">Recording the current tab needs the toolbar button or the
+              shortcut first</b><span data-i18n="options.permissions.screenNote3">, because Chrome only grants that at the moment
+              you invoke the extension on that tab, and drops it again when the
+              page navigates.</span>
+            </p>
+          </div>
+          <button id="grant-screen" class="btn" type="button" data-i18n="options.permissions.grantScreen">Allow screen recording</button>
+        </div>
+      </section>
+
+      <section class="card" id="sec-files" role="tabpanel" aria-labelledby="tab-files" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 data-i18n="options.files.title">Where files go, and what they are called</h2>
+          <p class="muted" data-i18n="options.files.intro">
+            Saving lays down a category tree and then only ever adds to it. Folders are
+            created the first time they are needed and reused afterwards.
+          </p>
+        </header>
+
+        <pre class="tree" data-i18n-aria="options.files.treeAria" aria-label="Folder layout">&lt;your folder&gt;/
+  QA Wrap/
+    Reports/          Bug report-04-09-26-14-32.md · Illustrated report-04-09-26-14-32.html
+    Tickets/          Jira ticket-04-09-26-14-32.txt · Issue-04-09-26-14-32.md
+    Tests/            Page object-04-09-26-14-32.ts · Re-test-04-09-26-14-32.spec.ts
+    Session sheets/   Session sheet-04-09-26-14-32.xlsx · Timeline-04-09-26-14-32.xlsx
+    Documents/        Requirements specification-… · User manual-… · Workflow diagram-…
+    Accessibility/    Accessibility findings-04-09-26-14-32.json
+    Screenshots/      01 Error shown-04-09-26-14-33.png
+    Recordings/       01 Recording-04-09-26-14-31.mp4
+    Sessions/         Submit an application-04-09-26-14-32.json
+
+<span data-i18n="options.files.treeNote">The folders are checked before every save and created if they are missing.</span></pre>
+
+        <!-- One block, because these three controls are one decision: which of
+             the two routes a file takes out of here. They were a picker, then a
+             field, then a checkbox, in a row, reading as competing answers to
+             the same question. The help paragraph names both routes once; it is
+             `DOWNLOAD_FOLDER_HELP` from platform/settings.js, written in by
+             options.js, so this page and the report's Save sheet cannot drift
+             apart on a limitation that has to be stated exactly right. -->
+        <h3 class="sub-head" data-i18n="options.files.whereHead">Where files go</h3>
+        <p class="range-note" id="downloadFolder-help"></p>
+
+        <div class="row-2">
+          <button id="pick-folder" class="btn" data-i18n="options.files.chooseFolder">Choose a folder&hellip;</button>
+          <button id="clear-folder" class="btn btn-quiet" data-i18n="options.files.useDownloads">Use Downloads instead</button>
+        </div>
+        <p class="range-note" id="folder-state"></p>
+
+        <!-- The placeholder used to read "QA Wrap". A placeholder spelling
+             out a real, plausible value reads as the setting's current value,
+             and a tester who types what it shows gets QA Wrap/QA Wrap/ - which
+             is what happened, in research/54. It now names a folder nobody
+             would mistake for the product's own. -->
+        <label class="text-field">
+          <span data-i18n="options.files.saveInto">Save into</span>
+          <input type="text" id="downloadFolder" data-i18n-placeholder="options.files.saveIntoPlaceholder" placeholder="Leave empty for Downloads/QA Wrap" />
+        </label>
+        <p class="range-note">
+          <span data-i18n="options.files.saveIntoNote1">The subfolder inside Downloads, used when no folder is chosen above. QA Wrap makes its own</span>
+          <code>QA Wrap</code>
+          <span data-i18n="options.files.saveIntoNote2">folder inside whatever you name here, so there is no need to type that yourself.</span>
+        </p>
+        <p class="range-note" id="downloadFolder-preview"></p>
+
+        <label class="switch">
+          <input type="checkbox" id="saveAs" />
+          <span><strong data-i18n="options.files.saveAsLabel">Ask where to save each file</strong><em data-i18n="options.files.saveAsHint">Opens the browser's Save dialog every time. Off, and files go straight to the folder above.</em></span>
+        </label>
+
+        <div class="guided-divider"></div>
+
+        <label class="field"><span data-i18n="options.files.clockLabel">Time in the filename</span>
+          <select id="clock">
+            <option value="24" data-i18n="options.files.clock24">24-hour (14-32)</option>
+            <option value="12" data-i18n="options.files.clock12">12-hour (02-32pm)</option>
+          </select>
+        </label>
+        <p class="range-note">
+          <span data-i18n="options.files.nameNote1">A filename reads</span> <code>&lt;what it is&gt;-dd-mm-yy-hh-mm</code><span data-i18n="options.files.nameNote2">, so a screenshot taken
+          at half past two on 5 September is</span> <code>screenshot-05-09-26-14-30.png</code><span data-i18n="options.files.nameNote3">. Colons and slashes are
+          illegal in filenames on every platform, so</span> <code>hh:mm</code> <span data-i18n="options.files.nameNote4">is written</span>
+          <code>hh-mm</code> <span data-i18n="options.files.nameNote5">and</span> <code>dd/mm/yy</code> <span data-i18n="options.files.nameNote6">as</span> <code>dd-mm-yy</code>.
+        </p>
+
+        <div class="guided-divider"></div>
+
+        <h3 class="sub-head" data-i18n="options.files.screenshotsHead">Screenshots</h3>
+        <label class="field"><span data-i18n="options.files.imageFormatLabel">Format</span>
+          <!-- Filled from what this browser can actually encode. -->
+          <select id="imageFormat"></select>
+        </label>
+        <div class="range-field" id="imageQuality-field">
+          <div class="range-head"><label for="imageQuality" data-i18n="options.files.imageQualityLabel">Quality</label><output id="imageQuality-out"></output></div>
+          <input type="range" id="imageQuality" />
+        </div>
+
+        <h3 class="sub-head" data-i18n="options.files.recordingsHead">Recordings</h3>
+
+        <!--
+          The buttons that used to be here now live in their own Permissions
+          section above, with the camera and screen capture beside them. The
+          reasoning for why this page and no other is allowed to ask is written
+          there.
+        -->
+        <p class="range-note">
+          <span data-i18n="options.files.permsPointer">Microphone, camera and screen capture are switched on under</span>
+          <a href="#sec-permissions" data-i18n="options.files.permsLink">Permissions</a>.
+        </p>
+
+        <label class="field"><span data-i18n="options.files.videoFormatLabel">Format</span>
+          <select id="videoFormat"></select>
+        </label>
+        <label class="field"><span data-i18n="options.files.videoQualityLabel">Detail</span>
+          <select id="videoQuality">
+            <option value="low" data-i18n="options.files.videoLow">Low: about 6MB a minute</option>
+            <option value="medium" data-i18n="options.files.videoMedium">Medium: about 18MB a minute</option>
+            <option value="high" data-i18n="options.files.videoHigh">High: about 45MB a minute</option>
+          </select>
+        </label>
+        <div class="range-field">
+          <div class="range-head"><label for="videoFps" data-i18n="options.files.fpsLabel">Frame rate</label><output id="videoFps-out"></output></div>
+          <input type="range" id="videoFps" />
+        </div>
+
+        <!--
+          The other half of the same omission as `maxStressNodes` above: the
+          webcam inset's size was storable and unreachable, so the only way to
+          change it was to edit storage by hand.
+        -->
+        <div class="range-field" data-setting="webcamSize">
+          <div class="range-head">
+            <label for="webcamSize" data-i18n="options.files.webcamLabel">Webcam inset</label>
+            <output id="webcamSize-out"></output>
+          </div>
+          <input type="range" id="webcamSize" />
+          <p class="range-note" id="webcamSize-note"></p>
+        </div>
+
+        <!--
+          The corner the webcam inset starts in, 8 September 2026. The same
+          choice is on the popup's Video options, beside the Webcam tick, where
+          it is decided per recording; this one is the default it starts from.
+          Both write `webcamPosition`, so changing it in either place is visible
+          in the other on the next paint.
+        -->
+        <label class="field"><span data-i18n="options.files.webcamPositionLabel">Webcam corner</span>
+          <select id="webcamPosition">
+            <option value="top-left" data-i18n="options.files.cornerTopLeft">Top left</option>
+            <option value="top-right" data-i18n="options.files.cornerTopRight">Top right</option>
+            <option value="bottom-left" data-i18n="options.files.cornerBottomLeft">Bottom left</option>
+            <option value="bottom-right" data-i18n="options.files.cornerBottomRight">Bottom right</option>
+          </select>
+        </label>
+        <p class="range-note" id="storage-state"></p>
+      </section>
+
+      <!-- ============================================ integrations -->
+      <section class="card" id="sec-integrations" role="tabpanel" aria-labelledby="tab-integrations" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 data-i18n="options.integrations.title">Integrations</h2>
+          <p class="muted" data-i18n="options.integrations.intro2">Every export is a file or a clipboard copy. Connecting a service is the one exception, and only when you press File or Send.</p>
+        </header>
+        <div id="svc-home">
+          <div id="svc-grid"></div>
+          <div id="svc-viz"></div>
+          <div class="setting-row" id="filing-row" data-kw="auto submit automatic filing">
+            <label class="switch">
+          <input type="checkbox" id="autoSubmitDefect" />
+          <span><strong data-i18n="options.filing.autoLabel">Auto-submit new defects when a session stops</strong><em data-i18n="options.filing.autoHint">Files the defect report into the project above the moment you press Stop, with the screenshots, the session sheet and the network log. Off unless you switch it on, and it does nothing at all until Jira is configured.</em></span>
+        </label>
+          </div>
+          <div class="callout" id="vault-box">
+          <h3 data-i18n="options.vault.title">Token vault</h3>
+          <p class="muted" data-i18n="options.vault.intro">
+            Saved tokens are stored encrypted and only the background worker can decrypt them. An optional passphrase
+            keeps them locked until you unlock QA Wrap here.
+          </p>
+          <p class="muted" data-i18n="options.vault.limit">
+            This defeats disk and profile scanners and sync leaks, not malware running as you while QA Wrap is unlocked.
+          </p>
+          <p class="range-note" id="vault-mode" role="status" aria-live="polite"></p>
+          <div id="vault-unlock" hidden>
+            <label class="text-field"><span data-i18n="options.vault.unlockLabel">Passphrase</span>
+              <input type="password" id="vault-unlock-pass" autocomplete="off" /></label>
+            <button id="vault-unlock-btn" class="btn" type="button" data-i18n="options.vault.unlock">Unlock</button>
+            <button id="vault-forget" class="btn btn-quiet" type="button" data-i18n="options.vault.forget">Forgot it: forget all tokens</button>
+          </div>
+          <div id="vault-set">
+            <label class="text-field"><span data-i18n="options.vault.newPass">New passphrase (8+ characters)</span>
+              <input type="password" id="vault-pass" autocomplete="new-password" /></label>
+            <label class="text-field"><span data-i18n="options.vault.again">Repeat it</span>
+              <input type="password" id="vault-pass2" autocomplete="new-password" /></label>
+            <label class="text-field"><span data-i18n="options.vault.idle">Lock again after this many idle minutes</span>
+              <input type="number" id="vault-idle" min="1" max="1440" value="30" /></label>
+            <button id="vault-set-btn" class="btn" type="button" data-i18n="options.vault.set">Set passphrase</button>
+            <button id="vault-lock" class="btn btn-quiet" type="button" hidden data-i18n="options.vault.lockNow">Lock now</button>
+            <button id="vault-remove" class="btn btn-quiet" type="button" hidden data-i18n="options.vault.remove">Remove passphrase</button>
+          </div>
+          <p class="range-note" id="vault-state" role="status" aria-live="polite"></p>
+        </div>
+
+        
+        </div>
+        <div id="svc-screen" hidden></div>
+        <div id="svc-holder" hidden>
+          <div id="jira-fields">
+            <label class="text-field">
+          <span data-i18n="options.jira.urlLabel">Jira site URL</span>
+          <input type="text" id="jira-baseUrl" placeholder="https://yourteam.atlassian.net" />
+        </label>
+        <label class="text-field">
+          <span data-i18n="options.jira.authLabel">Sign-in</span>
+          <select id="jira-authMode">
+            <option value="auto" data-i18n="options.jira.authAuto">Detect from the site URL</option>
+            <option value="cloud" data-i18n="options.jira.authCloud">Jira Cloud (email and API token)</option>
+            <option value="server" data-i18n="options.jira.authServer">Jira Data Center or Server (personal access token)</option>
+            <option value="server-basic" data-i18n="options.jira.authServerBasic">Jira Data Center (username and password)</option>
+          </select>
+        </label>
+        <p class="muted" id="jira-auth-help"></p>
+        <!-- Username-and-password sign-in (FX-2): the labels swap by CSS from the
+             selected option; the username rides in the email field and the
+             password in the token field. -->
+        <style>
+          .jira-basic-only { display: none; }
+          #jira-fields:has(#jira-authMode option[value="server-basic"]:checked) .jira-basic-only { display: revert; }
+          #jira-fields:has(#jira-authMode option[value="server-basic"]:checked) .jira-basic-hide { display: none; }
+        </style>
+        <label class="text-field" id="jira-email-field">
+          <span class="jira-basic-hide" data-i18n="options.jira.emailLabel">Your Atlassian email</span>
+          <span class="jira-basic-only" data-i18n="options.jira.usernameLabel">Your Jira username</span>
+          <input type="text" id="jira-email" placeholder="you@example.com" />
+        </label>
+        <label class="text-field">
+          <span id="jira-token-label" class="jira-basic-hide" data-i18n="options.jira.tokenApi">API token</span>
+          <span class="jira-basic-only" data-i18n="options.jira.passwordLabel">Your Jira password</span>
+          <input type="password" id="jira-token" data-i18n-placeholder="options.jira.tokenPlaceholderApi" placeholder="from id.atlassian.com, under API tokens" />
+        </label>
+        <label class="text-field">
+          <span data-i18n="options.jira.projectLabel">Default project key</span>
+          <input type="text" id="jira-project" placeholder="QA" />
+        </label>
+        <p class="range-note" id="jira-state"></p>
+          </div>
+          <div id="jira-types">
+            <h3 class="sub-head" data-i18n="options.jira.typesTitle">Jira issue types</h3>
+        <p class="muted" data-i18n="options.jira.typesIntro">
+          Which type a defect and a test case are filed as. Left empty, the report picks
+          whatever this project calls them, read from your site rather than guessed.
+        </p>
+        <div class="two-up">
+          <label class="text-field">
+            <span data-i18n="options.jira.defectTypeLabel">Defects are</span>
+            <input type="text" id="jira-issueType" placeholder="Bug" />
+          </label>
+          <label class="text-field">
+            <span data-i18n="options.jira.testTypeLabel">Test cases are</span>
+            <input type="text" id="jira-testIssueType" placeholder="Test, Test Case, or Task" />
+          </label>
+        </div>
+      
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ privacy -->
+      <section class="card" id="sec-privacy" role="tabpanel" aria-labelledby="h-sec-privacy" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-privacy" data-i18n="options.privacy.title">Privacy and data protection</h2>
+          <p class="muted" data-i18n="options.privacy.intro">
+            Nothing leaves this machine unless you press a button that says so. What follows is
+            about what stays on it, because a local file full of other people's records is
+            still a file full of other people's records.
+          </p>
+        </header>
+
+        <!--
+          The way back to the first-run notice.
+
+          It is the document the store's rules require to be shown inside the
+          product with a specific affirmative action (research/51d, section 1),
+          which means it also has to stay reachable afterwards: a tester who
+          skimmed it on install, a colleague sitting down at the same machine,
+          and a store reviewer looking for it all arrive here.
+        -->
+        <h3 class="sub-head" data-i18n="options.privacy.consentHead">The first-run notice</h3>
+        <p class="range-note" id="consent-state" role="status" aria-live="polite" data-i18n="options.privacy.checking">Checking...</p>
+        <button id="show-welcome" class="btn btn-quiet" type="button" data-i18n="options.privacy.showWelcome">Show the welcome page again</button>
+
+        <h3 class="sub-head" data-i18n="options.privacy.preRollHead">Pre-roll buffer</h3>
+        <label class="check">
+          <input type="checkbox" id="preRollBuffer" />
+          <span><span data-i18n="options.privacy.preRollLabel">Keep the last minute on awake tabs, so a bug can be filed after it happens</span>
+            <em data-i18n="options.privacy.preRollHint">Off by default. Held in memory on the page only, never stored or sent until you start a session, then added to it marked as pre-roll. Sensitive values are removed as for any event.</em>
+          </span>
+        </label>
+
+
+        <!-- Autopilot (1011): the recording dot on pages. On unless switched off (key pageIndicator, absent = on). options/remembered.js -->
+        <h3 class="sub-head" data-i18n="options.auto.head">Recording dot</h3>
+        <label class="check">
+          <input type="checkbox" id="auto-indicator" checked />
+          <span><span data-i18n="options.auto.indicator">Show the recording dot on pages</span>
+            <em data-i18n="options.auto.indicatorHint">A small dot with the minutes, drawn by QA Wrap while a test is recording. The page cannot see it. Which sites start recording or take screenshots by themselves is listed under Permissions.</em>
+          </span>
+        </label>
+
+        <!-- Decision 4: the 2-minute replay buffer. Switched on per site from the popup; this lists and switches off. options/buffer-bridge.js -->
+        <h3 class="sub-head" data-i18n="buffer.options.head">Replay buffer (last 2 minutes)</h3>
+        <p class="range-note" data-i18n="buffer.options.lead">Off by default, and turned on one site at a time from the popup. While it is on, QA Wrap keeps the last 2 minutes of your clicks and typing, the console and the network calls (address, status and time only, no bodies) in the memory of that page. Nothing is written to disk and nothing is sent anywhere until you press Save last 2 minutes. Anything older than 2 minutes is dropped, and closing or reloading the page clears it. Sensitive values are masked before they are kept.</p>
+        <p class="range-note" id="buffer-count" role="status" aria-live="polite" data-i18n="buffer.options.none">No site has it on.</p>
+        <ul class="site-list" id="buffer-list"></ul>
+        <button id="buffer-clear" class="btn btn-quiet" type="button" data-i18n="buffer.options.clear">Turn it off everywhere</button>
+
+        <!-- Decision 6: the agent bridge. Off by default; nativeMessaging is an optional permission asked for in the click that turns it on. -->
+        <h3 class="sub-head" data-i18n="bridge.head">Agent bridge</h3>
+        <label class="check">
+          <input type="checkbox" id="agentBridge" />
+          <span><span data-i18n="bridge.label">Let my coding agent read my sessions (read only)</span>
+            <em data-i18n="bridge.hint">Off by default. It needs a small helper program on this computer: run npx qa-wrap-bridge in a terminal once. Your agent (Claude Code, Cursor) can then ask for the list of sessions, one session as session.json, its failures, or the AI brief. It can only read. It cannot start, change or delete anything, and the helper never connects to the internet. Secrets are masked before anything leaves QA Wrap. What your agent does with the text is up to the agent.</em>
+          </span>
+        </label>
+        <p class="range-note" id="bridge-state" role="status" aria-live="polite" data-i18n="bridge.state.off">Off.</p>
+        <button id="bridge-check" class="btn btn-quiet" type="button" hidden data-i18n="bridge.check">Check again</button>
+
+        <h3 class="sub-head" data-i18n="options.privacy.redactHead">Redaction</h3>
+        <label class="check">
+          <input type="checkbox" id="redact" />
+          <span><span data-i18n="options.privacy.redactLabel">Remove sensitive values before anything is stored</span>
+            <em data-i18n="options.privacy.redactHint">Payment cards (checked against Luhn), IBANs, bearer tokens, JSON web tokens and
+              private keys. Checked, not guessed: an order number is not a card number, and a
+              redactor that eats ordinary data gets switched off.</em>
+          </span>
+        </label>
+        <div class="chips" id="redactExtra" role="group" data-i18n-aria="options.privacy.chipsAria" aria-label="Also remove">
+          <button type="button" data-family="nationalId" aria-pressed="false" data-i18n="options.privacy.chipNationalId">National and record numbers</button>
+          <button type="button" data-family="email" aria-pressed="false" data-i18n="options.privacy.chipEmail">Email addresses</button>
+        </div>
+        <p class="range-note" data-i18n="options.privacy.chipsNote">
+          These two are off by default: a ten-digit national number and a ten-digit order
+          reference are the same shape, and a tester testing order references needs to read them.
+        </p>
+
+        <label class="text-field">
+          <span data-i18n="options.privacy.maskLabel">Also mask fields matching</span>
+          <input type="text" id="maskExtraPattern" maxlength="2000" placeholder="e.g. account|reference|رقم الحساب" />
+          <em data-i18n="options.privacy.maskHint">A regular expression, matched against a field's name, id and label.</em>
+        </label>
+        <p class="range-note" id="mask-state"></p>
+
+        <h3 class="sub-head" data-i18n="options.privacy.retentionHead">How long sessions are kept</h3>
+
+        <!--
+          Shown once, to a profile that predates the retention setting.
+          `resolveRetentionDays()` deliberately answers 0 — keep everything —
+          for such a profile, because reading the 30-day default off DEFAULTS
+          would have deleted every finished session older than a month under a
+          policy nobody chose, with no prompt and no undo. That is the safe
+          direction to be wrong in, and it is only honest if the person is then
+          told the window exists and can be set. Dismissing it records
+          `retentionNoticeSeen`, so it is asked once and never again.
+        -->
+        <div class="notice" id="retention-notice" hidden>
+          <p>
+            <strong data-i18n="options.privacy.retentionNoticeBold">Finished sessions can now expire.</strong>
+            <span data-i18n="options.privacy.retentionNoticeText1">QA Wrap can delete a session, with its events, its screenshots and its
+            recordings, once it is older than the window below. Nothing has been
+            deleted: this profile is set to</span> <b data-i18n="options.privacy.retentionNoticeKeepBold">keep everything</b> <span data-i18n="options.privacy.retentionNoticeText2">until you choose a
+            window, because a retention policy applied to history you already had
+            would not have been your decision.</span>
+          </p>
+          <button id="retention-notice-ok" class="btn btn-sm" type="button" data-i18n="options.privacy.retentionNoticeOk">Got it</button>
+        </div>
+
+        <label class="range">
+          <span data-i18n="options.privacy.retentionLabel">Delete finished sessions after</span>
+          <input type="range" id="retentionDays" min="0" max="365" step="1" />
+          <output id="retentionDays-out"></output>
+        </label>
+        <p class="range-note" data-i18n="options.privacy.retentionNote">
+          The session, its events, its screenshots and its recordings: deleted together, daily.
+          A running session is never touched. Zero keeps everything until you delete it yourself.
+        </p>
+        <div class="row-2">
+          <button id="purge-now" class="btn" type="button" data-i18n="options.privacy.purgeNow">Run it now</button>
+          <span class="range-note" id="purge-state"></span>
+        </div>
+
+        <h3 class="sub-head" data-i18n="options.policy.title">Policy in effect</h3>
+        <p class="range-note" id="policy-status" aria-live="polite"></p>
+        <ul class="policy-list" id="policy-list"></ul>
+
+        <h3 class="sub-head" data-i18n="options.egress.title">What left this machine</h3>
+        <p class="range-note" data-i18n="options.egress.intro">The last 200 sends.</p>
+        <p class="range-note" id="egress-empty" aria-live="polite"></p>
+        <ol class="policy-list" id="egress-list"></ol>
+        <button id="egress-copy" class="btn btn-sm" type="button" data-i18n="options.egress.copy">Copy this list</button>
+
+        <h3 class="sub-head" data-i18n="options.privacy.complianceHead">What this answers to</h3>
+        <p class="range-note">
+          <span data-i18n="options.privacy.compliance1">Masking by hand and redaction by shape are data minimisation</span>
+          (<b>GDPR Art. 5(1)(c)</b>) <span data-i18n="options.privacy.compliance2">and protection by design and by default</span>
+          (<b>Art. 25</b>, <b>ISO/IEC 27701 cl. 7.4</b>). <span data-i18n="options.privacy.compliance3">Retention is storage limitation</span>
+          (<b>Art. 5(1)(e)</b>). <span data-i18n="options.privacy.compliance4">Covering values in captures is masking of test data</span>
+          (<b>ISO/IEC 27002:2022 control 8.11</b>). <span data-i18n="options.privacy.compliance5">None of this is a certification. It is
+          the set of controls a certification would ask you to show.</span>
+        </p>
+      </section>
+      <!--
+        The way back. Every other card here changes what the product does next;
+        this one undoes what it has already done, which is why it is last, why
+        each button says exactly what it keeps, and why the destructive half
+        asks for a word rather than a click.
+      -->
+      <section class="card" id="sec-safe" role="tabpanel" aria-labelledby="h-sec-safe" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-safe" data-i18n="options.safe.title">Safe route</h2>
+          <p class="muted" data-i18n="options.safe.intro">
+            Two ways back. One puts every setting on this page back to how it shipped and
+            leaves your recorded sessions alone. The other deletes the sessions and keeps
+            the settings. Neither one touches the other, and neither can be undone.
+          </p>
+        </header>
+
+        <h3 class="sub-head" data-i18n="options.safe.settingsHead">Settings</h3>
+        <div class="row-2">
+          <button type="button" id="reset-settings" class="btn" data-i18n="options.safe.resetButton">Reset settings to defaults</button>
+          <span class="range-note" id="reset-state" data-i18n="options.safe.resetResting">Sessions and recordings are kept.</span>
+        </div>
+
+        <h3 class="sub-head" data-i18n="options.safe.sessionsHead">Sessions on this machine</h3>
+        <p class="range-note" id="footprint" data-i18n="options.safe.counting">Counting&hellip;</p>
+        <div class="row-2">
+          <button type="button" id="erase-all" class="btn btn-danger" data-i18n="options.safe.eraseButton">Erase all sessions and recordings</button>
+          <span class="range-note" id="erase-state" data-i18n="options.safe.eraseResting">Settings are kept.</span>
+        </div>
+      </section>
+
+      <dialog id="bundle-dialog" class="save-dialog" aria-labelledby="bundle-title">
+        <form method="dialog">
+          <h2 id="bundle-title" data-i18n="options.about.bundle">Support details</h2>
+          <textarea id="bundle-text" data-i18n-aria="options.about.bundleTextAria" aria-label="Support details" readonly rows="14" style="width:100%;font-family:var(--font);" dir="ltr"></textarea>
+          <div class="row-2">
+            <button type="button" id="bundle-copy" class="btn btn-primary" data-i18n="options.about.bundleCopy">Copy</button>
+            <button type="button" id="bundle-close" class="btn" data-i18n="options.about.bundleClose">Close</button>
+          </div>
+        </form>
+      </dialog>
+      <dialog id="confirm-dialog" class="save-dialog" aria-labelledby="confirm-title">
+        <form method="dialog">
+          <div class="filter-bar">
+            <h2 id="confirm-title" data-i18n="options.confirm.title">Are you sure?</h2>
+            <button type="button" id="confirm-close" class="btn btn-sm" data-i18n-aria="options.confirm.closeAria" aria-label="Close">&times;</button>
+          </div>
+          <p id="confirm-text" class="muted"></p>
+          <label class="field" id="confirm-typed" hidden>
+            <span><span data-i18n="options.confirm.typePrompt">Type</span> <b>ERASE</b> <span data-i18n="options.confirm.typeSuffix">to confirm</span></span>
+            <input type="text" id="confirm-word" autocomplete="off" />
+          </label>
+          <div class="row-2">
+            <button type="button" id="confirm-go" class="btn btn-danger" data-i18n="options.confirm.go">Yes, do it</button>
+            <button type="button" id="confirm-cancel" class="btn" data-i18n="options.confirm.cancel">Cancel</button>
+          </div>
+        </form>
+      </dialog>
+
+      <section class="card" id="sec-updates" role="tabpanel" aria-labelledby="tab-updates" tabindex="0" hidden>
+        <header>
+          <h2 data-i18n="options.e1022.updTitle">Updates</h2>
+          <p class="muted" data-i18n="options.e1022.updIntro">See which build you run and check for a newer one.</p>
+        </header>
+        <dl class="about">
+          <dt data-i18n="options.about.build">Build</dt><dd id="upd-build"></dd>
+          <dt data-i18n="options.about.extensionId">Extension ID</dt><dd id="upd-id" class="mono"></dd>
+          <dt data-i18n="options.e1022.updBrowser">Browser and system</dt><dd id="upd-env"></dd>
+          <dt data-i18n="options.e1022.updChecked">Last checked</dt><dd id="upd-checked"></dd>
+        </dl>
+        <div class="field">
+          <button type="button" class="btn btn-primary" id="upd-check" data-i18n="update.setting">Check for updates</button>
+          <button type="button" class="btn" id="upd-now" data-i18n="options.e1022.updNow" hidden>Update now</button>
+          <span id="upd-status" role="status" aria-live="polite"></span>
+        </div>
+        <!-- Updates: GitHub releases/latest once a day; key checkUpdates (absent = on). ui/update-card.js -->
+        <h3 class="sub-head" data-i18n="update.setting">Check for updates</h3>
+        <label class="check">
+          <input type="checkbox" id="check-updates" checked />
+          <span><span data-i18n="update.setting">Check for updates</span>
+            <em data-i18n="update.settingHint">Once a day QA Wrap asks GitHub if a newer version exists. It sends nothing about you or your tests. Updating is always your choice.</em>
+          </span>
+        </label>
+        <!-- Optional read-only token for a private repo (key qawUpdateToken, storage.local only). Masked; ui/update-card.js -->
+        <div class="field">
+          <label for="update-token" data-i18n="update.upd1022.tokenLabel">GitHub token for updates (optional)</label>
+          <input type="password" id="update-token" autocomplete="off" spellcheck="false" />
+          <em data-i18n="update.upd1022.tokenHint">Only needed while the QA Wrap releases are private. Paste a read-only token; it stays on this computer and is sent only to GitHub when checking or downloading an update.</em>
+          <button type="button" class="btn btn-sm" id="update-token-save" data-i18n="update.upd1022.tokenSave">Save token</button>
+          <button type="button" class="btn btn-sm btn-quiet" id="update-token-clear" data-i18n="update.upd1022.tokenClear" hidden>Remove token</button>
+          <span id="update-token-status" role="status"></span>
+        </div>
+      </section>
+
+      <section class="card" id="about-card" role="tabpanel" aria-labelledby="tab-about" tabindex="0" hidden>
+        <header>
+          <h2 data-i18n="options.about.title">About</h2>
+          <p class="muted" data-i18n="options.about.intro">What to quote in a support message.</p>
+        </header>
+        <dl class="about">
+          <dt data-i18n="options.about.product">Product</dt><dd id="about-name">QA Wrap</dd>
+          <dt data-i18n="options.about.madeBy">Made by</dt><dd id="about-maker" data-i18n="options.e1022.maker">Nader Alzghoul (NJ-Burrito)</dd>
+          <dt data-i18n="options.e1022.aboutGithub">GitHub</dt><dd class="legal-links"><a id="about-github" href="https://github.com/NJ-Burrito/QA-Wrap" target="_blank" rel="noopener"></a></dd>
+          <dt data-i18n="options.e1022.aboutPortfolio">Portfolio</dt><dd class="legal-links"><a id="about-portfolio" href="https://nj-burrito.github.io" target="_blank" rel="noopener"></a></dd>
+          <dt data-i18n="options.e1022.aboutWebsite">Website</dt><dd class="legal-links" id="about-website" data-i18n="options.e1022.aboutSoon">Coming soon</dd>
+          <dt data-i18n="options.about.build">Build</dt><dd id="about-code"></dd>
+          <dt data-i18n="options.about.extensionId">Extension ID</dt><dd id="about-id" class="mono"></dd>
+          <!-- `legal-links` is the About card's link style, not a statement about
+               what these links are. options/options.css is another engineer's
+               file this week, so the existing rule is reused rather than a
+               near-identical `.about-links` added beside it. -->
+          <dt data-i18n="options.about.support">Support</dt><dd class="legal-links"><a id="about-support" href="#"></a></dd>
+          <dt data-i18n="options.about.tutorials">Tutorials</dt>
+          <dd class="legal-links">
+            <a id="about-tutorials" href="../tutorials/tutorials.html" target="_blank" rel="noopener" data-i18n="options.about.shortFilms">Short films</a>
+          </dd>
+          <dt data-i18n="options.about.rate" id="about-rate-dt">Rating</dt><dd class="legal-links" id="about-rate-dd"><a id="about-rate" target="_blank" rel="noopener" data-i18n="options.about.rateLink">Rate QA Wrap</a></dd>
+          <dt data-i18n="options.about.bundle">Support details</dt>
+          <dd><button type="button" id="bundle-open" class="btn btn-sm" data-i18n="options.about.bundleBtn">Preview support details</button>
+            <a id="bundle-report" class="legal-links" href="#" data-i18n="options.about.bundleReport">Report a problem</a>
+            <p class="range-note" data-i18n="options.about.bundleHint">Build, browser, a few settings and the last handler errors. Nothing is sent.</p></dd>
+          <dt data-i18n="options.about.data">Data</dt><dd data-i18n="options.about.dataNote">Stays on this machine. Nothing is uploaded unless you press a button that says so.</dd>
+          <!--
+            The policy and the terms were shipped in the package and linked from
+            nowhere, so the only way to read either was to unzip the extension.
+            These open the copies inside this build, which is the text that
+            actually governs the copy you are running, and they work offline.
+          -->
+          <dt data-i18n="options.about.legal">Legal</dt>
+          <dd class="legal-links">
+            <a href="../PRIVACY.md" target="_blank" rel="noopener" data-i18n="options.about.privacyPolicy">Privacy policy</a>
+            <a href="../TERMS.md" target="_blank" rel="noopener" data-i18n="options.about.terms">Terms of service</a>
+            <a href="../LICENSE" target="_blank" rel="noopener" data-i18n="options.about.licence">Licence</a>
+            <a href="../SUPPORT.md" target="_blank" rel="noopener" data-i18n="options.about.supportDoc">Support</a>
+          </dd>
+        </dl>
+        <p class="range-note" id="about-note"></p>
+      </section>
+        <footer class="page-foot">
+          <img src="../brand/mark-small.svg" alt="" width="14" height="14" />
+          <span>QA Wrap</span><span class="made-by" data-i18n="options.foot.madeBy">Made by Nader Alzghoul</span>
+        </footer>
+      </main>
+    </div>
+
+    <script src="../ui/folder.js"></script>
+    <!-- Classic, and before the module: a module is deferred, so window.UQASound
+         has to be on the window by the time options.js runs. -->
+    <script src="../ui/sound.js"></script>
+    <script src="../ui/vfx.js"></script>
+    <script src="../ui/motion.js"></script>
+    <script src="options.js" type="module"></script>
+    <script src="remembered.js"></script>
+    <script src="e1022.js" type="module"></script>
+    <script src="../ui/update-card.js"></script>
+    <script src="buffer-bridge.js"></script>
+    <script src="ai-writing.js" type="module"></script>
+    <script src="jira-helper.js" type="module"></script>
+  </body>
+</html>

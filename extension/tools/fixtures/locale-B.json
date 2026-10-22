@@ -1,0 +1,14 @@
+{
+  "en": {
+    "report.f.mediaUnscanned": "Screenshots and video are not scanned for secrets or personal data. Check them before you file.",
+    "report.f.trSentText": "The defect report",
+    "report.f.noAttach": "Screenshots are not attached for {name}: it has no way to add files to an issue.",
+    "report.f.noAttachDone": "Screenshots were not attached: {name} cannot take files. Add them by hand."
+  },
+  "ar": {
+    "report.f.mediaUnscanned": "لا تُفحص لقطات الشاشة ومقاطع الفيديو بحثًا عن الأسرار أو البيانات الشخصية. راجعها قبل التقديم.",
+    "report.f.trSentText": "تقرير الخلل",
+    "report.f.noAttach": "لن تُرفق لقطات الشاشة في {name}، إذ لا يوفّر وسيلة لإضافة ملفات إلى البلاغ.",
+    "report.f.noAttachDone": "لم تُرفق لقطات الشاشة، فـ {name} لا يقبل الملفات. أضفها يدويًا."
+  }
+}

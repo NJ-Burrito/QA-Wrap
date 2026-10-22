@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-03/schema#",
+  "title": "QA Wrap policy",
+  "description": "Settings an administrator can fix for every tester on a managed machine. Chrome refuses chrome.storage.managed entirely unless this file exists and the manifest names it. Push it through Group Policy, a macOS configuration profile, or your MDM. Chrome's policy-schema parser accepts only a subset of JSON Schema: object, string, integer, number, boolean and array types, properties, enum of strings or integers, and additionalProperties given as a schema object. A boolean additionalProperties, required, $ref or enum of non-strings makes the whole extension fail to load with 'Invalid type for attribute'. This file is written temp-and-renamed and tools/manifest-check.mjs is run straight afterwards, because a half-written schema stops the extension loading with a modal and no other suite can see it.",
+  "type": "object",
+  "properties": {
+    "microphoneAllowed": {
+      "title": "Allow the microphone in recordings",
+      "description": "Set to false to remove the microphone from QA Wrap entirely on this machine: the option disappears from the popup and from Settings, and every recording path refuses to open a microphone whatever a tester has saved. Recording the screen, the tab and the tab's own sound are unaffected. Intended for jurisdictions where recording a voice requires every party's consent (research/51d, section 5). Default true.",
+      "type": "boolean"
+    },
+    "hostPermissionsPolicy": {
+      "title": "How QA Wrap may ask for access to a site",
+      "description": "QA Wrap ships with no site access at all: pressing \"Wake up\" asks the tester for the site they are on. This decides what that press may offer. \"ask\" (the default) asks for the current site, with \"All sites\" available as a second choice. \"all\" grants nothing by itself — an administrator cannot grant a host permission on a tester's behalf — but makes the first wake ask for all sites in one press, which is what a team testing many internal applications wants. \"none\" removes the request: QA Wrap works only on the sites an administrator has already allowed through the ExtensionSettings policy, and the popup says an administrator has decided rather than offering a button that cannot work.",
+      "type": "string",
+      "enum": [
+        "ask",
+        "all",
+        "none"
+      ]
+    },
+    "replayAllowed": {
+      "title": "Allow the session replay",
+      "description": "Set to false to stop QA Wrap recording and showing the replay of a session on this machine. Screenshots, the event timeline and the written report are unaffected. Default true.",
+      "type": "boolean"
+    },
+    "retentionDaysMax": {
+      "title": "Longest time finished sessions may be kept, in days",
+      "description": "A whole number of days above zero. A tester may choose a shorter window but not a longer one, and may not choose to keep sessions for ever. 0 or absent sets no ceiling. Applies to existing profiles the next time the daily clean-up reads it.",
+      "type": "integer"
+    },
+    "integrationsAllowed": {
+      "title": "Allow Jira, trackers and chat destinations",
+      "description": "Set to false to stop QA Wrap sending anything to Jira, a tracker or a chat destination. Saving a report to the tester's own disk is unaffected. Default true.",
+      "type": "boolean"
+    },
+    "integrationHosts": {
+      "title": "Hosts integrations may reach",
+      "description": "A list of host names, for example jira.example.com. When the list is not empty, QA Wrap sends only to those hosts and their subdomains. Absent or empty sets no limit.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "debuggerToolsAllowed": {
+      "title": "Allow the tools that attach Chrome's debugger",
+      "description": "Set to false to turn off code coverage, the one tool that attaches Chrome's debugger to the page under test. Default true.",
+      "type": "boolean"
+    },
+    "consentMode": {
+      "title": "Who presents the first-run notice",
+      "description": "\"user\" (the default) opens the welcome page on install. \"organisation\" opens no tab on install: the popup shows your notice link (consentUrl) above the same first step, and QA Wrap still arms only after the tester accepts the notice. Needs consentUrl; without a valid https link the setting is ignored and the welcome page opens as usual.",
+      "type": "string",
+      "enum": [
+        "user",
+        "organisation"
+      ]
+    },
+    "consentUrl": {
+      "title": "Your organisation's notice (https link)",
+      "description": "An https address of the notice your organisation gives testers. Shown as a link in the popup when consentMode is organisation. Anything that is not an https link is ignored.",
+      "type": "string"
+    },
+    "redactionLocked": {
+      "title": "Lock redaction on",
+      "description": "Set to true to keep sensitive-value redaction on, including the two optional families (national ids and email addresses), whatever a tester or a synced setting says. Default false.",
+      "type": "boolean"
+    }
+  }
+}

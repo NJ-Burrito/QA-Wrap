@@ -1,0 +1,8 @@
+# Every tool launches into its own profile directory and closes only its own
+# browser handle. Nothing here is shared, and nothing here is committed.
+.*-profile/
+.ui-shots/
+dist/
+node_modules/
+keys/
+Microsoft/

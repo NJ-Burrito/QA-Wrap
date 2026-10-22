@@ -1,0 +1,1091 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "save-and-diagram",
+  "rev": "round-3",
+  "kind": "feature",
+  "mode": "expert",
+  "batch": "w",
+  "en": "Saving and the diagram",
+  "ar": "الحفظ والمخطط",
+  "blurb": "Every output in its own folder, named and dated, and the session as an A4 workflow.",
+  "titleKey": null,
+  "chipKey": null,
+  "bpm": 120,
+  "fps": 30,
+  "bars": 15,
+  "seconds": 30.0,
+  "frames": 900,
+  "aspects": [
+    "h",
+    "s",
+    "v"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    },
+    "s": {
+      "w": 1080,
+      "h": 1080,
+      "label": "1:1 cut"
+    },
+    "v": {
+      "w": 1080,
+      "h": 1920,
+      "label": "9:16 cut"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    },
+    "REQUEST": {
+      "surface": "request",
+      "url": "api/api.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      }
+    }
+  },
+  "posterShot": {
+    "shot": 5,
+    "frame": 495,
+    "why": "Saving and the diagram: the result of the first demonstration, visible in frame.",
+    "pass": "h"
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 5,
+    "frame": 495,
+    "why": "Saving and the diagram: the result of the first demonstration, visible in frame."
+  },
+  "srt": "deliverables/tutorials/save-and-diagram-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "One folder. Named and dated.",
+      "inSec": 0.15,
+      "outSec": 3.5,
+      "inFrame": 4,
+      "outFrame": 105,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "One folder. Named and dated.",
+      "dwell": {
+        "needMs": 2304,
+        "gotMs": 3350,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "Thirty formats.",
+      "inSec": 3.5,
+      "outSec": 7.5,
+      "inFrame": 105,
+      "outFrame": 225,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Thirty formats.",
+      "dwell": {
+        "needMs": 1350,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "Named, dated, yours.",
+      "inSec": 7.5,
+      "outSec": 11.0,
+      "inFrame": 225,
+      "outFrame": 330,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Named, dated, yours.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 3500,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "The session, as a flow.",
+      "inSec": 11.0,
+      "outSec": 15.0,
+      "inFrame": 330,
+      "outFrame": 450,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "The session, as a flow.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "One A4 page.",
+      "inSec": 15.0,
+      "outSec": 19.5,
+      "inFrame": 450,
+      "outFrame": 585,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "One A4 page.",
+      "dwell": {
+        "needMs": 1350,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "Every box moves.",
+      "inSec": 19.5,
+      "outSec": 24.0,
+      "inFrame": 585,
+      "outFrame": 720,
+      "shots": [
+        6
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Every box moves.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 6,
+      "text": "Both of them yours.",
+      "inSec": 24.0,
+      "outSec": 27.0,
+      "inFrame": 720,
+      "outFrame": 810,
+      "shots": [
+        7
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Both of them yours.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 3000,
+        "ok": true
+      }
+    },
+    {
+      "i": 7,
+      "text": "Every failure, traced.",
+      "inSec": 27.0,
+      "outSec": 30.0,
+      "inFrame": 810,
+      "outFrame": 900,
+      "shots": [
+        8
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 3000,
+        "ok": true
+      }
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0.0,
+      "outSec": 3.5,
+      "inFrame": 0,
+      "outFrame": 104,
+      "frames": 105,
+      "picture": "REPORT. Save pressed; the format list opens.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/save-and-diagram/h/shot-01"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/s/shot-01"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/v/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "Saving and the diagram",
+      "chipKey": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Everything the session made, in one folder.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        },
+        {
+          "cue": "tick",
+          "atSec": 0.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 3.5,
+      "outSec": 7.5,
+      "inFrame": 105,
+      "outFrame": 224,
+      "frames": 120,
+      "picture": "REPORT. The format list scrolled to full length, held: Markdown, SBTM, Playwright, JUnit, Postman, HAR, SRS, the user manual, the video storyboard, the workflow SVG.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/save-and-diagram/h/shot-02"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/s/shot-02"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/v/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Saving and the diagram",
+      "chipKey": null,
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Thirty-five formats, from a bug report to a Playwright spec.",
+        "startSec": 3.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 3.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 7.5,
+      "outSec": 11.0,
+      "inFrame": 225,
+      "outFrame": 329,
+      "frames": 105,
+      "picture": "REPORT. The saved list appears with real file names and sizes.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/save-and-diagram/h/shot-03"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/s/shot-03"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/v/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Saving and the diagram",
+      "chipKey": null,
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Named, dated, and yours, on your own disk.",
+        "startSec": 7.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 7.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 11.0,
+      "outSec": 15.0,
+      "inFrame": 330,
+      "outFrame": 449,
+      "frames": 120,
+      "picture": "DIAGRAM, cut on action. The drawing rail left, the A4 sheet right, being generated from the session.",
+      "capture": {
+        "rect": "DIAGRAM",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/save-and-diagram/h/shot-04"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/s/shot-04"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/v/shot-04"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Saving and the diagram",
+      "chipKey": null,
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "And the session, drawn as the flow it actually was.",
+        "startSec": 11.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 11.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 15.0,
+      "outSec": 19.5,
+      "inFrame": 450,
+      "outFrame": 584,
+      "frames": 135,
+      "picture": "SHEET. The A4 sheet alone on the ground, legible: start, steps, the decision, the red failure box, the end.",
+      "capture": {
+        "rect": "SHEET",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1018,
+              "h": 720
+            },
+            "place": {
+              "x": 451,
+              "y": 140
+            },
+            "placeSource": "A4 landscape fitted to the stage box height",
+            "clip": "film/capture/save-and-diagram/h/shot-05"
+          },
+          "s": {
+            "viewport": {
+              "w": 877,
+              "h": 620
+            },
+            "place": {
+              "x": 102,
+              "y": 230
+            },
+            "placeSource": "fitted to the square safe box",
+            "clip": "film/capture/save-and-diagram/s/shot-05"
+          },
+          "v": {
+            "viewport": {
+              "w": 792,
+              "h": 560
+            },
+            "place": {
+              "x": 144,
+              "y": 554
+            },
+            "placeSource": "fitted to the vertical safe box",
+            "clip": "film/capture/save-and-diagram/v/shot-05"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Saving and the diagram",
+      "chipKey": null,
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "One A4 page: what happened, where it decided, and where it failed.",
+        "startSec": 15.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 15.3
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 19.5,
+      "outSec": 24.0,
+      "inFrame": 585,
+      "outFrame": 719,
+      "frames": 135,
+      "picture": "DIAGRAM. A box is selected and reworded in the inspector; the sheet updates.",
+      "capture": {
+        "rect": "DIAGRAM",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/save-and-diagram/h/shot-06"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/s/shot-06"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/save-and-diagram/v/shot-06"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Saving and the diagram",
+      "chipKey": null,
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Every box moves, rewords and recolours, and the legend explains itself.",
+        "startSec": 19.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 19.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "barBeat": null,
+      "inSec": 24.0,
+      "outSec": 27.0,
+      "inFrame": 720,
+      "outFrame": 809,
+      "frames": 90,
+      "picture": "SHEET. The finished sheet, held.",
+      "capture": {
+        "rect": "SHEET",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1018,
+              "h": 720
+            },
+            "place": {
+              "x": 451,
+              "y": 140
+            },
+            "placeSource": "A4 landscape fitted to the stage box height",
+            "clip": "film/capture/save-and-diagram/h/shot-07"
+          },
+          "s": {
+            "viewport": {
+              "w": 877,
+              "h": 620
+            },
+            "place": {
+              "x": 102,
+              "y": 230
+            },
+            "placeSource": "fitted to the square safe box",
+            "clip": "film/capture/save-and-diagram/s/shot-07"
+          },
+          "v": {
+            "viewport": {
+              "w": 792,
+              "h": 560
+            },
+            "place": {
+              "x": 144,
+              "y": 554
+            },
+            "placeSource": "fitted to the vertical safe box",
+            "clip": "film/capture/save-and-diagram/v/shot-07"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Saving and the diagram",
+      "chipKey": null,
+      "caption": {
+        "span": 6,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "One folder, one page, and both of them yours.",
+        "startSec": 24.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 24.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "barBeat": null,
+      "inSec": 27.0,
+      "outSec": 30.0,
+      "inFrame": 810,
+      "outFrame": 899,
+      "frames": 90,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 7,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 27.0,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 27.52,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 27.0,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 27.0,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 29.3,
+          "toSec": 30.0
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 27.2,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 27.0
+        },
+        {
+          "cue": "logo",
+          "atSec": 27.0
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 27.0
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 8,
+    "cuts": 7,
+    "cutsPer10s": 2.33,
+    "asl": 3.75,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 7,
+    "pauseBeforeCloseSec": 0.23,
+    "maxLineGapSec": 0.87,
+    "cutsPer10sRendered": 2.35
+  }
+}

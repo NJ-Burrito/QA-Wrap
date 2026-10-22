@@ -1,0 +1,63 @@
+/* QA Wrap — the motion library. Transform and opacity only. See ui/vfx.js. */
+
+/* ── events ─────────────────────────────────────────────────────────────── */
+.vfx-pulse { animation: vfx-pulse 180ms cubic-bezier(.2,.9,.3,1.2); }
+@keyframes vfx-pulse { 0% { transform: scale(1); } 45% { transform: scale(0.965); } 100% { transform: scale(1); } }
+
+.vfx-pop { animation: vfx-pop 320ms cubic-bezier(.2,.9,.25,1.25); }
+@keyframes vfx-pop { 0% { transform: scale(0.98); } 55% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+.vfx-shake { animation: vfx-shake 260ms cubic-bezier(.36,.07,.19,.97); }
+@keyframes vfx-shake {
+  10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); }
+}
+
+.vfx-wobble { animation: vfx-wobble 420ms cubic-bezier(.3,.8,.3,1.3); transform-origin: 50% 60%; }
+@keyframes vfx-wobble { 0% { transform: rotate(0); } 25% { transform: rotate(-9deg); } 55% { transform: rotate(7deg); } 80% { transform: rotate(-3deg); } 100% { transform: rotate(0); } }
+
+.vfx-settle { animation: vfx-settle 220ms cubic-bezier(.2,.8,.2,1); }
+@keyframes vfx-settle { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.vfx-count { animation: vfx-count 200ms cubic-bezier(.2,.9,.3,1.3); display: inline-block; }
+@keyframes vfx-count { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+/* ── states ─────────────────────────────────────────────────────────────── */
+.vfx-glow { animation: vfx-glow 1.6s ease-in-out infinite; }
+@keyframes vfx-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+
+/* ── overlays and particles: their own nodes, removed when done ─────────── */
+.vfx-ring {
+  position: fixed; z-index: 2147483000; pointer-events: none;
+  width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  border: 2px solid var(--ok, #2A7A3B);
+  animation: vfx-ring 400ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes vfx-ring { from { transform: scale(0.6); opacity: 0.9; } to { transform: scale(3.2); opacity: 0; } }
+
+.vfx-spark {
+  position: fixed; z-index: 2147483000; pointer-events: none;
+  width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%;
+  animation: vfx-spark 520ms cubic-bezier(.2,.8,.3,1) forwards;
+}
+.vfx-spark-petra { background: var(--accent, #B5432B); }
+/* Corn, the highlight — not `--warn-soft`, which is the pale ochre TINT and
+   painted a wheat-coloured particle nobody could see against parchment. */
+.vfx-spark-corn { background: var(--brand-corn, #E2AE38); }
+.vfx-spark-guac { background: var(--ok, #2A7A3B); }
+@keyframes vfx-spark {
+  from { transform: translate(0, 0) rotate(0) scale(0.6); opacity: 1; }
+  to { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1); opacity: 0; }
+}
+
+.vfx-flash-layer {
+  position: fixed; inset: 0; z-index: 2147483001; pointer-events: none;
+  background: var(--surface, #F1EFE9);
+  animation: vfx-flash 180ms ease-out forwards;
+}
+@keyframes vfx-flash { from { opacity: 0.85; } to { opacity: 0; } }
+
+/* ── the one rule that overrides everything ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .vfx-pulse, .vfx-pop, .vfx-shake, .vfx-wobble, .vfx-settle, .vfx-count, .vfx-glow, .vfx-ring, .vfx-spark { animation: none !important; }
+}

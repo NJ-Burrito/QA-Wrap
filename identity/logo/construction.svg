@@ -1,0 +1,27 @@
+<!-- QA Wrap identity — construction. Geometry from identity/tools/marks.mjs. © 2026 Nader Alzghoul. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="QA Wrap mark construction">
+  <g transform="translate(-2 1)">
+    <line x1="8" y1="4" x2="8" y2="60" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="4" y1="8" x2="60" y2="8" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="16" y1="4" x2="16" y2="60" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="4" y1="16" x2="60" y2="16" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="24" y1="4" x2="24" y2="60" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="4" y1="24" x2="60" y2="24" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="32" y1="4" x2="32" y2="60" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="4" y1="32" x2="60" y2="32" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="40" y1="4" x2="40" y2="60" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="4" y1="40" x2="60" y2="40" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="48" y1="4" x2="48" y2="60" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="4" y1="48" x2="60" y2="48" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="56" y1="4" x2="56" y2="60" stroke="#D8C6A4" stroke-width=".3"/>
+    <line x1="4" y1="56" x2="60" y2="56" stroke="#D8C6A4" stroke-width=".3"/>
+    <circle cx="30" cy="30" r="17" fill="none" stroke="#B5432B" stroke-width=".4" stroke-dasharray="2 2"/>
+    <line x1="30" y1="30" x2="46.26" y2="34.97" stroke="#B5432B" stroke-width=".4"/>
+    <line x1="30" y1="30" x2="34.97" y2="46.26" stroke="#B5432B" stroke-width=".4"/>
+    <circle cx="30" cy="30" r=".8" fill="#B5432B"/>
+  </g>
+  <g transform="translate(-2 1)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".92">
+    <path d="M45.01 37.98 A17 17 0 1 0 34.97 46.26" stroke="#1D2024"/>
+    <path d="M36 36L42.5 44L55 20" stroke="#B5432B"/>
+  </g>
+</svg>

@@ -1,0 +1,22 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* The practice page. Logical properties throughout, so Arabic (RTL) lays out correctly. The layout fault is planted on .order-ref. */
+body { margin: 0; min-block-size: 100vh; background: var(--backdrop); color: var(--text); }
+.practice { max-inline-size: 640px; margin-inline: auto; padding: 24px clamp(16px, 5vw, 32px) 48px; display: grid; gap: 16px; }
+h1 { font-size: 24px; font-weight: 800; margin: 0 0 4px; }
+h2 { font-size: 16px; font-weight: 700; margin: 0 0 10px; }
+.lead { margin: 0 0 8px; color: var(--text-muted); line-height: 1.6; }
+.steps { margin: 0; padding-inline-start: 22px; line-height: 1.9; }
+.card { background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; display: grid; gap: 8px; justify-items: start; }
+label { font-size: 13px; font-weight: 600; }
+input[type='text'] { inline-size: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--r-md, 8px); background: var(--surface); color: inherit; font: inherit; }
+.state { margin: 0; min-block-size: 1.4em; font-size: 13px; }
+.state.ok { color: var(--pass); }
+.order-row { display: grid; grid-template-columns: auto 9ch auto; gap: 12px; align-items: center; inline-size: 100%; }
+.order-label { color: var(--text-muted); font-size: 13px; }
+/* Planted layout fault: a fixed 9ch box with no wrapping and no clipping, so the reference runs over the total. */
+.order-ref { white-space: nowrap; font-weight: 700; }
+.order-total { font-weight: 700; }
+/* Planted contrast fault: the small print is nearly the colour of the card. */
+.fine { margin: 0; font-size: 12px; color: #c9c9c9; /* literal: planted low-contrast fault */ }
+.answers { color: var(--text-muted); font-size: 13px; line-height: 1.7; }
+.answers summary { cursor: pointer; }

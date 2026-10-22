@@ -1,0 +1,424 @@
+[
+  {
+    "id": "qa-wrap",
+    "kind": "trailer",
+    "ar": "كيو إيه راب",
+    "en": "QA Wrap",
+    "blurb": "The whole product in under a minute: what it records, what it proves, and what you hand over.",
+    "files": {
+      "en": "qa-wrap-en.mp4"
+    },
+    "poster": "qa-wrap.webp",
+    "secs": 52,
+    "pending": true
+  },
+  {
+    "id": "record-a-session",
+    "kind": "feature",
+    "ar": "سجّل جلسة",
+    "en": "Record a session",
+    "blurb": "Wake it on the site you are testing, name the run, press Start, then read what it caught.",
+    "files": {
+      "en": "record-a-session-en.mp4"
+    },
+    "poster": "record-a-session.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "the-tools",
+    "kind": "feature",
+    "ar": "الأدوات",
+    "en": "The tools",
+    "blurb": "Nineteen tools in four groups, on the page you are standing on, and one film for each group.",
+    "files": {
+      "en": "the-tools-en.mp4"
+    },
+    "poster": "the-tools.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "file-it",
+    "kind": "feature",
+    "ar": "ارفع التقرير",
+    "en": "File the report",
+    "blurb": "Seven kinds of ticket, acceptance criteria written from the recording, evidence attached.",
+    "files": {
+      "en": "file-it-en.mp4"
+    },
+    "poster": "file-it.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "save-and-diagram",
+    "kind": "feature",
+    "ar": "الحفظ والمخطط",
+    "en": "Saving and the diagram",
+    "blurb": "Every output in its own folder, named and dated, and the session as an A4 workflow.",
+    "files": {
+      "en": "save-and-diagram-en.mp4"
+    },
+    "poster": "save-and-diagram.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "protect-the-data",
+    "kind": "feature",
+    "ar": "احمِ البيانات",
+    "en": "Protect the data",
+    "blurb": "Cover a real name before it is ever recorded, then put the whole extension back to sleep.",
+    "files": {
+      "en": "protect-the-data-en.mp4"
+    },
+    "poster": "protect-the-data.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "cat-capture",
+    "kind": "category",
+    "ar": "الالتقاط",
+    "en": "Capture",
+    "blurb": "Photograph it, film it, open it at another size, and cover the real names before any of it is recorded.",
+    "files": {
+      "en": "cat-capture-en.mp4"
+    },
+    "poster": "cat-capture.webp",
+    "secs": 120,
+    "chapters": [
+      {
+        "t": 9.5,
+        "titleKey": "tools.shot.label"
+      },
+      {
+        "t": 35,
+        "titleKey": "tools.record.label"
+      },
+      {
+        "t": 61.5,
+        "titleKey": "tools.viewport.label"
+      },
+      {
+        "t": 86.5,
+        "titleKey": "tools.mask.label"
+      }
+    ],
+    "pending": true
+  },
+  {
+    "id": "cat-check",
+    "kind": "category",
+    "ar": "الفحص",
+    "en": "Check",
+    "blurb": "Accessibility, page speed, the links, the code that ran and the legal fine print, on the page you are standing on.",
+    "files": {
+      "en": "cat-check-en.mp4"
+    },
+    "poster": "cat-check.webp",
+    "secs": 142,
+    "chapters": [
+      {
+        "t": 9.5,
+        "titleKey": "tools.a11y.label"
+      },
+      {
+        "t": 34.5,
+        "titleKey": "tools.perf.label"
+      },
+      {
+        "t": 59.5,
+        "titleKey": "tools.links.label"
+      },
+      {
+        "t": 83.5,
+        "titleKey": "tools.whitebox.label"
+      },
+      {
+        "t": 108,
+        "titleKey": "tools.fineprint.label"
+      }
+    ],
+    "pending": true
+  },
+  {
+    "id": "cat-design",
+    "kind": "category",
+    "ar": "التصميم",
+    "en": "Design",
+    "blurb": "The values worth testing, the locators a suite can use, the page read back as a map, a spec and a flow.",
+    "files": {
+      "en": "cat-design-en.mp4"
+    },
+    "poster": "cat-design.webp",
+    "secs": 176,
+    "chapters": [
+      {
+        "t": 8,
+        "titleKey": "tools.blackbox.label"
+      },
+      {
+        "t": 27.5,
+        "titleKey": "tools.inject.label"
+      },
+      {
+        "t": 47.5,
+        "titleKey": "tools.autofill.label"
+      },
+      {
+        "t": 67.5,
+        "titleKey": "tools.harvest.label"
+      },
+      {
+        "t": 87,
+        "titleKey": "tools.pick.label"
+      },
+      {
+        "t": 107,
+        "titleKey": "tools.diagram.label"
+      },
+      {
+        "t": 128.5,
+        "titleKey": "tools.spec.label"
+      },
+      {
+        "t": 148,
+        "titleKey": "tools.api.label"
+      }
+    ],
+    "pending": true
+  },
+  {
+    "id": "cat-break",
+    "kind": "category",
+    "ar": "العطب",
+    "en": "Break",
+    "blurb": "Make the server misbehave without touching the server, and flip the layout without hiring a translator.",
+    "files": {
+      "en": "cat-break-en.mp4"
+    },
+    "poster": "cat-break.webp",
+    "secs": 64,
+    "chapters": [
+      {
+        "t": 7.5,
+        "titleKey": "tools.break.label"
+      },
+      {
+        "t": 32,
+        "titleKey": "tools.rtl.label"
+      }
+    ],
+    "pending": true
+  },
+  {
+    "id": "tool-photograph-the-page",
+    "kind": "tool",
+    "ar": "صوّر الصفحة",
+    "en": "Photograph the page",
+    "blurb": "The visible part, or the whole page scrolled and stitched, kept with the session.",
+    "files": {
+      "en": "tool-photograph-the-page-en.mp4"
+    },
+    "poster": "tool-photograph-the-page.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-record-the-screen",
+    "kind": "tool",
+    "ar": "سجّل الشاشة",
+    "en": "Record the screen",
+    "blurb": "Film the tab, with sound, mic and camera if you want them. No time limit.",
+    "files": {
+      "en": "tool-record-the-screen-en.mp4"
+    },
+    "poster": "tool-record-the-screen.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "tool-check-another-size",
+    "kind": "tool",
+    "ar": "جرّب مقاسًا آخر",
+    "en": "Check another size",
+    "blurb": "The same page in a real window at a real device size, reflowing for real.",
+    "files": {
+      "en": "tool-check-another-size-en.mp4"
+    },
+    "poster": "tool-check-another-size.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-mask-real-data",
+    "kind": "tool",
+    "ar": "أخفِ البيانات الحقيقية",
+    "en": "Mask real data",
+    "blurb": "Cover a real value with a solid block for the rest of the session, everywhere.",
+    "files": {
+      "en": "tool-mask-real-data-en.mp4"
+    },
+    "poster": "tool-mask-real-data.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "tool-check-accessibility",
+    "kind": "tool",
+    "ar": "افحص الوصولية",
+    "en": "Check accessibility",
+    "blurb": "The engine DevTools uses, on the page you are standing on, plus what a machine cannot check.",
+    "files": {
+      "en": "tool-check-accessibility-en.mp4"
+    },
+    "poster": "tool-check-accessibility.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "tool-check-page-speed",
+    "kind": "tool",
+    "ar": "افحص سرعة الصفحة",
+    "en": "Check page speed",
+    "blurb": "How fast this page drew and answered, logged in and mid-flow, on your real network.",
+    "files": {
+      "en": "tool-check-page-speed-en.mp4"
+    },
+    "poster": "tool-check-page-speed.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-check-the-links",
+    "kind": "tool",
+    "ar": "افحص الروابط",
+    "en": "Check the links",
+    "blurb": "Every link asked whether it still answers: broken, redirected, slow or fine.",
+    "files": {
+      "en": "tool-check-the-links-en.mp4"
+    },
+    "poster": "tool-check-the-links.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-measure-code-coverage",
+    "kind": "tool",
+    "ar": "قِس تغطية الشيفرة",
+    "en": "Measure code coverage",
+    "blurb": "Which code actually ran while you used the page, function by function.",
+    "files": {
+      "en": "tool-measure-code-coverage-en.mp4"
+    },
+    "poster": "tool-measure-code-coverage.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-design-the-values",
+    "kind": "tool",
+    "ar": "صمّم القيم",
+    "en": "Design the values",
+    "blurb": "The classes a field declares, and the exact values on every edge of them.",
+    "files": {
+      "en": "tool-design-the-values-en.mp4"
+    },
+    "poster": "tool-design-the-values.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "tool-try-nasty-values",
+    "kind": "tool",
+    "ar": "جرّب قيمًا صعبة",
+    "en": "Try nasty values",
+    "blurb": "Very long text, Arabic, an old date, an emoji, nothing at all, pushed into the field for you.",
+    "files": {
+      "en": "tool-try-nasty-values-en.mp4"
+    },
+    "poster": "tool-try-nasty-values.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-fill-the-form",
+    "kind": "tool",
+    "ar": "املأ النموذج",
+    "en": "Fill the form",
+    "blurb": "Every field filled at once with designed values, and anything still rejected is named.",
+    "files": {
+      "en": "tool-fill-the-form-en.mp4"
+    },
+    "poster": "tool-fill-the-form.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-harvest-the-page",
+    "kind": "tool",
+    "ar": "احصد الصفحة",
+    "en": "Harvest the page",
+    "blurb": "Every control on the page read and verified, handed back as a page map, a page object and a brief.",
+    "files": {
+      "en": "tool-harvest-the-page-en.mp4"
+    },
+    "poster": "tool-harvest-the-page.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "tool-copy-a-locator",
+    "kind": "tool",
+    "ar": "انسخ محدّدًا",
+    "en": "Copy a locator",
+    "blurb": "Click the thing instead of writing the selector, and it checks each one matches only one thing.",
+    "files": {
+      "en": "tool-copy-a-locator-en.mp4"
+    },
+    "poster": "tool-copy-a-locator.webp",
+    "secs": 16,
+    "pending": true
+  },
+  {
+    "id": "tool-draw-the-flow",
+    "kind": "tool",
+    "ar": "ارسم المسار",
+    "en": "Draw the flow",
+    "blurb": "The session as a workflow on one A4 page, every box yours to move, reword and recolour.",
+    "files": {
+      "en": "tool-draw-the-flow-en.mp4"
+    },
+    "poster": "tool-draw-the-flow.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "tool-break-a-request",
+    "kind": "tool",
+    "ar": "اكسر طلبًا",
+    "en": "Break a request",
+    "blurb": "Ten faults, aimed at one URL, counted and armed, so you can watch what the app does about it.",
+    "files": {
+      "en": "tool-break-a-request-en.mp4"
+    },
+    "poster": "tool-break-a-request.webp",
+    "secs": 20,
+    "pending": true
+  },
+  {
+    "id": "tool-stress-the-layout",
+    "kind": "tool",
+    "ar": "اضغط التخطيط",
+    "en": "Stress the layout",
+    "blurb": "Right to left and forty per cent longer, the way a translation would, with anything clipped outlined.",
+    "files": {
+      "en": "tool-stress-the-layout-en.mp4"
+    },
+    "poster": "tool-stress-the-layout.webp",
+    "secs": 16,
+    "pending": true
+  }
+]

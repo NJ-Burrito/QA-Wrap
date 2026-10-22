@@ -1,0 +1,1275 @@
+{
+  "_source": "Copied once from prototype/data/{icons,tools}.json and DESIGN-SPEC.md §10 (UI round 2 S2, 27 Sept 2026). The drawings are prototype/icons/<id>.svg, final and green (python icons/_check.py PASS). Edit the drawings in the prototype, re-copy, then re-run tools/build-ui-icons.mjs; this file is not itself re-derived from prototype/ at build time (D2: no product tool reads work/).",
+  "_fields": "id; kind (tool|session|ui|status|purpose|export|tag); meaning (one line: what the drawing shows and what it means); mirror_rtl (true = flip with scaleX(-1) under dir=rtl); why_mirror (only when the answer is not obvious); fill (outline|filled|mixed: which parts are filled, see §10 fill policy); sizes (px it must hold at); alias_of (same drawing, second id: draw once); kind also shape|event (S11a)",
+  "count": {
+    "tool": 19,
+    "total": 97,
+    "drawings": 92
+  },
+  "icons": [
+    {
+      "id": "tool-shot",
+      "kind": "tool",
+      "meaning": "Photograph the page: four viewfinder corners around a nuqta, the frame closing on the page.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-record",
+      "kind": "tool",
+      "meaning": "Record the screen: a screen outline with a filled round record dot (a circle, not a nuqta) in its middle and a short stand.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-viewport",
+      "kind": "tool",
+      "meaning": "Check another size: a laptop outline with a phone outline overlapping its inline-end corner.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-mask",
+      "kind": "tool",
+      "meaning": "Mask real data: two text lines, the middle one covered by a solid 3px bar.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-a11y",
+      "kind": "tool",
+      "meaning": "Check accessibility: the accessibility figure (head as a nuqta, open arms, legs) inside an open ring like the mark's.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-perf",
+      "kind": "tool",
+      "meaning": "Check page speed: a three-quarter gauge (y 4-18) with a needle and a nuqta at its pivot.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-links",
+      "kind": "tool",
+      "meaning": "Check the links: two interlocked rounded chain links at 45 degrees.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-whitebox",
+      "kind": "tool",
+      "meaning": "Measure code coverage: angle brackets over a progress bar that is two-thirds filled. Coverage fill is a 2px bar inside the track (fill budget).",
+      "mirror_rtl": false,
+      "why_mirror": "code brackets read left to right in both languages",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-fineprint",
+      "kind": "tool",
+      "meaning": "Check the fine print: a document corner with three short lines and a small magnifier over the bottom line.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-blackbox",
+      "kind": "tool",
+      "meaning": "Design the values: an input field split into three ranges by two ticks, a nuqta sitting in the middle range.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-inject",
+      "kind": "tool",
+      "meaning": "Try nasty values: an input field open at its inline-end, a text cursor, and a zigzag breaking out of the field.",
+      "mirror_rtl": true,
+      "why_mirror": "the zigzag follows the text cursor, which moves in the reading direction",
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-autofill",
+      "kind": "tool",
+      "meaning": "Fill the form: two stacked fields, the first holding a 2px value bar at its inline-start.",
+      "mirror_rtl": true,
+      "why_mirror": "value bars start at the inline-start edge of a field",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-harvest",
+      "kind": "tool",
+      "meaning": "Harvest the page: a page with three nuqtas on it, their lines gathering into one list mark at the inline-end.",
+      "mirror_rtl": true,
+      "why_mirror": "the gathering runs toward the inline-end",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-pick",
+      "kind": "tool",
+      "meaning": "Copy a locator: an open crosshair ring with four short ticks and a nuqta at the centre.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-diagram",
+      "kind": "tool",
+      "meaning": "Draw the flow: three rounded nodes joined by lines, the middle one a diamond.",
+      "mirror_rtl": true,
+      "why_mirror": "the flow runs in the reading direction",
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-spec",
+      "kind": "tool",
+      "meaning": "Reverse-engineer the spec: an open book, one line on each page (the bilingual draft).",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-api",
+      "kind": "tool",
+      "meaning": "Send a request: curly braces with a short arrow leaving them to the right.",
+      "mirror_rtl": false,
+      "why_mirror": "braces are code and stay left to right",
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-break",
+      "kind": "tool",
+      "meaning": "Break a request: a connection line from a nuqta, broken by a diagonal jog across the full width.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "tool-rtl",
+      "kind": "tool",
+      "meaning": "Stress the layout: three text lines aligned to the right, the longest overrunning a frame edge.",
+      "mirror_rtl": false,
+      "why_mirror": "it depicts right-to-left itself; mirroring would invert its meaning",
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "record",
+      "kind": "session",
+      "meaning": "Start a session recording: an open ring (the mark's ring gap) around a filled round dot (a circle: the record dot is the one round dot in the set).",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "stop",
+      "kind": "session",
+      "meaning": "Stop the session: a filled rounded square, corner radius 2.",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "pause",
+      "kind": "session",
+      "meaning": "Pause a screen recording: two filled rounded bars.",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "screenshot",
+      "kind": "session",
+      "meaning": "Quick action Screenshot: same drawing as tool-shot.",
+      "alias_of": "tool-shot",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "pick",
+      "kind": "session",
+      "meaning": "Quick action Copy a locator: same drawing as tool-pick.",
+      "alias_of": "tool-pick",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "note",
+      "kind": "session",
+      "meaning": "Add note: a square note with its bottom inline-end corner folded and two short lines.",
+      "mirror_rtl": true,
+      "why_mirror": "the fold sits at the inline-end corner, the lines start inline-start",
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "copy",
+      "kind": "ui",
+      "meaning": "Copy / copy again: two overlapping rounded rectangles, the front one offset toward the bottom inline-end.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "check",
+      "kind": "ui",
+      "meaning": "Done, copied, selected: a single tick. Drawn, never typed (Thmanyah has no tick glyph).",
+      "mirror_rtl": false,
+      "why_mirror": "a tick is not directional",
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "cross",
+      "kind": "ui",
+      "meaning": "A failed item mark in lists: a small x, heavier than close.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "close",
+      "kind": "ui",
+      "meaning": "Close a menu, sheet or tool detail: a light x in the live area.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "back",
+      "kind": "ui",
+      "meaning": "Back to All tools in the narrow sheet: an arrow pointing to the inline-start.",
+      "mirror_rtl": true,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "chevron-down",
+      "kind": "ui",
+      "meaning": "Disclosure / menu opens below / sheet expands.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "chevron-end",
+      "kind": "ui",
+      "meaning": "A row that opens something further along the reading direction.",
+      "mirror_rtl": true,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "star",
+      "kind": "ui",
+      "meaning": "Add a tool to Favourites: a five-point star with rounded joins, outline.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "star-filled",
+      "kind": "ui",
+      "meaning": "The tool is in Favourites: the same star, filled with currentColor (ochre).",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "more",
+      "kind": "ui",
+      "meaning": "The more menu: three nuqtas in a row (Thmanyah has no ellipsis-midline glyph).",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        20,
+        24
+      ]
+    },
+    {
+      "id": "settings",
+      "kind": "ui",
+      "meaning": "Settings: three horizontal slider lines, each with a nuqta knob at a different position.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        20,
+        24
+      ]
+    },
+    {
+      "id": "dock",
+      "kind": "ui",
+      "meaning": "Dock to the side: a window outline whose right column is a filled panel.",
+      "mirror_rtl": false,
+      "why_mirror": "Chrome puts the side panel where its own setting says, not where the UI language reads",
+      "fill": "mixed",
+      "sizes": [
+        20,
+        24
+      ]
+    },
+    {
+      "id": "open-float",
+      "kind": "ui",
+      "meaning": "Open QA Wrap (from the in-page bar): a small window with a title bar and a nuqta in it.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "theme-system",
+      "kind": "ui",
+      "meaning": "Theme follows the machine: a circle half filled (the fill on the inline-end half).",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "theme-light",
+      "kind": "ui",
+      "meaning": "Light theme: a small circle with eight nuqtas around it as rays.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "theme-dark",
+      "kind": "ui",
+      "meaning": "Night theme: a crescent opening toward the top right.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "language",
+      "kind": "ui",
+      "meaning": "Language: a stroke-drawn Latin A beside a stroke-drawn Arabic ba with its diamond nuqta below (drawn paths, not type).",
+      "mirror_rtl": false,
+      "why_mirror": "it shows both scripts in fixed places",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "grip",
+      "kind": "ui",
+      "meaning": "Drag handle of the in-page bar: six nuqtas in two columns of three.",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "collapse",
+      "kind": "ui",
+      "meaning": "Shrink the bar to a pill: two short diagonal arrows pointing inward to the centre.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "pin",
+      "kind": "ui",
+      "meaning": "Keep the in-page bar solid: a push-pin, flat cap, tapered body and needle; pressed means the bar never fades.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "expand",
+      "kind": "ui",
+      "meaning": "Show the bar again: two short diagonal arrows pointing outward.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "external",
+      "kind": "ui",
+      "meaning": "Opens in a new tab (Open the report, Timeline, Tutorials): an arrow leaving a rounded box toward the top inline-end.",
+      "mirror_rtl": true,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "timeline",
+      "kind": "ui",
+      "meaning": "Timeline: a horizontal line with three nuqta nodes, the last one ringed.",
+      "mirror_rtl": true,
+      "why_mirror": "time runs in the reading direction",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "tutorials",
+      "kind": "ui",
+      "meaning": "Tutorials: a rounded screen with a play triangle.",
+      "mirror_rtl": false,
+      "why_mirror": "media controls are never mirrored",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "report-problem",
+      "kind": "ui",
+      "meaning": "Report a problem (reporter mode): a flag on a pole.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "reload",
+      "kind": "ui",
+      "meaning": "Reload the extension: an open circular arrow, clockwise.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "awake",
+      "kind": "ui",
+      "meaning": "Awake: an open eye with a round pupil.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        20,
+        24
+      ]
+    },
+    {
+      "id": "asleep",
+      "kind": "ui",
+      "meaning": "Asleep: a closed eye, a downward curve with three short lashes.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        20,
+        24
+      ]
+    },
+    {
+      "id": "restricted",
+      "kind": "ui",
+      "meaning": "Not a web page / not allowed here: a rounded lock.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "consent",
+      "kind": "ui",
+      "meaning": "Read the notice: a document with a tick at its lower inline-end corner.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        20,
+        24
+      ]
+    },
+    {
+      "id": "steps",
+      "kind": "ui",
+      "meaning": "Steps recorded: three short lines each led by a nuqta bullet at the inline-start.",
+      "mirror_rtl": true,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "events",
+      "kind": "ui",
+      "meaning": "Events count: a small pulse line with one peak.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16
+      ]
+    },
+    {
+      "id": "download",
+      "kind": "ui",
+      "meaning": "Saved to downloads: an arrow down into an open tray.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "pass",
+      "kind": "status",
+      "meaning": "PASS: a tick inside a circle. Colour --pass; the shape carries the meaning without colour.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "fail",
+      "kind": "status",
+      "meaning": "FAIL: an x inside a circle. The only icon ever drawn in --fail (red).",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "warning",
+      "kind": "status",
+      "meaning": "Warning / blocked / restricted banner: a rounded triangle holding a short stroke over a nuqta (the exclamation, drawn).",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "skipped",
+      "kind": "status",
+      "meaning": "SKIPPED: a circle with a short horizontal dash.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "info",
+      "kind": "status",
+      "meaning": "Information / what does this tool do: a circle holding a nuqta over a short stroke.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "purpose-any",
+      "kind": "purpose",
+      "meaning": "Pick purpose 1, Any: a nuqta inside a large rounded diamond (the nuqta, magnified), distinct from record (ring + round dot), shot (corners) and element (corner brackets).",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "purpose-step",
+      "kind": "purpose",
+      "meaning": "Pick purpose 2, Step: three nuqtas joined by a line, ascending in the reading direction.",
+      "mirror_rtl": true,
+      "why_mirror": "a sequence runs in the reading direction",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "purpose-element",
+      "kind": "purpose",
+      "meaning": "Pick purpose 3, Element: four corner brackets around a small filled square (this thing must be accounted for).",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "purpose-sensitive",
+      "kind": "purpose",
+      "meaning": "Pick purpose 4, Sensitive: a rounded field holding three nuqtas (a value that is never written down).",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "export-playwright",
+      "kind": "export",
+      "meaning": "Export Playwright: angle brackets with a nuqta between them (a test script).",
+      "mirror_rtl": false,
+      "why_mirror": "code stays left to right",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "export-markdown",
+      "kind": "export",
+      "meaning": "Export Markdown: the Markdown mark, a landscape card holding an M and a down arrow.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "export-json",
+      "kind": "export",
+      "meaning": "Export JSON: a pair of curly braces around a nuqta.",
+      "mirror_rtl": false,
+      "why_mirror": "code stays left to right",
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "export-sheet",
+      "kind": "export",
+      "meaning": "Export the session sheet: a rounded table of three rows by two columns.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "open-report",
+      "kind": "export",
+      "meaning": "Open the report: a document with the external arrow leaving its top inline-end corner.",
+      "mirror_rtl": true,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "tag-bug",
+      "kind": "tag",
+      "meaning": "Note tag Bug: a filled rounded triangle (replaces the old text-drawn triangle; Thmanyah has no geometric-shape glyphs).",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        16
+      ]
+    },
+    {
+      "id": "tag-issue",
+      "kind": "tag",
+      "meaning": "Note tag Issue: an outline rounded diamond.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16
+      ]
+    },
+    {
+      "id": "tag-question",
+      "kind": "tag",
+      "meaning": "Note tag Question: an outline circle.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16
+      ]
+    },
+    {
+      "id": "tag-note",
+      "kind": "tag",
+      "meaning": "Note tag Note: an outline rounded square.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16
+      ]
+    },
+    {
+      "id": "shape-rect",
+      "kind": "shape",
+      "meaning": "Annotate Rectangle: a landscape box with square corners (only the round join softens them); drawn, never typed (Thmanyah has no ▭).",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-rounded",
+      "kind": "shape",
+      "meaning": "Annotate Rounded box: the shape-rect box with radius 5 corners, so the two read apart at 16.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-ellipse",
+      "kind": "shape",
+      "meaning": "Annotate Ellipse: a landscape oval on the shape-rect keyline.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-circle",
+      "kind": "shape",
+      "meaning": "Annotate Circle: a closed ring 18 across (no mark gap: the shape is the meaning).",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-line",
+      "kind": "shape",
+      "meaning": "Annotate Line: one diagonal stroke rising to the upper right, as drawn on the image (the shape, not a direction, so not mirrored).",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-double-arrow",
+      "kind": "shape",
+      "meaning": "Annotate Double arrow: a horizontal shaft with a head at both ends; symmetric, so never mirrored.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-triangle",
+      "kind": "shape",
+      "meaning": "Annotate Triangle: the outline of warning without its mark, radius 2.5 corners.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-diamond",
+      "kind": "shape",
+      "meaning": "Annotate Diamond: an outline diamond 18 across with radius 2 corners (tag-issue is the 16-across tag).",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-star",
+      "kind": "shape",
+      "meaning": "Annotate Star: same drawing as star.",
+      "alias_of": "star",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-tick",
+      "kind": "shape",
+      "meaning": "Annotate Tick mark: same drawing as check (Thmanyah has no ✓).",
+      "alias_of": "check",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-cross",
+      "kind": "shape",
+      "meaning": "Annotate Cross mark: same drawing as close, the 12-across x that matches the weight of the tick (Thmanyah has no ✗).",
+      "alias_of": "close",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-question",
+      "kind": "shape",
+      "meaning": "Annotate Question mark: a hook whose dot is the family nuqta, as Thmanyah dots its own marks.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-exclaim",
+      "kind": "shape",
+      "meaning": "Annotate Exclamation mark: an upright stroke over a nuqta.",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "shape-dot",
+      "kind": "shape",
+      "meaning": "Annotate Dot stamp: a ring around a 6-across nuqta (the dot is the subject, so it is drawn larger than the 4-across point-of-action nuqta).",
+      "mirror_rtl": false,
+      "fill": "mixed",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "event-action",
+      "kind": "event",
+      "meaning": "Report timeline Action (a click or a keystroke): a pointer arrow. Cursors are not mirrored.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "event-request",
+      "kind": "event",
+      "meaning": "Report timeline Request: an up arrow and a down arrow, the request going out and the response coming back.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "event-console",
+      "kind": "event",
+      "meaning": "Report timeline Console: a terminal frame with a prompt chevron and a cursor bar; console output is left-to-right code, so never mirrored.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "event-nav",
+      "kind": "event",
+      "meaning": "Report timeline Page (a navigation): an arrow to the inline-end, the mirror image of back.",
+      "mirror_rtl": true,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "key",
+      "kind": "ui",
+      "meaning": "A stored credential was used here: a key, bow at the lower start, two teeth.",
+      "mirror_rtl": false,
+      "fill": "outline",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "dot",
+      "kind": "ui",
+      "meaning": "An event of a kind with no drawing of its own: a lone 8-across nuqta (alone, so drawn at twice the point-of-action size to hold at 16).",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    },
+    {
+      "id": "play",
+      "kind": "session",
+      "meaning": "Play a replay or a recording: a filled triangle, shifted toward its point for optical centre. Media transport, so filled and never mirrored.",
+      "mirror_rtl": false,
+      "fill": "filled",
+      "sizes": [
+        16,
+        20,
+        24
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "id": "shot",
+      "icon": "tool-shot"
+    },
+    {
+      "id": "record",
+      "icon": "tool-record"
+    },
+    {
+      "id": "viewport",
+      "icon": "tool-viewport"
+    },
+    {
+      "id": "mask",
+      "icon": "tool-mask"
+    },
+    {
+      "id": "a11y",
+      "icon": "tool-a11y"
+    },
+    {
+      "id": "perf",
+      "icon": "tool-perf"
+    },
+    {
+      "id": "links",
+      "icon": "tool-links"
+    },
+    {
+      "id": "whitebox",
+      "icon": "tool-whitebox"
+    },
+    {
+      "id": "fineprint",
+      "icon": "tool-fineprint"
+    },
+    {
+      "id": "blackbox",
+      "icon": "tool-blackbox"
+    },
+    {
+      "id": "inject",
+      "icon": "tool-inject"
+    },
+    {
+      "id": "autofill",
+      "icon": "tool-autofill"
+    },
+    {
+      "id": "harvest",
+      "icon": "tool-harvest"
+    },
+    {
+      "id": "pick",
+      "icon": "tool-pick"
+    },
+    {
+      "id": "diagram",
+      "icon": "tool-diagram"
+    },
+    {
+      "id": "spec",
+      "icon": "tool-spec"
+    },
+    {
+      "id": "api",
+      "icon": "tool-api"
+    },
+    {
+      "id": "break",
+      "icon": "tool-break"
+    },
+    {
+      "id": "rtl",
+      "icon": "tool-rtl"
+    }
+  ],
+  "_s11a": "S11a (28 Sept 2026) drew shape-*, event-*, key, dot and play here directly (not copied from the prototype), to the DESIGN-SPEC §10 rules with the S2 drawings as the optical reference. stage2_map names the id that replaces each Stage-2 glyph (annotate SHAPES, the report sprite, replay, the DevTools panel); S11b applies it.",
+  "stage2_map": {
+    "annotate": {
+      "rect": "shape-rect",
+      "rounded": "shape-rounded",
+      "ellipse": "shape-ellipse",
+      "circle": "shape-circle",
+      "line": "shape-line",
+      "double-arrow": "shape-double-arrow",
+      "triangle": "shape-triangle",
+      "diamond": "shape-diamond",
+      "star": "shape-star",
+      "tick": "shape-tick",
+      "cross": "shape-cross",
+      "question": "shape-question",
+      "exclaim": "shape-exclaim",
+      "dot": "shape-dot"
+    },
+    "report": {
+      "i-action": "event-action",
+      "i-request": "event-request",
+      "i-console": "event-console",
+      "i-error": "fail",
+      "i-nav": "event-nav",
+      "i-note": "note",
+      "i-screenshot": "screenshot",
+      "i-recording": "tool-record",
+      "i-a11y": "tool-a11y",
+      "i-perf": "tool-perf",
+      "i-rtl": "tool-rtl",
+      "i-inject": "tool-inject",
+      "i-check": "check",
+      "i-close": "close",
+      "i-key": "key",
+      "i-copy": "copy",
+      "i-play": "play",
+      "i-dot": "dot",
+      "i-theme": "theme-system",
+      "i-sizes": "tool-viewport"
+    },
+    "replay": {
+      "i-theme": "theme-system",
+      "play": "play",
+      "pause": "pause"
+    },
+    "devtools": {
+      "i-refresh": "reload",
+      "note.bug": "tag-bug",
+      "note.issue": "tag-issue",
+      "note.question": "tag-question"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+Contact: mailto:naderalzghoulbusiness@gmail.com
+Expires: 2027-09-30T00:00:00.000Z
+Preferred-Languages: en, ar
+Policy: https://nj-burrito.github.io/QA-Wrap/trust.html

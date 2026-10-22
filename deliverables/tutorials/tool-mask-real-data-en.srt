@@ -1,0 +1,23 @@
+1
+00:00:02,400 --> 00:00:04,200
+Full of real people.
+
+2
+00:00:04,433 --> 00:00:06,467
+Click what stays here.
+
+3
+00:00:06,700 --> 00:00:08,433
+Covered. Not blurred.
+
+4
+00:00:08,767 --> 00:00:11,700
+It survives the reload.
+
+5
+00:00:11,933 --> 00:00:14,100
+It never reaches the report.
+
+6
+00:00:15,767 --> 00:00:17,967
+Every failure, traced.

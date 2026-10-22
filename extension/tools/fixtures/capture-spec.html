@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Capture spec page</title></head>
+<body>
+<!-- r6-11-2 in tools/test-capture-live.mjs: a page whose recorded session becomes a Playwright spec that is then RUN (secret fill, web-first assertion, goBack, reload) -->
+<h1>Spec page</h1>
+<label>Name <input id="name" type="text"></label>
+<label>Password <input id="pw" type="password"></label>
+<button id="save" type="button">Save</button>
+<!-- r9-05-3: a custom control operated by Space has no native click, so only the key press can be recorded and replayed -->
+<div id="custom" role="button" tabindex="0">Toggle</div>
+<!-- r10-05-1: Shift+Enter is a newline here and Enter alone sends; the recorded step must say which -->
+<textarea id="note" rows="2"></textarea>
+<p id="out">Waiting</p>
+<a id="go" href="/capture-second.html">Next page</a>
+<script>
+  document.getElementById('save').addEventListener('click', () => { document.getElementById('out').textContent = 'Saved'; });
+  document.getElementById('custom').addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); document.getElementById('out').textContent = 'Toggled'; } });
+  document.getElementById('note').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); document.getElementById('out').textContent = 'Sent'; } });
+</script>
+</body>
+</html>

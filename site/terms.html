@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of service · QA Wrap</title>
+<meta name="description" content="The terms on which Nader Alzghoul makes QA Wrap available: the licensing model, what you may do with it, what your own testing output is, the absence of any warranty, and how to reach the publisher.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/thmanyah.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-lang="en">
+<a class="skip" href="#main">Skip to content · انتقل إلى المحتوى</a>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA Wrap">
+        <g transform="translate(-2 3.5)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path class="mark-ring" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+          <path class="mark-check" d="M36 36L42.5 44L55 20"/>
+        </g>
+      </svg>
+      QA Wrap
+    </a>
+    <div class="masthead-right">
+      <nav aria-label="Site">
+        <ul>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="support.html">Support</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="privacy.html">Privacy</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="./" aria-current="page">Terms</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="trust.html">Trust</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="support.html">الدعم</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="privacy.html">الخصوصية</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="./" aria-current="page">الشروط</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="trust.html">الثقة</a></li>
+        </ul>
+      </nav>
+      <button type="button" id="lang-toggle" class="lang-toggle">
+        <span data-lang-block="en" lang="en" dir="ltr">العربية</span>
+        <span data-lang-block="ar" lang="ar" dir="rtl">English</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Written to agree with extension/TERMS.md and extension/LICENSE (MIT,
+     Nader Alzghoul the rights holder), plus decision 27 in
+     research/56-decisions-2026-09-07.md (site licence, no seat meter). Where
+     this page states something neither document says outright, it is marked
+     with an HTML comment reading "drafted, needs the owner's legal review" at the point it
+     appears, per the brief for this folder. Where LICENSE and this page could be
+     read differently, LICENSE governs the software; this page governs the
+     arrangement between the publisher and a user. -->
+
+<main id="main">
+  <div class="wrap">
+
+    <!-- ============================== ENGLISH ============================== -->
+    <div data-lang-block="en" lang="en" dir="ltr">
+
+    <section class="hero">
+      <h1>Terms of service</h1>
+      <p class="lead prose">These terms cover the QA Wrap browser extension and this website, both
+        published by <strong>Nader Alzghoul</strong>. Installing or using QA Wrap means you accept
+        them.</p>
+      <p class="note"><strong>Effective 5 September 2026.</strong></p>
+    </section>
+
+    <section class="prose">
+      <h2>1. What you are getting</h2>
+      <p>A browser extension that records a testing session on your own machine and turns it into
+        evidence: a timeline, the cause of each failure, and the test documents the ISTQB and
+        ISO/IEC/IEEE 29119-3 shapes name.</p>
+      <p>There is no QA Wrap account, no QA Wrap server and no subscription. Nothing here is a
+        hosted service, so there is nothing for Nader Alzghoul to take away, and nothing that
+        stops working if a server goes down. <code>SLA.md</code>, carried in the package, explains
+        which of those guarantees hold because of how the software is built and which depend on
+        Chrome.</p>
+      <p>Two other documents are part of the same agreement, and neither is superseded by this one:
+        <code>LICENSE</code> sets out what you may and may not do with the software itself, and the
+        <a href="privacy.html">privacy policy</a> sets out what the extension records and where it
+        goes. Where this page and either of those appear to disagree, the more specific one
+        governs.</p>
+
+      <h2>2. The licensing model</h2>
+      <p>QA Wrap is free and open source under the MIT licence. There is no seat count, no account and no payment.</p>
+      <p>QA Wrap carries no advertising and no affiliate links, and will not, because either would
+        put it in conflict with the Chrome Web Store's Limited Use requirements: the product
+        already relies on collecting nothing beyond what a session under test needs.
+        <!-- drafted, needs the owner's legal review --></p>
+      <p><code>LICENSE</code> governs what a copy of the software itself permits, and it is short:
+        the software is released under the MIT licence. You may use, copy, modify, merge, publish,
+        distribute, sublicense and sell copies, provided the copyright and permission notice stay
+        with them. Third-party components keep their own licences (<code>THIRD-PARTY-NOTICES.md</code>).
+        <!-- drafted, needs the owner's legal review: LICENSE clause 1 states that no licence is granted by
+             mere possession and that any right exists only in writing; the specific personal /
+             non-exclusive / non-transferable / revocable phrasing of the everyday-install case is
+             this page's own attempt to state what that means in practice, not a quotation. --></p>
+
+      <h2>3. Your testing, and what comes out of it</h2>
+      <p>The reports, defect records, screenshots, recordings and test cases you produce from your
+        own testing are yours. The one obligation attached to output is attribution of the tool:
+        generated artefacts carry an attribution notice and a provenance token, and removing or
+        falsifying that mark, or presenting QA Wrap's output as another tool's, is bad faith toward the people who read your report. This is about crediting the tool, not about owning the
+        findings.</p>
+      <p>QA Wrap keeps what it records on your own machine. It has no server and no account, so
+        Nader Alzghoul holds no copy of your sessions and cannot retrieve them for you. The
+        <a href="privacy.html">privacy policy</a> is the detail, and it is part of these terms.</p>
+
+      <h2>4. What you are responsible for</h2>
+      <p>You choose what to test and what to record. That makes a few things yours to get right,
+        and the extension gives you the controls for each:</p>
+      <ol>
+        <li><strong>Permission to test the site.</strong> QA Wrap works on whatever site you point
+          it at, including sites you do not own. Having the technical ability to record a site is
+          not authorisation to test it.</li>
+        <li><strong>The personal data you capture.</strong> Testing happens on systems full of real
+          people's records. Masking, redaction and a retention window are in Settings, documented
+          in the <a href="privacy.html">privacy policy</a>, and it is your decision whether to use
+          them. Under GDPR you are the controller for anything you record; Nader Alzghoul is not
+          a processor of it, because none of it reaches Nader Alzghoul.</li>
+        <li><strong>Where you send it.</strong> Jira, Slack, Teams, Discord, Google Chat, GitHub,
+          Linear, Trello, ClickUp and Asana are opt-in, configured by you, and nothing is sent until
+          you press a button naming the destination. Once a report leaves for one of them, that
+          service's terms apply to it and this one no longer can.</li>
+        <li><strong>The tokens you paste.</strong> A tracker token stored in your browser profile is
+          readable by anyone with access to that profile. Scope it to what it needs and revoke it
+          when you are done.</li>
+      </ol>
+
+      <h2>5. What the extension will not do</h2>
+      <p>These are commitments, and the <a href="privacy.html">privacy policy</a> documents the
+        mechanism behind each:</p>
+      <ul>
+        <li>It makes no network request of its own. No analytics, no telemetry, no update ping, no
+          remote code.</li>
+        <li>It does not record password fields or cookie values into a session or an export. Saved
+          cookie profiles are the exception: they hold the values you saved, on your machine, until
+          you delete them.</li>
+        <li>It records nothing and acts on nothing in a browser window you have not woken,
+          including through the right-click menu and the keyboard shortcuts. On a site you have
+          allowed, its page scripts stay loaded.</li>
+      </ul>
+
+      <h2>6. No warranty</h2>
+      <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+        INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+        PURPOSE AND NONINFRINGEMENT.</p>
+      <p>QA Wrap reports what a browser and a page did during your session. It is evidence for a
+        human judgement, and it is not a certification, an audit, or a guarantee that software is
+        correct or accessible. An automated accessibility scan finds roughly a third of real
+        barriers, and the extension says so on the screen that runs one. Decisions you take on the
+        strength of a report are yours.</p>
+
+      <h2>7. Liability</h2>
+      <p>IN NO EVENT SHALL NADER ALZGHOUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+        WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+        SOFTWARE OR ITS USE. Sessions live in a browser profile: if the profile is deleted, they are
+        gone, so export what matters.</p>
+      <p>Nothing in these terms limits liability that cannot be limited by law, which in most
+        jurisdictions includes death or personal injury caused by negligence, and fraud.</p>
+
+      <h2>8. Third-party components</h2>
+      <p>QA Wrap vendors axe-core, licensed under the Mozilla Public License 2.0 by Deque Systems,
+        Inc. That component remains under its own licence and nothing here restricts the rights it
+        grants; see <code>vendor/</code> in the package. The typeface is thmanyah Sans and Serif Display, © thmanyah Publishing and Distribution, used under thmanyah's Font License, which allows embedding it in a packaged product; it is not redistributed as a font file. See <code>NOTICE</code> in the package.</p>
+
+      <h2>9. Ending it</h2>
+      <p>You can stop at any time by uninstalling the extension, which removes its database and its
+        settings from that browser profile. Files you already exported to disk are untouched,
+        because they are yours.</p>
+      <p>The MIT licence is not revocable. There is no remote switch, and the software never stops
+        running because of anything Nader Alzghoul does. Sections 3, 6 and 7 survive.</p>
+
+      <h2>10. Changes to these terms</h2>
+      <p>Changes to these terms are recorded in the extension's release notes, the same way changes
+        to the privacy policy are. A material change is described there in plain words rather than
+        by a version number alone. Continuing to use QA Wrap after a change means you accept the
+        revised terms.</p>
+
+      <h2>11. Governing law and contact</h2>
+      <p>These terms are governed by the law of the Hashemite Kingdom of Jordan, and its courts have
+        jurisdiction. If you are a consumer, this does not remove the protections of the law where
+        you live.</p>
+      <p>Questions about these terms, and any permission not granted above, go to Nader Alzghoul
+        through the <a href="support.html">support page</a>.</p>
+    </section>
+
+    </div>
+    <!-- ============================== ARABIC ================================ -->
+    <div data-lang-block="ar" lang="ar" dir="rtl">
+
+    <section class="hero">
+      <h1>شروط الخدمة</h1>
+      <p class="lead prose">تغطي هذه الشروط امتداد متصفح QA Wrap وهذا الموقع، وكلاهما من نشر
+        <strong>نادر الزغول</strong>. تثبيت QA Wrap أو استخدامه يعني قبولك لها.</p>
+      <p class="note"><strong>سارية اعتبارا من 5 سبتمبر 2026.</strong></p>
+    </section>
+
+    <section class="prose">
+      <h2>1. ما الذي تحصل عليه</h2>
+      <p>امتداد متصفح يسجل جلسة اختبار على جهازك أنت، ويحولها إلى دليل: خط زمني، وسبب كل عطل،
+        ومستندات الاختبار التي تسميها أشكال ISTQB وISO/IEC/IEEE 29119-3.</p>
+      <p>لا يوجد حساب لـ QA Wrap، ولا خادم له، ولا اشتراك. لا شيء هنا خدمة مستضافة، فلا شيء تسحبه
+        نادر الزغول، ولا شيء يتوقف عن العمل إن تعطل خادم ما. يشرح <code>SLA.md</code>،
+        المرفق داخل الحزمة، أي هذه الضمانات يصمد بحكم طريقة بناء البرمجية، وأيها يعتمد على
+        Chrome.</p>
+      <p>مستندان آخران جزء من الاتفاقية نفسها، ولا يلغي هذا أيا منهما: يحدد <code>LICENSE</code>
+        ما يجوز لك وما لا يجوز فعله بالبرمجية نفسها، وتحدد <a href="privacy.html">سياسة
+        الخصوصية</a> ما يسجله الامتداد وإلى أين يذهب. حيث يبدو أن هذه الصفحة وأيا منهما
+        يختلفان، يحكم الأكثر تحديدا.</p>
+
+      <h2>2. نموذج الترخيص</h2>
+      <p>QA Wrap مجانية ومفتوحة المصدر برخصة MIT. لا عدّ مقاعد ولا حساب ولا دفع.</p>
+      <p>لا يحمل QA Wrap أي إعلانات ولا أي روابط عمولة، ولن يحمل، لأن أيا منهما سيضعه في تعارض مع
+        متطلبات "الاستخدام المحدود" لمتجر Chrome الإلكتروني: يعتمد المنتج بالفعل على ألا يجمع شيئا
+        يتجاوز ما تحتاجه جلسة الاختبار.
+        <!-- drafted, needs the owner's legal review --></p>
+      <p>يحكم <code>LICENSE</code> ما تسمح به نسخة من البرمجية نفسها، وهو قصير: البرمجية مرخصة
+        برخصة MIT. يجوز لك استخدامها ونسخها وتعديلها ودمجها ونشرها وتوزيعها وبيع نسخ منها، بشرط
+        بقاء إشعار حقوق النشر وإشعار الإذن معها. تحتفظ المكونات الخارجية برخصها
+        (<code>THIRD-PARTY-NOTICES.md</code>).
+        <!-- drafted, needs the owner's legal review: البند 1 من LICENSE ينص على أن لا ترخيص يمنح بمجرد
+             الامتلاك، وأن أي حق لا يوجد إلا كتابة؛ الصياغة المحددة هنا (شخصي/غير حصري/غير قابل
+             للتحويل/قابل للإلغاء) لحالة التثبيت اليومية هي محاولة هذه الصفحة لشرح ما يعنيه ذلك
+             عمليا، لا اقتباسا حرفيا. --></p>
+
+      <h2>3. اختبارك، وما ينتج عنه</h2>
+      <p>التقارير، وسجلات الأعطال، ولقطات الشاشة، والتسجيلات، وحالات الاختبار التي تنتجها من
+        اختبارك أنت ملكك. الالتزام الوحيد المرتبط بالمخرجات هو نسب العمل إلى الأداة: تحمل
+        المصنفات المولدة إشعار نسب ورمز مصدر، وحذف تلك العلامة أو تزييفها، أو عرض مخرجات
+        QA Wrap على أنها مخرجات أداة أخرى، يعد سوء نية تجاه من يقرأ تقريرك. هذا يخص
+        نسب الأداة، لا ملكية النتائج.</p>
+      <p>يحفظ QA Wrap ما يسجله على جهازك أنت. لا يملك خادما ولا حسابا، فلا يحمل نادر الزغول
+        Software نسخة من جلساتك ولا تستطيع استرجاعها لك. <a href="privacy.html">سياسة
+        الخصوصية</a> هي التفاصيل، وهي جزء من هذه الشروط.</p>
+
+      <h2>4. ما أنت مسؤول عنه</h2>
+      <p>أنت من يختار ما يختبر وما يسجل. هذا يجعل بضعة أمور من مسؤوليتك أن تحسنها، ويمنحك
+        الامتداد أدوات التحكم بكل واحد منها:</p>
+      <ol>
+        <li><strong>إذن اختبار الموقع.</strong> يعمل QA Wrap على أي موقع توجهه إليه، بما في ذلك
+          مواقع لا تملكها. القدرة التقنية على تسجيل موقع ليست إذنا باختباره.</li>
+        <li><strong>البيانات الشخصية التي تلتقطها.</strong> يجري الاختبار على أنظمة مليئة بسجلات
+          أشخاص حقيقيين. الإخفاء والتنقيح ومدة الاحتفاظ موجودة في الإعدادات، موثقة في
+          <a href="privacy.html">سياسة الخصوصية</a>، واستخدامها قرارك. بموجب GDPR أنت المتحكم
+          بأي شيء تسجله؛ نادر الزغول ليس معالجا له، لأن شيئا منه لا يصل إليه.</li>
+        <li><strong>إلى أين ترسله.</strong> Jira وSlack وTeams وDiscord وGoogle Chat وGitHub
+          وLinear وTrello وClickUp وAsana اختيارية، تعدها أنت، ولا يرسل شيء حتى تضغط زرا يسمي
+          الوجهة. متى غادر تقرير إلى أحدها، تسري عليه شروط تلك الخدمة ولا تعود هذه الشروط تسري.</li>
+        <li><strong>الرموز التي تلصقها.</strong> رمز أداة تتبع مخزن في ملف متصفحك قابل
+          للقراءة من أي شخص يملك وصولا إلى ذلك الملف. اقصره على ما يحتاجه وألغه حين تنتهي.</li>
+      </ol>
+
+      <h2>5. ما لن تفعله الأداة</h2>
+      <p>هذه التزامات، وتوثق <a href="privacy.html">سياسة الخصوصية</a> الآلية خلف كل واحد منها:</p>
+      <ul>
+        <li>لا ترسل أي طلب شبكة من عندها. لا تحليلات، لا قياس عن بعد، لا نبضة تحديث، لا شيفرة عن
+          بعد.</li>
+        <li>لا تسجل حقول كلمات المرور ولا قيم الكعكات (cookies) في جلسة أو ملف مصدر. ملفات الكعكات
+          المحفوظة استثناء: تحتفظ بالقيم التي حفظتها، على جهازك، إلى أن تحذفها.</li>
+        <li>لا تسجل شيئا ولا تعمل في نافذة متصفح لم توقظها، بما في ذلك عبر قائمة النقر بزر الفأرة
+          الأيمن واختصارات لوحة المفاتيح. وفي موقع سمحت به تبقى سكربتات الصفحة فيها محملة.</li>
+      </ul>
+
+      <h2>6. بلا ضمان</h2>
+      <p>تقدم البرمجية "كما هي"، من دون أي ضمان من أي نوع، صريحا كان أو ضمنيا، بما في ذلك على
+        سبيل المثال لا الحصر ضمانات القابلية للتسويق، والملاءمة لغرض معين، وعدم انتهاك حقوق
+        الغير.</p>
+      <p>يبلغ QA Wrap عما فعله متصفح وصفحة أثناء جلستك. هو دليل لحكم بشري، وليس شهادة اعتماد،
+        ولا تدقيقا، ولا ضمانا بأن برمجية ما صحيحة أو قابلة للوصول. يجد فحص إمكانية الوصول الآلي
+        نحو ثلث العوائق الحقيقية فحسب، ويقول الامتداد ذلك على الشاشة التي تشغل واحدا منها.
+        القرارات التي تتخذها بناء على قوة تقرير هي قراراتك.</p>
+
+      <h2>7. المسؤولية</h2>
+      <p>لا يتحمل نادر الزغول بأي حال من الأحوال أي مطالبة أو أضرار أو مسؤولية أخرى، سواء
+        في العقد أو الضرر أو غير ذلك، ناشئة عن البرمجية أو استخدامها أو مرتبطة بأي منهما. تعيش
+        الجلسات في ملف متصفح: إن حذف الملف، تختفي، فصدر ما يهمك.</p>
+      <p>لا شيء في هذه الشروط يحد من مسؤولية لا يمكن للقانون تحديدها، وهو ما يشمل في معظم
+        الولايات القضائية الوفاة أو الإصابة الشخصية الناتجة عن الإهمال، والاحتيال.</p>
+
+      <h2>8. مكونات من طرف ثالث</h2>
+      <p>يستخدم QA Wrap مكتبة axe-core، المرخصة بموجب رخصة Mozilla العامة 2.0 من Deque Systems,
+        Inc. يبقى ذلك المكون تحت رخصته الخاصة ولا شيء هنا يقيد الحقوق التي تمنحها؛ انظر
+        <code>vendor/</code> داخل الحزمة. الخط هو thmanyah Sans وSerif Display، © thmanyah للنشر والتوزيع، ويستخدم بموجب رخصة خطوط thmanyah التي تسمح بتضمينه داخل منتج مغلف؛ ولا يعاد توزيعه ملف خط. راجع <code>NOTICE</code> في الحزمة.</p>
+
+      <h2>9. إنهاؤه</h2>
+      <p>يمكنك التوقف في أي وقت بإلغاء تثبيت الامتداد، ما يحذف قاعدة بياناته وإعداداته من ملف
+        المتصفح. الملفات التي صدرتها فعلا إلى القرص تبقى كما هي، لأنها ملكك.</p>
+      <p>رخصة MIT غير قابلة للإلغاء. لا يوجد مفتاح عن بعد، ولا تتوقف البرمجية عن العمل
+        بسبب أي شيء يفعله نادر الزغول. تبقى
+        البنود 3 و6 و7 سارية.</p>
+
+      <h2>10. التغييرات على هذه الشروط</h2>
+      <p>تسجل التغييرات على هذه الشروط في ملاحظات إصدار الامتداد، بالطريقة نفسها التي تسجل
+        بها التغييرات على سياسة الخصوصية. يوصف أي تغيير جوهري هناك بكلمات واضحة لا برقم إصدار
+        وحده. الاستمرار في استخدام QA Wrap بعد تغيير يعني قبولك للشروط المعدلة.</p>
+
+      <h2>11. القانون الحاكم والتواصل</h2>
+      <p>تخضع هذه الشروط لقانون المملكة الأردنية الهاشمية، ولمحاكمها الاختصاص. إن كنت مستهلكا،
+        فهذا لا يلغي حماية قانون البلد الذي تعيش فيه.</p>
+      <p>توجه الأسئلة حول هذه الشروط، وأي إذن لم يمنح أعلاه، إلى نادر الزغول عبر
+        <a href="support.html">صفحة الدعم</a>.</p>
+    </section>
+
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-lang-block="en" lang="en" dir="ltr">QA Wrap &middot; Made by Nader Alzghoul</p>
+    <p data-lang-block="ar" lang="ar" dir="rtl">QA Wrap &middot; من تطوير نادر الزغول</p>
+    <ul data-lang-block="en" lang="en" dir="ltr">
+      <li><a href="./">Home</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="trust.html">Trust</a></li>
+    </ul>
+    <ul data-lang-block="ar" lang="ar" dir="rtl">
+      <li><a href="./">الرئيسية</a></li>
+      <li><a href="support.html">الدعم</a></li>
+      <li><a href="privacy.html">الخصوصية</a></li>
+      <li><a href="trust.html">الثقة</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

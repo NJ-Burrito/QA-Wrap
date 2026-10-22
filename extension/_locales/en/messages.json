@@ -1,0 +1,23 @@
+{
+  "extDescription": {
+    "message": "Record a test session and every failure is linked to the click that caused it, then filed as a report you can hand over."
+  },
+  "cmdToggleRecording": {
+    "message": "Start / stop a QA session"
+  },
+  "cmdPickElement": {
+    "message": "Pick an element and copy its Playwright locator"
+  },
+  "cmdExecuteAction": {
+    "message": "Open the QA Wrap popup (keyboard route to the toolbar button)"
+  },
+  "cmdToggleRtl": {
+    "message": "Toggle RTL / i18n stress mode"
+  },
+  "cmdInjectData": {
+    "message": "Open edge-case values for the focused field"
+  },
+  "cmdRecordTab": {
+    "message": "Record a video of this tab (V for video)"
+  }
+}

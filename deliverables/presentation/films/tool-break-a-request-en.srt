@@ -1,0 +1,23 @@
+1
+00:00:02,400 --> 00:00:04,733
+Never fails on demand.
+
+2
+00:00:04,967 --> 00:00:06,833
+Break it on purpose.
+
+3
+00:00:07,067 --> 00:00:10,067
+Ten ways to fail.
+
+4
+00:00:10,300 --> 00:00:13,200
+Aimed, counted, armed.
+
+5
+00:00:13,400 --> 00:00:15,167
+Watch what it does.
+
+6
+00:00:15,767 --> 00:00:18,100
+Every failure, traced.

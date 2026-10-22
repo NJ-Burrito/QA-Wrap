@@ -1,0 +1,615 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* QA Wrap settings page. Tokens and primitives come from ../ui/tokens.css. */
+
+body {
+  min-height: 100vh;
+  background: var(--backdrop);
+  background-attachment: fixed;
+}
+
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-3) clamp(var(--sp-4), 5vw, 48px);
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--glass-edge);
+  box-shadow: 0 1px 0 var(--glass-highlight) inset;
+  flex-wrap: wrap;
+}
+
+.bar-actions { display: flex; align-items: center; flex-wrap: wrap; max-width: 100%; gap: var(--sp-3); } /* r7-08-2: wraps at 320 px */
+
+.save-state { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--ok); min-width: 8ch; }
+
+/* The page is long by nature — ten groups of settings — so it is given a
+   spine rather than being cut into tabs, which would hide settings people are
+   comparing (where files go, and what the recording is called, for instance). */
+.shell {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(var(--sp-4), 4vw, 40px);
+  display: grid;
+  grid-template-columns: 186px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+main {
+  min-width: 0;
+  padding: var(--sp-5) 0 96px;
+  display: grid;
+  gap: 18px;
+  scroll-behavior: smooth;
+}
+/* MOTION.md "other pages" rule: one materialise for the main column on first
+   paint, no per-row stagger. Reuses `ui/motion.css`'s `qaw-in-up`. */
+main { animation: qaw-in-up var(--motion-base) var(--motion-ease) both; }
+@media (prefers-reduced-motion: reduce) { main { animation: none !important; } }
+
+.rail {
+  position: sticky;
+  top: 68px;
+  display: grid;
+  gap: 1px;
+  padding: var(--sp-5) 0 0;
+}
+.rail-title {
+  font-size: var(--t-micro); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  line-height: var(--lead-micro); color: var(--text-muted); margin: 0 0 var(--sp-2); margin-inline-start: var(--sp-2h);
+}
+.rail a {
+  display: flex; align-items: center; min-height: var(--sz-hit); padding: var(--sp-2) var(--sp-2h); border-radius: var(--r-md); border-inline-start: 2px solid transparent;
+  font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: 1.35; color: var(--text-muted); text-decoration: none;
+  transition: background 140ms ease, color 140ms ease;
+}
+.rail a:hover { background: var(--surface-raised); color: var(--text); }
+.rail a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rail a.is-here { color: var(--text); font-weight: 600; border-inline-start-color: var(--accent); background: var(--surface-raised); }
+
+/* Every card the rail points at must clear the sticky bar when jumped to. */
+main > .card { scroll-margin-top: 76px; }
+
+/* Under 900px a 186px rail costs more than it gives: lay it flat instead. */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .rail {
+    top: 52px; z-index: 4; display: flex; flex-wrap: wrap; gap: var(--sp-1); padding: var(--sp-2h) 0;
+    background: var(--surface-glass-strong); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur));
+    border-bottom: 1px solid var(--glass-edge);
+  }
+  .rail-title { display: none; }
+  /* The two rounded corners are the top two in both directions, so the physical
+     shorthand is already symmetric and stays. */
+  .rail a { flex: 0 0 auto; border-inline-start: 0; border-bottom: 2px solid transparent; border-radius: var(--r-md) var(--r-md) 0 0; white-space: nowrap; }
+  .rail a.is-here { border-inline-start-color: transparent; border-bottom-color: var(--accent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main { scroll-behavior: auto; }
+  .rail a { transition: none; }
+}
+
+/* ------------------------------------------------------------------- cards */
+
+.card {
+  /* UI rework round 2 (research/56 round-2, "glass on floating layers only;
+     content cards solid"): a settings group is page content, not a floating
+     layer, so it takes the opaque raised surface — the sticky bar and the
+     narrow-width rail above stay glass, they are the floating nav. */
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px 22px;
+  display: grid;
+  gap: var(--sp-4);
+  container-type: inline-size;
+  box-shadow: var(--shadow-1);
+}
+
+/* R08 (decision 114): the rail is now a tab set and each `.card` a
+   tabpanel. `.card` sets `display: grid` above, which — being an author
+   rule — beats the UA stylesheet's `[hidden] { display: none }`, so the
+   `hidden` attribute options.js toggles needs its own rule here or the
+   inactive panels would render in place, stacked and visible. */
+.card[hidden] { display: none; }
+
+.card-head { display: grid; gap: var(--sp-1); }
+.card-head h2 { font-size: var(--t-head); font-weight: var(--weight-head); letter-spacing: var(--track-head); line-height: var(--lead-head); }
+.card-head p { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); max-width: 68ch; }
+
+/* ------------------------------------------------------------------ ranges */
+
+.range-field { display: grid; gap: var(--sp-half); }
+
+.range-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.range-head label { font-size: var(--t-body); font-weight: 600; letter-spacing: var(--track-body); line-height: var(--lead-body); }
+
+.range-head output {
+  font: 600 13px/1 var(--mono);
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+
+.range-note { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); max-width: 64ch; }
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  /* Filled portion is driven by --fill, set from JS.
+     A gradient line is physical - CSS has no `to inline-end` - and Chrome
+     mirrors the slider itself under `dir="rtl"`, so which end of this gradient
+     is the filled one is set from JS beside --fill rather than in a
+     `[dir="rtl"]` rule here. In LTR the two variables are the defaults. */
+  background: linear-gradient(
+    to right,
+    var(--fill-from, var(--accent)) 0%,
+    var(--fill-from, var(--accent)) var(--fill, 50%),
+    var(--fill-to, var(--border)) var(--fill, 50%),
+    var(--fill-to, var(--border)) 100%
+  );
+}
+
+/* The thumb rule (size, transition, hover/active/focus states) lives in
+   ui/tokens.css, already linked on this page — this file no longer ships a
+   second, differently-timed copy (F32). */
+
+/* ---------------------------------------------------------------- switches */
+
+.switch {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2h);
+  cursor: pointer;
+  padding: var(--sp-2) var(--sp-2h);
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+}
+
+.switch:hover { background: var(--surface-sunken); border-color: var(--border); }
+.switch input { margin-top: var(--sp-1); flex: none; width: 16px; height: 16px; accent-color: var(--accent); }
+.switch span { display: grid; gap: 1px; }
+.switch strong { font-size: var(--t-body); font-weight: 600; letter-spacing: var(--track-body); line-height: var(--lead-body); }
+.switch em { font-style: normal; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); }
+
+.text-field { display: grid; gap: var(--sp-1); }
+.text-field > span { font-size: var(--t-body); font-weight: 600; letter-spacing: var(--track-body); line-height: var(--lead-body); }
+.text-field em { font-style: normal; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); }
+
+/* ---------------------------------------------------------------- keymap */
+
+.keymap { display: grid; gap: var(--sp-half); }
+
+.key-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2h) var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+
+@container (max-width: 460px) {
+  .key-row { grid-template-columns: 1fr auto; }
+  .key-row .key-clear { grid-column: 2; }
+}
+
+.key-label { display: grid; gap: 1px; min-width: 0; }
+.key-label strong { font-size: var(--t-body); font-weight: 600; letter-spacing: var(--track-body); line-height: var(--lead-body); }
+.key-label em { font-style: normal; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); }
+
+.key-btn {
+  font: 600 12px/1 var(--mono);
+  padding: var(--sp-2) var(--sp-3);
+  min-width: 110px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.key-btn:hover { border-color: var(--accent); }
+
+.key-btn[data-recording='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  animation: key-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes key-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+.key-btn[data-conflict='true'] { border-color: var(--danger); color: var(--danger); background: var(--danger-soft); }
+
+.key-clear {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small);
+  cursor: pointer;
+  padding: var(--sp-1) var(--sp-half);
+  border-radius: var(--r-sm);
+}
+
+.key-clear:hover { color: var(--danger); background: var(--danger-soft); }
+
+/* ---------------------------------------------------------------- callout */
+
+.callout {
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--info);
+  border-radius: var(--r-md);
+  padding: var(--sp-3h) var(--sp-4);
+  background: var(--surface-sunken);
+  display: grid;
+  gap: var(--sp-2h);
+  justify-items: start;
+}
+
+.callout h3 { font-size: var(--t-body); letter-spacing: var(--track-body); line-height: var(--lead-body); }
+.callout p { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); max-width: 66ch; }
+
+.commands { display: grid; gap: var(--sp-1); width: 100%; }
+
+.command-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small);
+  padding: var(--sp-1) 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.command-row:last-child { border-bottom: 0; }
+.command-row kbd { flex: none; }
+.command-row .unset { color: var(--text-muted); font-style: italic; }
+
+/* Integrations: the one place data can leave the machine, so it says so. */
+.warn-callout { border-inline-start-color: var(--warn); }
+.warn-callout h3 { color: var(--warn); }
+
+.two-up { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+
+@container (max-width: 460px) {
+  .two-up { grid-template-columns: 1fr; }
+}
+
+.range-note.ready { color: var(--ok); }
+.range-note.armed { color: var(--warn); }
+
+.guided-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0 var(--sp-4);
+}
+
+.sound-try { display: grid; gap: var(--sp-4); margin-top: var(--sp-3h); }
+/* Sounds are off, and the panel says so in words. `opacity: 0.6` took the
+   family names and the sentence describing each instrument below AA to say the
+   same thing a disabled button already says. */
+.sound-try.is-off .sound-chip { border-style: dashed; }
+
+.sound-family { display: grid; gap: var(--sp-1); }
+
+.sound-family-name {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 700;
+}
+
+/* The instrument, named. It is what makes the set a system rather than a pile
+   of beeps, so it is on screen rather than only in the source. */
+.sound-voice {
+  padding: 1px var(--sp-2);
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font: 500 9.5px/1.6 var(--mono);
+  letter-spacing: 0.04em;
+}
+
+.sound-family-what { margin: 0; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: 1.5; color: var(--text-muted); }
+.sound-row { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-top: 2px; }
+.sound-chip:disabled { opacity: 0.45; cursor: not-allowed; }
+
+
+
+
+
+
+
+.tree {
+  margin: 0 0 var(--sp-3h);
+  padding: var(--sp-3) var(--sp-3h);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font-family: var(--mono);
+  font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small);
+  line-height: 1.7;
+  color: var(--text-muted);
+  overflow-x: auto;
+}
+
+.sub-head {
+  font-size: var(--t-head); font-weight: var(--weight-head); letter-spacing: var(--track-head); line-height: var(--lead-head);
+  margin: 0 0 var(--sp-1);
+}
+
+
+
+
+
+
+dl.about { display: grid; grid-template-columns: max-content 1fr; gap: var(--sp-half) var(--sp-4); margin: 0; font-size: var(--t-body); font-weight: var(--weight-body); letter-spacing: var(--track-body); line-height: var(--lead-body); }
+dl.about dt { font-weight: 600; color: var(--text-muted); }
+dl.about dd { margin: 0; }
+dl.about .mono { font-family: inherit; letter-spacing: 0.02em; }
+/* Four links on one line, wrapping rather than stacking: they are a row of
+   references, not four separate settings. */
+.legal-links { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3h); }
+.legal-links a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.legal-links a:hover { text-decoration-thickness: 2px; }
+.legal-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+/* ── the tutorials card ─────────────────────────────────────────────────── */
+.lesson-list { display: grid; gap: var(--sp-half); margin: var(--sp-1) 0 var(--sp-3); }
+.lesson { display: grid; grid-template-columns: auto 1fr auto; gap: var(--sp-2h); align-items: center; padding: var(--sp-2) var(--sp-3); border: 1px solid var(--border-strong); border-radius: var(--r-lg); background: var(--surface); font: inherit; color: inherit; text-align: start; cursor: pointer; }
+/*
+ * A real focus ring, not `outline: none`.
+ *
+ * The rule set `outline: none` on `:focus-visible` and offered a 1px border
+ * colour change in its place — which is the same weight as the hover state and
+ * a colour-only difference besides, so somebody driving this list from the
+ * keyboard had no reliable way to tell which lesson they were on. `:hover` and
+ * `:focus-visible` are two different questions and they get two different
+ * answers: the hover keeps the accent edge, the focus gets the ring every other
+ * control on this page uses.
+ */
+.lesson:hover { border-color: var(--accent); }
+.lesson:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/*
+ * A one-time notice, for something the product changed under the user.
+ *
+ * Not a `.card` and not an error: it is an explanation with a dismiss, so it
+ * reads as an aside inside the card that owns the setting it is about.
+ */
+.notice {
+  display: grid;
+  gap: var(--sp-2h);
+  justify-items: start;
+  margin: var(--sp-1) 0 var(--sp-3h);
+  padding: var(--sp-3) var(--sp-3h);
+  border: 1px solid var(--accent);
+  border-inline-start-width: 3px;
+  border-radius: var(--r-lg);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: var(--t-body); font-weight: var(--weight-body); letter-spacing: var(--track-body);
+  line-height: 1.55;
+}
+.notice p { margin: 0; }
+.notice strong { color: var(--accent-ink); }
+.lesson-play { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: var(--accent-text); font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); }
+.lesson-text { display: grid; gap: 1px; font-size: var(--t-body); font-weight: var(--weight-body); letter-spacing: var(--track-body); line-height: var(--lead-body); }
+.lesson-text span { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); }
+.lesson-dur { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.page-foot { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-4) 0 var(--sp-1); margin-top: 26px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); }
+
+/* Two families of redaction that are a trade rather than a straight win, so
+   they read as choices side by side rather than as a list of checkboxes where
+   more ticks would look like more safety. */
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: var(--sp-1) 0 2px; }
+.chips button {
+  padding: var(--sp-half) var(--sp-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text-muted);
+  font: 600 12px/1 var(--font);
+  cursor: pointer;
+  transition: background-color var(--dur-tap) var(--ease), color var(--dur-tap) var(--ease), border-color var(--dur-tap) var(--ease);
+}
+.chips button:hover { border-color: var(--accent); color: var(--text); }
+.chips button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.chips button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* A hint under its label, not trailing off the end of it. */
+.check span em { display: block; margin-top: var(--sp-1); font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: 1.5; color: var(--text-muted); }
+
+/* ── permissions rows ──────────────────────────────────────────────────────
+   A dot, the explanation, and the button that changes it, in that reading
+   order. The dot is a state and not decoration, so the text beside it says the
+   same thing in words: colour is never the only carrier. */
+.perm-row {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  gap: var(--sp-3, var(--sp-3));
+  align-items: start;
+  padding: var(--sp-3, var(--sp-3)) 0;
+  border-top: 1px solid var(--border);
+}
+.perm-row:first-of-type { border-top: 0; }
+.perm-text { display: grid; gap: var(--sp-1); }
+.perm-name { font-size: var(--t-body); font-weight: 600; letter-spacing: var(--track-body); line-height: var(--lead-body); }
+.perm-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: var(--sp-1);
+  border-radius: 50%;
+  background: var(--text-muted);
+  /* An outline rather than a fill for the unknown state, so "not asked yet"
+     does not read as a third colour nobody can name. */
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.perm-dot[data-state='granted'] { background: var(--ok); }
+.perm-dot[data-state='denied'] { background: var(--danger); }
+.perm-row .btn { min-height: var(--sz-hit); white-space: nowrap; }
+
+/* Two buttons where the other rows have one: allowing every site and taking
+   every site back are opposite presses and must not share a control. */
+.perm-actions { display: grid; gap: var(--sp-half); align-content: start; }
+
+/* The sites that have been said yes to. A list because it is a list: a count
+   alone cannot be checked by the person who is meant to be checking it. */
+.site-list { display: grid; gap: var(--sp-1); margin: var(--sp-half) 0 0; padding: 0; list-style: none; }
+.site-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2, var(--sp-2));
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font: 11px/1.4 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+/* ═══════════════════════════════════════════ Settings in motion (v5) ══ */
+/*
+  The same vocabulary as the popup, from `ui/motion.css`: three durations, two
+  curves, one direction token. Settings is a long scrolling page with a rail
+  down the side, so the two state changes worth animating are the rail's
+  pointer moving and a card arriving — plus every disclosure the page opens
+  when a switch is turned on.
+
+  The rail already transitioned its background and colour on a hand-written
+  140 ms; that number is now `--motion-fast` like everything else, so the rail,
+  the switches, the sound chips and the shortcut buttons all answer a pointer
+  at the same speed.
+*/
+
+/* ── the page arrives ────────────────────────────────────────────────── */
+
+.app-bar { animation: qaw-in-down 180ms var(--motion-ease) both; }
+.rail { animation: qaw-in-lead var(--motion-base) var(--motion-ease) both; }
+
+/* The cards, in order, on the capped stagger. */
+main > .card { animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards; }
+main > .card { animation-delay: calc(var(--motion-step) * 5); }
+main > .card:nth-child(1) { animation-delay: 0ms; }
+main > .card:nth-child(2) { animation-delay: var(--motion-step); }
+main > .card:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+main > .card:nth-child(4) { animation-delay: calc(var(--motion-step) * 3); }
+main > .card:nth-child(5) { animation-delay: calc(var(--motion-step) * 4); }
+
+/* ── the rail: which section you are in ──────────────────────────────── */
+
+.rail a {
+  transition:
+    background-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-base) var(--motion-ease);
+}
+/* The marker travels along the leading edge of the rail, and along the bottom
+   of the flat rail under 900px. Both are `border-*-color`, so both animate
+   with no rule of their own. */
+.rail a.is-here { transition-duration: var(--motion-base); }
+
+/* ── switches, fields and the things they reveal ─────────────────────── */
+
+.switch { transition: background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease); }
+.card { transition: border-color var(--motion-base) var(--motion-ease); }
+
+/* The five things Settings actually hides behind a switch or a choice. Only
+   these: a rule that unfolded every visible field would replay the whole page
+   on every load, on top of the card stagger. */
+#retention-notice:not([hidden]),
+#confirm-typed:not([hidden]),
+#jira-email-field:not([hidden]),
+#imageQuality-field:not([hidden]),
+#soundVolume-field:not([hidden]),
+@supports (interpolate-size: allow-keywords) {
+  #retention-notice:not([hidden]),
+  #confirm-typed:not([hidden]),
+  #jira-email-field:not([hidden]),
+  #imageQuality-field:not([hidden]),
+  #soundVolume-field:not([hidden]) {
+    animation-name: qaw-unfold-h;
+  }
+}
+
+/* ── "Saved" ─────────────────────────────────────────────────────────── */
+
+/* One element, written over and over, so ui/motion.js restarts it by hand —
+   the same mechanism the popup's status line uses, for the same reason. */
+.save-state { transition: color var(--motion-fast) var(--motion-ease); }
+
+/* ── recording a shortcut ────────────────────────────────────────────── */
+
+.key-btn { transition: background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease); }
+.range-note { transition: color var(--motion-base) var(--motion-ease); }
+
+/* ── reduced motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .app-bar, .rail, main > .card,
+  #retention-notice:not([hidden]), #confirm-typed:not([hidden]),
+  #jira-email-field:not([hidden]), #imageQuality-field:not([hidden]),
+  #soundVolume-field:not([hidden]) {
+    animation: none !important;
+    animation-delay: 0ms !important;
+    opacity: 1 !important;
+    transform: none !important;
+    height: auto !important;
+    clip-path: none !important;
+  }
+  .rail a, .rail a.is-here, .switch, .card, .save-state, .key-btn, .range-note { transition: none !important; }
+}
+
+/* T-068: a control an administrator has taken away stays visible, greyed, and says who. */
+.is-managed:disabled, input.is-managed { opacity: 0.55; cursor: not-allowed; }
+.is-managed-note { display: block; }
+.policy-list { margin: 0; padding-inline-start: 1.2em; font-size: var(--t-body, 14px); }
+.policy-list li.is-managed { font-weight: 600; }
+
+/* D-1010-159: forced colours replace every painted colour, so each focus stop keeps a real outline (box-shadow is dropped
+   there) and the current rail section keeps a border. One rule per selector (tools/test-styles.mjs). */
+@media (forced-colors: active) {
+  .rail a:focus-visible, .legal-links a:focus-visible, .lesson:focus-visible, .chips button:focus-visible { outline: 2px solid Highlight; }
+  .rail a.is-here { text-decoration: underline; text-decoration-thickness: 2px; }
+}

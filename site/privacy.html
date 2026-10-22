@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy · QA Wrap</title>
+<meta name="description" content="The QA Wrap privacy policy: what the extension records, what it deliberately does not record, when data leaves your machine, retention and deletion, the standards it is built against, and why each permission is there.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/thmanyah.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-lang="en">
+<a class="skip" href="#main">Skip to content · انتقل إلى المحتوى</a>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA Wrap">
+        <g transform="translate(-2 3.5)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path class="mark-ring" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+          <path class="mark-check" d="M36 36L42.5 44L55 20"/>
+        </g>
+      </svg>
+      QA Wrap
+    </a>
+    <div class="masthead-right">
+      <nav aria-label="Site">
+        <ul>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="support.html">Support</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="./" aria-current="page">Privacy</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="terms.html">Terms</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="trust.html">Trust</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="support.html">الدعم</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="./" aria-current="page">الخصوصية</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="terms.html">الشروط</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="trust.html">الثقة</a></li>
+        </ul>
+      </nav>
+      <button type="button" id="lang-toggle" class="lang-toggle">
+        <span data-lang-block="en" lang="en" dir="ltr">العربية</span>
+        <span data-lang-block="ar" lang="ar" dir="rtl">English</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- This page is the web rendering of extension/PRIVACY.md, which ships inside
+     the extension package. The Chrome Web Store fetches this URL at review and
+     compares it with the listing, so the text is kept word for word in meaning:
+     change PRIVACY.md and this page in the same change, or they will disagree. -->
+
+<main id="main">
+  <div class="wrap">
+
+    <!-- ============================== ENGLISH ============================== -->
+    <div data-lang-block="en" lang="en" dir="ltr">
+
+    <section class="hero">
+      <h1>Privacy policy</h1>
+      <p class="lead prose">Published by Nader Alzghoul. <strong>Effective 8 September 2026</strong>, revised from the version of 3 September to describe the permission model and the first-run notice.
+        Applies to the QA Wrap browser extension on every browser it is published for: Chrome
+        and Edge. The policy is the same on both, because the extension does the same thing on
+        both.</p>
+    </section>
+
+    <section>
+      <h2>The one-sentence version</h2>
+      <p class="prose">QA Wrap is local-first: everything it records stays in your browser profile
+        on your machine, and nothing leaves it except where you configure Jira, a tracker or a
+        webhook, or where you send the one request you wrote in the API tool or run the link
+        checker, and press a button that names where the data is going.</p>
+    </section>
+
+    <section>
+      <h2>What it records, and where it goes</h2>
+      <div class="prose">
+        <p>While a session is recording, and only in a window you have woken up, the extension
+          keeps:</p>
+        <ul>
+          <li>the clicks, typing, navigations and form steps you perform on the page under test,
+            with a locator for each element;</li>
+          <li>the page's network requests and console output, so a failure can be linked to the
+            action that caused it;</li>
+          <li>screenshots, full-page captures and screen or tab recordings you start, or that start by themselves on a site you ticked;</li>
+          <li>notes you type, the charter you set, and the settings you choose.</li>
+        </ul>
+        <p>All of it is written to IndexedDB and <code>chrome.storage</code> inside your browser
+          profile. There is no QA Wrap server. The extension makes no request to any host of its
+          own, carries no analytics, and loads no remote code; the accessibility engine (axe-core)
+          is bundled inside the package.</p>
+        <p>When you switch on "pre-roll buffer" (off by default), an awake tab keeps its last 60 seconds of events in memory on the page only; nothing is stored or sent until you start a session, and the buffer is discarded on navigation, tab close, sleep, or switching it off.</p>
+        <p>Two more powers are off until you tick them, for one site at a time, in the popup on that site: start recording by itself, and take a screenshot on the first error of each kind. Each keeps only the site's address in your browser. Automatic recording records what you do on that site, shows a small dot on the page, and stops after 30 minutes without activity. Automatic screenshots are not scanned for secrets and stay in this browser. Neither power uploads anything; filing and sharing stay a button you press. Settings lists the sites and turns each power off.</p>
+
+        <h3>What it deliberately does not record</h3>
+        <p>Four layers, applied before anything is written, in this order:</p>
+        <ol>
+          <li>
+            <p><strong>What you masked by hand.</strong> Press <em>Mask real data</em> and click
+              anything on the page: a name, a national number, a whole column. It is covered by an
+              opaque block for the rest of the session: in every screenshot, in the video, through
+              every navigation. The words underneath are removed from the event, skipped by the
+              page map, and never written into the report. The report says <em>how many</em> values
+              were masked, so a reviewer knows something was withheld rather than never seen.</p>
+            <p>A block, not a blur. A short string behind a Gaussian blur can be recovered by
+              rendering candidates and comparing, which has been done to published redactions more
+              than once.</p>
+          </li>
+          <li>
+            <p><strong>What has the shape of a secret.</strong> Payment card numbers (validated
+              against the Luhn check digit, so an order reference is not mistaken for one), IBANs
+              (validated mod-97), bearer tokens, API keys, JSON web tokens and private key blocks
+              are removed from every recorded value. National and record numbers, and email
+              addresses, can be added in Settings. They are off by default because a ten-digit
+              national number and a ten-digit order reference are the same shape, and a tester
+              testing order references needs to read them.</p>
+          </li>
+          <li>
+            <p><strong>What has the name of a secret.</strong> A field of type
+              <code>password</code>, an <code>autocomplete</code> of <code>cc-number</code> or
+              <code>one-time-code</code>, or a label matching
+              <code>pass|secret|token|otp|pin|cvv|card|iban|<bdi lang="ar">كلمة المرور</bdi></code>,
+              recorded as "a password was typed", never as its value. You can add your own
+              pattern.</p>
+          </li>
+          <li>
+            <p><strong>Cookie values</strong>, never written into a session or an export, even while the
+              cookie editor is open. The one place a cookie value is kept is a <strong>saved cookie
+              profile</strong>: if you save one, its cookies, values included, sit in
+              <code>chrome.storage.local</code> on this machine until you delete that profile.</p>
+          </li>
+        </ol>
+        <p>Two things these layers do not reach. A request you compose by hand in the request tool
+          is stored as you sent it, with its <code>Authorization</code> header and body. And a token
+          in the query string of a recorded URL, or in a response preview, reaches the HAR, YAML and
+          Postman exports as the page sent it. Treat those files as you would the page's own
+          traffic.</p>
+        <p>None of this is a substitute for judgement: no rule can know that a name on screen
+          belongs to a real patient. That is what masking by hand is for, and why the two exist
+          together.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>When data does leave your machine</h2>
+      <p class="prose">Only when you set up one of the 18 services in Settings, then Integrations, and
+        only when you press the corresponding button on a report:</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Destination</th><th scope="col">What is sent</th><th scope="col">Where</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Jira</th><td>the defect report or test case for one session, and the evidence attachments you ticked</td><td>your own Jira site, using your personal API token</td></tr>
+            <tr><th scope="row">GitHub, GitLab, Azure DevOps, Linear, Trello, ClickUp, Asana, Shortcut, YouTrack</th><td>the defect report for one session, and evidence attachments where the tracker accepts them</td><td>the tracker's API (your own server for a self-hosted one), using a personal token you paste</td></tr>
+            <tr><th scope="row">Slack, Microsoft Teams, Mattermost (as a webhook), Discord, Google Chat, a custom webhook</th><td>a summary of one session</td><td>the webhook URL you configured</td></tr>
+            <tr><th scope="row">Mattermost (as a signed-in account, from the report page)</th><td>a summary of one session, after your organisation's policy is checked and the text is scanned for secrets; the send is listed under what left this machine</td><td>the Mattermost server address you typed, using your personal access token, which is kept encrypted in the credential vault</td></tr>
+            <tr><th scope="row">Telegram</th><td>a summary of one session</td><td><code>api.telegram.org</code>, using the bot token and chat you configured</td></tr>
+            <tr><th scope="row">Link checker</th><td>a HEAD or GET request to each link on the page you chose, sent without cookies; addresses on your own machine or network are skipped unless the page is one; the run is listed under what left this machine as a count, with no link text</td><td>the host of each link; your organisation's policy (integrations off) is checked first and refuses before anything is sent</td></tr>
+            <tr><th scope="row">Email (.eml)</th><td>nothing is sent: a message file is written to your machine, for you to open and send yourself</td><td>your own disk</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prose">
+        <p><strong>Evidence attachments.</strong> When you file to Jira you choose what travels with
+          the report: screenshots, and the export formats you tick, such as the report file, a screen
+          or tab recording, or the network log (HAR). Nothing is attached that you did not tick, and
+          nothing is attached without the press.</p>
+        <p><strong>Secret scanning covers text, not media.</strong> Before anything leaves, the report
+          text and every text attachment (report files, logs, HAR) are scanned for the shape of a
+          secret; a hit blocks the send or, if you choose, is replaced by a marker. Screenshots,
+          recordings and other media attachments are <strong>not secret-scanned</strong>: no scanner
+          looks inside an image or a video. The filing result lists the files that were not scanned,
+          so check them by eye, and use <em>Mask real data</em> before capturing, because masked
+          values are covered in the pixels themselves.</p>
+        <p><strong>Per-service host grants.</strong> QA Wrap holds no permission to any of these hosts
+          at install. The first time you save or test a service, Chrome asks, in its own dialog, for
+          that one address (for example <code>https://your-company.atlassian.net</code>,
+          <code>https://api.telegram.org</code>, or the webhook's own host), and nothing wider. Refuse
+          it and that service does not work; nothing is sent. Take it back in Chrome's extension
+          settings under <em>Site access</em> and the service stops.</p>
+        <p>Each of those buttons asks for confirmation and says that the data is leaving your
+          machine. Leave the integration empty and the button never appears.</p>
+
+        <h3>AI writing (optional, off by default)</h3>
+        <p>If you turn on AI writing in Settings, the <strong>Suggest title and steps</strong> button appears in a report. When you press it, QA Wrap shows you a rough count of what will be sent and the exact text, and only when you press <strong>Send</strong> does it send that text, once, to the provider you chose (Anthropic, OpenAI or OpenRouter), with your own API key. The text is the same text «Copy for AI» makes: the steps, the failing requests, the console errors and the environment, with passwords, tokens and other secrets masked first. Screenshots, recordings, cookies and saved credentials are not sent. Your key is kept only on this computer, is not synced or exported, and you can remove it in Settings. The first time, the browser asks permission to reach that provider. QA Wrap calls no other AI service, and it sends only when you press Send. Each send appears in the list of what has left your machine (host and size, no content). What the provider does with the text is set by your agreement with them. The answer is shown as «suggested» next to what was recorded; your recorded steps and expected result stay as they were.</p>
+
+        <h3>Files you export do not phone home either</h3>
+        <p>An exported HTML report, SRS, manual or link map is opened somewhere else, often on a
+          machine that is not yours, and until version 3.1.0 it carried one line that mattered
+          here: the shared document stylesheet pulled its typeface from
+          Google's font service. QA Wrap never made that request. The browser that
+          opened the file did, which told Google's font service the reader's IP address, their
+          browser, and the moment they opened a QA Wrap document.</p>
+        <p><strong>That line has been removed.</strong> The document carries the typeface instead:
+          the Thmanyah faces out of the extension's own <code>ui/fonts.css</code>, written into the
+          file as base64 <code>data:</code> URIs, which asks nobody for anything. An exported
+          document now makes <strong>no network request at all</strong>, so nothing about who reads
+          one of these files, or when, reaches anybody. <code>tools/test-exporters.mjs</code> opens
+          a freshly built report in a real browser, waits for its fonts, records every request it
+          attempts, and fails if there is one.</p>
+        <p>Documents exported before this version still carry the old line. Deleting the
+          <code>@import</code> line at the top of their <code>&lt;style&gt;</code> block stops it;
+          nothing else in the file depends on it.</p>
+        <p>Tokens and webhooks you paste are <strong>encrypted at rest</strong>: one AES-GCM-256
+          ciphertext record in <code>chrome.storage.local</code> on this machine, opened with a
+          non-extractable key kept in the extension's own IndexedDB, or with a passphrase you choose
+          in Settings (PBKDF2-SHA256). They are decrypted only inside the extension's service worker
+          at the moment of use; extension pages see them masked. The one exception is the Mattermost
+          account token, which the report page opens only while it is posting to Mattermost. They are never synced through your
+          Google account, never written into an export, and never sent anywhere except the service
+          they belong to when you press File. The vault defeats disk and profile scanners and sync
+          leaks; it does not defeat malware running as you while QA Wrap is unlocked, so use tokens
+          scoped to issue creation and revoke them when you are done.</p>
+        <p>Saved cookie profiles and the variables you keep in the API tool are sealed the same way: each is its own AES-GCM record in <code>chrome.storage.local</code>, opened with the same key. A variable whose name looks like a credential is shown masked, with a Show button. Erase all removes both records without asking for the passphrase.</p>
+        <p>Chrome sync, when you have it on, carries only your preference settings: the recording, retention, sound, keyboard and layout choices and the interface language. Your tester name, the workspace you joined and the save-folder name are kept in <code>chrome.storage.local</code> on this machine, and credentials stay in the vault. Three of them are text you type: the "Save into" download folder, the extra mask pattern and the extra redaction words. They sync with the rest, so keep secrets and client names out of them, or switch Chrome sync off. Session data, screenshots and recordings stay on this machine.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Retention and deletion</h2>
+      <div class="prose">
+        <p><strong>Finished sessions are deleted after 30 days by default.</strong> The session
+          record, its events, its screenshots, its recordings and its replay log go together, on a daily schedule
+          and once when the browser starts, so a machine that is switched off overnight does not
+          skip a day. A running session is never touched. You can set the window to anything from
+          one day to a year, or to <em>never</em>, but <em>never</em> is a choice you make, not the
+          state you are left in.</p>
+        <p><strong>A pinned session is kept past the retention window.</strong> A session you
+          pinned is not deleted by the daily sweep, whatever its age, until you unpin it.</p>
+        <p><strong>A session the browser never let finish is closed, not kept for ever.</strong> If
+          Chrome is killed, the machine loses power, or the extension is updated while a session is
+          recording, nothing gets the chance to write the session's end time, and a session with no
+          end time used to be skipped by the deletion above forever, because a session still in
+          progress must not be deleted out from under you. At the next start, any session left open
+          that is not the one you are recording now is marked <strong>interrupted</strong> and given
+          an end time: the moment of its last recorded event, or its own start if it recorded
+          nothing. From then on it is deleted on the same schedule as any other. Four things it can
+          no longer know (how many values were masked, which cookies were present, how many rules
+          fired, which tools were used) are recorded as unknown rather than as zero.</p>
+        <p><strong>If you upgraded from an earlier version, nothing is deleted until you choose a
+          window.</strong> A profile that never had a retention setting is read as <em>never</em>,
+          not as 30 days, so an update cannot quietly delete sessions you recorded before the
+          setting existed. Settings, then Privacy, asks you once. Thirty days is the default for a
+          fresh install, where it is a default you are told about rather than a policy applied to
+          history.</p>
+        <p>Settings, then Privacy, has a <strong>Run it now</strong> button, so you can watch the
+          policy work rather than take its word for it.</p>
+        <p><strong>Erase all</strong> (Settings, then Privacy) removes every session with its
+          events, screenshots, recordings and replay logs, and your saved cookie profiles. Your
+          settings are kept. A saved cookie profile belongs to no session, so retention never
+          touches it: it goes with Erase all, or when you delete that profile.</p>
+        <p>You can also delete any session by hand from the timeline panel or the report. Exports
+          you have saved are ordinary files in the folder you chose, and are not touched by any of
+          this: they are yours. Uninstalling removes the database and the settings from the browser
+          profile.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>The standards this is built against</h2>
+      <p class="prose">Nothing here is a certification. These are the controls a certification
+        would ask to see, named so that a security review can check them off.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Measure</th><th scope="col">What it answers to</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Masking by hand; redaction by value shape</th><td><strong>GDPR Art. 5(1)(c)</strong> data minimisation</td></tr>
+            <tr><th scope="row">Both on by default</th><td><strong>GDPR Art. 25</strong> protection by design <em>and by default</em>; <strong>ISO/IEC 27701 cl. 7.4</strong></td></tr>
+            <tr><th scope="row">Opaque blocks over values in captures</th><td><strong>ISO/IEC 27002:2022 control 8.11</strong> data masking</td></tr>
+            <tr><th scope="row">30-day retention, deletion including media, and interrupted sessions closed so retention reaches them</th><td><strong>GDPR Art. 5(1)(e)</strong> storage limitation</td></tr>
+            <tr><th scope="row">Everything local; no analytics, no telemetry, no remote code</th><td><strong>GDPR Art. 5(1)(f)</strong> integrity and confidentiality; Chrome Web Store <strong>Limited Use</strong></td></tr>
+            <tr><th scope="row">No site access at install; one origin asked for at the moment it is used</th><td><strong>GDPR Art. 5(1)(c)</strong> data minimisation; Chrome Web Store <strong>minimum permissions</strong></td></tr>
+            <tr><th scope="row">A first-run notice the popup shows, and nothing else, until it is accepted</th><td><strong>GDPR Art. 13</strong> information at collection; Chrome Web Store <strong>prominent disclosure and consent</strong></td></tr>
+            <tr><th scope="row">Egress only on an explicit press, to a destination you configured</th><td><strong>GDPR Art. 5(1)(b)</strong> purpose limitation</td></tr>
+            <tr><th scope="row">Tokens in an AES-GCM vault in <code>storage.local</code>, never synced, never exported</th><td><strong>ISO/IEC 27002:2022 control 8.24</strong> use of cryptography and secrets</td></tr>
+            <tr><th scope="row">Manifest V3, strict CSP, no remotely hosted code, no <code>eval</code></th><td><strong>OWASP</strong> secure extension practice; Web Store policy</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="prose">The extension has no server. There is no account, no identifier, no
+        analytics and no crash reporting: nothing to breach, because nothing is collected. That is a
+        design decision rather than a promise, and <code>tools/release-check.mjs</code> fails the
+        build if an analytics endpoint or remotely hosted code ever appears in the package.</p>
+    </section>
+
+    <section>
+      <h2>Which sites it is allowed on</h2>
+      <div class="prose">
+        <p><strong>QA Wrap can read every website from the moment it is installed.</strong> The install
+          dialog says so ("read and change all your data on all websites"). Being able to read a
+          site is not capturing it: QA Wrap captures only after you press <strong>Wake up</strong>
+          or <strong>Start</strong>, and then only the focused tab or window, for as long as it is focused.</p>
+        <p>Press <strong>Wake up</strong> on the page you are testing; Chrome does not ask again, because
+          the access was given at install. You can take it back in Chrome's own extension settings
+          under <em>Site access</em>, and the extension's scripts leave those sites with it. A window you
+          have not woken is not recorded. The Jira helper runs on Jira pages (UI only;
+          notifications only when you turn them on, and only to your own Jira host).</p>
+        <p><strong>Asleep does not mean nothing is loaded.</strong> Asleep means no session
+          records, no request hook is installed and no tool acts. On every site,
+          QA Wrap's eight page scripts (about 146 KB of source per frame) stay loaded and record
+          only once you wake that window.</p>
+        <p>On a <strong>managed machine</strong> an administrator can set
+          <code>hostPermissionsPolicy</code> to <code>ask</code> (the default), <code>all</code> or
+          <code>none</code>. The policy grants nothing by itself.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>The notice you read first</h2>
+      <div class="prose">
+        <p>On installation QA Wrap opens one page, in Arabic and English, before any tool can be
+          used: what it stores and where, what a recording captures, what masking does and does not
+          do, that it can read every site but captures only a window you wake, and the line about the
+          microphone. Until you accept it the popup shows that card and nothing else.</p>
+        <p>Accepting writes three values into <code>chrome.storage.local</code> on this machine:
+          <code>consentedAt</code>, <code>consentVersion</code> and <code>consentRevision</code>: the moment you accepted,
+          the build you accepted it for and the revision of the welcome wording. They identify nothing and nobody,
+          they are never synced and never exported. The extension compares <code>consentRevision</code> with the
+          current revision when it starts, so if the wording is revised you are asked again;
+          <code>consentVersion</code> only records the build, and an ordinary update does not re-ask.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Permissions, and why each one is there</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Permission</th><th scope="col">Used for</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row"><code>storage</code>, <code>unlimitedStorage</code></th><td>sessions, screenshots and recordings in your profile; a long session can exceed the default quota</td></tr>
+            <tr><th scope="row"><code>activeTab</code>, <code>tabs</code></th><td>the URL and title of the page under test; opening the report and settings pages</td></tr>
+            <tr><th scope="row"><code>scripting</code></th><td>injecting the tools into the page you are testing, on demand, and registering the page scripts</td></tr>
+            <tr><th scope="row"><code>webNavigation</code></th><td>recording navigations, the status of the page itself, and the frame tree a locator inside an iframe needs</td></tr>
+            <tr><th scope="row"><code>webRequest</code></th><td>reading six security headers off each response while a session is recording and only on sites you have granted access to, so the fine-print report measures them instead of asking you to. Observation only: nothing is blocked, modified or redirected, no other header is kept, and the listener is attached only while a session runs</td></tr>
+            <tr><th scope="row"><code>cookies</code></th><td>the cookie editor and saved cookie profiles</td></tr>
+            <tr><th scope="row"><code>contextMenus</code></th><td>the right-click menu entries</td></tr>
+            <tr><th scope="row"><code>notifications</code></th><td>a desktop notice when a session is saved, when a recording starts or stops, and when the extension goes to sleep; nothing in one is sent anywhere, and Settings turns them off</td></tr>
+            <tr><th scope="row"><code>sidePanel</code></th><td>the docked workbench</td></tr>
+            <tr><th scope="row"><code>clipboardWrite</code></th><td>copying a locator</td></tr>
+            <tr><th scope="row"><code>alarms</code></th><td>the daily purge of sessions older than the retention period you set, which must run even while the service worker is suspended</td></tr>
+            <tr><th scope="row"><code>downloads</code></th><td>saving exports to the folder you chose</td></tr>
+            <tr><th scope="row"><code>offscreen</code></th><td>encoding recordings and GIFs, which needs a document</td></tr>
+            <tr><th scope="row"><code>tabCapture</code></th><td>recording the tab when you press Record</td></tr>
+            <tr><th scope="row"><code>debugger</code></th><td>measuring which of the page's JavaScript ran (code coverage) when you press Measure; Chrome shows it at install, and the debugger stays detached until you press Measure</td></tr>
+            <tr><th scope="row"><strong>optional</strong> <code>desktopCapture</code></th><td>recording a window or the whole screen; asked for the first time you choose one of those, and refusable</td></tr>
+            <tr><th scope="row">the site you are on</th><td>covered by the <code>&lt;all_urls&gt;</code> host permission below; it is captured only after you press <em>Wake up</em> or <em>Start</em>, and then only while its tab or window is focused</td></tr>
+            <tr><th scope="row"><strong>optional</strong> the address of a service you set up</th><td>asked for by name the first time you save or test Jira, a tracker, a chat webhook or Telegram, and no wider; refusable, and revocable in Chrome's extension settings</td></tr>
+            <tr><th scope="row">host permission <code>&lt;all_urls&gt;</code></th><td>held from install; the install dialog shows it as reading and changing your data on all websites. The page scripts record only once you wake that window</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Changes and contact</h2>
+      <div class="prose">
+        <p>Changes to this policy are recorded in the extension's release notes. This page and
+          <code>PRIVACY.md</code> in the package carry the same text.</p>
+        <p>Questions go to Nader Alzghoul at
+          naderalzghoulbusiness@gmail.com, or through the
+          <a href="support.html">support page</a>.</p>
+      </div>
+    </section>
+
+    </div>
+    <!-- ============================== ARABIC ================================ -->
+    <div data-lang-block="ar" lang="ar" dir="rtl">
+
+    <section class="hero">
+      <h1>سياسة الخصوصية</h1>
+      <p class="lead prose">من نشر نادر الزغول. <strong>سارية اعتبارا من 8 سبتمبر 2026</strong>، منقحة عن نسخة 3 سبتمبر لتصف نموذج الأذونات لكل موقع وإشعار التشغيل الأول.
+        تسري على امتداد QA Wrap في Chrome وEdge. السياسة نفسها في كليهما، لأن
+        الامتداد يفعل الشيء نفسه في كل منهما.</p>
+    </section>
+
+    <section>
+      <h2>النسخة بجملة واحدة</h2>
+      <p class="prose">QA Wrap محلي أولا: كل ما يسجله يبقى في ملف متصفحك على جهازك، ولا شيء
+        يغادره إلا حيث تعد Jira أو أداة تتبع أو ويب هوك، أو ترسل الطلب الواحد الذي كتبته في أداة API أو تشغل فاحص الروابط، وتضغط زرا يسمي إلى أين تذهب البيانات.</p>
+    </section>
+
+    <section>
+      <h2>ما الذي يسجله، وإلى أين يذهب</h2>
+      <div class="prose">
+        <p>أثناء تسجيل جلسة، وفقط في نافذة أيقظتها، يحفظ الامتداد:</p>
+        <ul>
+          <li>النقرات، والكتابة، والتنقلات، وخطوات النماذج التي تجريها على الصفحة قيد الاختبار،
+            مع محدد لكل عنصر؛</li>
+          <li>طلبات الشبكة الخاصة بالصفحة نفسها ومخرجات وحدة التحكم، حتى يمكن ربط العطل بالإجراء
+            الذي تسبب فيه؛</li>
+          <li>لقطات الشاشة، واللقطات الكاملة للصفحة، وتسجيلات الشاشة أو التبويب التي تبدؤها أو التي تبدأ تلقائيًا في موقع حدّدته؛</li>
+          <li>الملاحظات التي تكتبها، وميثاق الاختبار الذي تحدده، والإعدادات التي تختارها.</li>
+        </ul>
+        <p>كل ذلك يكتب في IndexedDB وفي <code>chrome.storage</code> داخل ملف متصفحك. لا يوجد خادم
+          لـ QA Wrap. لا يرسل الامتداد أي طلب إلى أي مضيف من عنده، ولا يحمل أي تحليلات، ولا
+          يحمل أي شيفرة عن بعد؛ محرك إمكانية الوصول (axe-core) مدمج داخل الحزمة.</p>
+        <p>عند تشغيل «مخزن ما قبل التسجيل» (وهو مطفأ افتراضيا)، يحتفظ التبويب المستيقظ بآخر 60 ثانية من الأحداث في ذاكرة الصفحة وحدها؛ ولا يخزن شيء ولا يرسل قبل أن تبدأ جلسة، ويمسح المخزن عند التنقل أو إغلاق التبويب أو النوم أو إطفاء الخيار.</p>
+        <p>هناك قدرتان أخريان مطفأتان حتى تحدّدهما، لموقع واحد في كل مرة ومن النافذة المنبثقة في ذلك الموقع: بدء التسجيل تلقائيًا، والتقاط لقطة شاشة عند أول خطأ من كل نوع. تحفظ كل واحدة عنوان الموقع فقط داخل متصفحك. يسجّل التسجيل التلقائي ما تفعله في ذلك الموقع، ويُظهر نقطة صغيرة على الصفحة، ويتوقف بعد 30 دقيقة دون نشاط. لا تُفحص اللقطات التلقائية بحثًا عن الأسرار وتبقى داخل هذا المتصفح. لا ترفع أي من القدرتين شيئًا؛ يبقى الإيداع والمشاركة زرًّا تضغطه. تعرض الإعدادات المواقع وتتيح إيقاف كل قدرة.</p>
+
+        <h3>ما لا يسجله عمدا</h3>
+        <p>أربع طبقات، تطبق قبل كتابة أي شيء، بهذا الترتيب:</p>
+        <ol>
+          <li>
+            <p><strong>ما أخفيته يدويا.</strong> اضغط <em>أخف البيانات الحقيقية</em> وانقر أي
+              عنصر في الصفحة: اسم، رقم وطني، عمود كامل. يغطى بكتلة معتمة لبقية الجلسة: في كل
+              لقطة شاشة، وفي الفيديو، وعبر كل تنقل. تحذف الكلمات التي تحته من الحدث، وتتخطاها
+              خريطة الصفحة، ولا تكتب أبدا في التقرير. يقول التقرير <em>كم</em> قيمة أخفيت، حتى
+              يعرف المراجع أن شيئا حجب لا أنه لم ير قط.</p>
+            <p>كتلة، لا تمويه. يمكن استرجاع نص قصير خلف تمويه غاوسي بتوليد احتمالات ومقارنتها،
+              وقد حدث ذلك بالفعل لبيانات منشورة أخفيت بهذه الطريقة أكثر من مرة.</p>
+          </li>
+          <li>
+            <p><strong>ما له شكل السر.</strong> تحذف من كل قيمة مسجلة أرقام بطاقات الدفع
+              (المتحقق منها برقم لون Luhn، حتى لا يخلط مرجع طلب برقم بطاقة)، وأرقام IBAN
+              (المتحقق منها بمعامل mod-97)، ورموز الدخول، ومفاتيح واجهات البرمجة، ورموز JSON
+              للويب، وكتل المفاتيح الخاصة. يمكن إضافة الأرقام الوطنية وأرقام السجلات وعناوين
+              البريد الإلكتروني في الإعدادات. وهي معطلة افتراضيا لأن رقما وطنيا من عشر خانات
+              ورقم مرجع طلب من عشر خانات لهما الشكل نفسه، ومختبر يختبر مراجع الطلبات يحتاج إلى
+              قراءتها.</p>
+          </li>
+          <li>
+            <p><strong>ما له اسم السر.</strong> حقل من نوع <code>password</code>، أو خاصية
+              <code>autocomplete</code> بقيمة <code>cc-number</code> أو <code>one-time-code</code>،
+              أو تسمية تطابق
+              <code>pass|secret|token|otp|pin|cvv|card|iban|<bdi lang="ar">كلمة المرور</bdi></code>،
+              تسجل بعبارة "كتبت كلمة مرور"، لا بقيمتها أبدا. يمكنك إضافة نمطك الخاص.</p>
+          </li>
+          <li>
+            <p><strong>قيم الكعكات (cookies)</strong>، لا تكتب في جلسة ولا في ملف مصدر قط ولو كان
+              محرر الكعكات مفتوحا. والمكان الوحيد الذي تحفظ فيه قيمة كعكة هو <strong>ملف كعكات
+              محفوظ</strong>: إن حفظت ملفا فكعكاته، بقيمها، تبقى في <code>chrome.storage.local</code>
+              على هذا الجهاز إلى أن تحذف ذلك الملف.</p>
+          </li>
+        </ol>
+        <p>أمران لا تبلغهما هذه الطبقات. الطلب الذي تكتبه بيدك في أداة الطلبات يخزن كما أرسلته،
+          برأس <code>Authorization</code> وجسمه. ورمز موجود في سلسلة استعلام عنوان مسجل، أو في معاينة
+          استجابة، يصل إلى تصديرات HAR وYAML وPostman كما أرسلته الصفحة. عامل هذه الملفات كما تعامل
+          حركة مرور الصفحة نفسها.</p>
+        <p>لا شيء من هذا بديل عن الحكم البشري: لا قاعدة تعرف أن اسما على الشاشة يخص مريضا
+          حقيقيا. ولهذا وجد الإخفاء اليدوي، ولهذا يتعايش الاثنان معا.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>متى تغادر البيانات جهازك</h2>
+      <p class="prose">فقط حين تعد إحدى الخدمات الثماني عشرة في الإعدادات، ثم التكاملات، وفقط حين
+        تضغط الزر المقابل على تقرير:</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">الوجهة</th><th scope="col">ما يرسل</th><th scope="col">إلى أين</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Jira</th><td>تقرير العطل أو حالة الاختبار لجلسة واحدة، ومرفقات الأدلة التي حددتها</td><td>موقع Jira الخاص بك، برمز واجهة برمجة تطبيقات شخصي</td></tr>
+            <tr><th scope="row">GitHub وGitLab وAzure DevOps وLinear وTrello وClickUp وAsana وShortcut وYouTrack</th><td>تقرير العطل لجلسة واحدة، ومرفقات الأدلة حيث تقبلها أداة التتبع</td><td>واجهة برمجة تطبيقات أداة التتبع (خادمك أنت إن كانت مستضافة ذاتيا)، برمز شخصي تلصقه</td></tr>
+            <tr><th scope="row">Slack وMicrosoft Teams وMattermost (عبر رابط خطافي) وDiscord وGoogle Chat، أو رابط خطافي مخصص</th><td>ملخص لجلسة واحدة</td><td>رابط الـ webhook الذي أعددته</td></tr>
+            <tr><th scope="row">Mattermost (حساب مسجل الدخول، من صفحة التقرير)</th><td>ملخص لجلسة واحدة، بعد التحقق من سياسة مؤسستك وفحص النص بحثاً عن الأسرار؛ ويظهر الإرسال ضمن ما غادر هذا الجهاز</td><td>عنوان خادم Mattermost الذي كتبته، برمز وصول شخصي يحفظ مشفراً في خزنة بيانات الاعتماد</td></tr>
+            <tr><th scope="row">Telegram</th><td>ملخص لجلسة واحدة</td><td><code>api.telegram.org</code>، برمز البوت والمحادثة اللذين أعددتهما</td></tr>
+            <tr><th scope="row">فاحص الروابط</th><td>طلب HEAD أو GET إلى كل رابط في الصفحة التي اخترتها، يرسل دون ملفات تعريف الارتباط؛ تتخطى العناوين الموجودة على جهازك أو شبكتك ما لم تكن الصفحة منها؛ ويسجل التشغيل تحت ما غادر هذا الجهاز عددا فقط دون نص الروابط</td><td>مضيف كل رابط؛ تفحص سياسة مؤسستك (إيقاف التكاملات) أولا وترفض قبل إرسال أي شيء</td></tr>
+            <tr><th scope="row">البريد الإلكتروني (.eml)</th><td>لا يرسل شيء: يكتب ملف رسالة على جهازك لتفتحه وترسله بنفسك</td><td>قرصك أنت</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prose">
+        <p><strong>مرفقات الأدلة.</strong> عند الإيداع في Jira تختار ما يسافر مع التقرير: لقطات
+          الشاشة وصيغ التصدير التي تحددها، مثل ملف التقرير أو تسجيل الشاشة أو التبويب أو سجل
+          الشبكة (HAR). لا يرفق شيء لم تحدده، ولا يرفق شيء دون ضغطتك.</p>
+        <p><strong>فحص الأسرار يشمل النصوص لا الوسائط.</strong> قبل أن يغادر أي شيء، يفحص نص
+          التقرير وكل مرفق نصي (ملفات التقارير والسجلات وHAR) بحثا عن شكل السر؛ وأي إصابة تمنع
+          الإرسال أو، إن اخترت، تستبدل بعلامة. أما لقطات الشاشة والتسجيلات وغيرها من مرفقات
+          الوسائط فهي <strong>غير مفحوصة بحثا عن الأسرار</strong>: لا ماسح ينظر داخل صورة أو
+          مقطع فيديو. تسرد نتيجة الإيداع الملفات التي لم تفحص، فراجعها بعينك، واستخدم
+          <em>إخفاء البيانات الحقيقية</em> قبل الالتقاط، لأن القيم المخفية تغطى في البكسلات نفسها.</p>
+        <p><strong>منح الوصول لكل خدمة.</strong> لا يملك QA Wrap عند التثبيت إذنا بأي من هذه
+          المضيفات. في أول مرة تحفظ فيها خدمة أو تختبرها يسألك Chrome، في نافذته الخاصة، عن ذلك
+          العنوان وحده (مثل <code>https://your-company.atlassian.net</code> أو
+          <code>https://api.telegram.org</code> أو مضيف الـ webhook نفسه) ولا شيء أوسع. إن رفضت
+          فلن تعمل الخدمة ولن يرسل شيء. استرجعه من إعدادات الامتدادات في Chrome تحت <em>الوصول إلى
+          المواقع</em> فتتوقف الخدمة.</p>
+        <p>كل واحد من تلك الأزرار يطلب تأكيدا ويقول إن البيانات تغادر جهازك. اترك التكامل فارغا
+          ولن يظهر الزر إطلاقا.</p>
+
+        <h3>الكتابة بالذكاء الاصطناعي (اختياري ومُعطَّل افتراضيًا)</h3>
+        <p>إذا شغّلتَ الكتابة بالذكاء الاصطناعي من الإعدادات يظهر زر <strong>اقتراح العنوان والخطوات</strong> داخل التقرير. عند الضغط عليه يعرض QA Wrap عدًّا تقريبيًا لما سيُرسَل والنص نفسه بالضبط، ولا يرسل إلا عندما تضغط <strong>إرسال</strong>، وبطلب واحد فقط، إلى المزوّد الذي اخترتَه (Anthropic أو OpenAI أو OpenRouter) بمفتاح API الخاص بك. النص هو نفسه الذي يصنعه زر «انسخ للذكاء الاصطناعي»: الخطوات والطلبات الفاشلة وأخطاء وحدة التحكم والبيئة، بعد إخفاء كلمات المرور والرموز وسائر الأسرار. لا تُرسَل لقطات الشاشة ولا التسجيلات ولا ملفات تعريف الارتباط ولا بيانات الاعتماد المحفوظة أبدًا. يبقى مفتاحك على هذا الحاسوب فقط، ولا يُزامَن ولا يُصدَّر، ويمكنك حذفه من الإعدادات. وفي المرة الأولى يطلب المتصفح إذنًا بالوصول إلى هذا المزوّد. لا يجري QA Wrap أي اتصال آخر بأي خدمة ذكاء اصطناعي، ولا في الخلفية. وكل إرسال يظهر في قائمة ما غادر جهازك (المضيف والحجم دون المحتوى). ما يفعله المزوّد بالنص تحدده اتفاقيتك معه. يظهر الجواب بوسم «مقترح» بجانب ما سُجّل، ولا تتغيّر خطواتك المسجّلة ولا النتيجة المتوقعة أبدًا.</p>
+
+        <h3>الملفات التي تصدرها لا تتصل بأي جهة أيضا</h3>
+        <p>تقرير HTML مصدر، أو مواصفة متطلبات، أو دليل، أو خريطة روابط، يفتح في مكان آخر، غالبا
+          على جهاز ليس جهازك، وحتى النسخة 3.1.0 كان يحمل سطرا واحدا كان مهما هنا: كانت صفحة
+          الأنماط المشتركة للمستند تجلب خطها من خدمة الخطوط لدى Google. لم يرسل
+          QA Wrap ذلك الطلب أبدا؛ المتصفح الذي فتح الملف هو من فعل، وهذا أخبر خدمة الخطوط لدى
+          Google بعنوان IP الخاص بالقارئ، ومتصفحه، ولحظة فتحه لمستند QA Wrap.</p>
+        <p><strong>حذف ذلك السطر.</strong> يحمل المستند الخط بدلا من ذلك: أوجه خط Thmanyah من
+          ملف <code>ui/fonts.css</code> الخاص بالامتداد نفسه، مكتوبة في الملف روابط <code>data:</code>
+          بترميز base64، ولا تطلب شيئا من أحد. المستند المصدر الآن
+          <strong>لا يرسل أي طلب شبكة إطلاقا</strong>، فلا شيء عمن يقرأ أحد هذه الملفات، أو متى،
+          يصل إلى أي جهة. يفتح <code>tools/test-exporters.mjs</code> تقريرا جديد البناء في متصفح
+          حقيقي، وينتظر خطوطه، ويسجل كل طلب يحاول إرساله، ويفشل الاختبار إن وجد طلب واحد.</p>
+        <p>المستندات المصدرة قبل هذه النسخة لا تزال تحمل السطر القديم. حذف سطر
+          <code>@import</code> أعلى كتلة <code>&lt;style&gt;</code> فيها يوقف ذلك؛ لا شيء آخر في
+          الملف يعتمد عليه.</p>
+        <p>الرموز والروابط الخطافية التي تلصقها <strong>مشفرة أثناء التخزين</strong>: سجل واحد
+          مشفر بـ AES-GCM-256 في <code>chrome.storage.local</code> على هذا الجهاز، يفتح بمفتاح غير
+          قابل للاستخراج محفوظ في IndexedDB الخاص بالامتداد، أو بعبارة مرور تختارها في الإعدادات
+          (PBKDF2-SHA256). لا يفك تشفيرها إلا داخل العامل الخدمي للامتداد لحظة الاستخدام؛ وترى
+          صفحات الامتداد نسخة مقنعة منها. والاستثناء الوحيد رمز حساب Mattermost، إذ تفتحه صفحة
+          التقرير أثناء إرسال المشاركة فقط. لا تزامن أبدا عبر حساب Google الخاص بك، ولا تكتب أبدا
+          في تصدير، ولا ترسل أبدا إلى أي مكان سوى الخدمة التي تخصها حين تضغط "أودع". تحمي الخزنة
+          من ماسحات القرص والملف الشخصي ومن تسربات المزامنة؛ ولا تحمي من برمجية خبيثة تعمل
+          باسمك بينما QA Wrap مفتوح، فاستخدم رموزا مقصورة على إنشاء التذاكر وألغها حين تنتهي.</p>
+        <p>تُختم ملفات تعريف الارتباط المحفوظة والمتغيرات التي تحفظها في أداة واجهة البرمجة بالطريقة نفسها: لكل منها سجل AES-GCM خاص به في <code>chrome.storage.local</code>، يُفتح بالمفتاح نفسه. ويظهر المتغير الذي يشبه اسمه بيانات اعتماد مقنّعا مع زر «إظهار». ويزيل «مسح الكل» السجلين دون طلب عبارة المرور.</p>
+        <p>مزامنة Chrome، حين تشغلها، تحمل تفضيلاتك فقط: خيارات التسجيل والاحتفاظ والصوت والاختصارات والتخطيط ولغة الواجهة. أما اسم المختبر والمساحة المشتركة التي انضممت إليها واسم مجلد الحفظ فتبقى في <code>chrome.storage.local</code> على هذا الجهاز، وتبقى بيانات الاعتماد في الخزنة. ثلاثة منها نصوص تكتبها بنفسك: مجلد الحفظ «احفظ في» ونمط الإخفاء الإضافي وكلمات الحجب الإضافية. تُزامَن مع بقية التفضيلات، فأبقِ الأسرار وأسماء العملاء خارجها، أو أوقف مزامنة Chrome. تبقى بيانات الجلسات ولقطات الشاشة والتسجيلات على هذا الجهاز.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>الاحتفاظ والحذف</h2>
+      <div class="prose">
+        <p><strong>تحذف الجلسات المنتهية بعد 30 يوما افتراضيا.</strong> تحذف سجل الجلسة،
+          وأحداثها، ولقطاتها، وتسجيلاتها، وسجل إعادة العرض الخاص بها معا، بجدول يومي ومرة واحدة عند بدء تشغيل المتصفح، حتى لا
+          يفوت جهاز مطفأ طوال الليل يوما من الحذف. لا تمس جلسة قيد التشغيل أبدا. يمكنك ضبط
+          المدة من يوم واحد إلى سنة، أو إلى <em>أبدا</em>، لكن <em>أبدا</em> اختيار تتخذه، لا حالة
+          تترك فيها.</p>
+        <p><strong>الجلسة المثبتة تبقى بعد انتهاء مدة الاحتفاظ.</strong> لا يحذف الجدول اليومي
+          جلسة ثبتها أنت مهما قدم عهدها، حتى تلغي تثبيتها.</p>
+        <p><strong>الجلسة التي لم يسمح لها المتصفح بالانتهاء تغلق، لا تحفظ إلى الأبد.</strong>
+          إن أغلق Chrome قسرا، أو انقطعت الطاقة عن الجهاز، أو حدث الامتداد أثناء تسجيل جلسة،
+          فلا تحصل الجلسة على فرصة لكتابة وقت انتهائها، وكانت جلسة بلا وقت انتهاء تتخطاها عملية
+          الحذف أعلاه إلى الأبد، لأن جلسة لا تزال قيد التقدم يجب ألا تحذف من تحتك. عند بدء
+          التشغيل التالي، توسم أي جلسة تركت مفتوحة وليست الجلسة التي تسجلها الآن بأنها
+          <strong>مقطوعة</strong>، ويمنح لها وقت انتهاء: لحظة آخر حدث سجل فيها، أو بدايتها هي
+          إن لم تسجل شيئا. من تلك اللحظة تحذف بالجدول نفسه كأي جلسة أخرى. أربعة أمور لم تعد
+          تعرفها (كم قيمة أخفيت، وأي كعكات كانت موجودة، وكم قاعدة عملت، وأي أدوات استخدمت) تسجل
+          كمجهولة لا كصفر.</p>
+        <p><strong>إن حدثت من نسخة أقدم، لا يحذف شيء حتى تختار مدة.</strong> يقرأ الملف الذي لم
+          يحمل إعداد احتفاظ قط على أنه <em>أبدا</em>، لا 30 يوما، حتى لا يحذف تحديث بصمت جلسات
+          سجلتها قبل وجود الإعداد. تسألك الإعدادات، ثم الخصوصية، مرة واحدة. ثلاثون يوما هي
+          الافتراض لتثبيت جديد، حيث هو افتراض تخبر به لا سياسة تطبق على تاريخ سابق.</p>
+        <p>تحمل الإعدادات، ثم الخصوصية، زر <strong>نفذها الآن</strong>، حتى تشاهد السياسة تعمل
+          بدل أن تأخذ كلمتها فقط.</p>
+        <p><strong>امسح كل الجلسات والتسجيلات</strong> (الإعدادات ثم الخصوصية) يزيل كل جلسة مع أحداثها ولقطاتها
+          وتسجيلاتها وسجلات إعادة العرض، وملفات الكعكات المحفوظة. وتبقى إعداداتك. ملف الكعكات
+          المحفوظ لا ينتمي إلى جلسة، فلا يمسه الاحتفاظ المحدد بمدة: يزول بذلك الزر، أو حين
+          تحذف ذلك الملف.</p>
+        <p>يمكنك أيضا حذف أي جلسة يدويا من لوحة الخط الزمني أو من التقرير. الملفات المصدرة
+          التي حفظتها ملفات عادية في المجلد الذي اخترته، ولا يمسها شيء من هذا: إنها ملكك. إلغاء
+          التثبيت يحذف قاعدة البيانات والإعدادات من ملف المتصفح.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>المعايير التي تبني عليها الأداة</h2>
+      <p class="prose">لا شيء هنا شهادة اعتماد. هذه هي الضوابط التي ستطلب شهادة اعتماد رؤيتها،
+        مسماة حتى تستطيع مراجعة أمنية التحقق منها.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">الإجراء</th><th scope="col">ما يستجيب له</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">الإخفاء اليدوي؛ التنقيح حسب شكل القيمة</th><td><strong>GDPR المادة 5(1)(ج)</strong> تقليل البيانات</td></tr>
+            <tr><th scope="row">كلاهما مفعل افتراضيا</th><td><strong>GDPR المادة 25</strong> الحماية بالتصميم <em>وبالافتراض</em>؛ <strong>ISO/IEC 27701 البند 7.4</strong></td></tr>
+            <tr><th scope="row">كتل معتمة فوق القيم في اللقطات</th><td><strong>ISO/IEC 27002:2022 الضابط 8.11</strong> إخفاء البيانات</td></tr>
+            <tr><th scope="row">احتفاظ لمدة 30 يوما، وحذف يشمل الوسائط، وإغلاق الجلسات المقطوعة حتى يصلها الاحتفاظ</th><td><strong>GDPR المادة 5(1)(ه)</strong> تحديد مدة التخزين</td></tr>
+            <tr><th scope="row">كل شيء محلي؛ لا تحليلات، لا قياس عن بعد، لا شيفرة عن بعد</th><td><strong>GDPR المادة 5(1)(و)</strong> السلامة والسرية؛ سياسة <strong>الاستخدام المحدود</strong> لمتجر Chrome الإلكتروني</td></tr>
+            <tr><th scope="row">لا التقاط قبل الإيقاظ أو البدء، ثم النافذة التي عليها التركيز فقط</th><td><strong>GDPR المادة 5(1)(ج)</strong> تقليل البيانات؛ <strong>الحد الأدنى من الأذونات</strong> في متجر Chrome الإلكتروني</td></tr>
+            <tr><th scope="row">إشعار أول تشغيل تعرضه النافذة المنبثقة وحده إلى أن يقبل</th><td><strong>GDPR المادة 13</strong> المعلومات عند الجمع؛ <strong>الإفصاح البارز والموافقة</strong> في متجر Chrome الإلكتروني</td></tr>
+            <tr><th scope="row">مغادرة البيانات فقط بضغطة صريحة، إلى وجهة أعددتها أنت</th><td><strong>GDPR المادة 5(1)(ب)</strong> تحديد الغرض</td></tr>
+            <tr><th scope="row">الرموز في خزنة AES-GCM داخل <code>storage.local</code>، لا تزامن أبدا، لا تصدر أبدا</th><td><strong>ISO/IEC 27002:2022 الضابط 8.24</strong> استخدام التشفير والأسرار</td></tr>
+            <tr><th scope="row">Manifest V3، سياسة أمان محتوى صارمة، لا شيفرة مستضافة عن بعد، لا <code>eval</code></th><td><strong>OWASP</strong> ممارسات الامتدادات الآمنة؛ سياسة المتجر</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="prose">لا يملك الامتداد خادما. لا يوجد حساب، ولا معرف، ولا تحليلات، ولا تقارير
+        أعطال: لا شيء يخترق، لأنه لا شيء يجمع. هذا قرار تصميم لا وعد فحسب، ويفشل
+        <code>tools/release-check.mjs</code> عملية البناء إن ظهرت نقطة نهاية تحليلات أو شيفرة
+        مستضافة عن بعد في الحزمة يوما ما.</p>
+    </section>
+
+    <section>
+      <h2>المواقع المسموح للامتداد بالعمل عليها</h2>
+      <div class="prose">
+        <p><strong>يستطيع QA Wrap قراءة كل المواقع منذ لحظة التثبيت.</strong> تقول نافذة التثبيت ذلك
+          ("قراءة بياناتك وتغييرها على جميع المواقع"). القدرة على القراءة ليست التقاط: لا يلتقط QA Wrap
+          شيئا حتى تضغط <strong>أيقظ</strong> أو <strong>ابدأ</strong>، ثم يلتقط التبويب أو النافذة
+          التي عليها التركيز فقط، وما دام التركيز عليها.</p>
+        <p>اضغط <strong>أيقظ</strong> على الصفحة التي تختبرها؛ لا يسألك Chrome شيئا آخر لأن الوصول
+          مُنح عند التثبيت. يمكنك سحبه من إعدادات الامتدادات في Chrome تحت
+          <em>الوصول إلى المواقع</em>، وتغادر شيفرة الامتداد تلك المواقع معه. لا يسجل شيء من نافذة لم
+          توقظها. تعمل مساعدة Jira على صفحات Jira (الواجهة فقط؛ الإشعارات فقط حين تشغّلها، وإلى
+          مضيف Jira الخاص بك وحده).</p>
+        <p><strong>النوم لا يعني أن لا شيء محمل.</strong> النوم يعني أن لا جلسة تسجل، ولا
+          خطاف طلبات مثبتا، ولا أداة تعمل. وفي كل موقع تبقى سكربتات الصفحة الثمانية في
+          QA Wrap (نحو 146 كيلوبايت من الشيفرة لكل إطار) محملة ولا تسجل شيئا حتى توقظ تلك
+          النافذة.</p>
+        <p>على <strong>الأجهزة المُدارة</strong> يستطيع المسؤول ضبط <code>hostPermissionsPolicy</code>
+          على <code>ask</code> (الافتراضي) أو <code>all</code> أو <code>none</code>. السياسة لا تمنح
+          شيئا بذاتها.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>الإشعار الذي تقرؤه أولا</h2>
+      <div class="prose">
+        <p>عند التثبيت يفتح QA Wrap صفحة واحدة، بالعربية والإنجليزية، قبل أن تستخدم أي أداة: ما
+          الذي يخزنه وأين، وما الذي يلتقطه التسجيل، وما الذي يفعله الإخفاء وما لا يفعله، وأنه يبدأ
+          أنه يستطيع قراءة كل موقع لكنه لا يلتقط إلا نافذة توقظها، والسطر الخاص بالميكروفون. إلى أن تقبله لا تعرض
+          النافذة المنبثقة سوى تلك البطاقة.</p>
+        <p>يكتب القبول ثلاث قيم في <code>chrome.storage.local</code> على هذا الجهاز:
+          <code>consentedAt</code> و<code>consentVersion</code> و<code>consentRevision</code>، وهي لحظة القبول والنسخة التي قبلتها ونسخة صياغة صفحة الترحيب.
+          لا تحدد هوية أي أحد، ولا تزامن ولا تصدر أبدا. تقارن الإضافة <code>consentRevision</code> بالنسخة الحالية عند التشغيل،
+          فإذا نقحت الصياغة سئلت من جديد؛ أما <code>consentVersion</code> فسجل للإصدار فقط، والتحديث العادي لا يعيد السؤال.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>الأذونات، ولماذا يوجد كل واحد منها</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">الإذن</th><th scope="col">يستخدم من أجل</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row"><code>storage</code>، <code>unlimitedStorage</code></th><td>الجلسات ولقطات الشاشة والتسجيلات في ملفك؛ يمكن لجلسة طويلة أن تتجاوز الحصة الافتراضية</td></tr>
+            <tr><th scope="row"><code>activeTab</code>، <code>tabs</code></th><td>عنوان الصفحة قيد الاختبار وعنوانها الظاهر؛ فتح صفحتي التقرير والإعدادات</td></tr>
+            <tr><th scope="row"><code>scripting</code></th><td>حقن الأدوات في الصفحة التي تختبرها، عند الطلب، وتسجيل سكربتات الصفحة على المواقع التي سمحت بها</td></tr>
+            <tr><th scope="row"><code>webNavigation</code></th><td>تسجيل التنقلات، وحالة الصفحة نفسها، وشجرة الإطارات التي يحتاجها محدد داخل iframe</td></tr>
+            <tr><th scope="row"><code>webRequest</code></th><td>قراءة ست ترويسات أمنية من كل استجابة أثناء تسجيل جلسة، وفي المواقع التي منحتها الوصول فقط، ليقيسها تقرير التفاصيل الدقيقة بدل أن يطلب منك ذلك. مراقبة فقط: لا شيء يحجب أو يعدل أو يعاد توجيهه، ولا ترويسة أخرى تحفظ، ولا يرفق المستمع إلا أثناء تشغيل جلسة</td></tr>
+            <tr><th scope="row"><code>cookies</code></th><td>محرر الكعكات وملفات الكعكات المحفوظة</td></tr>
+            <tr><th scope="row"><code>contextMenus</code></th><td>عناصر قائمة النقر بزر الفأرة الأيمن</td></tr>
+            <tr><th scope="row"><code>notifications</code></th><td>إشعار على سطح المكتب عند حفظ جلسة، وعند بدء تسجيل أو إيقافه، وعند ذهاب الامتداد إلى النوم؛ لا يرسل شيء منها إلى أي مكان، ويعطلها الإعدادات</td></tr>
+            <tr><th scope="row"><code>sidePanel</code></th><td>مساحة العمل المثبتة على جانب المتصفح</td></tr>
+            <tr><th scope="row"><code>clipboardWrite</code></th><td>نسخ محدد عنصر</td></tr>
+            <tr><th scope="row"><code>alarms</code></th><td>التنظيف اليومي للجلسات الأقدم من مدة الاحتفاظ التي حددتها، وهو يجب أن يعمل حتى أثناء تعليق العامل الخدمي</td></tr>
+            <tr><th scope="row"><code>downloads</code></th><td>حفظ الملفات المصدرة في المجلد الذي اخترته</td></tr>
+            <tr><th scope="row"><code>offscreen</code></th><td>ترميز التسجيلات وملفات GIF، وهو ما يحتاج مستندا</td></tr>
+            <tr><th scope="row"><code>tabCapture</code></th><td>تسجيل التبويب حين تضغط تسجيل</td></tr>
+            <tr><th scope="row"><code>debugger</code></th><td>قياس أي جزء من شيفرة الصفحة نفذ (تغطية الشيفرة) حين تضغط قس؛ يعرضه Chrome عند التثبيت، ويبقى المنقح غير موصول حتى تضغط قس</td></tr>
+            <tr><th scope="row"><strong>اختياري</strong> <code>desktopCapture</code></th><td>تسجيل نافذة أو الشاشة كلها؛ يطلب أول مرة تختار فيها أحدهما، ويمكن رفضه</td></tr>
+            <tr><th scope="row">الموقع الذي أنت عليه</th><td>يغطيه إذن المضيف <code>&lt;all_urls&gt;</code> أدناه؛ لا يلتقط شيء حتى تضغط <em>أيقظ</em> أو <em>ابدأ</em>، ثم ما دام تبويبه أو نافذته عليها التركيز</td></tr>
+            <tr><th scope="row"><strong>اختياري</strong> عنوان خدمة أعددتها</th><td>يطلب بالاسم أول مرة تحفظ أو تختبر Jira أو أداة تتبع أو webhook محادثة أو Telegram، ولا أوسع؛ يمكن رفضه وسحبه من إعدادات الامتدادات في Chrome</td></tr>
+            <tr><th scope="row">إذن المضيف <code>&lt;all_urls&gt;</code></th><td>ممنوح منذ التثبيت؛ تعرضه نافذة التثبيت قراءةً لبياناتك وتغييرا لها على جميع المواقع. لا تسجل سكربتات الصفحة شيئا حتى توقظ تلك النافذة</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>التغييرات والتواصل</h2>
+      <div class="prose">
+        <p>تسجل التغييرات على هذه السياسة في ملاحظات إصدار الامتداد. هذه الصفحة و
+          <code>PRIVACY.md</code> داخل الحزمة يحملان النص نفسه.</p>
+        <p>توجه الأسئلة إلى نادر الزغول على
+          naderalzghoulbusiness@gmail.com، أو عبر
+          <a href="support.html">صفحة الدعم</a>.</p>
+      </div>
+    </section>
+
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-lang-block="en" lang="en" dir="ltr">QA Wrap &middot; Made by Nader Alzghoul</p>
+    <p data-lang-block="ar" lang="ar" dir="rtl">QA Wrap &middot; من تطوير نادر الزغول</p>
+    <ul data-lang-block="en" lang="en" dir="ltr">
+      <li><a href="./">Home</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="trust.html">Trust</a></li>
+    </ul>
+    <ul data-lang-block="ar" lang="ar" dir="rtl">
+      <li><a href="./">الرئيسية</a></li>
+      <li><a href="support.html">الدعم</a></li>
+      <li><a href="terms.html">الشروط</a></li>
+      <li><a href="trust.html">الثقة</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

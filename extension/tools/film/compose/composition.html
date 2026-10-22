@@ -1,0 +1,559 @@
+<!doctype html>
+<!-- QA Wrap — film composition page. Builder A.
+
+     Renders any storyboard at 1920x1080, 1080x1080 or 1080x1920, plus the
+     reduced-motion cut. Exposes window.renderFrame(n) as a pure function of the
+     frame number: the same n gives the same pixels, in any order, on any run.
+     Nothing here animates itself, so there is no clock to race and no CSS
+     animation for the screenshot to catch mid-flight.
+
+     Served from a loopback static server by frames.mjs. It requests nothing off
+     that origin; frames.mjs asserts that per request and fails the render if a
+     remote URL is ever asked for. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>QA Wrap film composition</title>
+<!-- The product's palette first, as every page in this repo loads it, then the
+     film's own sheet over it. The film reads none of the themed tokens (its
+     ground is Basalt in every frame and it needs both Petra values at once),
+     but the palette is the source of truth those four numbers come from, and
+     loading it keeps this page on the same footing as the pages it films. -->
+<link rel="stylesheet" href="../../../ui/identity-tokens.css">
+<link rel="stylesheet" href="./composition.css">
+</head>
+<body>
+<div id="frame">
+  <div id="stack">
+    <div id="captures"></div>
+
+    <!-- Authored scenes, shots 1 to 3. Line figures in the film's own language:
+         no photograph, no stock asset, no words inside the picture, and Petra
+         used once per scene as the only accent. Every animated value is a pure
+         function of the shot's progress, set once per frame from timeline.mjs,
+         so a scene is as deterministic as a captured frame. -->
+    <svg id="scenes" viewBox="0 0 1728 720" hidden aria-hidden="true">
+      <g class="scene" id="sc-qa-desk-fail" hidden>
+        <g class="ink">
+          <line x1="540" y1="600" x2="1190" y2="600"/>
+          <rect x="620" y="330" width="340" height="230" rx="10"/>
+          <line x1="790" y1="560" x2="790" y2="600"/>
+          <line x1="700" y1="390" x2="880" y2="390" opacity=".38"/>
+          <line x1="700" y1="430" x2="840" y2="430" opacity=".38"/>
+          <line x1="700" y1="470" x2="900" y2="470" opacity=".38"/>
+          <circle cx="1060" cy="398" r="36"/>
+          <path d="M1000 512 q60 -62 120 0"/>
+          <line x1="1000" y1="512" x2="1000" y2="600"/>
+          <line x1="1120" y1="512" x2="1120" y2="600"/>
+          <rect x="880" y="586" width="150" height="16" rx="6"/>
+          <line class="arm" id="f1-arm" x1="1012" y1="518" x2="960" y2="586"/>
+        </g>
+        <circle class="accent" id="f1-dot" cx="790" cy="440" r="10"/>
+      </g>
+
+      <g class="scene" id="sc-qa-desk-pass" hidden>
+        <g class="ink">
+          <line x1="540" y1="600" x2="1190" y2="600"/>
+          <rect x="620" y="330" width="340" height="230" rx="10"/>
+          <line x1="790" y1="560" x2="790" y2="600"/>
+          <line x1="700" y1="390" x2="880" y2="390" opacity=".38"/>
+          <line x1="700" y1="430" x2="840" y2="430" opacity=".38"/>
+          <circle cx="1060" cy="398" r="36"/>
+          <path d="M1000 512 q60 -62 120 0"/>
+          <line x1="1000" y1="512" x2="1000" y2="600"/>
+          <line x1="1120" y1="512" x2="1120" y2="600"/>
+          <rect x="880" y="586" width="150" height="16" rx="6"/>
+          <line class="arm" id="f2-arm" x1="1012" y1="518" x2="960" y2="586"/>
+        </g>
+        <path class="accent tick" id="f2-tick" d="M735 452 L775 492 L855 402" stroke-dasharray="180" stroke-dashoffset="180"/>
+      </g>
+
+      <g class="scene" id="sc-ticket-bounce" hidden>
+        <g class="ink">
+          <circle cx="360" cy="330" r="36"/>
+          <path d="M300 444 q60 -62 120 0"/>
+          <line x1="300" y1="444" x2="300" y2="560"/>
+          <line x1="420" y1="444" x2="420" y2="560"/>
+          <circle cx="1368" cy="330" r="36"/>
+          <path d="M1308 444 q60 -62 120 0"/>
+          <line x1="1308" y1="444" x2="1308" y2="560"/>
+          <line x1="1428" y1="444" x2="1428" y2="560"/>
+          <rect x="744" y="470" width="240" height="180" rx="10"/>
+          <line x1="744" y1="512" x2="984" y2="512"/>
+          <line x1="800" y1="470" x2="800" y2="446" opacity=".38"/>
+          <line x1="928" y1="470" x2="928" y2="446" opacity=".38"/>
+          <line x1="790" y1="560" x2="938" y2="560" opacity=".38"/>
+          <line x1="790" y1="600" x2="900" y2="600" opacity=".38"/>
+        </g>
+        <g id="f3-ticket" class="accent-stroke">
+          <rect x="-52" y="-34" width="104" height="68" rx="8"/>
+          <line x1="-30" y1="-8" x2="30" y2="-8"/>
+          <line x1="-30" y1="12" x2="10" y2="12"/>
+        </g>
+      </g>
+    </svg>
+
+    <!-- The animated intro: the mark draws itself, then the wordmark rises. -->
+    <div id="intro" hidden>
+      <div class="col">
+        <svg class="mark" viewBox="0 0 64 64" width="150" height="150" aria-hidden="true">
+          <g transform="translate(-2 3.5)" fill="none" stroke-width="7"
+             stroke-linecap="round" stroke-linejoin="round">
+            <path id="inRing" stroke="#ECEAE3" stroke-dasharray="93.5"
+                  d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+            <path id="inCheck" stroke="#FF8A6E" stroke-dasharray="37.4"
+                  d="M36 36L42.5 44L55 20"/>
+          </g>
+        </svg>
+        <div class="wordmark"><span id="inWord">QA Wrap</span></div>
+      </div>
+    </div>
+
+    <!-- The poster card, frame 0 of every lesson film. The capture beside it
+         is a real frame of the tool from this film, drawn by the capture layer
+         at its native size inside a smaller window, which is a crop and not a
+         scale. -->
+    <!-- Round 3 (research/63 section 2): the card is the product frame with a
+         band across its foot. `#posterPlate` is the band's ground at 92 %; the
+         words sit above it at full opacity, because fading type to 92 % is not
+         the same thing as laying it on a 92 % ground. -->
+    <div id="poster" hidden>
+      <div id="posterPlate"></div>
+      <div id="posterBand">
+        <div class="txt">
+          <span id="posterChip" class="chip"><i class="dot"></i><b></b></span>
+          <div class="line"><span id="posterTitle"></span></div>
+          <div class="line"><span id="posterTitle2"></span></div>
+        </div>
+        <!-- The QA Wrap mark, right-aligned in the band on every card.
+             Geometry from brand/mark-dark.svg, the same paths the end card and
+             the retired intro used. -->
+        <!-- Wrapped in a div because `hidden` is an HTMLElement property and an
+             SVGElement does not have one: `show()` set a JS property that meant
+             nothing and the mark never appeared. The intro layer wraps its own
+             svg for the same reason, which is why it worked there. -->
+        <div id="posterMark">
+        <svg viewBox="0 0 64 64" width="128" height="128" aria-hidden="true">
+          <g transform="translate(-2 3.5)" fill="none" stroke-width="7"
+             stroke-linecap="round" stroke-linejoin="round">
+            <path id="poRing" stroke="#ECEAE3" stroke-dasharray="93.5"
+                  d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+            <path id="poCheck" stroke="#FF8A6E" stroke-dasharray="37.4"
+                  d="M36 36L42.5 44L55 20"/>
+          </g>
+        </svg>
+        </div>
+      </div>
+    </div>
+
+    <div id="ringLayer"></div>
+    <div id="chipRail"><span id="chipOut" class="chip"><i class="dot"></i><b></b></span><span id="chip" class="chip"><i class="dot"></i><b id="chipText"></b></span></div>
+    <div id="rule"></div>
+    <div id="captionBand"><div id="captionOut"></div><div id="caption"></div></div>
+    <div id="card"><div id="cardRule"></div></div>
+    <div id="endCard">
+      <div class="col">
+        <!-- Geometry from extension/brand/mark-dark.svg. The wake is BRAND §4:
+             the ring draws 520 ms, the check strokes out 260 ms with a 4 %
+             overshoot, on cubic-bezier(.2,.8,.2,1). -->
+        <svg class="mark" viewBox="0 0 64 64" width="128" height="128" aria-hidden="true">
+          <g transform="translate(-2 3.5)" fill="none" stroke-width="7"
+             stroke-linecap="round" stroke-linejoin="round">
+            <path id="ecRing" stroke="#ECEAE3" stroke-dasharray="93.5"
+                  d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+            <path id="ecCheck" stroke="#FF8A6E" stroke-dasharray="37.4"
+                  style="transform-box:fill-box;transform-origin:50% 50%"
+                  d="M36 36L42.5 44L55 20"/>
+          </g>
+        </svg>
+        <div class="wordmark"><span id="ecWord">QA Wrap</span></div>
+        <div class="tagline"><span id="ecTag">Every failure, traced.</span></div>
+        <div class="ask" id="ecAsk"></div>
+        <div class="action" id="ecUrl"></div>
+        <div class="fine"><span class="sub" id="ecPub"></span></div>
+      </div>
+    </div>
+  </div>
+  <div id="slug" hidden>Stand in captures. Not for delivery.</div>
+</div>
+
+<script type="module">
+import { buildTimeline } from './timeline.mjs';
+
+const $ = (s) => document.querySelector(s);
+const px = (n) => `${n}px`;
+const el = {
+  root: document.documentElement, frame: $('#frame'), stack: $('#stack'),
+  captures: $('#captures'), rings: $('#ringLayer'),
+  scenes: $('#scenes'), intro: $('#intro'), inRing: $('#inRing'), inCheck: $('#inCheck'), inWord: $('#inWord'),
+  chipRail: $('#chipRail'), chip: $('#chip'), chipText: $('#chipText'),
+  chipOut: $('#chipOut'), chipOutText: $('#chipOut b'),
+  rule: $('#rule'),
+  band: $('#captionBand'), caption: $('#caption'), captionOut: $('#captionOut'),
+  card: $('#card'), cardRule: $('#cardRule'),
+  endCard: $('#endCard'), ecCol: $('#endCard .col'), ecMark: $('#endCard .mark'),
+  ecRing: $('#ecRing'), ecCheck: $('#ecCheck'),
+  ecWordBox: $('#endCard .wordmark'), ecTagBox: $('#endCard .tagline'),
+  ecWord: $('#ecWord'), ecTag: $('#ecTag'), ecFine: $('#endCard .fine'),
+  ecAsk: $('#ecAsk'), ecUrl: $('#ecUrl'), ecPub: $('#ecPub'),
+  poster: $('#poster'), posterChip: $('#posterChip'), posterChipText: $('#posterChip b'),
+  posterPlate: $('#posterPlate'), posterBand: $('#posterBand'),
+  posterMark: $('#posterMark'), poRing: $('#poRing'), poCheck: $('#poCheck'),
+  posterTitle: $('#posterTitle'), posterTitle2: $('#posterTitle2'),
+  slug: $('#slug'),
+};
+
+let T = null;              // the timeline
+const slots = [];          // capture slots, reused so nothing reflows per frame
+
+function slot(i) {
+  while (slots.length <= i) {
+    const box = document.createElement('div');
+    box.className = 'cap';
+    const img = document.createElement('img');
+    box.appendChild(img);
+    el.captures.appendChild(box);
+    slots.push({ box, img });
+  }
+  return slots[i];
+}
+
+/** Called once by frames.mjs with the film data; lays out everything that does
+ *  not change frame to frame. */
+window.setFilm = function setFilm(data) {
+  T = buildTimeline(data);
+  const { canvas, zones, S } = T;
+
+  el.root.style.setProperty('--W', px(canvas.w));
+  el.root.style.setProperty('--H', px(canvas.h));
+  el.root.style.setProperty('--S', px(S));
+
+  Object.assign(el.chipRail.style, {
+    left: px(zones.chipRail.x), top: px(zones.chipRail.y),
+    width: px(zones.chipRail.w), height: px(zones.chipRail.h),
+  });
+  Object.assign(el.band.style, {
+    left: px(zones.caption.x), top: px(zones.caption.y),
+    width: px(zones.caption.w), height: px(zones.caption.h),
+  });
+  // A caption is one line, or two at most, and 42 characters wide at most.
+  // Capping the measure is what makes the wrap land where the writer meant.
+  for (const n of [el.caption, el.captionOut]) n.style.maxWidth = px(Math.min(zones.caption.w, S * 0.054 * 22));
+
+  // The type card and the end card share one left axis at the safe inset, so
+  // shot 17 hands over to shot 18 without the eye moving.
+  el.card.style.padding = `0 ${px(zones.safeX)}`;
+  Object.assign(el.ecCol.style, { left: px(zones.safeX), top: '0', height: px(canvas.h), justifyContent: 'center' });
+
+  /* The poster card's band: full width across the foot of the frame, the height
+     the timeline computed (28 % of the canvas), with the type on the same x 96
+     axis every card in the film uses and the mark against the right inset. The
+     layer itself is the whole frame so the band can be placed inside it. */
+  if (T.poster && T.poster.band) {
+    const b = T.poster.band;
+    Object.assign(el.poster.style, { left: '0', top: '0', width: px(canvas.w), height: px(canvas.h) });
+    for (const n of [el.posterPlate, el.posterBand]) {
+      Object.assign(n.style, { left: px(b.x), top: px(b.y), width: px(b.w), height: px(b.h) });
+    }
+    el.posterPlate.style.opacity = String(b.opacity);
+    el.posterBand.style.padding = `0 ${px(zones.safeX)}`;
+  }
+
+  el.ecAsk.textContent = T.script.endCard.ask || '';
+  el.ecUrl.textContent = T.script.endCard.url;
+  el.ecPub.textContent = T.script.endCard.publisher;
+  el.ecWord.textContent = T.script.endCard.wordmark;
+  el.ecTag.textContent = T.script.endCard.tagline;
+  el.slug.hidden = !T.standin;
+  el.endCard.classList.toggle('verbatim', !!T.script.verbatim);
+
+  window.__filmMeta = {
+    id: T.id, frames: T.frames, fps: T.fps, aspect: T.aspect,
+    canvas, faults: T.faults, cards: T.cards,
+  };
+  return window.__filmMeta;
+};
+
+/** Ease a value in and out over a window of the shot's progress. */
+const ramp = (p, a, b) => Math.max(0, Math.min(1, (p - a) / (b - a)));
+const pulse = (p, a, b, c, d) => Math.min(ramp(p, a, b), 1 - ramp(p, c, d));
+
+/** Every scene, drawn from its shot's progress and nothing else. */
+function drawScene(id, p) {
+  if (id === 'qa-desk-fail' || id === 'qa-desk-pass') {
+    const n = id === 'qa-desk-fail' ? 'f1' : 'f2';
+    // The hand goes to the key and comes back: the press is the only movement
+    // of the figure, which is what a press looks like.
+    const press = p < 0.62 ? Math.sin(Math.min(1, p / 0.55) * Math.PI) : 0;
+    const arm = document.getElementById(n + '-arm');
+    arm.setAttribute('x2', String(960 - 46 * press));
+    arm.setAttribute('y2', String(586 + 6 * press));
+    if (n === 'f1') {
+      // The failure nobody sees: it arrives, and it goes.
+      document.getElementById('f1-dot').style.opacity = String(pulse(p, 0.34, 0.42, 0.56, 0.70));
+    } else {
+      // It works, and it stays.
+      const draw = ramp(p, 0.42, 0.62);
+      document.getElementById('f2-tick').style.strokeDashoffset = String(180 * (1 - draw));
+    }
+    return;
+  }
+  if (id === 'ticket-bounce') {
+    // The ticket goes back and forth between the two of them while the page
+    // below it waits. Two returns across the shot, slowest at each end.
+    const k = (1 - Math.cos(p * Math.PI * 4)) / 2;
+    const x = 470 + (1250 - 470) * k;
+    const y = 300 - 40 * Math.sin((p * Math.PI * 4) % Math.PI);
+    document.getElementById('f3-ticket').setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')');
+  }
+}
+
+/* SVG elements are not HTMLElements, so they have no `hidden` IDL property:
+   `g.hidden = false` sets an expando and leaves the attribute in place, and the
+   layer never appears. Toggle the attribute itself. */
+function showSvg(node, on) {
+  if (on) node.removeAttribute('hidden');
+  else node.setAttribute('hidden', '');
+}
+
+function setText(node, text) { if (node.textContent !== text) node.textContent = text; }
+function show(node, on) { if (node.hidden === on) node.hidden = !on; }
+
+/** The whole picture at frame n. Pure: no reads of Date, no state carried. */
+window.renderFrame = async function renderFrame(n) {
+  const s = T.stateAt(n);
+  el.stack.style.opacity = String(s.opacity);
+
+  /* captures */
+  for (let i = 0; i < Math.max(s.captures.length, slots.length); i++) {
+    const c = s.captures[i];
+    if (!c) { if (slots[i]) show(slots[i].box, false); continue; }
+    const k = slot(i);
+    show(k.box, true);
+    const vector = /\.svg($|\?)/.test(c.src || '');
+    k.box.classList.toggle('vector', vector);
+    /* The card is the window; the picture inside it is the capture at its own
+       native size. They are the same rectangle everywhere except the poster
+       card, where a smaller window shows the middle of a larger capture. A
+       window is a crop, and a crop shows native pixels: nothing is resampled. */
+    Object.assign(k.box.style, {
+      left: px(c.x), top: px(c.y),
+      width: px(c.bw != null ? c.bw : c.w), height: px(c.bh != null ? c.bh : c.h),
+    });
+    k.box.style.opacity = String(c.opacity);
+    const cr = c.clipRight || 0;
+    k.box.style.clipPath = cr > 0 ? `inset(0 ${cr}% 0 0)` : 'none';
+    if (vector) {
+      // Inlined, not <img>: an SVG inside an <img> cannot reach the page's
+      // fonts, and the product's sheet is set in Thmanyah with Arabic in it.
+      if (k.box.dataset.svg !== c.src) {
+        k.box.dataset.svg = c.src;
+        const svg = await (await fetch(c.src)).text();
+        k.img.remove();
+        k.box.innerHTML = svg;
+        const node = k.box.querySelector('svg');
+        node.setAttribute('width', '100%'); node.setAttribute('height', '100%');
+        node.style.display = 'block';
+      }
+    } else if (c.src && k.img.getAttribute('src') !== c.src) {
+      k.img.setAttribute('src', c.src);
+      try { await k.img.decode(); } catch { /* a missing clip is caught by frames.mjs */ }
+    }
+    if (!vector) {
+      // The image is drawn at the placement rectangle's CSS size, not at its
+      // own intrinsic size. A recording made at dsf 2 is twice the rectangle in
+      // real pixels, and the composition is captured at the same dsf, so this
+      // is the mapping that puts one recorded pixel on one rendered pixel. Left
+      // at `auto` the browser lays a 840x1440 file out as 840x1440 CSS px and
+      // the capture is drawn at double size, which is what happened on the
+      // first real render and which the dsf 1 stand-ins could not show.
+      // frames.mjs has already asserted the file is exactly the rectangle times
+      // the dsf, so this scales nothing.
+      k.img.style.width = px(c.w);
+      k.img.style.height = px(c.h);
+    }
+    /* The push, and the poster card's crop offset, in one place: the picture
+       moves inside the card, which clips it (`.cap` is `overflow: hidden`). The
+       card itself never moves, and this is exactly 0 on every frame outside a
+       transition, so the capture sits on its placement rectangle. */
+    const inner = vector ? k.box.querySelector('svg') : k.img;
+    if (inner) {
+      const dx = c.dx || 0, dy = c.dy || 0;
+      inner.style.transform = (dx || dy) ? `translate(${dx}px, ${dy}px)` : 'none';
+    }
+  }
+
+  /* the poster card */
+  show(el.poster, !!s.poster);
+  if (s.poster) {
+    if (el.posterTitle.textContent !== s.poster.line1) {
+      el.posterTitle.textContent = s.poster.line1;
+      el.posterTitle2.textContent = s.poster.line2 || '';
+      el.posterChipText.textContent = s.poster.chip || '';
+      el.posterChip.hidden = !s.poster.chip;
+      el.posterTitle2.parentElement.hidden = !s.poster.line2;
+    }
+    // Pre-rolled to whole: frame 0 is the thumbnail, so the card is finished on
+    // it. The mask-wipe is still what put the type there; it simply ran before
+    // the film started, exactly as the opening fade does (35-render 6.7).
+    el.posterTitle.style.transform = `translateY(${(1 - s.poster.reveal) * 100}%)`;
+    el.posterTitle2.style.transform = `translateY(${(1 - s.poster.reveal) * 100}%)`;
+    el.poster.style.opacity = String(s.poster.opacity);
+    /* The mark is on every card now (research/63 section 2), right-aligned in
+       the band. On the commercial it still WAKES, because that film's opening
+       card is where rev 4's intro lives; everywhere else it is simply drawn. */
+    if (s.poster.mark) {
+      // The wake: the ring draws, then the check strokes out (bible 2.4).
+      el.poRing.style.strokeDashoffset = String(93.5 * (1 - s.poster.mark.ring));
+      el.poCheck.style.strokeDashoffset = String(37.4 * (1 - s.poster.mark.check));
+    } else {
+      el.poRing.style.strokeDashoffset = '0';
+      el.poCheck.style.strokeDashoffset = '0';
+    }
+  }
+
+  /* the animated intro */
+  if (s.intro) {
+    show(el.intro, true);
+    el.intro.style.opacity = String(s.intro.out);
+    el.inRing.style.strokeDashoffset = String(93.5 * (1 - s.intro.ring));
+    el.inCheck.style.strokeDashoffset = String(37.4 * (1 - s.intro.check));
+    el.inWord.style.transform = `translateY(${(1 - s.intro.wordmark) * 100}%)`;
+  } else show(el.intro, false);
+
+  /* the authored scenes */
+  if (s.scene) {
+    showSvg(el.scenes, true);
+    for (const g of el.scenes.querySelectorAll('.scene')) showSvg(g, g.id === `sc-${s.scene.id}`);
+    drawScene(s.scene.id, s.scene.p);
+  } else showSvg(el.scenes, false);
+
+  /* chip. Two layers, so the rail cross-fades between feature beats instead of
+     blinking empty for a frame. */
+  for (const [node, text, c] of [[el.chip, el.chipText, s.chip], [el.chipOut, el.chipOutText, s.chipOut]]) {
+    if (!c) { show(node, false); continue; }
+    show(node, true);
+    setText(text, c.text);
+    node.style.opacity = String(c.opacity);
+    node.style.transform = `translateX(${c.tx}px)`;
+  }
+
+  /* caption. Two layers, so a card change cross-fades and the band is never
+     empty between two cards. */
+  for (const [node, c] of [[el.caption, s.caption], [el.captionOut, s.captionOut]]) {
+    if (!c) { show(node, false); continue; }
+    show(node, true);
+    setText(node, c.text);
+    node.classList.toggle('two', !!c.two);
+    node.style.opacity = String(c.opacity);
+    node.style.transform = `translateY(${c.ty}px)`;
+  }
+
+  /* accent rule */
+  if (s.rule) {
+    show(el.rule, true);
+    Object.assign(el.rule.style, {
+      left: px(s.rule.x), top: px(s.rule.y), width: px(s.rule.w),
+      transform: `scaleX(${s.rule.scaleX})`, opacity: String(s.rule.opacity),
+    });
+  } else show(el.rule, false);
+
+  /* click rings */
+  el.rings.replaceChildren();
+  for (const r of s.rings) {
+    const d = document.createElement('div');
+    d.className = r.accent === 'petra' ? 'ring' : 'ring quiet';
+    Object.assign(d.style, {
+      left: px(r.x), top: px(r.y),
+      transform: `scale(${r.scale})`, opacity: String(r.opacity),
+    });
+    el.rings.appendChild(d);
+  }
+
+  /* full-frame type card */
+  if (s.card) {
+    show(el.card, true);
+    while (el.card.querySelectorAll('.line').length < s.card.length) {
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.appendChild(document.createElement('span'));
+      el.card.insertBefore(line, el.cardRule);
+    }
+    const lines = el.card.querySelectorAll('.line');
+    s.card.forEach((c, i) => {
+      const line = lines[i];
+      setText(line.firstChild, c.text);
+      // A mask wipe up on the line's own baseline: the type rises into a box
+      // that was always its full height, so nothing else on the card moves.
+      line.firstChild.style.transform = `translateY(${(1 - c.reveal) * 100}%)`;
+      line.firstChild.style.opacity = String(c.opacity);
+    });
+    const last = lines[lines.length - 1];
+    Object.assign(el.cardRule.style, {
+      left: px(s.zones.safeX), top: px(last.offsetTop + last.offsetHeight + 26),
+      width: px(s.canvas.w * 0.115),
+      transform: `scaleX(${s.cardRule.scaleX})`, opacity: String(s.cardRule.opacity),
+    });
+  } else show(el.card, false);
+
+  /* end card */
+  if (s.endCard) {
+    const e = s.endCard;
+    show(el.endCard, true);
+    // The mask reveal uses the mark's own ring as a clip-path circle.
+    const box = el.ecMark.getBoundingClientRect();
+    const cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+    const far = Math.hypot(s.canvas.w, s.canvas.h) * 1.05;
+    el.endCard.style.clipPath = e.maskR >= 1 ? 'none' : `circle(${far * e.maskR}px at ${cx}px ${cy}px)`;
+    el.ecMark.style.opacity = String(e.markOpacity);
+    el.ecRing.style.strokeDashoffset = String(93.5 * (1 - e.ringDraw));
+    el.ecCheck.style.strokeDashoffset = String(37.4 * (1 - e.checkDraw));
+    el.ecCheck.style.transform = `scale(${e.checkScale})`;
+    el.ecWord.style.transform = `translateY(${(1 - e.wordmark) * 100}%)`;
+    el.ecWord.style.opacity = String(e.wordmarkOpacity);
+    el.ecTag.style.transform = `translateY(${(1 - e.tagline) * 100}%)`;
+    el.ecTag.style.opacity = String(e.taglineOpacity);
+    el.ecAsk.style.opacity = String(e.ask);
+    el.ecUrl.style.opacity = String(e.fine);
+    el.ecFine.style.opacity = String(e.fine);
+  } else show(el.endCard, false);
+
+  window.__frame = n;
+  return n;
+};
+
+/** What the page actually drew, for the placement probe. A capture must occupy
+ *  its placement rectangle exactly: the file is the rectangle times the device
+ *  scale factor, and the box is the rectangle in CSS pixels, so one recorded
+ *  pixel lands on one rendered pixel. Left to its intrinsic size an image at
+ *  dsf 2 is drawn at double size, which a dsf 1 stand-in can never show. */
+window.__probe = function probe() {
+  const out = [];
+  const s = T.stateAt(window.__frame ?? 0);
+  s.captures.forEach((c, i) => {
+    const k = slots[i];
+    if (!k || !c.src) return;
+    const img = k.box.querySelector('img, svg');
+    if (!img) return;
+    const r = img.getBoundingClientRect();
+    out.push({
+      i, want: { w: c.w, h: c.h },
+      drawn: { w: Math.round(r.width * 100) / 100, h: Math.round(r.height * 100) / 100 },
+      natural: img.naturalWidth ? { w: img.naturalWidth, h: img.naturalHeight } : null,
+      src: c.src,
+    });
+  });
+  return out;
+};
+
+/* The font gate. Rendering a frame before Thmanyah Sans has loaded silently swaps
+   in a fallback face, and that is invisible until someone looks at frame 0.
+   ui/fonts.css ships 400/500/700; heavier weights resolve to 700. */
+document.fonts.load('700 96px "Thmanyah Sans"')
+  .then(() => document.fonts.load('500 34px "Thmanyah Sans"'))
+  .then(() => document.fonts.load('400 24px "Thmanyah Sans"'))
+  .then(() => document.fonts.ready)
+  .then(() => { window.__fontsReady = true; });
+</script>
+</body>
+</html>

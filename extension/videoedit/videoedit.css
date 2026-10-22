@@ -1,0 +1,349 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/**
+ * The video editor.
+ *
+ * The same three-column workspace as `annotate/annotate.css`, and deliberately
+ * the same class names: the rail, the stage and the settings column are the
+ * same idea, so a tester who has marked up a screenshot recognises this page
+ * before reading a word of it. What is new is the strip under the stage — the
+ * transport and the timeline — because a clip has a length and a screenshot
+ * does not.
+ *
+ * Every colour comes from the palette. Nothing here knows a hex code.
+ */
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--backdrop);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--t-body);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--track-body);
+  line-height: var(--lead-body);
+  overflow: hidden;
+}
+
+.muted { color: var(--text-muted); }
+
+/* Which clip this is: a webcam on its own track, or a baked-in inset. */
+.mode-note {
+  margin: 0;
+  padding: 0 18px var(--sp-2);
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  flex: none;
+}
+[hidden] { display: none !important; }
+
+.app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding: 10px 18px;
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--glass-edge);
+  flex: none;
+}
+
+.brand { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+.brand-mark { flex: none; border-radius: var(--r-sm); }
+.brand-name { font-family: var(--display); font-size: var(--t-head); font-weight: var(--weight-head); letter-spacing: var(--track-head); line-height: var(--lead-head); }
+.bar-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+.status { margin: 0; padding: var(--sp-2) 18px; min-height: 18px; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); flex: none; }
+.status.err { color: var(--danger); }
+.status.ok { color: var(--ok); }
+
+.workspace {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 84px 1fr 270px;
+  min-height: 0;
+}
+
+/* ── tool rail ─────────────────────────────────────────────────────────── */
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-2);
+  background: var(--surface-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-inline-end: 1px solid var(--glass-edge);
+  overflow-y: auto;
+}
+
+.tool-btn {
+  display: grid;
+  gap: 2px;
+  place-items: center;
+  padding: var(--sp-2) 0;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+.tool-btn span { font-size: 18px; /* scale-exception: tool icon glyph, 2px from every step (research/90) */ line-height: 1; }
+.tool-btn em { font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); }
+.tool-btn:hover { background: var(--surface-raised); color: var(--text); }
+
+.tool-btn[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ── the stage ─────────────────────────────────────────────────────────── */
+
+.stage-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-width: 0;
+  min-height: 0;
+  padding: var(--sp-3);
+  overflow: auto;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.stage video,
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--r-md);
+}
+
+/* The canvas is a sheet of glass over the video: it takes the pointer, the
+   video underneath never does. */
+.stage canvas { background: transparent; cursor: crosshair; z-index: 2; }
+
+/*
+ * The webcam layer.
+ *
+ * Placed in pixels by the script against the video's own rendered box rather
+ * than the stage's: the stage is wider than a letterboxed clip, and a layer
+ * laid out in percentages of the stage would sit somewhere the export does not
+ * draw it. `inset` and the max sizes are unset for the same reason — the rule
+ * above them is what centres the two full-size elements, and this one is not
+ * one of those.
+ */
+.cam-layer {
+  inset: auto;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  z-index: 1;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-2);
+  pointer-events: none;
+}
+
+.cam-layer.is-round { border-radius: 50%; }
+
+.text-input {
+  position: absolute;
+  z-index: 2;
+  width: 220px;
+  padding: 2px var(--sp-2);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--t-body);
+}
+
+/* ── transport and timeline ────────────────────────────────────────────── */
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex: none;
+  flex-wrap: wrap;
+}
+
+.transport input[type='range'] { flex: 1; min-width: 140px; }
+
+.clock {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/**
+ * What survives the cuts, drawn as blocks and gaps.
+ *
+ * A list of "kept from 3.2s to 9.8s" is a sentence nobody checks. The strip is
+ * the edit list, one block per kept segment at its real width, so a cut that
+ * took the wrong five seconds is visible rather than deduced.
+ */
+.timeline {
+  position: relative;
+  flex: none;
+  height: 26px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.timeline-block {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--accent-soft);
+  border-inline: 1px solid var(--accent);
+}
+
+.timeline-head {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--fail);
+}
+
+/* T-072 / T-060: the clip's trim handles. Native sliders: arrows, Home, End, PageUp and PageDown work, and the target stays 24 px (WCAG 2.5.8). */
+.trim { display: grid; grid-template-columns: auto 1fr auto 1fr; align-items: center; gap: var(--sp-2); flex: none; }
+.trim-field { display: flex; gap: var(--sp-2); align-items: baseline; font-size: var(--t-micro); color: var(--text-muted); white-space: nowrap; }
+.trim-field output { font-family: var(--mono); }
+.trim input[type='range'] { min-width: 100px; min-height: 24px; margin: 0; }
+@media (max-width: 720px) { .trim { grid-template-columns: auto 1fr; } }
+
+.timeline-note { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); flex: none; }
+
+/* ── the settings column ───────────────────────────────────────────────── */
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--surface-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-inline-start: 1px solid var(--glass-edge);
+  overflow-y: auto;
+}
+
+.field-row { display: grid; gap: var(--sp-1); }
+.field-label { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); }
+.field-row input[type='range'] { width: 100%; }
+.field-row output { font-family: var(--mono); font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+.field-row progress { width: 100%; }
+
+.check { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); }
+.check input { width: 24px; height: 24px; margin: 0; flex: none; } /* T-060: WCAG 2.2 target size (2.5.8) */
+
+.times {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+  color: var(--text);
+}
+
+.colour-custom {
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.hint {
+  padding: var(--sp-2) 10px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.hint b { color: var(--text); }
+
+@media (max-width: 900px) {
+  .workspace { grid-template-columns: 68px 1fr; }
+  .side { grid-column: 1 / -1; border-inline-start: 0; border-top: 1px solid var(--border); }
+}
+
+/* ── motion ────────────────────────────────────────────────────────────
+ * Tokens, curves and keyframes come from ui/motion.css, linked by the page.
+ * No new durations and no new curves: the bar and the two columns arrive the
+ * way every other surface's do, and the tool buttons answer a pointer the way
+ * every `.btn` already does. */
+.app-bar { animation: qaw-in-down var(--motion-base) var(--motion-ease) both; }
+.rail { animation: qaw-in-lead var(--motion-base) var(--motion-ease) both; }
+.side { animation: qaw-in-trail var(--motion-base) var(--motion-ease) both; }
+
+.tool-btn {
+  transition:
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease);
+}
+.tool-btn:hover { box-shadow: var(--shadow-1); }
+.tool-btn:active:not(:disabled) { transform: scale(var(--press-scale)); box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-bar, .rail, .side { animation: none !important; }
+  .tool-btn { transition: none !important; }
+  .tool-btn:active { transform: none !important; }
+}
+
+/* A control with nothing to decide: a GIF has no audio to drop. Dimmed by the
+   muted ink and not by opacity, which would take the words with it. */
+.check.is-moot { color: var(--text-muted); }
+.i { width: 16px; height: 16px; flex: none; }
+[dir="rtl"] .i .mirror { transform: scaleX(-1); transform-origin: center; }
+
+/* ann1022: the marks on the timeline, one row each, and the picked mark's panel. */
+.obj-track { display: flex; flex-direction: column; gap: 2px; flex: none; max-height: 96px; overflow: auto; }
+.obj-row { display: grid; grid-template-columns: 90px 1fr; gap: var(--sp-2); align-items: center; min-height: 24px; padding: 0 var(--sp-2); background: none; border: 1px solid transparent; border-radius: var(--r-sm); color: var(--text); font: inherit; font-size: var(--t-micro); cursor: pointer; text-align: start; }
+.obj-row[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-soft); }
+.obj-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.obj-lane { position: relative; height: 10px; background: var(--surface-sunken); border-radius: var(--r-sm); }
+.obj-span { position: absolute; top: 0; bottom: 0; background: var(--accent); opacity: 0.6; border-radius: var(--r-sm); }
+.obj-key { position: absolute; top: -2px; width: 6px; height: 14px; margin-inline-start: -3px; background: var(--fail); border-radius: 2px; }
+.obj-panel { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
+.obj-btns { display: flex; flex-wrap: wrap; gap: var(--sp-2); }

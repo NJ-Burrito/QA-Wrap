@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="api.title">QA Wrap: send a request</title>
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="api.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../platform/i18n.js"></script>
+  </head>
+  <body>
+    <h1 class="sr-only" data-i18n="api.title">QA Wrap: send a request</h1>
+    <header class="bar">
+      <div class="bar-title">
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" data-i18n="api.bar.subtitle">send a request</span>
+      </div>
+      <div class="bar-actions">
+        <span class="save-state" id="say" role="status" aria-live="polite"></span>
+        <button id="theme" class="btn btn-sm" type="button" data-i18n="api.bar.theme">Theme</button>
+      </div>
+    </header>
+
+    <!--
+      What this page is for, in one line, above everything.
+
+      E12, Nader's words: "don't understand it, make it better". The page opened
+      on a method dropdown, a URL box and a Send button, which is perfectly
+      clear to somebody who has used Postman and says nothing at all to somebody
+      who has not. Neither the popup card nor this first screen ever said what
+      the thing was *for*. One sentence and one worked example, dismissible,
+      because it is only news once.
+    -->
+    <section class="primer" id="primer">
+      <div class="primer-text">
+        <h2 data-i18n="api.primer.title">Call the site's own API as the user who is logged in</h2>
+        <p data-i18n="api.primer.body">Send a request as the logged-in user.</p>
+        <ol class="primer-steps">
+          <li data-i18n="api.primer.step1">The Save button on a page has just failed.</li>
+          <li data-i18n="api.primer.step2">Import the request that returned 500.</li>
+          <li data-i18n="api.primer.step3">Change one body field, press Send.</li>
+          <li data-i18n="api.primer.step4">Read status and body in the response card.</li>
+        </ol>
+      </div>
+      <button id="primer-hide" class="btn btn-sm btn-quiet" type="button" data-i18n="api.primer.hide">Got it</button>
+    </section>
+
+    <main class="shell">
+      <!--
+        Left: what is going to be sent. Right: what came back. The order is the
+        order of the act, and nothing is hidden behind a tab that a tester has
+        to remember to look in before pressing Send.
+      -->
+      <section class="card" id="compose">
+        <header class="card-head">
+          <h2 data-i18n="api.req.title">The request</h2>
+          <p class="muted" data-i18n="api.req.note">Cookies are sent. Put tokens in a variable.</p>
+        </header>
+
+        <div class="line">
+          <label class="sr-only" for="method" data-i18n="api.req.method">Method</label>
+          <select id="method">
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>PATCH</option>
+            <option>DELETE</option>
+            <option>HEAD</option>
+            <option>OPTIONS</option>
+          </select>
+          <label class="sr-only" for="url" data-i18n="api.req.url">URL</label>
+          <input type="text" id="url" placeholder="https://{{host}}/api/applications" spellcheck="false" dir="ltr" />
+          <button id="send" class="btn btn-primary" type="button" data-i18n="api.req.send">Send</button>
+        </div>
+
+        <h3 class="sub-head" data-i18n="api.headers.title">Headers</h3>
+        <div id="headers" class="rows"></div>
+        <button id="add-header" class="btn btn-sm" type="button" data-i18n="api.headers.add">Add a header</button>
+
+        <h3 class="sub-head" id="body-head" data-i18n="api.body.title">Body</h3>
+        <textarea id="body" aria-labelledby="body-head" rows="6" spellcheck="false" dir="ltr" placeholder='{ "reference": "{{ref}}" }'></textarea>
+
+        <h3 class="sub-head" id="before-head" data-i18n="api.before.title">Before it is sent</h3>
+        <!--
+          Not JavaScript, and the panel says so plainly rather than letting
+          somebody paste a script and watch nothing happen. The whole reasoning
+          is at the top of api/sandbox.js.
+        -->
+        <p class="fine" id="script-help"></p>
+        <textarea id="prescript" aria-labelledby="before-head" rows="4" spellcheck="false" dir="ltr" placeholder="uuid ref&#10;now stamp&#10;header X-Request-Id: {{ref}}"></textarea>
+        <p class="fine err" id="script-errors" role="alert" hidden></p>
+      </section>
+
+      <section class="card" id="env-card">
+        <header class="card-head">
+          <h2 data-i18n="api.env.title">Environments</h2>
+          <p class="muted" data-i18n="api.env.note">Use {{name}} in the URL, headers or body.</p>
+          <details class="fine">
+            <summary data-i18n="api.env.storeTitle">Where are these kept?</summary>
+            <p data-i18n="api.env.store">Kept in this browser profile as plain text, nowhere else. Do not keep a token here you cannot afford to leave behind; "Erase all sessions and recordings" removes them.</p>
+          </details>
+        </header>
+        <div class="line">
+          <label class="sr-only" for="env" data-i18n="api.env.label">Environment</label>
+          <select id="env"></select>
+          <input type="text" id="env-name" aria-label="New environment name" data-i18n-aria="api.env.namePh" data-i18n-placeholder="api.env.namePh" placeholder="New environment name" spellcheck="false" />
+          <button id="env-add" class="btn btn-sm" type="button" data-i18n="api.env.add">Add</button>
+          <button id="env-del" class="btn btn-sm" type="button" data-i18n="api.env.del">Delete</button>
+        </div>
+        <div id="vars" class="rows"></div>
+        <button id="add-var" class="btn btn-sm" type="button" data-i18n="api.vars.add">Add a variable</button>
+
+        <h3 class="sub-head" data-i18n="api.session.title">From this session</h3>
+        <p class="fine" data-i18n="api.session.note">Resend a request this session already saw.</p>
+        <div class="line">
+          <button id="import-session" class="btn btn-sm" type="button" data-i18n="api.session.import">Import from the session</button>
+          <label class="btn btn-sm" for="import-file" data-i18n="api.session.importFile">Import a collection file</label>
+          <input type="file" id="import-file" accept="application/json,.json" hidden />
+        </div>
+        <div id="collection" class="rows"></div>
+      </section>
+
+      <section class="card" id="preview-card" hidden>
+        <header class="card-head">
+          <h2 data-i18n="api.preview.title">This is what will be sent</h2>
+          <p class="muted" data-i18n="api.preview.note">
+            Shown before anything leaves the browser, with every variable
+            resolved. Nothing is sent until Confirm is pressed.
+          </p>
+        </header>
+        <pre id="preview" class="pre" dir="ltr" tabindex="0" role="region" aria-label="The request that will be sent" data-i18n-aria="api.preview.aria"></pre>
+        <div class="line">
+          <button id="confirm" class="btn btn-primary" type="button" data-i18n="api.preview.confirm">Confirm and send</button>
+          <button id="cancel" class="btn btn-sm" type="button" data-i18n="api.preview.cancel">Cancel</button>
+        </div>
+      </section>
+
+      <section class="card" id="response-card" hidden>
+        <header class="card-head">
+          <h2 data-i18n="api.res.title">The response</h2>
+          <p class="muted" id="res-summary" role="status"></p>
+        </header>
+        <div class="line">
+          <span class="pill" id="res-status"></span>
+          <span class="pill" id="res-time"></span>
+          <span class="pill" id="res-size"></span>
+          <span class="fine" id="res-recorded"></span>
+        </div>
+        <h3 class="sub-head" data-i18n="api.headers.title">Headers</h3>
+        <pre id="res-headers" class="pre" dir="ltr" tabindex="0" role="region" aria-label="Response headers" data-i18n-aria="api.headers.aria"></pre>
+        <h3 class="sub-head" data-i18n="api.body.title">Body</h3>
+        <pre id="res-body" class="pre" dir="ltr" tabindex="0" role="region" aria-label="Response body" data-i18n-aria="api.body.aria"></pre>
+      </section>
+    </main>
+
+    <script type="module" src="api.js"></script>
+  </body>
+</html>

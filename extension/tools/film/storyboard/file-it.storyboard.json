@@ -1,0 +1,1099 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "file-it",
+  "rev": "round-3",
+  "kind": "feature",
+  "mode": "expert",
+  "batch": "w",
+  "en": "File the report",
+  "ar": "ارفع التقرير",
+  "blurb": "Seven kinds of ticket, acceptance criteria written from the recording, evidence attached.",
+  "titleKey": null,
+  "chipKey": null,
+  "bpm": 120,
+  "fps": 30,
+  "bars": 16,
+  "seconds": 32.0,
+  "frames": 960,
+  "aspects": [
+    "h",
+    "s",
+    "v"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    },
+    "s": {
+      "w": 1080,
+      "h": 1080,
+      "label": "1:1 cut"
+    },
+    "v": {
+      "w": 1080,
+      "h": 1920,
+      "label": "9:16 cut"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    },
+    "REQUEST": {
+      "surface": "request",
+      "url": "api/api.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      }
+    }
+  },
+  "posterShot": {
+    "shot": 2,
+    "frame": 135,
+    "why": "File the report: the result of the first demonstration, visible in frame.",
+    "pass": "h"
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 2,
+    "frame": 135,
+    "why": "File the report: the result of the first demonstration, visible in frame."
+  },
+  "srt": "deliverables/tutorials/file-it-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "It knows what broke.",
+      "inSec": 0.15,
+      "outSec": 3.0,
+      "inFrame": 4,
+      "outFrame": 90,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "It knows what broke.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 2850,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "Seven kinds of ticket.",
+      "inSec": 3.0,
+      "outSec": 6.5,
+      "inFrame": 90,
+      "outFrame": 195,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Seven kinds of ticket.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 3500,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "From the recording.",
+      "inSec": 6.5,
+      "outSec": 11.0,
+      "inFrame": 195,
+      "outFrame": 330,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "From the recording.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "Same session. Any shape.",
+      "inSec": 11.0,
+      "outSec": 16.5,
+      "inFrame": 330,
+      "outFrame": 495,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Same session. Any shape.",
+      "dwell": {
+        "needMs": 1996,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "Evidence attached.",
+      "inSec": 16.5,
+      "outSec": 21.0,
+      "inFrame": 495,
+      "outFrame": 630,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Evidence attached.",
+      "dwell": {
+        "needMs": 1535,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "Into the tracker.",
+      "inSec": 21.0,
+      "outSec": 26.0,
+      "inFrame": 630,
+      "outFrame": 780,
+      "shots": [
+        6
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Into the tracker.",
+      "dwell": {
+        "needMs": 1458,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 6,
+      "text": "Nothing retyped.",
+      "inSec": 26.0,
+      "outSec": 29.0,
+      "inFrame": 780,
+      "outFrame": 870,
+      "shots": [
+        7
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Nothing retyped.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 3000,
+        "ok": true
+      }
+    },
+    {
+      "i": 7,
+      "text": "Every failure, traced.",
+      "inSec": 29.0,
+      "outSec": 32.0,
+      "inFrame": 870,
+      "outFrame": 960,
+      "shots": [
+        8
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 3000,
+        "ok": true
+      }
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0.0,
+      "outSec": 3.0,
+      "inFrame": 0,
+      "outFrame": 89,
+      "frames": 90,
+      "picture": "REPORT, What broke. The failure chain, with the click that caused it.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/file-it/h/shot-01"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/s/shot-01"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/v/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "File the report",
+      "chipKey": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The report already knows what broke.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        },
+        {
+          "cue": "tick",
+          "atSec": 0.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 3.0,
+      "outSec": 6.5,
+      "inFrame": 90,
+      "outFrame": 194,
+      "frames": 105,
+      "picture": "REPORT, the Jira tab (report.tabs.file). The seven-way segmented row, Defect report selected: Defect report, Test case, Story, Task, Sub-task, Epic, Plain.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/file-it/h/shot-02"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/s/shot-02"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/v/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "File the report",
+      "chipKey": null,
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Seven kinds of ticket, in the ISTQB shape.",
+        "startSec": 3.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 3.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 6.5,
+      "outSec": 11.0,
+      "inFrame": 195,
+      "outFrame": 329,
+      "frames": 135,
+      "picture": "REPORT. The document preview, written from the recording: steps, expected, actual, environment.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/file-it/h/shot-03"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/s/shot-03"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/v/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "File the report",
+      "chipKey": null,
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Written from the recording, not from memory: steps, expected, actual, environment.",
+        "startSec": 6.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 6.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 11.0,
+      "outSec": 16.5,
+      "inFrame": 330,
+      "outFrame": 494,
+      "frames": 165,
+      "picture": "REPORT, cut on action. Test case selected; the same session re-rendered as a test case with its level and type.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/file-it/h/shot-04"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/s/shot-04"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/v/shot-04"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "File the report",
+      "chipKey": null,
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The same session, re-rendered as a test case with its level and its type.",
+        "startSec": 11.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 11.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 16.5,
+      "outSec": 21.0,
+      "inFrame": 495,
+      "outFrame": 629,
+      "frames": 135,
+      "picture": "REPORT. Copy pressed; the status line confirms.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/file-it/h/shot-05"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/s/shot-05"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/v/shot-05"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "File the report",
+      "chipKey": null,
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Copy it, or file it into Jira with the evidence attached.",
+        "startSec": 16.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 16.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 21.0,
+      "outSec": 26.0,
+      "inFrame": 630,
+      "outFrame": 779,
+      "frames": 150,
+      "picture": "REPORT, the Jira block: project, issue type, the attachment list.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/file-it/h/shot-06"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/s/shot-06"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/v/shot-06"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "File the report",
+      "chipKey": null,
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Project, issue type, and the screenshots and the video going up with it.",
+        "startSec": 21.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 21.3
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "barBeat": null,
+      "inSec": 26.0,
+      "outSec": 29.0,
+      "inFrame": 780,
+      "outFrame": 869,
+      "frames": 90,
+      "picture": "REPORT. The filed ticket with its key, held.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/file-it/h/shot-07"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/s/shot-07"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/file-it/v/shot-07"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "File the report",
+      "chipKey": null,
+      "caption": {
+        "span": 6,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Nothing is retyped, because nothing was written down twice.",
+        "startSec": 26.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 26.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "barBeat": null,
+      "inSec": 29.0,
+      "outSec": 32.0,
+      "inFrame": 870,
+      "outFrame": 959,
+      "frames": 90,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 7,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 29.0,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 29.52,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 29.0,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 29.0,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 31.3,
+          "toSec": 32.0
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 29.2,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 29.0
+        },
+        {
+          "cue": "logo",
+          "atSec": 29.0
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 29.0
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 8,
+    "cuts": 7,
+    "cutsPer10s": 2.19,
+    "asl": 4.0,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 7,
+    "pauseBeforeCloseSec": 0.23,
+    "maxLineGapSec": 0.88,
+    "cutsPer10sRendered": 2.22
+  }
+}

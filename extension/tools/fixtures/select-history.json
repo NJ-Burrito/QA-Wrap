@@ -1,0 +1,143 @@
+{
+ "_doc": "R12 (council-1012): ten historical fix commits. changed = product files the commit touched that still exist; expected = the tests the commit added or changed that are still manifest rows. test-pipeline-select asserts --changed selects every expected suite. Frozen data: no git history is needed to run the test.",
+ "commits": [
+  {
+   "commit": "af5ad7f",
+   "subject": "Fix: serialise context-menu rebuilds, check lastError on every create (44 duplicate-id err",
+   "changed": [
+    "extension/background/context-menus.js"
+   ],
+   "expected": [
+    "test-context-menus"
+   ]
+  },
+  {
+   "commit": "82467a4",
+   "subject": "Harvest fixes: drop the browser-shutdown rejection in forgetInvoked; freshWorker enables d",
+   "changed": [
+    "extension/background/service-worker.js",
+    "extension/tools/lib-fresh.mjs"
+   ],
+   "expected": [
+    "test-wrappers"
+   ]
+  },
+  {
+   "commit": "0a46211",
+   "subject": "T-037 T-042 T-048: integration fixes - assertMayRecord options typed (tsc back under the 1",
+   "changed": [
+    "extension/background/armed.js",
+    "extension/tools/fixtures/top-layer.html"
+   ],
+   "expected": [
+    "test-frames"
+   ]
+  },
+  {
+   "commit": "befa96f",
+   "subject": "T-040 T-042: fetch wrapper fixes (mock/graphqlError no longer throw, Request keeps method ",
+   "changed": [
+    "extension/background/armed.js",
+    "extension/background/dispatch-tables.js",
+    "extension/background/service-worker.js",
+    "extension/content/page-hooks.js"
+   ],
+   "expected": [
+    "test-assert-may-record",
+    "test-handlers",
+    "test-i18n",
+    "test-permissions",
+    "test-sleep",
+    "test-wrappers"
+   ]
+  },
+  {
+   "commit": "27c058b",
+   "subject": "T-037, T-041, T-044: top-layer fixture and fix (host moves into the open modal, popover or",
+   "changed": [
+    "extension/content/bar.js",
+    "extension/content/bridge.js",
+    "extension/content/overlay.css",
+    "extension/content/ui-host.js",
+    "extension/package.json",
+    "extension/platform/i18n/ar.json",
+    "extension/platform/i18n/en.json",
+    "extension/tools/fixtures/top-layer.html"
+   ],
+   "expected": [
+    "test-bar-dead",
+    "test-top-layer"
+   ]
+  },
+  {
+   "commit": "da31934",
+   "subject": "fix(Now): T-012 T-021 boot ratchet: chat scan has no catch, overlay comment and glyph-ok m",
+   "changed": [
+    "extension/background/service-worker.js",
+    "extension/content/overlay.css",
+    "extension/core/privacy.js",
+    "extension/platform/i18n/ar.json",
+    "extension/platform/i18n/en.json"
+   ],
+   "expected": [
+    "test-i18n",
+    "test-now-fixes"
+   ]
+  },
+  {
+   "commit": "c67a32a",
+   "subject": "T-012 T-013 T-030 T-020: integration fixes - generated isSecretName kept its backslash-d (",
+   "changed": [
+    "extension/background/service-worker.js",
+    "extension/content/page-hooks.js",
+    "extension/content/recorder.js",
+    "extension/core/privacy.js",
+    "extension/tools/gen-privacy-names.mjs"
+   ],
+   "expected": [
+    "test-devil-a1",
+    "test-devil-a3",
+    "test-privacy-contract"
+   ]
+  },
+  {
+   "commit": "1209a6e",
+   "subject": "L2: n-opaque anchored prefix, third-party src console/pageerror as Warning, T-EVERY counts",
+   "changed": [
+    "extension/core/signal.js"
+   ],
+   "expected": [
+    "test-signal"
+   ]
+  },
+  {
+   "commit": "9491505",
+   "subject": "Devil fixes D: on-page overlay strings through t(), literal lint",
+   "changed": [
+    "extension/content/keymap.js",
+    "extension/content/mask.js",
+    "extension/content/picker.js",
+    "extension/content/rtl-stress.js"
+   ],
+   "expected": [
+    "test-devil-d-literals"
+   ]
+  },
+  {
+   "commit": "6ce08c4",
+   "subject": "Tools are a fixed list: slidable bottom sheet removed from popup and side panel",
+   "changed": [
+    "extension/popup/popup.css",
+    "extension/popup/popup.html",
+    "extension/popup/popup.js",
+    "extension/tools/clickthrough.mjs",
+    "extension/tools/film/record/driver.mjs",
+    "extension/tools/tutorials.mjs"
+   ],
+   "expected": [
+    "test-motion",
+    "test-popup-structure"
+   ]
+  }
+ ]
+}

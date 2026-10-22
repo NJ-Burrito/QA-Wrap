@@ -1,0 +1,101 @@
+/* QA Wrap — options: search, the Integrations tab, and the always-fix list. Tokens from ../ui/tokens.css. */
+
+/* password / search / number fields looked unstyled next to text fields */
+input[type='password'], input[type='search'], input[type='number'] {
+  width: 100%; min-height: 40px; padding: var(--sp-2) var(--sp-2h); border: 1px solid var(--border-strong);
+  border-radius: var(--r-md); background: var(--surface); color: var(--text); font: inherit;
+}
+input[type='password'] { letter-spacing: 0; }
+:lang(ar) input, :lang(ar) .code, [dir='rtl'] input { letter-spacing: 0; }
+/* a delete button is not the primary action */
+.btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+.btn-danger:hover { background: var(--danger-soft); border-color: var(--danger); }
+.srch { flex: 1 1 14rem; max-width: 24rem; }
+.srch input { min-height: 36px; border-radius: var(--r-pill); }
+.rail a[hidden] { display: none; }
+.rail .n { margin-inline-start: auto; font-size: var(--t-small); color: var(--accent-ink); background: var(--accent-soft); border-radius: var(--r-pill); padding: 0 var(--sp-2); }
+.card[hidden], .hide { display: none !important; }
+.hit { outline: 2px solid var(--accent-soft); outline-offset: 2px; border-radius: var(--r-md); }
+mark { background: var(--accent-soft); color: var(--accent-ink); border-radius: 2px; }
+#nores { padding: var(--sp-4) 0; }
+#theme .icon { width: 16px; height: 16px; vertical-align: -3px; margin-inline-end: var(--sp-half); }
+
+/* service grid */
+.svc-group { margin-block: var(--sp-4) var(--sp-2); font-size: var(--t-small); color: var(--text-muted); }
+.svc-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: var(--sp-3); }
+.svc { display: grid; gap: var(--sp-1); justify-items: start; text-align: start; min-height: var(--sz-hit); padding: var(--sp-3); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; transition: border-color var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease); }
+.svc:hover { border-color: var(--accent); background: var(--surface-sunken); }
+.svc-ic { color: var(--accent); display: inline-flex; }
+.svc .icon, .svc-head .icon, .tests .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.svc-name { font-weight: 600; }
+.svc-st { font-size: var(--t-small); color: var(--text-muted); }
+.svc-st.on { color: var(--ok); }
+.svc-screen { display: grid; gap: var(--sp-4); }
+.svc-head { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.svc-head h3 { font-size: var(--t-head); }
+.badge { font-size: var(--t-small); padding: 2px var(--sp-2); border-radius: var(--r-pill); border: 1px solid var(--border); color: var(--text-muted); }
+.badge.on { color: var(--ok); border-color: var(--ok); }
+.sub { font-size: var(--t-body); font-weight: 600; margin-top: var(--sp-2); }
+.svc-form { display: grid; gap: var(--sp-3); max-width: 42rem; }
+.svc-form textarea { min-height: 72px; font-family: inherit; }
+.err { color: var(--danger); min-height: 1.25em; font-size: var(--t-small); }
+.acts { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: center; }
+.saved { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; color: var(--ok); }
+.code { direction: ltr; unicode-bidi: isolate; }
+.chans { list-style: none; display: grid; gap: var(--sp-3); padding: 0; margin: 0; }
+.chan, .conn { display: grid; gap: var(--sp-2); padding: var(--sp-3); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); }
+.chan-main { display: flex; gap: var(--sp-3); align-items: baseline; flex-wrap: wrap; }
+.chips { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+.chip { min-height: 32px; padding: 0 var(--sp-3); border: 1px solid var(--border-strong); border-radius: var(--r-pill); background: var(--surface); color: var(--text); font: inherit; font-size: var(--t-small); cursor: pointer; }
+.chip[aria-pressed='true'] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+.tests { list-style: none; padding: 0; margin: var(--sp-2) 0 0; display: grid; gap: var(--sp-1); }
+.tests li { display: flex; gap: var(--sp-2); align-items: center; }
+.tests li.ok .ic { color: var(--ok); } .tests li.warn .ic { color: var(--warn); }
+.preview { border: 1px dashed var(--border-strong); border-radius: var(--r-md); padding: var(--sp-3); display: grid; gap: var(--sp-1); max-width: 42rem; }
+.sent { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--sp-4); }
+.sent ul { margin: var(--sp-1) 0 0; padding-inline-start: 1.1em; color: var(--text-muted); }
+.prio { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--sp-3); }
+
+/* 3 steps + explainers: calm, transform/opacity only */
+.steps3 { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--sp-3); }
+.steps3 li { display: grid; gap: var(--sp-1); padding: var(--sp-3); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); align-content: start; }
+.steps3 li > span:not(.num) { font-size: var(--t-small); color: var(--text-muted); }
+.num { display: inline-grid; place-items: center; inline-size: 24px; block-size: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-ink); font-weight: 700; font-size: var(--t-small); }
+.viz { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: var(--sp-4); margin-block: var(--sp-4); }
+.viz-card { display: grid; gap: var(--sp-3); padding: var(--sp-4); border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); align-content: start; }
+.flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: var(--sp-2); align-items: stretch; }
+.node { display: grid; gap: 2px; align-content: start; padding: var(--sp-3); border: 1px solid var(--border); border-radius: var(--r-md); font-size: var(--t-small); }
+.node b { font-size: var(--t-small); } .node span { color: var(--text-muted); }
+.node.solid { border-color: var(--accent); background: var(--accent-soft); } .node.no { border-style: dashed; }
+.node .icon { width: 20px; height: 20px; fill: none; stroke: var(--accent); stroke-width: 1.75; }
+.link { align-self: center; inline-size: 22px; block-size: 2px; background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 10px); background-size: 20px 2px; }
+.link.x { background: repeating-linear-gradient(90deg, var(--text-muted) 0 3px, transparent 3px 10px); }
+[dir='rtl'] .link { transform: scaleX(-1); }
+@keyframes qw-flow { to { background-position: 20px 0; } }
+@keyframes qw-pulse { 50% { transform: scale(1.03); } }
+[data-loop] .link.on { animation: qw-flow 1.8s linear infinite; }
+[data-loop] .node.solid { animation: qw-pulse 3.2s var(--motion-ease) infinite; }
+@media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .link { inline-size: 2px; block-size: 14px; justify-self: center; } }
+@media (prefers-reduced-motion: reduce) { [data-loop] .link.on, [data-loop] .node.solid { animation: none !important; } }
+
+/* token vault card: quiet, one column */
+#vault-box { display: grid; gap: var(--sp-3); margin-block: var(--sp-4); }
+#vault-box .text-field { max-width: 24rem; }
+.setting-row { margin-block: var(--sp-3); }
+
+/* Thmanyah only: this page has no monospace face, and nothing on it is under 12 px */
+:root { --mono: "Thmanyah Sans", system-ui, sans-serif; }
+.sound-voice { font-size: var(--t-small); letter-spacing: 0; }
+/* no tracking on Arabic: letter-spacing breaks the joins */
+:lang(ar) *, [dir='rtl'] * { letter-spacing: 0 !important; }
+/* the vault card: one quiet block, buttons in a row */
+#vault-box > div { display: grid; gap: var(--sp-3); }
+#vault-box .btn { justify-self: start; }
+
+/* D-1010-159: forced colours drop every painted fill, so each state keeps a shape that is not a colour. */
+@media (forced-colors: active) {
+  .hit { outline-color: Highlight; }
+  .chip[aria-pressed='true'] { outline: 2px solid Highlight; outline-offset: -2px; }
+  .badge.on { border-width: 2px; }
+  .svc:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+}

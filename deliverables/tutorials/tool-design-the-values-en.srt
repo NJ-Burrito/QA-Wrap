@@ -1,0 +1,23 @@
+1
+00:00:02,400 --> 00:00:05,400
+Four beats forty.
+
+2
+00:00:05,600 --> 00:00:07,667
+Nothing is guessed.
+
+3
+00:00:07,900 --> 00:00:10,033
+What the field declares.
+
+4
+00:00:10,267 --> 00:00:12,467
+The values on the edges.
+
+5
+00:00:12,667 --> 00:00:16,133
+Say what you tested.
+
+6
+00:00:16,333 --> 00:00:18,567
+Every failure, traced.

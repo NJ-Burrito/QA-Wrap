@@ -1,0 +1,23 @@
+1
+00:00:02,400 --> 00:00:04,400
+Some bugs only move.
+
+2
+00:00:04,600 --> 00:00:05,433
+Film the tab.
+
+3
+00:00:05,767 --> 00:00:08,833
+Sound, mic, camera.
+
+4
+00:00:09,067 --> 00:00:11,500
+No time limit.
+
+5
+00:00:11,767 --> 00:00:14,467
+In the report, with everything else.
+
+6
+00:00:15,767 --> 00:00:18,100
+Every failure, traced.

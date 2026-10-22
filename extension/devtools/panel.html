@@ -1,0 +1,260 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/scale.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/tone.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="panel.css" />
+    <link rel="stylesheet" href="panel-brand.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../platform/i18n.js"></script>
+    <title data-i18n="panel.meta.title">QA Wrap panel</title>
+  </head>
+  <body>
+    <!--
+      The watermark: the brand ring, oversized and cropped by the corner, its check leaving through the seam.
+      Decoration only, inside this panel only (never in a capture, a screenshot or a recording).
+    -->
+    <div class="wm" aria-hidden="true">
+      <svg viewBox="0 0 64 64" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <g transform="translate(-2 1)">
+          <path class="wm-ring" pathLength="1" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26" />
+          <path class="wm-check" pathLength="1" d="M36 36L42.5 44L55 20" />
+        </g>
+      </svg>
+    </div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <!-- UI rework round 2, S11b: the new family's `reload` drawing
+             (identity/icons/ui/icons.json stage2_map.devtools), pasted from
+             ui/icons.js. No background pane: the new family draws bare. -->
+        <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.13 17.14A8 8 0 1 1 18.93 8M20.09 3.65L18.93 8L14.58 6.84"/></symbol>
+      </defs>
+    </svg>
+    <h1 class="visually-hidden" data-i18n="panel.meta.title">QA Wrap panel</h1>
+    <header class="app-bar">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark-dark.svg" alt="" width="28" height="28" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="brand-tag" data-i18n="panel.masthead.tag">Evidence desk</span>
+        <span class="local-pill" data-i18n="panel.masthead.local">Local only</span>
+      </div>
+
+      <label class="session-picker">
+        <span class="visually-hidden" data-i18n="panel.header.sessionLabel">Session</span>
+        <select id="session-select"></select>
+      </label>
+
+      <!--
+        Deleting sits beside the picker, not in the export group on the right.
+
+        The picker is the only control on this page that lists sessions one at a
+        time, so it is what a tester is looking at when they decide last week's
+        work can go — the report page puts its delete button in the same place,
+        for the same reason. The old single "Delete" lived at the end of the
+        export row, where it read as a fifth export format and said nothing
+        about what it would take with it.
+
+        Both start disabled: the panel opens before UQA_LIST_SESSIONS has come
+        back, and a delete button that is live while `currentId` is still null
+        is a button whose only possible outcome is a silent no-op.
+      -->
+      <button id="session-delete" class="btn btn-sm btn-ghost danger-hover" data-i18n="panel.session.deleteButton" data-i18n-title="panel.session.deleteButtonTitle" title="Delete the session shown here, and everything recorded in it" disabled>Delete this session</button>
+      <button id="history-clear" class="btn btn-sm btn-ghost danger-hover" data-i18n="panel.session.clearHistoryButton" data-i18n-title="panel.session.clearHistoryButtonTitle" title="Delete every session recorded in this browser" disabled>Delete all history</button>
+
+      <div class="bar-actions">
+        <button id="refresh" class="btn btn-sm btn-ghost" data-i18n-title="panel.header.refreshTitle" title="Reload from storage"><svg class="i" width="16" height="16" aria-hidden="true"><use href="#i-refresh"/></svg> <span data-i18n="panel.header.refresh">Refresh</span></button>
+        <span class="divider" aria-hidden="true"></span>
+        <button id="open-report" class="btn btn-sm btn-primary" data-i18n="panel.header.openReport" data-i18n-title="panel.header.openReportTitle" title="Open the full report in a tab">Open report</button>
+        <span class="export-label" data-i18n="panel.header.save">Save</span>
+        <button id="export-sbtm" class="btn btn-sm" data-i18n="panel.header.exportSbtm" data-i18n-title="panel.header.exportSbtmTitle" title="Session-based test management record: charter, coverage, bugs">Session sheet</button>
+        <button id="export-md" class="btn btn-sm" data-i18n-title="panel.header.exportMdTitle" title="A report you can paste straight into Jira">Markdown</button>
+        <button id="export-pw" class="btn btn-sm" data-i18n-title="panel.header.exportPwTitle" title="A runnable Playwright spec">Playwright</button>
+        <button id="export-json" class="btn btn-sm" data-i18n-title="panel.header.exportJsonTitle" title="Raw structured data">JSON</button>
+      </div>
+    </header>
+
+    <div id="stage">
+      <!-- Empty state -->
+      <section class="empty-stage" id="empty-stage" hidden>
+        <div class="empty-card">
+          <img class="brand-mark-lg" src="../brand/mark.svg" alt="" width="72" height="72" />
+          <h2 data-i18n="panel.empty.heading">Nothing recorded yet</h2>
+          <p class="muted" data-i18n="panel.empty.body">
+            QA Wrap records what you do in the page, then explains what broke and why.
+          </p>
+          <ol class="how-to">
+            <li><strong data-i18n="panel.empty.step1Strong">Click the QA Wrap icon</strong><span data-i18n="panel.empty.step1Rest"> in the toolbar.</span></li>
+            <li><strong data-i18n="panel.empty.stepWakeStrong">Press Wake up</strong><span data-i18n="panel.empty.stepWakeRest">, so QA Wrap is awake in this window.</span></li>
+            <li><strong data-i18n="panel.empty.step2Strong">Name what you are testing</strong><span data-i18n="panel.empty.step2Rest">. This becomes the report title.</span></li>
+            <li><strong data-i18n="panel.empty.step3Strong">Press Start recording</strong><span data-i18n="panel.empty.step3Rest">, then use the page normally.</span></li>
+            <li><strong data-i18n="panel.empty.step4Strong">Press Stop</strong><span data-i18n="panel.empty.step4Rest">. Your report appears right here.</span></li>
+          </ol>
+          <p class="muted small" data-i18n="panel.empty.privacy">Nothing is uploaded. Everything stays in this browser.</p>
+          <p class="tagline">QA Wrap &middot; <span data-i18n="common.madeBy">Made by Nader Alzghoul</span></p>
+        </div>
+      </section>
+
+      <main id="content" hidden>
+        <!-- Stat strip -->
+        <section class="stats" id="stats"></section>
+        <section class="sg-host" id="sg-panel"></section>
+
+        <!-- Correlated failures -->
+        <section class="block" id="block-failures" hidden>
+          <div class="block-head">
+            <h2><span data-i18n="panel.failures.heading">What broke</span> <span class="count" id="fail-count"></span></h2>
+            <p class="muted" data-i18n="panel.failures.body">
+              Each problem is matched to the action that most likely caused it, which is the part a bug report usually leaves out.
+            </p>
+          </div>
+          <div id="chains"></div>
+        </section>
+
+        <!-- Accessibility -->
+        <section class="block" id="block-a11y" hidden>
+          <div class="block-head">
+            <h2><span data-i18n="panel.a11y.heading">Accessibility</span> <span class="count" id="a11y-count"></span></h2>
+            <p class="muted" data-i18n="panel.a11y.body">
+              Found by axe-core, running locally. Automated checks catch roughly a third of real barriers, so manual review still applies.
+            </p>
+          </div>
+          <div id="a11y"></div>
+        </section>
+
+        <!-- Performance -->
+        <section class="block" id="block-perf" hidden>
+          <div class="block-head">
+            <h2 data-i18n="panel.perf.heading">Page speed</h2>
+            <p class="muted" data-i18n="panel.perf.body">
+              Core Web Vitals and network timing read from the live page, in the state you
+              put it in. Lighthouse cannot do this: it drives its own page load, which an
+              extension is not allowed to do.
+            </p>
+          </div>
+          <div id="perf"></div>
+        </section>
+
+        <!-- Accessibility audit, rule by rule -->
+        <section class="block" id="block-audit">
+          <div class="block-head">
+            <h2 data-i18n="panel.audit.heading">Accessibility audit</h2>
+            <p class="muted" data-i18n="panel.audit.body">
+              Run the whole rule set, or pick the rules that matter for this screen. Below
+              that are the checks no automated tool can make, which are the ones a clean
+              scan hides. Each answer is filed into the session as a tagged note.
+            </p>
+          </div>
+
+          <div class="audit-bar">
+            <input type="search" id="rule-search" data-i18n-placeholder="panel.audit.searchPlaceholder" data-i18n-aria="panel.audit.searchAria" placeholder="Filter rules&hellip;" aria-label="Filter accessibility rules" />
+            <select id="rule-tag" data-i18n-aria="panel.audit.tagAria" aria-label="Filter by conformance level">
+              <option value="" data-i18n="panel.audit.tagAll">Every rule</option>
+              <option value="wcag2a">WCAG 2.0 A</option>
+              <option value="wcag2aa">WCAG 2.0 AA</option>
+              <option value="wcag21aa">WCAG 2.1 AA</option>
+              <option value="wcag22aa">WCAG 2.2 AA</option>
+              <option value="best-practice" data-i18n="panel.audit.tagBestPractice">Best practice</option>
+              <option value="cat.keyboard" data-i18n="panel.audit.tagKeyboard">Keyboard</option>
+              <option value="cat.color" data-i18n="panel.audit.tagColour">Colour</option>
+              <option value="cat.forms" data-i18n="panel.audit.tagForms">Forms</option>
+              <option value="cat.aria">ARIA</option>
+            </select>
+            <button id="rule-load" class="btn btn-sm" data-i18n="panel.audit.loadRules">Load rules</button>
+            <button id="rule-run" class="btn btn-sm btn-primary" data-i18n="panel.audit.runSelected" disabled>Run selected</button>
+            <button id="rule-run-all" class="btn btn-sm" data-i18n="panel.audit.runAll">Run everything</button>
+            <span class="muted" id="rule-state"></span>
+          </div>
+          <div id="rules"></div>
+
+          <div class="guided-head">
+            <h3 data-i18n="panel.audit.guidedHeading">What axe cannot check</h3>
+            <p class="muted" data-i18n="panel.audit.guidedBody">
+              Roughly half of WCAG is not machine-decidable. Answer these while you have the
+              screen in front of you.
+            </p>
+          </div>
+          <div id="guided"></div>
+        </section>
+
+        <!-- Cookies and storage -->
+        <section class="block" id="block-storage">
+          <div class="block-head">
+            <h2 data-i18n="panel.storage.heading">Cookies &amp; storage</h2>
+            <p class="muted">
+              <span data-i18n="panel.storage.introPre">Read and change what the page is holding. Values are visible here and
+              </span><strong data-i18n="panel.storage.introStrong">never recorded</strong><span data-i18n="panel.storage.introPost">: a session, an export and a ticket carry
+              cookie names and flags only.</span>
+            </p>
+          </div>
+
+          <div class="storage-bar">
+            <button id="storage-refresh" class="btn btn-sm" data-i18n="panel.storage.refresh">Refresh</button>
+            <button id="cookie-add" class="btn btn-sm" data-i18n="panel.storage.addCookie">Add cookie</button>
+            <button id="cookie-export" class="btn btn-sm" data-i18n="panel.storage.exportJar">Export jar</button>
+            <button id="cookie-import" class="btn btn-sm" data-i18n="panel.storage.importJar">Import jar</button>
+            <button id="cookie-clear" class="btn btn-sm btn-danger" data-i18n="panel.storage.clearCookies">Delete all cookies</button>
+            <span class="muted" id="storage-state"></span>
+          </div>
+          <div id="cookies"></div>
+
+          <div class="guided-head">
+            <h3 data-i18n="panel.storage.webHeading">Local &amp; session storage</h3>
+          </div>
+          <div class="storage-bar">
+            <button id="ls-add" class="btn btn-sm" data-i18n="panel.storage.addKey">Add key</button>
+            <button id="ls-clear" class="btn btn-sm btn-danger" data-i18n="panel.storage.clearLocal">Clear localStorage</button>
+            <button id="ss-clear" class="btn btn-sm btn-danger" data-i18n="panel.storage.clearSession">Clear sessionStorage</button>
+          </div>
+          <div id="webstorage"></div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="block">
+          <div class="block-head timeline-head">
+            <div>
+              <h2 data-i18n="panel.timeline.heading">Everything that happened</h2>
+              <p class="muted" data-i18n="panel.timeline.body">Clicks, requests and console output on one clock. Click any locator to copy it.</p>
+            </div>
+            <label class="fail-toggle">
+              <input type="checkbox" id="only-failures" /> <span data-i18n="panel.timeline.problemsOnly">Problems only</span>
+            </label>
+          </div>
+
+          <nav class="filters" id="filters" data-i18n-aria="panel.timeline.filtersAria" aria-label="Filter timeline by event type"></nav>
+          <div id="timeline"></div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+    <!-- Sound is off until switched on in Settings; the library only listens. -->
+
+    <script src="../ui/sound.js"></script>
+
+    <script src="../ui/download.js"></script>
+    <script src="../ui/dom.js"></script>
+    <script src="../ui/icons.js"></script>
+    <script src="../ui/tone.js"></script>
+    <script src="../platform/console-brand.js"></script>
+    <script src="panel.js"></script>
+    <script src="audit.js"></script>
+
+    <!--
+      The publisher's credit, in a footer, the same markup as report.html.
+      The panel's only credit used to sit inside the hidden empty state, so it
+      disappeared the moment a session loaded — which is exactly when a person is
+      looking at the panel. A footer is where a colophon goes.
+    -->
+    <footer class="page-foot">
+      <img src="../brand/mark.svg" alt="" width="14" height="14" />
+      <span>QA Wrap</span><span class="made-by" data-i18n="common.madeBy">Made by Nader Alzghoul</span>
+    </footer>
+  </body>
+</html>
