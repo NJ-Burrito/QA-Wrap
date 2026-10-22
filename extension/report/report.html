@@ -1,0 +1,749 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/scale.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/tone.css" />
+    <link rel="stylesheet" href="../ui/vfx.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="report.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../platform/i18n.js"></script>
+    <title data-i18n="report.page.title">QA Wrap report</title>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <!-- UI rework round 2, S11b: bodies are the new icon family
+             (identity/icons/ui/icons.json `stage2_map.report`), pasted from
+             ui/icons.js so the symbol ids and the report.js call sites below
+             never move. No background pane: the new family draws bare, like
+             every other surface on it. stroke-width 2, matching UQAIcon(). -->
+        <symbol id="i-action" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5l5 14 2.2-5.8 5.8-2.2z"/></symbol>
+        <symbol id="i-request" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 19V5M4.5 8.5 8 5l3.5 3.5M16 5v14M12.5 15.5 16 19l3.5-3.5"/></symbol>
+        <symbol id="i-console" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9l3 3-3 3M13 15h4"/></symbol>
+        <symbol id="i-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></symbol>
+        <symbol id="i-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12h14M12.5 6l6 6-6 6"/></symbol>
+        <symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h7z"/><path d="M14 20v-3a3 3 0 0 1 3-3h3M8 9h8M8 13h4"/></symbol>
+        <symbol id="i-screenshot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V6a3 3 0 0 1 3-3h2M16 3h2a3 3 0 0 1 3 3v2M21 16v2a3 3 0 0 1-3 3h-2M8 21H6a3 3 0 0 1-3-3v-2"/><path d="M12 10l2 2-2 2-2-2z" fill="currentColor" stroke-width="1"/></symbol>
+        <symbol id="i-recording" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="3"/><path d="M12 17v3M8 20h8"/><circle cx="12" cy="10.5" r="3" fill="currentColor" stroke="none"/></symbol>
+        <symbol id="i-a11y" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.95 16.23A9 9 0 1 0 14.63 20.61"/><path d="M7.5 10 12 12l4.5-2M12 12v2.5l-2 3M12 14.5l2 3"/><path d="M12 5.5l2 2-2 2-2-2z" fill="currentColor" stroke-width="1"/></symbol>
+        <symbol id="i-perf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.34 17.66A8 8 0 1 1 17.66 17.66M12 12l4-4"/><path d="M12 10l2 2-2 2-2-2z" fill="currentColor" stroke-width="1"/></symbol>
+        <symbol id="i-rtl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4" width="12" height="16" rx="3"/><path d="M13 8h4M11 12h6M3 16h14"/></symbol>
+        <symbol id="i-inject" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18H6a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3h8"/><path d="M6.5 9v6"/><path d="M9 14l2-4 2 4 2-4 2 4 2-4"/></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5L19.5 7"/></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+        <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="4"/><path d="M10.83 13.17 19 5M16 8l2.5 2.5M13.5 10.5l2 2"/></symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="10" width="11" height="11" rx="2"/><path d="M6.5 14H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1.5"/></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v12l9.5-6z" fill="currentColor"/></symbol>
+        <symbol id="i-dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8l4 4-4 4-4-4z" fill="currentColor" stroke-width="1"/></symbol>
+        <symbol id="i-theme" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></symbol>
+        <symbol id="i-sizes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 14H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3M3 18h7.5"/><rect x="14" y="11" width="6" height="9" rx="2"/></symbol>
+      </defs>
+    </svg>
+    <!-- 1px sentinel: when it leaves the viewport, content has scrolled under
+         the sticky header, and report.js toggles one class from an
+         IntersectionObserver — never a per-frame scroll handler. -->
+    <div id="scroll-sentinel" style="position: absolute; inset-block-start: 0; block-size: 1px; inline-size: 1px;" aria-hidden="true"></div>
+    <header class="app-bar">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark-small.svg" alt="" width="22" height="22" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" id="subtitle" data-i18n="report.bar.subtitle">report</span>
+      </div>
+      <div class="bar-actions">
+        <button id="theme" class="btn btn-sm" title="Light, night, or follow your machine" data-i18n-title="common.theme.titleDefault" data-i18n-aria="report.bar.themeAria" aria-label="Theme"><svg class="i" width="16" height="16" aria-hidden="true"><use href="#i-theme"/></svg></button>
+        <select id="session-select" data-i18n-aria="report.bar.sessionAria" aria-label="Which session" disabled></select>
+        <button id="save-all" class="btn btn-sm" data-i18n="report.bar.save" disabled>Save…</button>
+        <button id="copy-report" class="btn btn-sm" data-i18n="report.bar.copy" disabled>Copy report</button>
+        <span id="bar-sep" class="bar-sep" role="separator" aria-orientation="vertical"></span>
+        <button id="session-delete" class="btn btn-sm btn-quiet" data-i18n-title="report.bar.deleteTitle" title="Delete this session and everything in it" data-i18n="report.bar.delete" disabled>Delete this session</button>
+      </div>
+    </header>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <!--
+      Tabs, not one long scroll. The complaint this answers is real: a report
+      that is only a wall of text makes the reader do the sorting. Each tab is
+      one question — what happened, what broke, what did I see, what does it
+      look like — and the raw export stays available for anyone who wants it.
+
+      Every tab whose name sits beside a count carries the name in its own
+      `<span>`: `data-i18n` writes `textContent`, which would delete the count
+      element if it were a bare text node next to it.
+    -->
+    <!-- Round 3, direction C: the verdict, the steps and the one File control sit above the
+         fold; four sections hold the ten panels (panel ids and #deep-links unchanged). The
+         section buttons are .sec-btn, deliberately not .tab. -->
+    <section class="verdict-wrap" id="verdict" aria-labelledby="v-h" hidden></section>
+    <nav class="secbar" id="secbar" role="tablist" data-i18n-aria="report.tabs.aria" aria-label="Report sections">
+      <button type="button" class="sec-btn" role="tab" id="sec-findings" data-sec="findings" aria-selected="true"><span data-i18n="report.sec.findings">Findings</span> <span class="tab-count" id="count-sec-findings"></span></button>
+      <button type="button" class="sec-btn" role="tab" id="sec-evidence" data-sec="evidence" aria-selected="false" tabindex="-1" disabled aria-disabled="true"><span data-i18n="report.sec.evidence">Evidence</span></button>
+      <button type="button" class="sec-btn" role="tab" id="sec-quality" data-sec="quality" aria-selected="false" tabindex="-1" disabled aria-disabled="true"><span data-i18n="report.sec.quality">Quality</span> <span class="tab-count" id="count-sec-quality"></span></button>
+      <button type="button" class="sec-btn" role="tab" id="sec-share" data-sec="share" aria-selected="false" tabindex="-1" disabled aria-disabled="true"><span data-i18n="report.sec.share">Share &amp; export</span></button>
+    </nav>
+    <div class="tabs-wrap">
+      <nav class="tabs" id="tabs" role="tablist" data-i18n-aria="report.tabs.viewsAria" aria-label="Views in this section">
+        <button class="tab" role="tab" id="tab-broke" data-tab="broke" disabled aria-disabled="true"><span data-i18n="report.tabs.broke">What broke</span> <span class="tab-count" id="count-broke"></span></button>
+        <button class="tab" role="tab" id="tab-timeline" data-tab="timeline" disabled aria-disabled="true"><span data-i18n="report.tabs.timeline">Timeline</span> <span class="tab-count" id="count-timeline"></span></button>
+        <button class="tab" role="tab" id="tab-selectors" data-tab="selectors" disabled aria-disabled="true" hidden><span data-i18n="report.tabs.selectors">Selectors</span> <span class="tab-count" id="count-selectors"></span></button>
+        <button class="tab" role="tab" id="tab-overview" data-tab="overview" aria-selected="true" data-i18n="report.tabs.session">Session</button>
+        <button class="tab" role="tab" id="tab-media" data-tab="media" disabled aria-disabled="true"><span data-i18n="report.tabs.media">Screens &amp; video</span> <span class="tab-count" id="count-media"></span></button>
+        <button class="tab" role="tab" id="tab-notes" data-tab="notes" disabled aria-disabled="true" data-i18n="report.tabs.notes">Notes</button>
+        <button class="tab" role="tab" id="tab-sizes" data-tab="sizes" disabled aria-disabled="true"><span data-i18n="report.tabs.sizes">Window sizes</span> <span class="tab-count" id="count-sizes"></span></button>
+        <button class="tab" role="tab" id="tab-quality" data-tab="quality" disabled aria-disabled="true"><span data-i18n="report.tabs.quality">Quality</span> <span class="tab-count" id="count-quality"></span></button>
+        <button class="tab" role="tab" id="tab-diagram" data-tab="diagram" disabled aria-disabled="true" data-i18n="report.tabs.diagram">Diagram</button>
+        <button class="tab" role="tab" id="tab-file" data-tab="file" disabled aria-disabled="true" data-i18n="report.tabs.file">File a ticket</button>
+        <button class="tab" role="tab" id="tab-raw" data-tab="raw" disabled aria-disabled="true" data-i18n="report.tabs.raw">Raw export</button>
+      </nav>
+    </div>
+
+    <main>
+      <!-- ═══════════════════════════════════════════════════ overview ═══ -->
+      <section class="panel" id="panel-overview" role="tabpanel">
+        <div class="hero">
+          <div class="hero-text">
+            <p class="eyebrow" id="hero-when"></p>
+            <h1 id="hero-title" data-i18n="report.hero.loading">Loading…</h1>
+            <p class="muted" id="hero-where"></p>
+          </div>
+          <div class="verdict-chip" id="hero-verdict"></div>
+        </div>
+        <div id="sg-report"></div>
+        <p class="file-banner" id="gap-banner" role="status" hidden></p>
+
+        <!--
+          The skeleton is markup, not script: every renderer on this page opens
+          with `host.replaceChildren()`, so the real cards delete these the
+          moment they exist and no JS has to know about them. Until then the
+          reader sees how many summary cards are coming and where they will
+          land, instead of a gap that closes with a jump. See ui/tokens.css.
+        -->
+        <div class="cards" id="cards" aria-busy="true">
+          <div class="skeleton skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton skeleton-card" aria-hidden="true"></div>
+        </div>
+
+        <!--
+          No session recorded: the tiles and the two charts below have nothing
+          to show, so they are hidden rather than rendered empty (report.js
+          `repaintAll`/`boot` toggle `hidden` here and on #cards, the glance
+          block and #mix-block together). This reuses the DevTools panel's own
+          empty state verbatim — same i18n keys, so Arabic is already covered.
+        -->
+        <section class="empty" id="overview-empty" hidden>
+          <img class="empty-icon-mark" src="../brand/mark.svg" alt="" width="48" height="48" />
+          <h2 data-i18n="panel.empty.heading">Nothing recorded yet</h2>
+          <p class="muted" data-i18n="panel.empty.body">QA Wrap records what you do in the page, then explains what broke and why.</p>
+          <ol class="how-to">
+            <li><strong data-i18n="panel.empty.step1Strong">Click the QA Wrap icon</strong><span data-i18n="panel.empty.step1Rest"> in the toolbar.</span></li>
+            <li><strong data-i18n="panel.empty.step2Strong">Name what you are testing</strong><span data-i18n="panel.empty.step2Rest">. This becomes the report title.</span></li>
+            <li><strong data-i18n="panel.empty.step3Strong">Press Start recording</strong><span data-i18n="panel.empty.step3Rest">, then use the page normally.</span></li>
+            <li><strong data-i18n="panel.empty.step4Strong">Press Stop</strong><span data-i18n="panel.empty.step4Rest">. Your report appears right here.</span></li>
+          </ol>
+          <p class="muted" data-i18n="panel.empty.privacy">Nothing is uploaded. Everything stays in this browser.</p>
+        </section>
+
+        <section class="block" id="team-block" hidden>
+          <div class="filter-bar">
+            <h2 data-i18n="report.team.title">The team's sessions in the shared folder</h2>
+            <button id="team-grant" class="btn btn-sm" data-i18n="report.team.grant" hidden>Open the folder again</button>
+          </div>
+          <p class="muted" id="team-note"></p>
+          <div id="team"></div>
+        </section>
+
+        <!--
+          Two charts, and each answers a different question. The first is when
+          the session was busy and where it broke; the second is what the
+          session was actually made of. Both are drawn by report/charts.js in
+          plain SVG: the manifest's policy is script-src 'self', so a charting
+          library from a CDN would not run here even if the package could
+          afford one, and a session that never leaves the machine must not have
+          its chart fetch a font.
+        -->
+        <section class="block" id="glance-block">
+          <h2 data-i18n="report.overview.glance">The session at a glance</h2>
+          <div id="chart-activity" class="chart-scroll"></div>
+        </section>
+
+        <section class="block" id="mix-block">
+          <h2 data-i18n="report.overview.mix">What the session was made of</h2>
+          <div id="chart-mix"></div>
+        </section>
+
+        <!--
+          What the tester deliberately hid. A report that silently leaves
+          evidence out is a worse document than one that says so: a reviewer who
+          knows three values were masked can ask for them through a channel that
+          is allowed to carry them.
+        -->
+        <section class="block" id="masked-block" hidden>
+          <h2 data-i18n="report.overview.masked">Masked in this session</h2>
+          <p id="masked-note" class="muted"></p>
+          <!--
+            What kind, and where — never what. The list behind this is a
+            descriptor written by `redactedMaskList()` in the service worker:
+            page, element, clock, and nothing that could carry the hidden words.
+          -->
+          <div id="mask-detail"></div>
+        </section>
+
+        <section class="block" id="headline-block" hidden>
+          <h2 data-i18n="report.overview.headline">Headline</h2>
+          <div id="headline"></div>
+        </section>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════ what broke ═══ -->
+      <section class="panel" id="panel-broke" role="tabpanel" hidden>
+        <div id="chains"></div>
+      </section>
+
+      <!-- notes (ui-1020): the session's own notes, listed by type; code in notes-tab.js, loaded on first open -->
+      <section class="panel" id="panel-notes" role="tabpanel" hidden>
+        <div class="filter-bar">
+          <nav class="filters" id="notes-filters" data-i18n-aria="report.notes.filtersAria" aria-label="Filter notes by type"></nav>
+          <span class="nt-actions">
+            <button id="notes-save" class="btn btn-sm" type="button" data-i18n="report.timeline.exportNotes">Export notes</button>
+            <button id="notes-save-csv" class="btn btn-sm btn-ghost" type="button" data-i18n="report.timeline.exportNotesCsv">Export notes (CSV)</button>
+          </span>
+        </div>
+        <p class="muted" id="notes-empty" hidden></p>
+        <ol class="nt-list" id="notes-list"></ol>
+        <button id="notes-more" class="btn btn-sm btn-ghost" type="button" hidden></button>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════ timeline ═══ -->
+      <section class="panel" id="panel-timeline" role="tabpanel" hidden>
+        <div class="filter-bar">
+          <nav class="filters" id="filters" data-i18n-aria="report.timeline.filtersAria" aria-label="Filter by event type"></nav>
+          <label class="fail-toggle"><input type="checkbox" id="only-failures" /> <span data-i18n="report.timeline.onlyFailures">Problems only</span></label>
+          <!--
+            The replay is the same session as the timeline beside it, so this is
+            where it belongs: a tester reading the list of what happened is one
+            click from watching it. Hidden until the worker says a replay was
+            recorded, because an entry point to nothing is worse than none.
+          -->
+          <button id="watch-replay" class="btn btn-sm" type="button" data-i18n="report.timeline.replay" hidden>Watch the replay</button>
+          <button id="export-notes" class="btn btn-sm" type="button" data-i18n="report.timeline.exportNotes">Export notes</button>
+          <button id="export-notes-csv" class="btn btn-sm btn-ghost" type="button" data-i18n="report.timeline.exportNotesCsv">Export notes (CSV)</button>
+        </div>
+        <div id="timeline" aria-busy="true">
+          <p class="visually-hidden" data-i18n="report.timeline.reading">Reading the session.</p>
+          <div class="skeleton-row" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton is-mid"></span></div>
+          <div class="skeleton-row" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div>
+          <div class="skeleton-row" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton is-short"></span></div>
+          <div class="skeleton-row" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton is-mid"></span></div>
+          <div class="skeleton-row" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div>
+          <div class="skeleton-row" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton is-short"></span></div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════ media ═══ -->
+      <!--
+        Every selector this session put on the clipboard, in a tab of its own.
+
+        It used to sit above the timeline, and that was right while a copy was
+        an occasional thing. A walk is twenty of them, sorted by what each was
+        picked FOR, and twenty cards above a timeline is a timeline nobody can
+        reach. The tab is hidden until a selector has actually been copied:
+        a tool that was never used does not get a place in the row.
+      -->
+      <section class="panel" id="panel-selectors" role="tabpanel" hidden>
+        <section class="block" id="selcopy-block">
+          <h2 data-i18n="report.selcopy.title">Selector copy</h2>
+          <p class="muted" id="selcopy-note"></p>
+          <div id="selcopy"></div>
+        </section>
+      </section>
+
+      <section class="panel" id="panel-media" role="tabpanel" hidden>
+        <div class="filter-bar">
+          <p class="muted" id="media-summary"></p>
+          <button id="media-save" class="btn btn-sm" data-i18n="report.media.saveAll">Save every file</button>
+        </div>
+        <div class="gallery" id="gallery"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════ window sizes ═══ -->
+      <!--
+        "Check another size" opens the page again in a real window of a chosen
+        size, and what happens in that window is a run of its own. The shape of
+        a run, the message that carries it and the rule that a clip with a
+        runId lives here and not under Screens & video are all fixed in
+        research/55-window-sizes-contract.md, agreed with Groups E and G before
+        any of the three halves was written.
+      -->
+      <section class="panel" id="panel-sizes" role="tabpanel" hidden>
+        <div class="filter-bar">
+          <p class="muted" id="sizes-summary"></p>
+        </div>
+        <div class="size-grid" id="sizes"></div>
+        <section class="block" id="sizes-chart-block" hidden>
+          <h2 data-i18n="report.sizes.chartTitle">How long each size was open</h2>
+          <div id="chart-sizes"></div>
+        </section>
+      </section>
+
+      <!-- ═════════════════════════════════════════════════════ quality ═══ -->
+      <section class="panel" id="panel-quality" role="tabpanel" hidden>
+        <section class="block" id="perf-block" hidden>
+          <h2 data-i18n="report.quality.perf">Page speed</h2>
+          <div id="perf"></div>
+        </section>
+        <section class="block" id="a11y-block" hidden>
+          <h2 data-i18n="report.quality.a11y">Accessibility</h2>
+          <div id="a11y"></div>
+        </section>
+        <section class="block" id="fineprint-block" hidden>
+          <!--
+            The section has always carried its own name twice, once in each
+            language, because "the fine print" is what the tester calls it and
+            «التدقيق القانوني» is what the lawyer calls it. Both keys survive
+            the switch: the gloss simply changes places with the name.
+          -->
+          <h2><span data-i18n="report.quality.finePrint">The fine print</span> <span class="muted" data-i18n="report.quality.finePrintGloss">التدقيق القانوني</span></h2>
+          <p class="muted" data-i18n="report.quality.finePrintNote">
+            What the page declares, what the browser observed, the gap between them, and the
+            rows marked MANUAL, which this browser could not measure at all. This is
+            not a legal opinion and not a certificate: whether a gap matters is a question for
+            counsel in a named jurisdiction. Accessibility is not repeated here, because
+            "Check accessibility" answers it in more depth.
+          </p>
+          <div id="fineprint"></div>
+        </section>
+
+        <section class="block" id="links-block" hidden>
+          <h2 data-i18n="report.quality.links">Links</h2>
+          <div id="links"></div>
+        </section>
+        <section class="block" id="harvest-block" hidden>
+          <h2 data-i18n="report.quality.pageMap">Page map</h2>
+          <div id="harvest"></div>
+        </section>
+        <p class="muted" id="quality-empty" hidden>
+          <span data-i18n="report.quality.emptyLead">Nothing measured in this session. Run</span>
+          <b data-i18n="report.quality.emptyPerf">Check page speed</b><span data-i18n="report.quality.emptySep">,</span>
+          <b data-i18n="report.quality.emptyA11y">Check accessibility</b><span data-i18n="report.quality.emptySep">,</span>
+          <b data-i18n="report.quality.emptyLinks">Check the links</b>
+          <span data-i18n="report.quality.emptyOr">or</span>
+          <b data-i18n="report.quality.emptyHarvest">Map the page</b>
+          <span data-i18n="report.quality.emptyTail">from the popup while recording.</span>
+        </p>
+      </section>
+
+      <!-- ═════════════════════════════════════════════════════ diagram ═══ -->
+      <!--
+        The workflow diagram is a view of this session, so it sits with the
+        other views. It used to be a button in the top right corner beside
+        "Save", which put the one drawing the report has among the actions
+        rather than among the ways of looking at the run, and a reader who
+        never pressed it never learned it existed. The full editor is still one
+        press away, because editing a diagram wants the whole window.
+      -->
+      <section class="panel" id="panel-diagram" role="tabpanel" hidden>
+        <div class="filter-bar">
+          <p class="muted" data-i18n="report.diagram.note">
+            The session as a workflow diagram on one A4 page: one box per step, the failures
+            marked, the user story down the side. Open the editor to move a box, rename it or
+            print it.
+          </p>
+          <div class="diagram-actions">
+            <button id="diagram-open" class="btn btn-sm btn-primary" type="button" data-i18n="report.diagram.open">Open the editor</button>
+            <button id="diagram-refresh" class="btn btn-sm" type="button" data-i18n="report.diagram.refresh">Draw it again</button>
+          </div>
+        </div>
+        <div class="diagram-frame" id="diagram-frame" tabindex="0" role="region" aria-labelledby="tab-diagram"></div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════ file ═══ -->
+      <section class="panel" id="panel-file" role="tabpanel" hidden>
+        <section class="block" id="mail-block">
+          <div class="filter-bar">
+            <h2 data-i18n="report.f.mailTitle">Send by email</h2>
+            <button type="button" id="eml-btn" class="btn btn-sm" data-i18n="report.f.mailBtn">Open in mail app</button>
+          </div>
+          <p class="muted" data-i18n="report.f.mailNote">Builds a draft (.eml) with the summary, the steps, the report and the screenshots attached. Nothing is sent from here.</p>
+        </section>
+        <div class="filter-bar">
+          <div class="seg" role="tablist" data-i18n-aria="report.file.whichAria" aria-label="Which document">
+            <button class="seg-btn" role="tab" data-artefact="defect" aria-selected="true" data-i18n="report.file.kindDefect">Defect report</button>
+            <button class="seg-btn" role="tab" data-artefact="testcase" aria-selected="false" data-i18n="report.file.kindTestcase">Test case</button>
+            <button class="seg-btn" role="tab" data-artefact="story" aria-selected="false" data-i18n="report.file.kindStory">Story</button>
+            <button class="seg-btn" role="tab" data-artefact="epic" aria-selected="false" data-i18n="report.file.kindEpic">Epic</button>
+            <button class="seg-btn" role="tab" data-artefact="task" aria-selected="false" data-i18n="report.file.kindTask">Task</button>
+            <button class="seg-btn" role="tab" data-artefact="subtask" aria-selected="false" data-i18n="report.file.kindSubtask">Sub-task</button>
+            <button class="seg-btn" role="tab" data-artefact="plain" aria-selected="false" data-i18n="report.file.kindPlain">Plain</button>
+          </div>
+          <p class="muted" id="file-status"></p>
+        </div>
+
+        <!--
+          One press for whichever of the seven is selected: the saved project,
+          the saved credentials, and the issue type this project already uses
+          for that kind. The confirmation says what is about to be sent before
+          anything leaves; the line under it says what was filed, per kind.
+        -->
+        <div class="row-2" id="auto-submit-row" hidden>
+          <button id="auto-submit" class="btn btn-primary btn-sm" type="button" data-i18n="report.file.autoSubmit">Auto-submit to Jira</button>
+          <p class="muted" id="auto-submit-state"></p>
+        </div>
+
+        <section class="block" id="istqb-block">
+          <h2 data-i18n="report.file.istqbTitle">Built to the ISTQB shape</h2>
+          <p class="muted">
+            <span data-i18n="report.file.istqbNoteA">Both documents follow</span>
+            <b>ISO/IEC/IEEE 29119-3</b><span data-i18n="report.file.istqbNoteB">, which is the template the ISTQB Foundation syllabus points at. Everything that can be derived from the recording is filled in; the things only a person can know are asked for below.</span>
+          </p>
+
+          <div class="row-2" id="tc-classification">
+            <label class="field"><span data-i18n="report.file.testLevel">Test level</span><select id="tc-level"></select></label>
+            <label class="field"><span data-i18n="report.file.testType">Test type</span><select id="tc-type"></select></label>
+          </div>
+
+          <div id="judgement" class="judgement"></div>
+        </section>
+
+        <section class="block">
+          <div class="filter-bar">
+            <h2 data-i18n="report.file.documentTitle">The document</h2>
+            <div class="row-2">
+              <button id="artefact-copy" class="btn btn-sm" data-i18n="report.file.copy">Copy</button>
+              <button id="gherkin-copy" class="btn btn-sm" data-i18n="report.file.copyGherkin" hidden>Copy as Gherkin</button>
+            </div>
+          </div>
+          <div id="artefact-preview"></div>
+          <label class="field">
+            <span data-i18n="report.file.summary">Summary</span>
+            <input type="text" id="jira-summary" maxlength="250" autocomplete="off" />
+          </label>
+          <!-- r10-04-1 (D-238): the two facts a developer asks for first on a defect. Shown for a defect only; filed beneath the description. -->
+          <div class="row-2" id="defect-extra">
+            <label class="field"><span data-i18n="report.file.defectBuild">Build or version</span><input type="text" id="defect-build" maxlength="120" autocomplete="off" /></label>
+            <label class="field"><span data-i18n="report.file.defectRepro">How often it happens</span>
+              <select id="defect-repro">
+                <option value="always" data-i18n="report.file.reproAlways">Every time</option>
+                <option value="sometimes" data-i18n="report.file.reproSometimes">Sometimes</option>
+                <option value="once" data-i18n="report.file.reproOnce">Once</option>
+                <option value="unknown" data-i18n="report.file.reproUnknown" selected>Unknown</option>
+              </select>
+            </label>
+          </div>
+          <label class="field">
+            <span data-i18n="report.file.description">Description</span>
+            <textarea id="jira-body" spellcheck="true"></textarea>
+          </label>
+          <p class="muted">
+            <span data-i18n="report.file.editA">Written from the recording. Edit anything:</span>
+            <code>#</code> <span data-i18n="report.file.editHeadings">headings,</span>
+            <code>-</code> <span data-i18n="report.file.editBullets">bullets,</span>
+            <code>1.</code> <span data-i18n="report.file.editSteps">steps,</span>
+            <code>**bold**</code> <span data-i18n="report.file.editAnd">and</span>
+            <code>```</code> <span data-i18n="report.file.editTail">code keep their shape wherever it is filed.</span>
+            <span id="jira-body-note" hidden>
+              <span data-i18n="report.file.edited">You have edited it.</span>
+              <button class="link" id="jira-body-reset" type="button" data-i18n="report.file.resetDraft">Start again from the recording</button>.
+            </span>
+          </p>
+        </section>
+
+        <section class="block" id="jira-block">
+          <div class="filter-bar">
+            <h2 data-i18n="report.file.jiraTitle">File to Jira</h2>
+            <div class="row-2">
+              <button id="jira-quick" class="btn btn-primary btn-sm" hidden
+                data-i18n-title="report.file.quickTitle"
+                title="Saved project and issue type; attaches the screenshots, the defect report, the session sheet and the network log"
+                data-i18n="report.file.quick">
+                File as Bug now
+              </button>
+              <button id="jira-connect" class="btn btn-sm" data-i18n="report.file.connect">Connect</button>
+            </div>
+          </div>
+          <p class="muted" id="jira-who" data-i18n="report.file.jiraWho">
+            Press Connect. Nothing is sent until you press File.
+          </p>
+
+          <div id="jira-panel" hidden>
+            <div class="row-2">
+              <label class="field"><span data-i18n="report.file.project">Project</span><select id="jira-project"></select></label>
+              <label class="field"><span data-i18n="report.file.issueType">Issue type</span><select id="jira-type"></select></label>
+            </div>
+            <p class="range-note armed" id="jira-required"></p>
+
+            <details class="fields-wrap" id="jira-fields-wrap">
+              <summary><span data-i18n="report.file.fieldsSummary">Fields on this issue type</span> <span class="muted" id="jira-fields-count"></span></summary>
+              <p class="muted">
+                <span data-i18n="report.file.fieldsNoteA">Read from your site for this project and type. Required ones are marked</span>
+                <b class="req">*</b><span data-i18n="report.file.fieldsNoteB">. A sub-task's parent is here too.</span>
+              </p>
+              <div class="jira-fields" id="jira-fields"></div>
+            </details>
+
+            <label class="field">
+              <span data-i18n="report.file.findLink">Find an epic or story to link to</span>
+              <input type="search" id="link-search" data-i18n-placeholder="report.file.linkSearchPlaceholder" placeholder="Type part of a summary or a key&hellip;" />
+            </label>
+            <div class="row-2">
+              <label class="field"><span data-i18n="report.file.epic">Epic</span><select id="link-epic"></select></label>
+              <label class="field"><span data-i18n="report.file.story">Story</span><select id="link-story"></select></label>
+            </div>
+            <label class="field"><span data-i18n="report.file.requirements">Requirements</span><input type="text" id="link-requirements" autocomplete="off" /></label>
+            <p class="muted">
+              <span data-i18n="report.file.epicLinkA">Epics link through</span>
+              <code>parent</code><span data-i18n="report.file.epicLinkB"> on a team-managed project and through the Epic Link field on a company-managed one. Which is which is read from your site, not guessed.</span>
+            </p>
+
+            <fieldset class="attach">
+              <legend data-i18n="report.file.attachLegend">Attach to the issue</legend>
+              <div class="attach-list" id="jira-attach-list"></div>
+              <p class="muted" data-i18n="report.file.attachNote">
+                Screenshots go as image files. The rest are generated from this session, in the
+                ISO/IEC/IEEE 29119-3 shape, at the moment of filing. Nothing is uploaded until
+                you press File.
+              </p>
+            </fieldset>
+
+            <div class="row-2">
+              <button id="jira-file" class="btn btn-primary" data-i18n="report.file.fileButton">File to Jira</button>
+              <span id="jira-last"></span>
+            </div>
+            <p class="muted">
+              <span data-i18n="report.file.credsA">Credentials live in</span>
+              <a href="../options/options.html" target="_blank" rel="noopener" data-i18n="report.file.credsLink">Settings › Integrations</a><span data-i18n="report.file.credsB">, on this machine only.</span>
+            </p>
+          </div>
+        </section>
+
+        <section class="block" id="trackers-block" hidden>
+          <div class="filter-bar">
+            <h2 data-i18n="report.trackers.title">File elsewhere</h2>
+          </div>
+          <p class="muted" data-i18n="report.trackers.note">
+            The trackers configured in Settings › Integrations. The defect report goes as
+            Markdown where the tracker renders it and as plain text where it does not. Nothing
+            is sent until you press File.
+          </p>
+          <div id="trackers"></div>
+        </section>
+
+        <!--
+          Telling the team, in two routes that are genuinely different things.
+
+          The webhooks are fire-and-forget: a URL pasted into Settings that
+          posts into one channel somebody already chose. That is most teams,
+          and it stays the first button.
+
+          Mattermost is the other shape. A team running its own server does not
+          want a webhook per channel; it wants to sign in once and choose where
+          a summary lands, which is what the second block does through the REST
+          v4 API: sign in, list the teams, list the channels in the team, post.
+          The token is held on this machine and never written into an export or
+          a log.
+
+          The word and never the logo, for both this and Jira: Mattermost asks
+          for written approval before its marks are used at all, and nominative
+          use of a name is what trademark law leaves open to us either way. See
+          research/51d-legal-privacy-licensing.md sections 6 and 8.
+        -->
+        <section class="block" id="chat-block">
+          <div class="filter-bar">
+            <h2 data-i18n="report.chat.title">Tell the team</h2>
+            <button id="chat-post" class="btn btn-sm" data-i18n="report.chat.post">Post to chat</button>
+          </div>
+          <p class="muted" data-i18n="report.chat.note">
+            Goes to every destination in Settings › Integrations that accepts this
+            severity. Slack, Teams, Discord, Google Chat, or any endpoint that takes a
+            POST. If you filed into Jira first, the message carries a link to the issue.
+          </p>
+          <p class="chat-out" id="chat-status" role="status" aria-live="polite"></p>
+          <ul class="chat-list" id="chat-results" hidden></ul>
+
+          <details class="chat-panel" id="mattermost-panel">
+            <summary data-i18n="report.chat.mmSummary">Post to a Mattermost channel instead</summary>
+            <p class="chat-hint" data-i18n="report.chat.mmHint">
+              For a team on its own Mattermost server. Sign in once, pick the team and the
+              channel, and the summary is posted there. Your server address and access token
+              stay on this machine, in this browser profile, and are never written into an
+              export, a log or a report. The address is the one you use to open Mattermost in
+              your browser, and it has to be https.
+            </p>
+            <div class="chat-row">
+              <label class="field">
+                <span data-i18n="report.chat.mmUrl">Server address</span>
+                <input type="url" id="mm-url" placeholder="https://" autocomplete="off" />
+              </label>
+              <label class="field">
+                <span data-i18n="report.chat.mmToken">Personal access token</span>
+                <input type="password" id="mm-token" autocomplete="off" />
+              </label>
+              <button id="mm-connect" class="btn btn-sm" type="button" data-i18n="report.chat.mmConnect">Sign in</button>
+            </div>
+            <p class="chat-hint" id="mm-who"></p>
+            <div class="chat-row" id="mm-pickers" hidden>
+              <label class="field"><span data-i18n="report.chat.mmTeam">Team</span><select id="mm-team"></select></label>
+              <label class="field"><span data-i18n="report.chat.mmChannel">Channel</span><select id="mm-channel"></select></label>
+              <button id="mm-post" class="btn btn-sm btn-primary" type="button" data-i18n="report.chat.mmPost">Post here</button>
+            </div>
+            <div class="chat-row">
+              <button id="mm-forget" class="btn btn-sm btn-quiet" type="button" data-i18n="report.chat.mmForget" hidden>Forget this server</button>
+            </div>
+            <p class="chat-out" id="mm-status" role="status" aria-live="polite"></p>
+          </details>
+        </section>
+      </section>
+
+      <!-- ═════════════════════════════════════════════════════════ raw ═══ -->
+      <!--
+        `<optgroup label>` is an attribute and not a text node, so the four
+        `data-i18n*` attributes cannot reach it. `paintFormats()` in report.js
+        reads `data-i18n-label` on each group and writes the label itself; the
+        options underneath are ordinary `data-i18n`, because an `<option>` does
+        carry its words as text.
+      -->
+      <section class="panel" id="panel-raw" role="tabpanel" hidden>
+        <div class="filter-bar">
+          <select id="format" data-i18n-aria="report.raw.formatAria" aria-label="Report format">
+            <optgroup data-i18n-label="report.raw.groupPeople" label="For a person to read">
+              <option value="markdown" data-i18n="report.raw.fmtMarkdown">Bug report (Markdown)</option>
+              <option value="html" data-i18n="report.raw.fmtHtml">Illustrated report (HTML)</option>
+            </optgroup>
+            <optgroup data-i18n-label="report.raw.groupTracker" label="For a tracker">
+              <option value="jira" data-i18n="report.raw.fmtJira">Jira ticket (wiki markup)</option>
+              <option value="github" data-i18n="report.raw.fmtGithub">GitHub / Linear issue</option>
+            </optgroup>
+            <optgroup data-i18n-label="report.raw.groupMachine" label="For a machine">
+              <option value="playwright" data-i18n="report.raw.fmtPlaywright">Playwright spec</option>
+              <option value="junit" data-i18n="report.raw.fmtJunit">JUnit XML (CI)</option>
+              <option value="postman" data-i18n="report.raw.fmtPostman">Postman collection</option>
+              <option value="har" data-i18n="report.raw.fmtHar">Network HAR</option>
+              <option value="json" data-i18n="report.raw.fmtJson">Raw JSON</option>
+              <option value="session-json" data-i18n="report.raw.fmtSessionJson">session.json (for an AI or a script)</option>
+            </optgroup>
+            <optgroup data-i18n-label="report.raw.groupDocs" label="Workbooks and documents">
+              <option value="sheet-xlsx" data-i18n="report.raw.fmtSheetXlsx">Session sheet (Excel)</option>
+            </optgroup>
+            <optgroup data-i18n-label="report.raw.groupMore" label="More (not maintained)">
+              <option value="text" data-i18n="report.raw.fmtText">Plain text</option>
+              <option value="sbtm" data-i18n="report.raw.fmtSbtm">Session sheet (SBTM)</option>
+              <option value="csv" data-i18n="report.raw.fmtCsv">Timeline CSV (TestRail, Xray)</option>
+              <option value="suite" data-i18n="report.raw.fmtSuite">Test suite (parent + sub-cases)</option>
+              <option value="suite-csv" data-i18n="report.raw.fmtSuiteCsv">Test suite (CSV)</option>
+              <option value="postman-env" data-i18n="report.raw.fmtPostmanEnv">Postman environment (holds values)</option>
+              <option value="yaml" data-i18n="report.raw.fmtYaml">YAML</option>
+              <option value="agent" data-i18n="report.raw.fmtAgent">Agent brief (for an AI)</option>
+              <option value="locator-set" data-i18n="report.raw.fmtLocatorSet">Locator set (for an AI)</option>
+              <option value="test-plan" data-i18n="report.raw.fmtTestPlan">Test plan (Playwright agent)</option>
+              <option value="locator-sheet" data-i18n="report.raw.fmtLocatorSheet">Locators by purpose (Markdown, for an AI)</option>
+              <option value="harvest-map" data-i18n="report.raw.fmtHarvestMap">Page map (JSON)</option>
+              <option value="harvest-pom" data-i18n="report.raw.fmtHarvestPom">Page object (Playwright, .ts)</option>
+              <option value="harvest-brief" data-i18n="report.raw.fmtHarvestBrief">Page brief (for an AI)</option>
+              <option value="links" data-i18n="report.raw.fmtLinks">Link check</option>
+              <option value="a11y" data-i18n="report.raw.fmtA11y">Accessibility findings (JSON)</option>
+              <option value="timeline-xlsx" data-i18n="report.raw.fmtTimelineXlsx">Timeline (Excel)</option>
+              <option value="srs" data-i18n="report.raw.fmtSrs">Requirements specification (SRS)</option>
+              <option value="srs-html" data-i18n="report.raw.fmtSrsHtml">Requirements specification (page)</option>
+              <option value="manual" data-i18n="report.raw.fmtManual">User manual</option>
+              <option value="manual-html" data-i18n="report.raw.fmtManualHtml">User manual (page)</option>
+              <option value="links-html" data-i18n="report.raw.fmtLinksHtml">Link check (page)</option>
+              <option value="storyboard-html" data-i18n="report.raw.fmtStoryboardHtml">Video storyboard (review)</option>
+              <option value="storyboard" data-i18n="report.raw.fmtStoryboard">Video storyboard (JSON, for a generator)</option>
+              <option value="flow-svg" data-i18n="report.raw.fmtFlowSvg">Workflow diagram (SVG, A4)</option>
+              <option value="flow-json" data-i18n="report.raw.fmtFlowJson">Workflow diagram (model, JSON)</option>
+            </optgroup>
+          </select>
+          <button id="copy" class="btn btn-sm" data-i18n="report.raw.copyAll">Copy all</button>
+          <button id="save" class="btn btn-sm btn-primary" data-i18n="report.raw.saveFile">Save this file</button>
+        </div>
+        <div id="content" aria-busy="true">
+          <p class="visually-hidden" data-i18n="report.raw.building">Building the export.</p>
+          <div class="skeleton-group" aria-hidden="true">
+            <span class="skeleton skeleton-line is-mid"></span>
+            <span class="skeleton skeleton-line"></span>
+            <span class="skeleton skeleton-line"></span>
+            <span class="skeleton skeleton-line is-short"></span>
+            <span class="skeleton skeleton-line"></span>
+            <span class="skeleton skeleton-line is-mid"></span>
+          </div>
+        </div>
+
+        <section class="block" id="saved-block" hidden>
+          <h2 data-i18n="report.raw.savedTitle">Saved from this session</h2>
+          <p class="muted" data-i18n="report.raw.savedNote">Every file written, and where. The list is kept with the session.</p>
+          <div id="saved"></div>
+        </section>
+      </section>
+      <footer class="page-foot">
+      <img src="../brand/mark-small.svg" alt="" width="14" height="14" />
+      <span>QA Wrap</span><span class="made-by" data-i18n="report.foot.madeBy">Made by Nader Alzghoul</span>
+    </footer>
+  </main>
+
+    <!--
+      Saving is a decision, not a reflex: which parts, for whom, and where. The
+      dialog says all three before a byte is written.
+    -->
+    <dialog id="save-dialog" class="save-dialog" aria-labelledby="save-title">
+      <form method="dialog">
+        <div class="filter-bar">
+          <h2 id="save-title" data-i18n="report.save.title">Save the session</h2>
+          <button type="button" id="save-close" class="btn btn-sm" data-i18n-aria="report.save.closeAria" aria-label="Close"><svg class="i" width="16" height="16" aria-hidden="true"><use href="#i-close"/></svg></button>
+        </div>
+        <p class="muted" id="save-where"></p>
+        <div class="row-2">
+          <button type="button" id="save-pick-folder" class="btn btn-sm" data-i18n="report.save.pickFolder">Choose a folder&hellip;</button>
+          <button type="button" id="save-use-downloads" class="btn btn-sm btn-quiet" data-i18n="report.save.useDownloads">Use Downloads</button>
+        </div>
+        <div class="attach-pick" id="save-presets" role="group" data-i18n-aria="report.preset.label" aria-label="Ready-made selections"></div>
+        <label class="attach-item"><input type="checkbox" id="save-zip"><span class="attach-name" data-i18n="report.save.zip">Put these in one zip</span><span class="attach-note" data-i18n="report.save.zipNote">Documents, the session JSON and the screenshots, in a single file to hand over.</span></label>
+        <div id="save-parts"></div>
+        <p class="muted" id="save-count" role="status" aria-live="polite"></p>
+        <div class="row-2 save-actions">
+          <button type="button" id="save-go" class="btn btn-primary" data-i18n="report.save.go">Save selected</button>
+          <button type="button" id="save-everything" class="btn" data-i18n="report.save.everything">Everything</button>
+          <button type="button" id="save-none" class="btn btn-quiet" data-i18n="report.save.none">Nothing</button>
+        </div>
+        <p class="muted" id="save-status"></p>
+      </form>
+    </dialog>
+
+    <dialog id="dlg-file" class="glass fdlg" aria-labelledby="dj-h"></dialog>
+
+    <dialog class="lightbox" id="lightbox" data-i18n-aria="report.lightbox.title" aria-label="Media viewer">
+      <button class="lightbox-close" id="lightbox-close" data-i18n-aria="report.lightbox.closeAria" aria-label="Close"><svg class="i" width="18" height="18" aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button class="btn btn-xs btn-primary lightbox-edit" id="lightbox-edit" data-i18n="report.media.editVideo" data-i18n-title="report.media.editVideoTitle" hidden>Edit video</button>
+      <div class="lightbox-stage" id="lightbox-stage"></div>
+    </dialog>
+
+    <div class="qaw-mark" id="report-mark" aria-hidden="true"></div>
+
+    <!-- Sound is off until switched on in Settings; the library only listens. -->
+
+    <script src="../ui/sound.js"></script>
+    <script src="../ui/vfx.js"></script>
+    <script src="../ui/motion.js"></script>
+
+    <script src="../ui/folder.js"></script>
+    <script src="../ui/download.js"></script>
+    <script src="../ui/dom.js"></script>
+    <script src="../ui/icons.js"></script>
+    <script src="../ui/tone.js"></script>
+    <script src="charts.js"></script>
+    <script src="eml.js"></script>
+    <script src="filing.js"></script>
+    <script src="quality.js"></script>
+    <script src="sizes.js"></script>
+    <script src="report.js"></script>
+    <script src="notes-export.js"></script>
+    <script src="istqb.js"></script>
+  </body>
+</html>

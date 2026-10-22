@@ -1,0 +1,51 @@
+<!-- QA Wrap identity — mark, animated, dark ground. Geometry from identity/tools/marks.mjs. © 2026 Nader Alzghoul. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="QA Wrap">
+  <style>
+    .ring{stroke:#ECEAE3}
+    .check{stroke:#FF8A6E}
+
+    /* At rest this file is mark.svg exactly. The dashes are longer than the
+       paths they sit on, so nothing is hidden until an offset moves. */
+    .ring{stroke-dasharray:93.5;stroke-dashoffset:0}
+    .check{stroke-dasharray:37.4;stroke-dashoffset:0;transform-box:fill-box;transform-origin:50% 50%}
+
+    @keyframes qaw-ring-draw{from{stroke-dashoffset:93.5}to{stroke-dashoffset:0}}
+    /* The check overshoots by 4% as it lands and settles back: the verdict
+       arrives, it does not glide in. */
+    @keyframes qaw-check-in{
+      0%{stroke-dashoffset:37.4;transform:scale(1)}
+      70%{stroke-dashoffset:0;transform:scale(1.04)}
+      100%{stroke-dashoffset:0;transform:scale(1)}
+    }
+    /* a tiny settle after the draw finishes — the only thing ever animated
+       on the group itself, and it never loops. */
+    @keyframes qaw-mark-settle{0%{transform:scale(1.015)}100%{transform:scale(1)}}
+
+    /* wake: the wrap closes, then the verdict comes out of the seam. 520 + 260,
+       so the whole thing is done in 780 ms and never outlives the window
+       opening it. */
+    #wake:target ~ .mark .ring,.qaw-wake .ring{animation:qaw-ring-draw 520ms cubic-bezier(.2,.8,.2,1) both}
+    #wake:target ~ .mark .check,.qaw-wake .check{animation:qaw-check-in 260ms cubic-bezier(.2,.8,.2,1) 520ms both}
+    /* recording: no longer breathes — the status chip's own timer is the
+       sign of life now (DESIGN-SPEC §1.11, UI rework round 2). The hooks
+       stay wired so a future state has somewhere to attach. */
+    #recording:target ~ .mark .check,.qaw-recording .check{}
+
+    /* draw: the large mark's own first-paint entrance (welcome, empty report,
+       tutorials) — never the popup header. Same ring+check as wake, plus a
+       140ms settle, ~900ms total; SMIL/CSS only, no script, hooked the same
+       two ways: :target for an image src, a class for an inlined copy. */
+    #draw:target ~ .mark .ring,.qaw-draw .ring{animation:qaw-ring-draw 520ms cubic-bezier(.2,.8,.2,1) both}
+    #draw:target ~ .mark .check,.qaw-draw .check{animation:qaw-check-in 260ms cubic-bezier(.2,.8,.2,1) 520ms both}
+    #draw:target ~ .mark,.qaw-draw .mark{transform-origin:50% 50%;animation:qaw-mark-settle 140ms cubic-bezier(.2,.8,.2,1) 780ms both}
+
+    @media (prefers-reduced-motion:reduce){
+      .ring,.check,.mark{animation:none!important;stroke-dashoffset:0!important;opacity:1!important;transform:none!important}
+    }
+  </style>
+  <g id="wake"/><g id="recording"/><g id="draw"/>
+  <g class="mark" transform="translate(-2 1)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path class="ring" stroke="#ECEAE3" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+    <path class="check" stroke="#FF8A6E" d="M36 36L42.5 44L55 20"/>
+  </g>
+</svg>

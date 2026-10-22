@@ -1,0 +1,426 @@
+/* QA Wrap site stylesheet.
+   One file, no build step, no JavaScript. Every page loads this and nothing else.
+
+   WHY the colours are hard-coded here rather than imported:
+   the site deploys on its own, to a static host with no access to
+   identity/tokens/tokens.css or to the extension package. An @import across
+   repositories is a broken link waiting to happen, so the values below are
+   COPIED from identity/tokens/tokens.css (QA Wrap 3.1.0, "Salsa & Slate,
+   Amman edition"). If that file changes, change these by hand and record it in
+   research/23-site.md. Only the tokens this site uses are copied; the
+   extension state colours (pass, blocked, skipped) have no job on a marketing
+   page, because results carry colour and nothing else does. */
+
+/* ---- Thmanyah ---------------------------------------------------------
+   The only typeface. Its licence allows embedding inside a packaged product and
+   forbids offering the face as a downloadable font file, so it is carried as
+   base64 data: URIs in assets/thmanyah.css (generated from the extension's
+   ui/fonts.css), never as a loose .woff2/.ttf, and nothing is requested from a
+   third-party font host. Sans 400/500/700 and Serif Display 400/700. */
+
+/* ---- Tokens, copied from identity/tokens/tokens.css --------------------- */
+:root {
+  --petra: #B5432B;        /* a failure, and the one primary action. Never decoration. */
+  --limestone: #F1EFE9;
+  --basalt: #1D2024;
+  --tortilla: #D8C6A4;
+
+  --surface: #FAF8F4;      /* --n-0 */
+  --surface-sunken: #F1EFE9;
+  --text: #262B30;         /* --n-900 */
+  --text-mid: #353B41;     /* --n-700 */
+  --text-muted: #5D646B;   /* --n-500 */
+  --border: rgba(29, 32, 36, 0.16);
+  --border-strong: rgba(29, 32, 36, 0.28);
+
+  --accent: #B5432B;
+  --accent-hover: #A33A24;
+  --accent-text: #FFF7F4;  /* text ON an accent fill */
+  --accent-ink: #A33A24;   /* accent-coloured TEXT on a pale ground */
+
+  --font: "Thmanyah Sans", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --r-sm: 4px;
+  --r-md: 7px;
+
+  --measure: 34rem;        /* prose column, about 68 characters at 17px */
+  --page: 62rem;
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --petra: #FF8A6E;
+    --limestone: #ECEAE3;
+    --basalt: #15181B;
+    --tortilla: #6F5C40;
+
+    --surface: #1D2125;
+    --surface-sunken: #15181B;
+    --text: #ECEAE3;       /* --n-900, dark */
+    --text-mid: #CDD2D6;   /* --n-700, dark */
+    --text-muted: #A3A9AF; /* --n-500, dark */
+    --border: rgba(236, 234, 227, 0.16);
+    --border-strong: rgba(236, 234, 227, 0.32);
+
+    --accent: #FF8A6E;
+    --accent-hover: #FFA48E;
+    --accent-text: #1F0F0A;
+    --accent-ink: #FFA48E;
+  }
+}
+
+/* ---- Base --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* The skip link sits off-screen until it takes focus, then it is a real,
+   visible control at the top left. */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10;
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  border-radius: 0 0 var(--r-sm) 0;
+}
+.skip:focus { left: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+
+.wrap {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.prose { max-width: var(--measure); }
+
+/* ---- Type --------------------------------------------------------------- */
+h1, h2, h3 {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.6rem;
+}
+h1 {
+  font-weight: 800;
+  font-size: clamp(2rem, 6vw, 2.9rem);
+  letter-spacing: -0.02em;
+}
+h2 { font-size: clamp(1.35rem, 3.4vw, 1.6rem); margin-top: 0; }
+h3 { font-size: 1.08rem; margin-top: 1.6rem; }
+
+p { margin: 0 0 1.1rem; }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--accent-hover); text-decoration-thickness: 2px; }
+
+strong { font-weight: 700; }
+code, kbd {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 0.94em;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0.05em 0.35em;
+}
+pre {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  margin: 0 0 1.1rem;
+  font-size: 0.94rem;
+}
+pre code { background: none; border: 0; padding: 0; font-weight: 400; }
+
+/* An eyebrow: the small label that says what a section is, above its heading.
+   Muted on purpose, so it names the section without competing with it. */
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 0.35rem;
+}
+
+.lead { font-size: 1.16rem; color: var(--text-mid); }
+.note { font-size: 0.92rem; color: var(--text-muted); }
+
+/* ---- Masthead ----------------------------------------------------------- */
+.masthead {
+  border-bottom: 1px solid var(--border);
+  padding: 1.1rem 0;
+}
+.masthead .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 1.5rem;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 800;
+  font-size: 1.12rem;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-decoration: none;
+}
+.brand:hover { color: var(--text); }
+.brand svg { display: block; width: 26px; height: 26px; flex: none; }
+
+/* The mark: an open ring with a check leaving through the seam. Ink ring,
+   Petra check, one stroke weight, no shadow, no rotation, no animation.
+   Geometry copied from identity/logo/mark.svg.
+
+   The ring is `currentColor`, which here is the masthead link's own colour, so
+   the mark is the same ink as the word "QA Wrap" beside it and cannot disagree
+   with the page it is drawn on. It used to be `var(--basalt)` with a second
+   `prefers-color-scheme` rule swapping it to limestone: correct while this
+   page follows the machine, and wrong the moment the mark is lifted onto a
+   ground that does not — which is how the identity's standalone marks came to
+   measure 1.20:1 on a forced-white page. One rule, one source of truth, and
+   nothing to keep in step. --petra is already redefined for the dark palette
+   above, so the check needs no second rule either. */
+.mark-ring { stroke: currentColor; }
+.mark-check { stroke: var(--petra); }
+
+.masthead nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.35rem;
+  font-weight: 600;
+  font-size: 0.96rem;
+}
+.masthead nav li { margin: 0; }
+.masthead nav a { color: var(--text-mid); text-decoration: none; }
+.masthead nav a:hover { color: var(--accent-ink); text-decoration: underline; }
+.masthead nav a[aria-current="page"] {
+  color: var(--text);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 1px;
+}
+
+/* ---- Sections ----------------------------------------------------------- */
+main { padding: clamp(2rem, 5vw, 3.25rem) 0 1rem; }
+section { margin: 0 0 clamp(2.25rem, 5vw, 3.25rem); }
+section:last-child { margin-bottom: 0; }
+.hr { border: 0; border-top: 1px solid var(--border); margin: clamp(2rem, 5vw, 3rem) 0; }
+
+.hero h1 { margin-bottom: 0.35rem; }
+.tagline {
+  font-size: clamp(1.15rem, 3vw, 1.35rem);
+  font-weight: 600;
+  color: var(--text-mid);
+  margin: 0 0 1.4rem;
+}
+
+/* ---- The one primary action --------------------------------------------- */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.25rem;
+  margin: 1.5rem 0 0.6rem;
+}
+.cta {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.7rem 1.35rem;
+  border-radius: var(--r-md);
+  text-decoration: none;
+}
+.cta:hover { background: var(--accent-hover); color: var(--accent-text); }
+
+/* ---- Figures ------------------------------------------------------------ */
+figure { margin: 0 0 1.75rem; }
+figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+figcaption {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  max-width: var(--measure);
+}
+/* The screenshots run full width, stacked, rather than sitting two or three
+   across. A 1280 px capture shown at 400 px is a picture of an interface, not a
+   look at one, and the whole point of these is that a reader can read them. */
+.shots figure { margin-bottom: 2.5rem; }
+.shots figure:last-child { margin-bottom: 0; }
+
+/* ---- Tables ------------------------------------------------------------- */
+.table-scroll { overflow-x: auto; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.96rem;
+  margin: 0 0 1.1rem;
+}
+caption {
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  padding-bottom: 0.5rem;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6rem 1.25rem 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+th { font-weight: 600; color: var(--text); }
+thead th { border-bottom: 1px solid var(--border-strong); }
+table td:last-child, table th:last-child { padding-right: 0; }
+
+/* ---- Lists -------------------------------------------------------------- */
+ul, ol { margin: 0 0 1.1rem; padding-left: 1.25rem; }
+li { margin-bottom: 0.4rem; }
+li > ul, li > ol { margin-top: 0.4rem; }
+ul { list-style: disc; }   /* a disc, not a tick: a tick means a pass in this product */
+ul li::marker { color: var(--text-muted); }
+
+dl { margin: 0 0 1.1rem; }
+dt { font-weight: 600; margin-top: 0.9rem; }
+dd { margin: 0.15rem 0 0; color: var(--text-mid); }
+
+/* ---- The quiet panel ---------------------------------------------------- */
+/* A sunken block with a rule on the reading edge, for the one thing on a page
+   a reader should not scroll past. No shadow, no tint, no colour of its own. */
+.panel {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--tortilla);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 1.1rem 1.25rem;
+  margin: 0 0 1.25rem;
+}
+.panel > :last-child { margin-bottom: 0; }
+.panel h2, .panel h3 { margin-top: 0; margin-bottom: 0.5rem; }
+
+blockquote {
+  margin: 0 0 1.1rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--border-strong);
+  color: var(--text-mid);
+}
+
+/* ---- Footer ------------------------------------------------------------- */
+footer {
+  border-top: 1px solid var(--border);
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding: 1.5rem 0 2.5rem;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  justify-content: space-between;
+  align-items: baseline;
+}
+footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+}
+footer li { margin: 0; }
+footer a { color: var(--text-muted); }
+footer a:hover { color: var(--accent-ink); }
+
+/* ---- Bilingual: the toggle and the two blocks -------------------------
+   Every page carries an English block and an Arabic block for the same
+   content, each with its own lang/dir. assets/site.js flips one attribute,
+   `data-lang`, on <body>; these two rules are the entire display switch.
+   Nothing here removes the other language from the DOM: a screen reader
+   set to Arabic, a search engine, or a plain view-source still finds both. */
+body[data-lang="en"] [data-lang-block="ar"] { display: none; }
+body[data-lang="ar"] [data-lang-block="en"] { display: none; }
+
+.masthead .wrap { gap: 0.75rem 1rem; }
+.masthead-right {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem 1.35rem;
+  flex-wrap: wrap;
+}
+.lang-toggle {
+  font-family: var(--font);
+  background: transparent;
+  color: var(--text-mid);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.lang-toggle:hover { color: var(--accent-ink); border-color: var(--accent-ink); }
+
+/* ---- RTL ----------------------------------------------------------------
+   `dir="rtl"` on a block flips text-align and list markers on its own; the
+   properties below are the ones this stylesheet wrote as physical
+   left/right rather than logical start/end, so they need a mirrored rule
+   scoped to an RTL block rather than to the whole document (an LTR block
+   can sit right next to an RTL one, hidden by the toggle but still in the
+   DOM, and must not be mirrored by a page-wide rule). */
+[dir="rtl"] { text-align: right; }
+[dir="rtl"] ul, [dir="rtl"] ol { padding-left: 0; padding-right: 1.25rem; }
+[dir="rtl"] th, [dir="rtl"] td { text-align: right; padding: 0.6rem 0 0.6rem 1.25rem; }
+[dir="rtl"] table td:last-child, [dir="rtl"] table th:last-child { padding-left: 0; padding-right: 1.25rem; }
+[dir="rtl"] caption { text-align: right; }
+[dir="rtl"] .panel {
+  border-left: 1px solid var(--border);
+  border-right: 3px solid var(--tortilla);
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+[dir="rtl"] blockquote {
+  padding-left: 0;
+  padding-right: 1rem;
+  border-left: 0;
+  border-right: 3px solid var(--border-strong);
+}
+[dir="rtl"] .masthead nav a[aria-current="page"] { border-bottom: 2px solid var(--accent); }
+[dir="rtl"] dd { margin-right: 0; }
+[dir="rtl"] .brand { flex-direction: row; }

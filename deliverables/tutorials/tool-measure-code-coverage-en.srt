@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:03,967
+How much did you reach?
+
+2
+00:00:04,200 --> 00:00:07,067
+The bar is Chrome, not us.
+
+3
+00:00:07,267 --> 00:00:09,600
+Which code actually ran.
+
+4
+00:00:09,833 --> 00:00:12,033
+Function by function.
+
+5
+00:00:12,267 --> 00:00:14,600
+Every failure, traced.

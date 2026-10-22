@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Top-layer fixture (T-037)</title>
+<style>
+  body { margin: 0; font: 16px "QAW Thmanyah Sans", sans-serif; }
+  dialog::backdrop { background: rgba(0,0,0,.5); }
+  dialog, [popover] { width: 80vw; height: 70vh; }
+  #t { transform: translateZ(0); }
+</style></head>
+<body>
+<main>
+  <button id="open-fs">fullscreen</button>
+  <div id="stage"><dialog id="dlg"><p>A modal dialog</p></dialog><div id="pop" popover="manual"><p>A popover</p></div></div>
+</main>
+<script>
+// ?case=modal | modal-transform | popover | fullscreen: the one top-layer element the test opens, its own way.
+const kind = new URLSearchParams(location.search).get('case');
+window.__open = () => {
+  if (kind === 'modal') document.getElementById('dlg').showModal();
+  else if (kind === 'modal-transform') { document.getElementById('stage').id = 't'; document.getElementById('dlg').showModal(); }
+  else if (kind === 'popover') document.getElementById('pop').showPopover();
+};
+document.getElementById('open-fs').addEventListener('click', () => document.getElementById('stage').requestFullscreen());
+</script>
+</body></html>

@@ -1,0 +1,23 @@
+1
+00:00:02,400 --> 00:00:04,067
+They ask for a picture.
+
+2
+00:00:04,267 --> 00:00:06,067
+No time to draw it.
+
+3
+00:00:06,300 --> 00:00:09,333
+Start, steps, decision.
+
+4
+00:00:09,533 --> 00:00:11,167
+A red box where it failed.
+
+5
+00:00:11,767 --> 00:00:15,800
+One A4 page, all yours.
+
+6
+00:00:16,033 --> 00:00:18,400
+Every failure, traced.

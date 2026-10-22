@@ -1,0 +1,1338 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "cat-break",
+  "rev": "round-3",
+  "kind": "category",
+  "groupId": "break",
+  "group": "Break",
+  "tools": [
+    "break",
+    "rtl"
+  ],
+  "mode": "expert",
+  "batch": "cat",
+  "en": "Break",
+  "ar": "العطب",
+  "blurb": "Make the server misbehave without touching the server, and flip the layout without hiring a translator.",
+  "titleKey": "popup.groups.break.label",
+  "chipKey": "popup.groups.break.hint",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 30,
+  "seconds": 60.0,
+  "frames": 1800,
+  "aspects": [
+    "h"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    },
+    "REQUEST": {
+      "surface": "request",
+      "url": "api/api.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      }
+    }
+  },
+  "posterShot": {
+    "shot": 6,
+    "frame": 795,
+    "why": "Break: the result of the first demonstration, visible in frame.",
+    "pass": "h"
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 6,
+    "frame": 795,
+    "why": "Break: the result of the first demonstration, visible in frame."
+  },
+  "srt": "deliverables/tutorials/cat-break-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "Break. On purpose.",
+      "inSec": 0.15,
+      "outSec": 5.5,
+      "inFrame": 4,
+      "outFrame": 165,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "Break. On purpose.",
+      "dwell": {
+        "needMs": 1535,
+        "gotMs": 5350,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "Fail on purpose.",
+      "inSec": 5.5,
+      "outSec": 10.5,
+      "inFrame": 165,
+      "outFrame": 315,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Fail on purpose.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "500, dead, slow, diverted.",
+      "inSec": 10.5,
+      "outSec": 15.5,
+      "inFrame": 315,
+      "outFrame": 465,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "500, dead, slow, diverted.",
+      "dwell": {
+        "needMs": 2150,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "No reference number.",
+      "inSec": 15.5,
+      "outSec": 20.0,
+      "inFrame": 465,
+      "outFrame": 600,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "No reference number.",
+      "dwell": {
+        "needMs": 1688,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "Off at once.",
+      "inSec": 20.0,
+      "outSec": 25.0,
+      "inFrame": 600,
+      "outFrame": 750,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Off at once.",
+      "dwell": {
+        "needMs": 1350,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "Nothing reloads.",
+      "inSec": 25.0,
+      "outSec": 30.0,
+      "inFrame": 750,
+      "outFrame": 900,
+      "shots": [
+        6
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Nothing reloads.",
+      "dwell": {
+        "needMs": 1381,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 6,
+      "text": "Flip it. Lengthen it.",
+      "inSec": 30.0,
+      "outSec": 35.0,
+      "inFrame": 900,
+      "outFrame": 1050,
+      "shots": [
+        7
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Flip it. Lengthen it.",
+      "dwell": {
+        "needMs": 1765,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 7,
+      "text": "Forty per cent longer.",
+      "inSec": 35.0,
+      "outSec": 40.0,
+      "inFrame": 1050,
+      "outFrame": 1200,
+      "shots": [
+        8
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Forty per cent longer.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 8,
+      "text": "Outlined where it breaks.",
+      "inSec": 40.0,
+      "outSec": 44.0,
+      "inFrame": 1200,
+      "outFrame": 1320,
+      "shots": [
+        9
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Outlined where it breaks.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 9,
+      "text": "Or whatever Settings says.",
+      "inSec": 44.0,
+      "outSec": 48.5,
+      "inFrame": 1320,
+      "outFrame": 1455,
+      "shots": [
+        10
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Or whatever Settings says.",
+      "dwell": {
+        "needMs": 2150,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 10,
+      "text": "Before a translator is hired.",
+      "inSec": 48.5,
+      "outSec": 54.0,
+      "inFrame": 1455,
+      "outFrame": 1620,
+      "shots": [
+        11
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Before a translator is hired.",
+      "dwell": {
+        "needMs": 2381,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 11,
+      "text": "No server. No translator.",
+      "inSec": 54.0,
+      "outSec": 57.5,
+      "inFrame": 1620,
+      "outFrame": 1725,
+      "shots": [
+        12
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "No server. No translator.",
+      "dwell": {
+        "needMs": 2073,
+        "gotMs": 3500,
+        "ok": true
+      }
+    },
+    {
+      "i": 12,
+      "text": "Every failure, traced.",
+      "inSec": 57.5,
+      "outSec": 60.0,
+      "inFrame": 1725,
+      "outFrame": 1800,
+      "shots": [
+        13
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 2500,
+        "ok": true
+      }
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0.0,
+      "outSec": 5.5,
+      "inFrame": 0,
+      "outFrame": 164,
+      "frames": 165,
+      "picture": "WALL. Expert, scrolled to the Break heading: Make it fail on purpose, and its two rows.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-break/h/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "text",
+            "selector": ".activity[data-activity=\"break\"] .activity-label",
+            "equals": "Break"
+          },
+          {
+            "kind": "attr",
+            "selector": "#mode-expert",
+            "attr": "aria-pressed",
+            "equals": "true"
+          }
+        ]
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Break is where you make it fail on purpose, without touching the server.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        },
+        {
+          "cue": "tick",
+          "atSec": 0.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 5.5,
+      "outSec": 10.5,
+      "inFrame": 165,
+      "outFrame": 314,
+      "frames": 150,
+      "picture": "PANEL. Break a request pressed; the rule builder opens on the applications endpoint.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-break/h/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"break\"]"
+          }
+        ]
+      },
+      "chip": "Break a request",
+      "chipKey": "tools.break.label",
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Break a request makes the site fail on purpose, then stops it failing.",
+        "startSec": 5.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 5.5
+        },
+        {
+          "cue": "tick",
+          "atSec": 5.9,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "break",
+        "title": "Break a request",
+        "startSec": 5.5
+      }
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 10.5,
+      "outSec": 15.5,
+      "inFrame": 315,
+      "outFrame": 464,
+      "frames": 150,
+      "picture": "PANEL. The fault list open: the four kinds, with the URL pattern and a count.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-break/h/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Break a request",
+      "chipKey": "tools.break.label",
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A five hundred, a dead connection, a slow reply, or a diverted request.",
+        "startSec": 10.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 10.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 15.5,
+      "outSec": 20.0,
+      "inFrame": 465,
+      "outFrame": 599,
+      "frames": 135,
+      "picture": "STAGE. Submit pressed; the 500 fires; the page says nothing and issues no reference number.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-break/h/shot-04"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Break a request",
+      "chipKey": "tools.break.label",
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Submit, and the page says nothing and issues no reference number.",
+        "startSec": 15.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 15.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 20.0,
+      "outSec": 25.0,
+      "inFrame": 600,
+      "outFrame": 749,
+      "frames": 150,
+      "picture": "PANEL. Stop breaking it pressed; the rule list empties.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-break/h/shot-05"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Break a request",
+      "chipKey": "tools.break.label",
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Stop breaking it takes every rule off at once, and the rules stack.",
+        "startSec": 20.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 20.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 25.0,
+      "outSec": 30.0,
+      "inFrame": 750,
+      "outFrame": 899,
+      "frames": 150,
+      "picture": "PAIR. Panel left: the empty rule list. Stage right: the next submit goes through and nothing reloads.",
+      "capture": {
+        "rect": "PAIR",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "form": "side by side",
+            "placeSource": "bible 2.3",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 720
+                },
+                "place": {
+                  "x": 96,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-break/h/shot-06/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 1080,
+                  "h": 720
+                },
+                "place": {
+                  "x": 660,
+                  "y": 140
+                },
+                "clip": "film/capture/cat-break/h/shot-06/STAGE"
+              }
+            ]
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [],
+        "member": "PANEL"
+      },
+      "chip": "Break a request",
+      "chipKey": "tools.break.label",
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Nothing reloads, and everything the broken requests already put in the session stays.",
+        "startSec": 25.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 25.3
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "barBeat": null,
+      "inSec": 30.0,
+      "outSec": 35.0,
+      "inFrame": 900,
+      "outFrame": 1049,
+      "frames": 150,
+      "picture": "PANEL. Stress the layout pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-break/h/shot-07"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"rtl\"]"
+          }
+        ]
+      },
+      "chip": "Stress the layout",
+      "chipKey": "tools.rtl.label",
+      "caption": {
+        "span": 6,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Stress the layout flips the page right to left and lengthens every label.",
+        "startSec": 30.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 30.0
+        },
+        {
+          "cue": "tick",
+          "atSec": 30.4,
+          "fromMark": true
+        }
+      ],
+      "chapter": {
+        "tool": "rtl",
+        "title": "Stress the layout",
+        "startSec": 30.0
+      }
+    },
+    {
+      "n": 8,
+      "barBeat": null,
+      "inSec": 35.0,
+      "outSec": 40.0,
+      "inFrame": 1050,
+      "outFrame": 1199,
+      "frames": 150,
+      "picture": "STAGE. The fixture flips right to left; every label grows.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-break/h/shot-08"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Stress the layout",
+      "chipKey": "tools.rtl.label",
+      "caption": {
+        "span": 7,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Forty per cent longer to start with, the way a translation would be.",
+        "startSec": 35.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 35.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "barBeat": null,
+      "inSec": 40.0,
+      "outSec": 44.0,
+      "inFrame": 1200,
+      "outFrame": 1319,
+      "frames": 120,
+      "picture": "STAGE. One button cuts its text off and is outlined where it happens.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-break/h/shot-09"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Stress the layout",
+      "chipKey": "tools.rtl.label",
+      "caption": {
+        "span": 8,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Anything that cuts text off is outlined where it happens.",
+        "startSec": 40.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 40.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "barBeat": null,
+      "inSec": 44.0,
+      "outSec": 48.5,
+      "inFrame": 1320,
+      "outFrame": 1454,
+      "frames": 135,
+      "picture": "PANEL. Settings open on the lengthening percentage, changed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/cat-break/h/shot-10"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Stress the layout",
+      "chipKey": "tools.rtl.label",
+      "caption": {
+        "span": 9,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Or whatever Settings says, after you have changed the percentage yourself.",
+        "startSec": 44.0,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 44.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "barBeat": null,
+      "inSec": 48.5,
+      "outSec": 54.0,
+      "inFrame": 1455,
+      "outFrame": 1619,
+      "frames": 165,
+      "picture": "STAGE. Pressed again; the page goes back the way it was.",
+      "capture": {
+        "rect": "STAGE",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1080,
+              "h": 720
+            },
+            "place": {
+              "x": 420,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-break/h/shot-11"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "Stress the layout",
+      "chipKey": "tools.rtl.label",
+      "caption": {
+        "span": 10,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "It shows which boxes break when the app is translated, before a translator is hired.",
+        "startSec": 48.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 48.8
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "barBeat": null,
+      "inSec": 54.0,
+      "outSec": 57.5,
+      "inFrame": 1620,
+      "outFrame": 1724,
+      "frames": 105,
+      "picture": "WALL. The Break group again, its activity meter filled.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/cat-break/h/shot-12"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 11,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Two tools, and neither needs a server or a translator.",
+        "startSec": 54.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 54.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 13,
+      "barBeat": null,
+      "inSec": 57.5,
+      "outSec": 60.0,
+      "inFrame": 1725,
+      "outFrame": 1799,
+      "frames": 75,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 12,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 57.5,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 58.02,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 57.5,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 57.5,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 59.3,
+          "toSec": 60.0
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 57.7,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 57.5
+        },
+        {
+          "cue": "logo",
+          "atSec": 57.5
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 57.5
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 13,
+    "cuts": 12,
+    "cutsPer10s": 2.0,
+    "asl": 4.62,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 12,
+    "pauseBeforeCloseSec": 0.4,
+    "maxLineGapSec": 0.87,
+    "cutsPer10sRendered": 2.03
+  }
+}

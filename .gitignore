@@ -1,0 +1,83 @@
+# Dependencies
+extension/node_modules/
+node_modules/
+
+# Build / work artifacts
+work/*
+!work/ui-rework-0927/
+work/ui-rework-0927/**
+!work/ui-rework-0927/**/
+!work/ui-rework-0927/**/*.md
+!work/ui-rework-0927/**/*.json
+!work/ui-rework-0927/**/*.mjs
+!work/ui-rework-0927/**/*.js
+!work/ui-rework-0927/**/*.css
+!work/ui-rework-0927/**/*.html
+!work/ui-rework-0927/**/*.svg
+!work/ui-rework-0927/**/*.py
+work/ui-rework-0927/**/shots*/
+work/ui-rework-0927/**/_tmp/
+dist/
+
+# Playwright / browser automation scratch
+extension/.playwright*/
+.playwright-mcp/
+
+# Profile and checkpoint directories
+*-profile/
+profiles/
+extension/.checkpoints/
+
+# Logs
+*.log
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Scratch/cache found at top level
+__pycache__/
+
+# Nader's own session evidence; ignored on purpose — never committed, never deleted by cleanup
+asd/
+
+# Private signing key: never committed
+keys/
+
+# Generated knowledge graph
+graphify-out/
+
+# nj-agent-ops worker results (large JSON); briefs and ledger stay tracked
+.agent-ops/results/
+
+# run-suites baselines: local records, only the latest is kept (T-065)
+work/ui-rework-0927/baseline/main-*
+
+# Private-repo hygiene (1022): nothing local or secret ships
+.claude/
+.vscode/
+.agent-ops/spawns.jsonl
+.agent-ops/brief-*/
+*.env
+.env.*
+*.pem
+*.key
+*.crx
+*.p12
+*.pfx
+*.7z
+recordings/
+*.har
+
+# Public tree (1023): internal process, AI/agent working files and third-party marks stay off the repo
+/work/
+/research/
+/.agent-ops/
+/docs/agent-memory/
+/CLAUDE.md
+/handoff*.md
+/tools/sdlc/
+/.graphifyignore
+/extension/tools/accept-devil.mjs
+/extension/tools/design-review-*.mjs
+/skills/

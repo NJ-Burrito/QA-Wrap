@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="doctitle">Report a problem</title>
+  <link rel="stylesheet" href="../ui/fonts.css" />
+  <link rel="stylesheet" href="../ui/identity-tokens.css" />
+  <link rel="stylesheet" href="../ui/tokens.css" />
+  <link rel="stylesheet" href="../ui/motion.css" />
+  <link rel="stylesheet" href="reporter.css" />
+</head>
+<body>
+  <!--
+    Three things on screen, and nothing else.
+
+    This page is for the person who found the problem, not for the person who
+    tests for a living: a colleague in accounts, a client on a call, whoever was
+    using the thing when it broke. Everything a tester would want — the page,
+    the console errors, the failed request, the browser and the screen size — is
+    attached without being asked for, because asking for it is how a bug report
+    ends up as "it doesn't work" with nothing under it.
+
+    Hick's law, taken literally: one box to type in, one button to send, one
+    line saying what is attached. No tabs, no severity picker, no test-activity
+    vocabulary anywhere. A person who has never heard the word "charter" should
+    be able to finish this in twenty seconds.
+  -->
+  <main class="sheet">
+    <header class="head">
+      <h1 id="title">What went wrong?</h1>
+      <button type="button" id="lang" class="btn btn-sm btn-quiet" aria-label="العربية">عربي</button>
+    </header>
+
+    <label class="field">
+      <span class="label" id="prompt">Describe it in your own words. One or two sentences is plenty.</span>
+      <textarea id="what" rows="5" placeholder="I pressed Submit and the page went blank."></textarea>
+    </label>
+
+    <p class="attached" id="attached">Preparing the details…</p>
+
+    <div class="actions">
+      <button type="button" id="send" class="btn btn-primary">Send it</button>
+      <button type="button" id="save" class="btn">Save it instead</button>
+    </div>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <p class="fine" id="privacy">
+      A picture of this page is attached, along with the address, any errors the page reported,
+      and your browser and screen size. Nothing else, and nothing leaves this machine unless you
+      press Send.
+    </p>
+  </main>
+
+  <script src="../ui/theme.js"></script>
+  <script src="reporter.js" type="module"></script>
+</body>
+</html>

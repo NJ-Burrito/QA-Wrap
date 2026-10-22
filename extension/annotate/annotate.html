@@ -1,0 +1,211 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="annotate.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../platform/i18n.js"></script>
+    <title data-i18n="annotate.page.title">QA Wrap · Mark up</title>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <g id="i-pane"><rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" opacity=".16"/></g>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><use href="#i-pane"/><path d="M7 17L17 7M10 7h7v7" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="mirror"/></symbol>
+        <symbol id="i-note" viewBox="0 0 24 24"><use href="#i-pane"/><path d="M7 17L16 8l1 1-9 9H7v-1z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></symbol>
+        <symbol id="i-step" viewBox="0 0 24 24"><use href="#i-pane"/><circle cx="12" cy="12" r="6" fill="none" stroke="currentColor" stroke-width="1.75"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></symbol>
+        <symbol id="i-marker" viewBox="0 0 24 24"><use href="#i-pane"/><rect x="5" y="10" width="14" height="5" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
+        <symbol id="i-redact" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="8" rx="1.5" fill="currentColor"/></symbol>
+        <symbol id="i-blur" viewBox="0 0 24 24"><use href="#i-pane"/><circle cx="9" cy="10" r="1.4" fill="currentColor"/><circle cx="15" cy="10" r="1.4" fill="currentColor"/><circle cx="12" cy="15" r="1.4" fill="currentColor"/><rect x="5" y="6" width="14" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
+        <symbol id="i-crop" viewBox="0 0 24 24"><use href="#i-pane"/><path d="M7 4v13a1 1 0 0 0 1 1h13M4 7h13a1 1 0 0 1 1 1v13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M8 10l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      </defs>
+    </svg>
+    <h1 class="visually-hidden" data-i18n="annotate.page.title">QA Wrap · Mark up</h1>
+    <header class="app-bar">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark.svg" alt="" width="22" height="22" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" id="subtitle" data-i18n="annotate.subtitle.default">mark up</span>
+      </div>
+      <div class="bar-actions">
+        <button id="undo" class="btn btn-sm" disabled data-i18n="annotate.header.undo">Undo</button>
+        <button id="redo" class="btn btn-sm" disabled data-i18n="annotate.header.redo">Redo</button>
+        <button id="clear" class="btn btn-sm" data-i18n="annotate.header.clear">Start over</button>
+        <button id="copy" class="btn btn-sm" data-i18n="annotate.header.copy">Copy image</button>
+        <button id="save-copy" class="btn btn-sm" data-i18n="annotate.header.saveCopy">Save as a copy</button>
+        <button id="save" class="btn btn-sm btn-primary" data-i18n="annotate.header.save">Save</button>
+      </div>
+    </header>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <main class="workspace">
+      <!--
+        The tool rail. Every one of these exists because a bug report needs it:
+        an arrow points at the thing, a shape frames it, blur hides the
+        customer's name before the screenshot leaves the building.
+
+        Nine geometry buttons used to sit here in a flat column, which made the
+        rail long enough to scroll on a laptop and still had no room for the
+        marks a tester actually wants — a tick, a cross, a question mark. They
+        are one Shapes button now, opening a grid, and the button wears whatever
+        is armed so nothing is hidden by the collapse. The entries that stayed
+        are the ones that are a different *mode* rather than a different
+        geometry: freehand, a typed label, a numbered step, the highlighter, the
+        destructive blur and the crop.
+      -->
+      <nav class="rail" id="tools" aria-label="Markup tools" data-i18n-aria="annotate.rail.ariaLabel">
+        <button class="tool-btn" data-tool="arrow" aria-pressed="true" title="Arrow: point at it" data-i18n-title="annotate.tools.arrow.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg></span><em data-i18n="annotate.tools.arrow.name">Arrow</em>
+        </button>
+        <button
+          class="tool-btn"
+          id="shapes-btn"
+          data-tool="shape"
+          aria-pressed="false"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="shape-grid"
+          aria-label="Shapes: Rectangle"
+          data-i18n-aria="annotate.tools.shapesDefault"
+          title="Shapes: Rectangle"
+          data-i18n-title="annotate.tools.shapesDefault"
+        >
+          <span aria-hidden="true" id="shapes-glyph"></span
+          ><i class="caret" aria-hidden="true"><svg class="i" width="12" height="12"><use href="#i-chevron"/></svg></i><em id="shapes-name" data-i18n="annotate.shapes.rect.short">Rectangle</em>
+        </button>
+        <button class="tool-btn" data-tool="pen" aria-pressed="false" title="Freehand" data-i18n-title="annotate.tools.pen.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-note"/></svg></span><em data-i18n="annotate.tools.pen.name">Pen</em>
+        </button>
+        <button class="tool-btn" data-tool="text" aria-pressed="false" title="Text label" data-i18n-title="annotate.tools.text.title">
+          <span aria-hidden="true">T</span><em data-i18n="annotate.tools.text.name">Text</em>
+        </button>
+        <button class="tool-btn" data-tool="step" aria-pressed="false" title="Numbered step" data-i18n-title="annotate.tools.step.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-step"/></svg></span><em data-i18n="annotate.tools.step.name">Step</em>
+        </button>
+        <button class="tool-btn" data-tool="highlight" aria-pressed="false" title="Highlighter" data-i18n-title="annotate.tools.highlight.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-marker"/></svg></span><em data-i18n="annotate.tools.highlight.name">Marker</em>
+        </button>
+        <button class="tool-btn" data-tool="redact" aria-pressed="false" title="Redact: cover personal data with a solid block" data-i18n-title="annotate.tools.redact.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-redact"/></svg></span><em data-i18n="annotate.tools.redact.name">Redact</em>
+        </button>
+        <button class="tool-btn" data-tool="blur" aria-pressed="false" title="Soften: blur only; use Redact for personal data" data-i18n-title="annotate.tools.blur.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-blur"/></svg></span><em data-i18n="annotate.tools.blur.name">Soften</em>
+        </button>
+        <button class="tool-btn" data-tool="select" aria-pressed="false" title="Pick a mark, then drag it" data-i18n-title="annotate.obj.select.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-arrow"/></svg></span><em data-i18n="annotate.obj.select.name">Move</em>
+        </button>
+        <button class="tool-btn" data-tool="erase" aria-pressed="false" title="Click a mark to remove it" data-i18n-title="annotate.obj.erase.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-redact"/></svg></span><em data-i18n="annotate.obj.erase.name">Erase</em>
+        </button>
+        <button class="tool-btn" data-tool="crop" aria-pressed="false" title="Crop" data-i18n-title="annotate.tools.crop.title">
+          <span aria-hidden="true"><svg class="i" width="16" height="16"><use href="#i-crop"/></svg></span><em data-i18n="annotate.tools.crop.name">Crop</em>
+        </button>
+      </nav>
+
+      <!--
+        Pinned to `dir="ltr"`: the canvas draws a screenshot at fixed pixel
+        coordinates and the text-input box above it is positioned with
+        `style.left`/`style.top` computed straight from those same pixel
+        coordinates (annotate.js `placeText()`/`at()`). Neither must mirror
+        under an Arabic interface, or a shape drawn over the top-left of the
+        image would land somewhere else. Only the surrounding toolbar and
+        panels translate; the stage stays LTR whatever `<html dir>` is.
+      -->
+      <div class="stage-wrap">
+        <div class="stage" id="stage" dir="ltr">
+          <canvas id="canvas" tabindex="0" role="application" aria-label="Image: Enter places the current tool, arrow keys move it, plus and minus size it" data-i18n-aria="annotate.stage.aria"></canvas>
+          <input type="text" id="text-input" class="text-input" hidden placeholder="Type, then Enter" data-i18n-placeholder="annotate.textInput.placeholder" />
+        </div>
+      </div>
+
+      <aside class="side">
+        <!--
+          Two grids and a fallback, not one strip of six fixed swatches.
+
+          The old strip was the same six colours whatever was on screen, so on a
+          dark dashboard the default was near-invisible and the tester found out
+          after drawing. The first grid is read off the screenshot, because
+          matching a colour already on the page is what you want for a label
+          that belongs to the design; the second is ranked against that same
+          reading, because standing out is a question about this image and
+          nothing else.
+        -->
+        <div class="field-row">
+          <span class="field-label" data-i18n="annotate.colour.label">Colour</span>
+
+          <div class="swatch-group">
+            <span class="swatch-group-label" id="from-image-label" data-i18n="annotate.colour.fromImage">From this image</span>
+            <div class="swatches" id="swatches-image" role="group" aria-labelledby="from-image-label"></div>
+          </div>
+
+          <div class="swatch-group">
+            <span class="swatch-group-label" id="most-visible-label" data-i18n="annotate.colour.mostVisible">Easiest to see on it</span>
+            <div class="swatches" id="swatches-visible" role="group" aria-labelledby="most-visible-label"></div>
+            <p class="swatch-note" id="best-note" hidden></p>
+          </div>
+
+          <div class="swatch-group">
+            <label class="swatch-group-label" for="colour-custom" data-i18n="annotate.colour.anythingElse">Anything else</label>
+            <input type="color" id="colour-custom" class="colour-custom" value="#b5432b" />
+          </div>
+        </div>
+
+        <label class="field-row">
+          <span class="field-label" data-i18n="annotate.thickness.label">Thickness</span>
+          <input type="range" id="width" min="1" max="24" step="1" />
+          <output id="width-out"></output>
+        </label>
+
+        <label class="field-row">
+          <span class="field-label" data-i18n="annotate.textSize.label">Text size</span>
+          <input type="range" id="fontsize" min="10" max="72" step="1" />
+          <output id="fontsize-out"></output>
+        </label>
+
+        <label class="field-row">
+          <span class="field-label" data-i18n="annotate.blurStrength.label">Soften strength</span>
+          <input type="range" id="blur" min="2" max="30" step="1" />
+          <output id="blur-out"></output>
+        </label>
+
+        <p class="hint">
+          <b data-i18n="annotate.hint.blurTitle">Redact covers; soften only blurs.</b>
+          <span data-i18n="annotate.hint.blurBody">Redact paints an opaque block, so nothing underneath is left in the exported image. Soften blurs, and a blurred name can sometimes still be read, so do not use it for personal data.</span>
+        </p>
+
+        <p class="hint">
+          <span data-i18n="annotate.hint.shortcutsPre">Ctrl+Z undoes. Esc cancels the shape you are drawing.</span>
+          <b data-i18n="annotate.hint.saveWord">Save</b> <span data-i18n="annotate.hint.shortcutsMid">replaces the image in the session;</span> <b data-i18n="annotate.hint.saveCopyWord">Save as a copy</b> <span data-i18n="annotate.hint.shortcutsPost">keeps both.</span>
+        </p>
+      </aside>
+    </main>
+
+    <!--
+      The shapes grid lives outside the workspace on purpose: the rail scrolls,
+      and a panel anchored inside a scrolling column is a panel that gets
+      clipped the first time the window is short. It is positioned against the
+      button at the moment it opens instead.
+    -->
+    <div class="shape-grid" id="shape-grid" role="group" aria-label="Shapes and marks" data-i18n-aria="annotate.shapeGrid.ariaLabel" hidden></div>
+
+    <!-- Sound is off until switched on in Settings; the library only listens. -->
+
+    <script src="../ui/sound.js"></script>
+
+    <!-- UI rework round 2, S11b: the shape/mark buttons draw from the new
+         icon family (identity/icons/ui/icons.json stage2_map.annotate)
+         instead of the old Unicode glyphs. -->
+    <script src="../ui/icons.js"></script>
+    <script src="../ui/folder.js"></script>
+    <script src="../ui/download.js"></script>
+    <script src="annotate.js"></script>
+  </body>
+</html>

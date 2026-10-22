@@ -1,0 +1,318 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/**
+ * The markup editor.
+ *
+ * A three-column workspace that fills the window: tools on the left where the
+ * hand already is, the image in the middle at whatever size fits, and the
+ * settings for the current tool on the right. Nothing scrolls except the stage,
+ * because losing the toolbar behind a scroll is how a drawing tool becomes
+ * annoying.
+ */
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--backdrop);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--t-body);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--track-body);
+  line-height: var(--lead-body);
+  overflow: hidden;
+}
+
+.muted { color: var(--text-muted); }
+[hidden] { display: none !important; }
+
+.app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding: 10px 18px;
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--glass-edge);
+  flex: none;
+}
+
+.brand { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
+.brand-mark { flex: none; border-radius: var(--r-sm); }
+.brand-name { font-family: var(--display); font-size: var(--t-head); font-weight: var(--weight-head); letter-spacing: var(--track-head); line-height: var(--lead-head); }
+.bar-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+.status { margin: 0; padding: var(--sp-2) 18px; min-height: 18px; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); flex: none; }
+.status.err { color: var(--danger); }
+
+.workspace {
+  flex: 1;
+  display: grid;
+  /* `minmax(0, …)` on both axes: a bare `1fr` is `minmax(auto, 1fr)`, so a large canvas stretched the track past the
+     window and the side panel was pushed out (or, once stacked, the stage row grew and clipped the panel). */
+  grid-template-columns: 84px minmax(0, 1fr) 250px;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ── tool rail ─────────────────────────────────────────────────────────── */
+
+/* UI rework round 2 (research/56 round-2, "glass on floating layers only;
+   content cards solid"): a grid column beside the canvas, not an overlay —
+   solid, like the settings panel on the other side. */
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: 10px var(--sp-2);
+  background: var(--surface-raised);
+  border-inline-end: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.tool-btn {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: var(--sp-2) var(--sp-1);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.tool-btn span { font-size: 18px; /* scale-exception: tool icon glyph, 2px from every step (research/90) */ line-height: 1; }
+.tool-btn em { font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); }
+.tool-btn:hover { background: var(--surface-raised); color: var(--text); }
+
+/* The one rail button that opens something rather than only arming something,
+   so it says so before it is pressed. */
+.tool-btn .caret { font-style: normal; font-size: 8px; line-height: 1; margin-top: -1px; }
+
+/* `--accent-ink`, not `--accent-text`: the ground here is the accent TINT, not
+   a solid accent fill, and corn on that tint measures about 1.2:1 — so the one
+   state that says which drawing tool is selected was the state you could not
+   read. */
+.tool-btn[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ── the shapes grid ───────────────────────────────────────────────────── */
+
+/**
+ * Anchored to the Shapes button at the moment it opens, and fixed rather than
+ * absolute.
+ *
+ * The rail scrolls, so a panel positioned inside it is clipped the first time
+ * the window is short — which is exactly when a tester has the most tools and
+ * the least room. Fixed positioning against the button's own rectangle keeps
+ * the grid on screen whatever the rail is doing.
+ */
+.shape-grid {
+  position: fixed;
+  z-index: 20;
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-2);
+}
+
+.shape-set { display: grid; gap: var(--sp-1); }
+.shape-set-label { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+.shape-row { display: grid; grid-template-columns: repeat(5, 34px); gap: var(--sp-1); }
+
+.shape-btn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 17px; /* scale-exception: shape icon glyph, 2px from every step (research/90) */
+  line-height: 1;
+  cursor: pointer;
+}
+.shape-btn:hover { border-color: var(--border-strong); }
+/* `--accent-ink` for the same reason the rail uses it: the ground is the accent
+   TINT, and corn on that tint is not a colour anyone can read. */
+.shape-btn[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ── stage ─────────────────────────────────────────────────────────────── */
+
+.stage-wrap {
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow: auto;
+  min-width: 0;
+  min-height: 0;
+  /* A size container: the canvas below is limited by the room this cell really has (`cqw`/`cqh` = its content box,
+     padding already taken out), not by a `100vh - 150px` guess that went wrong the moment the bar wrapped or the
+     side panel stacked. */
+  container-type: size;
+  /* A chequerboard, so a transparent screenshot is obviously transparent
+     rather than looking like a white one. */
+  background-color: var(--surface-sunken);
+  background-image:
+    linear-gradient(45deg, var(--border) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--border) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--border) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--border) 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+}
+
+.stage { position: relative; line-height: 0; }
+
+canvas {
+  display: block;
+  max-width: 100cqw;
+  max-height: 100cqh;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-2);
+  touch-action: none;
+  background: var(--surface);
+}
+
+/* Typed in place, at the size and position the label will land. */
+.text-input {
+  position: absolute;
+  z-index: 3;
+  min-width: 130px;
+  padding: 2px 6px;
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ── side panel ────────────────────────────────────────────────────────── */
+
+/* Solid, same reasoning as .rail above. */
+.side {
+  min-width: 0;
+  padding: 14px;
+  background: var(--surface-raised);
+  border-inline-start: 1px solid var(--border);
+  overflow-y: auto;
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.field-row { display: grid; gap: var(--sp-1); }
+.field-label { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); }
+.field-row input[type='range'] { width: 100%; }
+.field-row output { font-family: var(--mono); font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+.swatch-group { display: grid; gap: var(--sp-1); }
+.swatch-group-label { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+/* A grid and not a strip: the two suggestion sets are the same shape, so they
+   read as two answers to the same question rather than as two lists. */
+.swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+
+.swatch {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
+.swatch[aria-pressed='true'] { border-color: var(--text); box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text); }
+
+/* The pick the ranking put first. A dashed ring rather than a colour, because
+   whatever colour was chosen for the badge would be the one colour the badge
+   cannot sit on. */
+.swatch.best { outline: 2px dashed var(--accent); outline-offset: 3px; }
+
+.swatch-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro);
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.colour-custom {
+  width: 100%;
+  height: 28px;
+  padding: 1px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small);
+  line-height: 1.5;
+  color: var(--text-muted);
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-sm);
+}
+.hint b { color: var(--text); }
+
+@media (max-width: 860px) {
+  .workspace { grid-template-columns: 68px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+  .side { grid-column: 1 / -1; max-height: 40vh; border-inline-start: 0; border-top: 1px solid var(--border); }
+}
+
+/* ── motion (research/72) ──────────────────────────────────────────────
+ * Tokens, curves and keyframes come from ui/motion.css, linked above — no
+ * new durations, no new curves. The bar and the two rails are the surface
+ * arriving, the same way the popup's own topper and wall do; the tool,
+ * shape and swatch buttons answer a pointer the way every `.btn` in the
+ * product already does. */
+.app-bar { animation: qaw-in-down var(--motion-base) var(--motion-ease) both; }
+.rail { animation: qaw-in-lead var(--motion-base) var(--motion-ease) both; }
+.side { animation: qaw-in-trail var(--motion-base) var(--motion-ease) both; }
+
+.tool-btn, .shape-btn, .swatch {
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease),
+    background-color var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease);
+}
+.tool-btn:hover, .shape-btn:hover { box-shadow: var(--shadow-1); }
+.tool-btn:active:not(:disabled),
+.shape-btn:active:not(:disabled),
+.swatch:active:not(:disabled) { transform: translateY(1px) scale(0.985); box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-bar, .rail, .side { animation: none !important; }
+  .tool-btn, .shape-btn, .swatch { transition: none !important; }
+  .tool-btn:active, .shape-btn:active, .swatch:active { transform: none !important; }
+}
+.i { width: 16px; height: 16px; flex: none; }
+[dir="rtl"] .i .mirror { transform: scaleX(-1); transform-origin: center; }

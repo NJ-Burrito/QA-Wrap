@@ -1,0 +1,335 @@
+/* QA Wrap — film composition, the visual system of bible §2 as tokens.
+ *
+ * Nothing here loads from the network. Thmanyah Sans comes from the product's own
+ * ui/fonts.css (base64, no loose file), which is why an offline render succeeds.
+ * Nothing here animates: every value that changes over time is written by
+ * timeline.mjs into an inline style or a custom property, once per frame.
+ */
+
+@import url('../../../ui/fonts.css');
+
+/* The film's four fixed colours.
+ *
+ * ../../../ui/identity-tokens.css is loaded first and is the source of truth
+ * for the product, but its palette is themed: `--brand-petra` carries the day
+ * value under the light theme and the night value under the dark one, and only
+ * one of the two is live in a document at a time. A film frame is not themed.
+ * Its ground is Basalt in every frame of every film (bible §2.1), and it needs
+ * BOTH Petra values at once: the day value as a filled ground carrying
+ * Limestone type on the chip, the night value as ink or a hairline sitting on
+ * Basalt (bible §2.5). No themed token can hand over both, so the four are
+ * written here as values, which is why each carries the literal exemption.
+ * They are the same numbers as identity/BRAND.md §5 and identity-tokens.css;
+ * if the palette moves, these move with it.
+ */
+:root {
+  --basalt: #1D2024;       /* literal: the film ground, unthemed in every frame (bible 2.1) */
+  --limestone: #F1EFE9;    /* literal: the film's ink on that ground, unthemed */
+  --petra-ink: #FF8A6E;    /* literal: Petra ON basalt, needed alongside the ground value */
+  --petra-ground: #B5432B; /* literal: Petra AS a ground carrying limestone type */
+
+  /* Frame. --S is the short edge; every type size is a fraction of it, so the
+     scale survives 16:9, 1:1 and 9:16 identically (bible §2.3, departure 9.5). */
+  --W: 1920px; --H: 1080px; --S: 1080px;
+
+  --t-display: calc(var(--S) * 0.089);
+  /* The poster band's two sizes, from research/63 §2: the Thmanyah display weight at 56 px and
+     the chip at 22 px. Those are the numbers AT THE POSTER'S OWN SIZE — the
+     .webp ships 1280x720 (record/manifest.mjs POSTER_W/H) — so they are set
+     against the short side and land at 56 and 22 on the thumbnail a viewer
+     actually reads, and at 84 and 33 on the 1080-tall master. */
+  --t-poster: calc(var(--S) * 56 / 720);
+  --t-poster-chip: calc(var(--S) * 22 / 720);
+  --t-caption: calc(var(--S) * 0.054);
+  --t-chip:    calc(var(--S) * 0.031);
+  --t-fine:    calc(var(--S) * 0.022);
+
+  --r-lg: 10px;
+  --r-999: 999px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Layers are switched with the `hidden` attribute, and several of them carry a
+   display value of their own. Without this they never actually go away, and a
+   chip from six shots ago is still on the end card. */
+[hidden] { display: none !important; }
+
+html, body {
+  width: var(--W); height: var(--H);
+  background: var(--basalt);
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Thmanyah Sans', sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+#frame {
+  position: relative;
+  width: var(--W); height: var(--H);
+  /* Flat, edge to edge, in every frame of every film. No gradient, no
+     vignette, no texture, no tint. */
+  background: var(--basalt);
+  overflow: hidden;
+}
+
+/* The whole picture fades up from Basalt once, at frame 0. Nothing else in
+   the film touches this layer. */
+#stack { position: absolute; inset: 0; }
+
+/* ── the capture as an object (§2.2) ─────────────────────────────────────── */
+
+.cap {
+  position: absolute;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  /* One soft, one contact. Blur only: no spread, no colour, no glow. */
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .55), 0 2px 8px rgba(0, 0, 0, .35);
+  /* No ground of its own. A push slides the picture inside this box for 240 ms,
+     and a white card behind it would flash on Basalt for exactly that long. The
+     vector sheet sets its own white below, because an SVG really does need one. */
+  background: transparent;
+}
+.cap img {
+  display: block;
+  /* No object-fit, no width:100%. The image is placed at its natural size and
+     is never resampled. A mismatch is a build failure, not a layout problem. */
+  image-rendering: pixelated;
+}
+/* 1 px inset outline, drawn over the capture, never around it. */
+.cap::after {
+  content: ''; position: absolute; inset: 0;
+  border: 1px solid rgba(241, 239, 233, .14);
+  border-radius: var(--r-lg);
+  pointer-events: none;
+}
+/* The vector sheet is rendered at frame size from the SVG, which is not
+   scaling a capture (§2.2, permitted exception). */
+.cap.vector { background: #fff; }
+.cap.vector img { width: 100%; height: 100%; image-rendering: auto; }
+
+/* ── <feature> chip (§2.4) ───────────────────────────────────────────────── */
+
+#chipRail { position: absolute; display: grid; place-items: center start; }
+/* Both layers share one cell: a cross-fade must not move the rail. */
+.chip { grid-area: 1 / 1; }
+.chip {
+  display: inline-flex; align-items: center; gap: calc(var(--t-chip) * .32);
+  padding: 11px 20px;
+  border-radius: var(--r-999);
+  background: var(--petra-ground);
+  color: var(--limestone);
+  font-size: var(--t-chip); font-weight: 600; letter-spacing: .01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.chip .dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--limestone); opacity: .9;
+}
+
+/* ── caption band (§2.7) ─────────────────────────────────────────────────── */
+
+/* On the ground, in the band, never on the capture, never on a plate. */
+#captionBand { position: absolute; display: grid; place-items: center; }
+/* Both layers occupy the same cell, so a cross-fade does not move anything. */
+#caption, #captionOut { grid-area: 1 / 1; }
+#caption, #captionOut {
+  color: var(--limestone);
+  font-size: var(--t-caption); font-weight: 800; letter-spacing: -.005em;
+  /* 1.12 so two lines fit inside the title-safe band exactly (ruling 6). */
+  line-height: 1.12;
+  text-align: center;
+  max-width: 100%;
+  text-wrap: balance;
+}
+
+/* ── accent rule and click ring (§2.4) ───────────────────────────────────── */
+
+#rule {
+  position: absolute; height: 4px;
+  background: var(--petra-ink);
+  transform-origin: left center;
+  /* Hard ends, blur 0. */
+  border-radius: 0;
+}
+
+.ring {
+  position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px;
+  border-radius: 50%; border: 3px solid var(--petra-ink);
+  /* blur 0 on every ring and rule. */
+  filter: none;
+}
+.ring.quiet { border-color: rgba(241, 239, 233, .40); }
+
+/* ── full-frame type card (§2.4) ─────────────────────────────────────────── */
+
+#card { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; }
+/* Each line keeps its full height from the first frame, so the block never
+   shifts as the lines arrive. Only the type inside is masked. */
+#card .line { overflow: hidden; height: calc(var(--t-display) * 1.14); }
+#card .line > span {
+  display: block;
+  color: var(--limestone);
+  font-size: var(--t-display); font-weight: 900; letter-spacing: -.02em;
+  line-height: 1.14;
+}
+#cardRule { position: absolute; height: 4px; background: var(--petra-ink); transform-origin: left center; }
+
+/* ── poster card (director's ruling, 2026-09-06) ─────────────────────────── */
+
+/* Frame 0 of every lesson film. The film's title, the tool it is about, and a
+   real frame of that tool from the film itself, on the house grid.
+   The capture is placed by the timeline like any other, in `#captures`; this
+   layer is only the type beside it, left-set on the x 96 axis exactly as the
+   full-frame type card is. Nothing here is a plate, a gradient or a bug. */
+/* Round 3 (research/63 §2): the card is a PRODUCT FRAME with a band across its
+   foot, not a title beside a window. The layer is the whole canvas; the band is
+   placed inside it by the timeline, which is also what placed the picture.
+
+   `--surface` is the brief's name for the band's ground. In the film there is
+   only one ground — Basalt, unthemed in every frame (bible 2.1) — so the token
+   is an alias rather than a second colour, and it is named so the brief and the
+   sheet use the same word. The 92 % lives on the PLATE, never on the type: a
+   band at 92 % carrying type at 92 % is a washed-out band. */
+:root { --surface: var(--basalt); }
+#poster { position: absolute; }
+#posterPlate { position: absolute; background: var(--surface); }
+#posterBand {
+  position: absolute; display: flex; align-items: center; justify-content: space-between;
+  gap: calc(var(--S) * .03); box-sizing: border-box;
+}
+#posterBand .txt { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+#poster .line { overflow: hidden; height: calc(var(--t-poster) * 1.14); }
+#poster .line > span {
+  display: block;
+  color: var(--limestone);
+  font-size: var(--t-poster); font-weight: 900; letter-spacing: -.02em;
+  line-height: 1.14;
+  white-space: nowrap;
+}
+/* The category, as the chip that names it everywhere else, and the card's one
+   Petra element (§2.5 rule 1) — which is why there is no accent rule here and
+   why the mark beside it is drawn in Limestone alone.
+   Its words are read from platform/i18n/en.json at compose time; nothing on
+   this card is a copy of product copy (62 §3). */
+#posterChip {
+  align-self: flex-start; margin-bottom: calc(var(--S) * .018);
+  font-size: var(--t-poster-chip);
+}
+/* The QA Wrap mark, right-aligned in the band on every card. */
+#posterMark { display: block; flex: 0 0 auto; }
+#posterMark svg { display: block; width: calc(var(--S) * .10); height: calc(var(--S) * .10); }
+
+/* ── end card (§3.3 shot 18) ─────────────────────────────────────────────── */
+
+#endCard { position: absolute; inset: 0; }
+#endCard .col { position: absolute; display: flex; flex-direction: column; }
+#endCard .mark { display: block; margin-bottom: calc(var(--S) * .030); }
+/* Same rule as the type card: the box is full height from the first frame, the
+   type rises into it, and nothing below it moves. */
+#endCard .wordmark {
+  overflow: hidden; height: calc(var(--t-display) * 1.1);
+  margin-bottom: calc(var(--S) * .008);
+  color: var(--limestone);
+  font-size: var(--t-display); font-weight: 900; letter-spacing: -.02em; line-height: 1.1;
+}
+/* Rev 3 sets the tagline at display size (bible 3.4 calls it "the end card's
+   own 96 px display line"), because the caption band echoes the same sentence
+   underneath it for that one moment. At the same size the two read as a
+   duplicate; at 96 over 58 the card states it and the band subtitles it. */
+#endCard.verbatim .tagline {
+  height: calc(var(--t-display) * 1.1);
+  font-size: var(--t-display); font-weight: 900; letter-spacing: -.02em; line-height: 1.1;
+}
+#endCard .tagline {
+  overflow: hidden; height: calc(var(--t-caption) * 1.2);
+  margin-bottom: calc(var(--S) * .030);
+  color: var(--limestone);
+  font-size: var(--t-caption); font-weight: 800; letter-spacing: -.005em; line-height: 1.2;
+}
+#endCard .wordmark > span, #endCard .tagline > span { display: block; }
+/* The ask, then the URL as the action under it. The URL takes Petra: BRAND §5
+   gives Petra to "the one primary action", and the end card's budget is ruled
+   at two, the mark's check and this line. It reads 6.1:1 against the ground at
+   34/800. */
+#endCard .ask {
+  color: var(--limestone);
+  font-size: var(--t-chip); font-weight: 600; letter-spacing: .01em; line-height: 1.35;
+  margin-bottom: calc(var(--S) * .016);
+}
+#endCard .action {
+  color: var(--petra-ink);
+  font-size: var(--t-chip); font-weight: 800; letter-spacing: 0; line-height: 1.2;
+  margin-bottom: calc(var(--S) * .022);
+}
+#endCard .fine {
+  color: var(--limestone);
+  font-size: var(--t-fine); font-weight: 400; letter-spacing: .02em; line-height: 1.6;
+}
+#endCard .fine .sub { opacity: .62; }
+
+/* ── the animated intro, and the authored scenes ─────────────────────────── */
+
+/* Two seconds of the film's own language before any product: the mark draws
+   itself, the wordmark rises, on the same Basalt everything else sits on. */
+#intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+#intro .col { display: flex; flex-direction: column; align-items: center; gap: calc(var(--S) * .034); }
+#intro .mark { display: block; }
+#intro .wordmark {
+  overflow: hidden; height: calc(var(--t-display) * 1.1);
+  color: var(--limestone);
+  font-size: var(--t-display); font-weight: 900; letter-spacing: -.02em; line-height: 1.1;
+}
+#intro .wordmark > span { display: block; }
+
+/* Shots 1 to 3 are drawn, not captured: a QA at work, in line art. One weight
+   of stroke, no fill, no type inside the picture, and Petra exactly once per
+   scene. The scene sits in the stage box, so it obeys the same frame grid a
+   capture does. */
+#scenes {
+  position: absolute; left: 96px; top: 140px; width: 1728px; height: 720px;
+  overflow: visible;
+}
+#scenes .ink {
+  fill: none; stroke: var(--limestone); stroke-width: 3;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* The recessive lines inside a monitor or a calendar page carry their own
+   `opacity` as a drawing attribute rather than a class. They are strokes, not
+   type, and no scene contains a character of text by rule; keeping the value on
+   the element says that plainly and leaves nothing for a stylesheet rule about
+   dimmed text to misread. */
+#scenes .accent { fill: var(--petra-ink); }
+#scenes .accent-stroke {
+  fill: none; stroke: var(--petra-ink); stroke-width: 3;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+#scenes .tick {
+  fill: none; stroke: var(--petra-ink); stroke-width: 7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* A line over six words is set two lines deep rather than crushed onto one.
+   The band was built for two lines and this is what they are for. */
+#caption.two, #captionOut.two {
+  font-size: calc(var(--S) * 0.0445);
+  line-height: 1.14;
+}
+
+/* ── the stand-in slug ───────────────────────────────────────────────────── */
+
+/* Present only while the captures are placeholders. It exists so that no frame
+   from a stand-in render can be mistaken for a master, in a report or anywhere
+   else. A delivery render cannot draw it: frames.mjs only sets the flag in
+   --standin mode, and encode.mjs refuses to write to deliverables/ then. */
+#slug {
+  position: absolute; right: 22px; top: 18px;
+  color: var(--limestone); opacity: .38;
+  font-size: calc(var(--S) * 0.0155); font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase;
+}

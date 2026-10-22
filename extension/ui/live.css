@@ -1,0 +1,24 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/*
+ * The one working / success / failure motion (f1022), used by the side panel's tool buttons and the in-page island.
+ * ui/live.js sets [data-live] and [data-live-state] on the pressed button's icon holder; nothing here is colour alone:
+ *   working  the icon turns (reduced motion: a static three-dot glyph instead)
+ *   success  a check draws itself in, then one soft pulse
+ *   failure  a cross, with one short horizontal shake
+ * Reduced motion keeps the two endings apart by shape (check vs cross), with no movement at all.
+ * This file is also read by the worker and added to the overlay's shadow-root CSS, so it carries no tokens.
+ */
+[data-live-state="working"] > svg:not(.live-glyph) { animation: live-turn 1s linear infinite; transform-origin: 50% 50%; }
+.live-glyph { display: block; flex: none; transform-origin: 50% 50%; }
+.live-glyph path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.live-glyph[data-live-state="working"] path { stroke-width: 3.2; }
+.live-glyph[data-live-state="success"] { animation: live-pulse 600ms ease-out 320ms 1 both; }
+.live-glyph[data-live-state="success"] path { stroke-dasharray: 1; animation: live-draw 320ms ease-out both; }
+.live-glyph[data-live-state="failure"] { animation: live-shake 360ms ease-in-out 1 both; }
+@keyframes live-turn { to { transform: rotate(360deg); } }
+@keyframes live-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes live-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+@keyframes live-shake { 0%, 100% { translate: 0 0; } 20% { translate: -3px 0; } 40% { translate: 3px 0; } 60% { translate: -2px 0; } 80% { translate: 2px 0; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-live-state] > svg, .live-glyph, .live-glyph path { animation: none !important; }
+}

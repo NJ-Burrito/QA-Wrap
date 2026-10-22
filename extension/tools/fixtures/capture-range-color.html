@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Capture range and colour page</title></head>
+<body>
+<!-- r8-05-4 in tools/test-capture-live.mjs: a range input and a colour input. Each recorded step must carry its value, and the generated spec must run. -->
+<h1>Range and colour</h1>
+<label>Volume <input id="vol" type="range" min="0" max="10" value="3"></label>
+<label>Tint <input id="tint" type="color" value="#ff0000"></label>
+<p id="out">Waiting</p>
+<script>
+  const out = document.getElementById('out');
+  const show = () => { out.textContent = 'vol=' + document.getElementById('vol').value + ' tint=' + document.getElementById('tint').value; };
+  document.getElementById('vol').addEventListener('input', show);
+  document.getElementById('tint').addEventListener('input', show);
+</script>
+</body>
+</html>

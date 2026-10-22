@@ -1,0 +1,22 @@
+{
+  "_doc": "Per-tier time budgets for tools/pipeline.mjs (spec 2.4, objection 14). Provisional until provisionalRuns PASS runs of the tier are recorded in work/test-runs; a breach is then a WARN naming the slowest five. After that, or with enforce:true, a breach is a FAIL. `npm run t -- --freeze-budgets` writes frozenSec = ceil(p95 x 1.25) from the recorded runs; the file hash is part of gate-baseline.json, so raising a frozen value is GATE LOOSENED.",
+  "version": 1,
+  "provisionalRuns": 3,
+  "tiers": {
+    "smoke": {
+      "budgetSec": 120
+    },
+    "regression": {
+      "budgetSec": 360
+    },
+    "e2e": {
+      "budgetSec": 1200
+    },
+    "full": {
+      "budgetSec": 2100
+    },
+    "release": {
+      "budgetSec": 600
+    }
+  }
+}

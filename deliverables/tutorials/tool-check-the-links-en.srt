@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:04,100
+Nobody clicks them all.
+
+2
+00:00:04,300 --> 00:00:06,633
+It asks every one.
+
+3
+00:00:06,833 --> 00:00:09,467
+Broken. Redirected. Slow. Fine.
+
+4
+00:00:09,767 --> 00:00:12,100
+Other sites too.
+
+5
+00:00:12,333 --> 00:00:14,700
+Every failure, traced.

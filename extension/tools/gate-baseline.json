@@ -1,0 +1,349 @@
+{
+  "_doc": "GATE LOOSENED detector baseline (council-1012 spec 2.9 and 3). ceilings = the tsc error ceilings of test-types and test-types-wide; hashes = sha256 of the parsed QUARANTINE table, the KNOWN_RED table, the allow-list files, the line-ratchet values and pipeline-budgets.json (recipe: lib-select.mjs gateState); detail repeats the values so a diff can say raised or lowered; assertions = the observed assertion count per suite (ok lines, else the N passed summary) as of the recorded run, so a suite that silently loses assertions reads as loosened. A raise, an added quarantine or allow-list entry, or a count below baseline prints GATE LOOSENED and makes the tier INCOMPLETE until accepted with `node tools/lib-select.mjs write-baseline \"<reason>\"` (or --accept-gate in the runner). assertions holds only the suites measured on the first rehearsal run; the first full pass seeds the rest.",
+  "version": 1,
+  "acceptedReason": "public-prep-1023: four PRIVACY.md claim rows C-11..C-14 added by owner decision (MIT + privacy policy)",
+  "acceptedOn": "2026-10-22",
+  "ceilings": {
+    "types": 152,
+    "typesWide": {
+      "content": 47,
+      "offscreen": 17,
+      "ui": 10,
+      "devtools": 11,
+      "annotate": 4,
+      "videoedit": 1,
+      "replay": 0,
+      "diagram": 0
+    }
+  },
+  "hashes": {
+    "quarantine": "f24c08eaaf1b566c28ca3ff47c21ac471df76065bddda374625d2cd5a760650e",
+    "knownRed": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "allowLists": "dc36d1c79a9d43ba06844ab3b117dfa5a6d11c4296f9bd49190dc8b3380085a4",
+    "lineRatchet": "763586b3e128bbd778b1b4be0993657fdad288e24854167299207e5352723d00",
+    "budgets": "078affdfd27d50e89123d49f26e8d3c5ee179586ce02e112aa4e7f50ab8d641e"
+  },
+  "detail": {
+    "quarantine": {
+      "test-jira-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-report-filing-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-truth": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-game-trial-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "perf": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-boot-smoke": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-draft-door-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-capture-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-dock-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-onboarding-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-first-run-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-integrations-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-integrations-perm": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-secrets-page": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-vault-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-worker-restart": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-origin-gate-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-next-primary": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-reach-popup": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-stable-layout": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-done-card": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-popup-outcomes": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-dock-panel": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-toolbar-panel": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-top-space": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-scale-parity": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-action-icon-art": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-copy-length": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-e2e-practice": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-autopilot-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-tile-wake-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-sound-volume-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-buttons-all": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-plan-run": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-sandbox-egress": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-notes-tab": {
+        "byHand": true,
+        "until": "2026-12-31"
+      },
+      "test-game-live": {
+        "byHand": true,
+        "until": "2026-12-31"
+      }
+    },
+    "knownRed": {},
+    "allowLists": {
+      "tools/copy-claims-baseline.json": "a31c10d32c843940ab2757845df144e0b799511525d51762ea56725704ef323f",
+      "tools/a11y-baseline.json": "3ed534878c405cbea889a383f1d2e761c300a535fd580539f22680f32c69fcba",
+      "tools/copy-claims.json": "98999906e2f5b319d6884e9ad8d1b63149918024fc35ccb669a1a2e6d78e634c",
+      "tools/retired-sentences.json": "31d67762b4a4603beb9ead9f7273b3282d6dee3a11628805c84e32bf7c49a102"
+    },
+    "lineRatchet": {
+      "lines": {
+        "background/service-worker.js": 657,
+        "background/handlers-app.js": 644,
+        "background/handlers-session.js": 1004,
+        "background/handlers-tools.js": 626,
+        "background/worker-base.js": 136,
+        "background/worker-filing.js": 282,
+        "background/worker-lifecycle.js": 405,
+        "background/worker-scans.js": 806,
+        "background/worker-scrub.js": 125,
+        "background/worker-session.js": 1067,
+        "background/worker-tabs.js": 367,
+        "popup/popup.js": 4289,
+        "report/report.js": 3746,
+        "options/options.js": 1775,
+        "tools/lib-suites.mjs": 346,
+        "tools/lib-verdict.mjs": 239,
+        "tools/lib-teardown.mjs": 166,
+        "tools/lib-preflight.mjs": 141,
+        "tools/lib-router.mjs": 235,
+        "tools/lib-sched.mjs": 380,
+        "tools/lib-report.mjs": 208,
+        "tools/pipeline.mjs": 399,
+        "tools/run-suites.mjs": 202,
+        "tools/test-pipeline-verdict.mjs": 360,
+        "tools/test-pipeline-router.mjs": 236,
+        "tools/test-pipeline-lock.mjs": 192,
+        "tools/lib-select.mjs": 876,
+        "tools/test-pipeline-select.mjs": 214,
+        "tools/test-pipeline-manifest.mjs": 432,
+        "tools/lib-sandbox.mjs": 299,
+        "tools/lib-sandbox-preload.mjs": 176,
+        "tools/lib-sandbox-probe.mjs": 133,
+        "tools/lib-scrub.mjs": 107,
+        "tools/test-sandbox-egress.mjs": 288,
+        "tools/lib-launch.mjs": 104,
+        "tools/lib-test-window.mjs": 162,
+        "tools/lib-worker-live.mjs": 264,
+        "tools/lib-paths.mjs": 118,
+        "tools/lib-zip.mjs": 275,
+        "tools/lib-assert.mjs": 167,
+        "tools/canary.mjs": 195,
+        "tools/test-test-quality.mjs": 159,
+        "tools/voice-render.mjs": 371,
+        "tools/lib-game.mjs": 100,
+        "tools/lib-game-engine.mjs": 130,
+        "tools/lib-game-b.mjs": 116,
+        "game/engine.js": 726,
+        "game/game.js": 985,
+        "game/server.mjs": 190,
+        "game/scoring.js": 62,
+        "game/levels/l1.js": 111,
+        "game/levels/l2.js": 133,
+        "game/levels/l3.js": 132,
+        "game/levels/l4.js": 102,
+        "game/levels/l5.js": 114,
+        "game/audio/bus.js": 205,
+        "game/audio/sfx.js": 211,
+        "game/audio/voice.js": 284,
+        "game/trial.js": 718,
+        "game/trial-ui.js": 645,
+        "game/trials/t6.js": 65,
+        "game/trials/t7.js": 80,
+        "game/trials/attune.js": 85,
+        "tools/lib-sweep.mjs": 490,
+        "tools/test-buttons-all.mjs": 600,
+        "tools/clickthrough.mjs": 2320,
+        "tools/test-pipeline-sweep.mjs": 160
+      },
+      "swallows": {
+        "background/service-worker.js": 20,
+        "background/handlers-app.js": 12,
+        "background/handlers-session.js": 17,
+        "background/handlers-tools.js": 4,
+        "background/worker-base.js": 0,
+        "background/worker-filing.js": 3,
+        "background/worker-lifecycle.js": 14,
+        "background/worker-scans.js": 3,
+        "background/worker-scrub.js": 0,
+        "background/worker-session.js": 15,
+        "background/worker-tabs.js": 3,
+        "popup/popup.js": 3,
+        "report/report.js": 5,
+        "options/options.js": 3,
+        "tools/lib-suites.mjs": 0,
+        "tools/lib-verdict.mjs": 0,
+        "tools/lib-teardown.mjs": 0,
+        "tools/lib-preflight.mjs": 0,
+        "tools/lib-router.mjs": 0,
+        "tools/lib-sched.mjs": 0,
+        "tools/lib-report.mjs": 0,
+        "tools/pipeline.mjs": 0,
+        "tools/run-suites.mjs": 0,
+        "tools/test-pipeline-verdict.mjs": 0,
+        "tools/test-pipeline-router.mjs": 0,
+        "tools/test-pipeline-lock.mjs": 0,
+        "tools/lib-select.mjs": 0,
+        "tools/test-pipeline-select.mjs": 0,
+        "tools/test-pipeline-manifest.mjs": 0,
+        "tools/lib-sandbox.mjs": 0,
+        "tools/lib-sandbox-preload.mjs": 5,
+        "tools/lib-sandbox-probe.mjs": 0,
+        "tools/lib-scrub.mjs": 0,
+        "tools/test-sandbox-egress.mjs": 0,
+        "tools/lib-launch.mjs": 0,
+        "tools/lib-test-window.mjs": 0,
+        "tools/lib-worker-live.mjs": 2,
+        "tools/lib-paths.mjs": 0,
+        "tools/lib-zip.mjs": 0,
+        "tools/lib-assert.mjs": 0,
+        "tools/canary.mjs": 0,
+        "tools/test-test-quality.mjs": 0,
+        "tools/voice-render.mjs": 0,
+        "tools/lib-game.mjs": 0,
+        "tools/lib-game-engine.mjs": 0,
+        "tools/lib-game-b.mjs": 0,
+        "game/engine.js": 1,
+        "game/game.js": 3,
+        "game/server.mjs": 0,
+        "game/scoring.js": 0,
+        "game/levels/l1.js": 0,
+        "game/levels/l2.js": 1,
+        "game/levels/l3.js": 0,
+        "game/levels/l4.js": 0,
+        "game/levels/l5.js": 0,
+        "game/audio/bus.js": 3,
+        "game/audio/sfx.js": 0,
+        "game/audio/voice.js": 0,
+        "game/trial.js": 2,
+        "game/trial-ui.js": 1,
+        "game/trials/t6.js": 0,
+        "game/trials/t7.js": 0,
+        "game/trials/attune.js": 0,
+        "tools/lib-sweep.mjs": 6,
+        "tools/test-buttons-all.mjs": 29,
+        "tools/clickthrough.mjs": 26,
+        "tools/test-pipeline-sweep.mjs": 5
+      },
+      "deadExportAllowlist": []
+    }
+  },
+  "assertions": {
+    "test-a11y-static": 1,
+    "test-agent-bridge": 11,
+    "test-ai-write": 17,
+    "test-autopilot-privacy": 6,
+    "test-film-transitions": 279,
+    "test-formats": 34,
+    "test-handlers": 24,
+    "test-jira-adf": 66,
+    "test-onboarding-1010": 19,
+    "test-options-save": 12,
+    "test-perf-worker": 8,
+    "test-popup-structure": 54,
+    "test-privacy-contract": 29,
+    "test-replay": 37,
+    "test-report": 71,
+    "test-secret-scan": 15,
+    "test-sender-checks": 24,
+    "test-worker-imports": 14,
+    "test-wrappers": 9,
+    "test-types": 8
+  },
+  "assertionsNote": "measured 2026-10-12 by running each canary once (node tools/<id>.mjs); the remaining suites are seeded by the first t:full pass that records a green run.json"
+}

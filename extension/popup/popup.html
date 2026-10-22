@@ -1,0 +1,790 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- The float and the side panel are both resizable, and this page is also
+         opened as a tab by anyone debugging it. Without a viewport the mobile
+         emulation Chrome applies to a narrow surface scales the whole popup
+         down instead of reflowing it, so the 44px controls stopped being 44px. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/scale.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/tone.css" />
+    <link rel="stylesheet" href="../ui/vfx.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="../ui/live.css" />
+    <link rel="stylesheet" href="../ui/visuals.css" />
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="../ui/update-card.css" />
+    <!-- Before the stylesheet paints: a popup that opens light and flips to
+         night is worse than one that simply opens night. -->
+    <script src="../ui/theme.js"></script>
+    <!-- And before the first character is drawn: `lang` and `dir` are stamped
+         on <html> synchronously here, so an Arabic profile never sees a
+         left-to-right frame flip under it a moment after it opened. Same
+         reason theme.js is parser-blocking, same shape. -->
+    <script src="../platform/i18n.js"></script>
+    <title>QA Wrap</title>
+  </head>
+  <body data-awake="false" data-consented="false">
+    <!--
+      UI round 2 (S6): one page, three widths (DESIGN-SPEC §3). The .app element
+      is the container; below 440 the tools are a fixed list under the session, 440-719 an
+      in-flow grouped grid, 720 and up a rail beside the work pane. Start and
+      Stop sit in the session strip, outside every scroller, so nothing ever
+      covers them.
+    -->
+    <div class="app" id="app">
+    <div class="app-grid">
+    <header class="app-head glass" id="app-head">
+      <h1 class="visually-hidden"><bdi>QA Wrap</bdi></h1>
+      <img class="brand-mark" src="../brand/mark-small.svg" alt="" width="22" height="22" />
+      <span class="brand-name"><bdi>QA Wrap</bdi></span>
+      <!-- S7: live only (paintWorkLive/paintChip gates it). Not a live region: the
+           label is refreshed every second, not announced every second. -->
+      <button id="status-chip" class="status-chip" type="button" hidden>
+        <span class="chip-dot" aria-hidden="true"></span>
+        <span class="timer" id="chip-timer" data-live>00:00</span>
+      </button>
+      <span class="head-actions">
+        <button id="dock" class="icon-btn" type="button" data-icon="dock" data-i18n-title="popup.header.dockTitle" data-i18n-aria="popup.header.dockAria" title="Dock to the side of the browser" aria-label="Dock to the side"></button>
+        <button id="open-options" class="icon-btn" type="button" data-icon="settings" data-i18n-title="popup.header.settingsTitle" data-i18n-aria="popup.header.settingsAria" title="Settings" aria-label="Settings"></button>
+        <button id="more" class="icon-btn" type="button" data-icon="more" aria-haspopup="menu" aria-expanded="false" aria-controls="more-menu" data-i18n-title="popup.header.more" data-i18n-aria="popup.header.more" title="More" aria-label="More"></button>
+      </span>
+    </header>
+
+    <div class="app-body" id="app-body">
+    <!-- The session: who this is for, whether it is awake, what it just said. -->
+    <section class="session" id="session">
+    <!--
+      S7 (DESIGN-SPEC §4.7): the tab under test is not a page, or the worker did
+      not answer. Warn colours, never red — nothing has failed, there is just
+      nothing to test yet. Above everything else in the session region.
+    -->
+    <div class="state-banner" id="state-banner" role="status" hidden>
+      <span class="state-banner-icon" id="banner-icon" aria-hidden="true"></span>
+      <div class="state-banner-text">
+        <p class="state-banner-line" id="banner-line-1"></p>
+        <p class="state-banner-line state-banner-sub t-small muted" id="banner-line-2"></p>
+      </div>
+      <button type="button" class="btn btn-sm" id="banner-reload" hidden data-i18n="popup.stale.reload">Reload</button>
+    </div>
+    <!-- Autopilot line (autopilotBanner, popup/autopilot-banner.js): paused, running by itself, stopped after idle. -->
+    <div class="state-banner is-info" id="auto-banner" role="status" hidden>
+      <div class="state-banner-text"><p class="state-banner-line" id="auto-banner-line"></p></div>
+      <button type="button" class="btn btn-sm" id="auto-banner-btn" hidden></button>
+    </div>
+    <!-- Rule 5: shown once after a crash (popup/interrupted.js). Three plain buttons, none of them the primary. -->
+    <div class="state-banner is-info" id="interrupted-card" role="status" hidden>
+      <div class="state-banner-text"><p class="state-banner-line" id="interrupted-line"></p></div>
+      <button type="button" class="btn btn-sm" id="interrupted-open" data-i18n="popup.interrupted.open">Open report</button>
+      <button type="button" class="btn btn-sm" id="interrupted-keep" data-i18n="popup.keep.on">Keep</button>
+      <button type="button" class="btn btn-sm btn-quiet" id="interrupted-dismiss" data-i18n="popup.interrupted.dismiss">Dismiss</button>
+    </div>
+    <div class="state-banner" id="disk-warn" role="alert" hidden>
+      <div class="state-banner-text"><p class="state-banner-line" data-i18n="popup.record.diskWarn">Not saving to disk. Recording stops at the limit.</p></div>
+      <button type="button" class="btn btn-sm" id="disk-stop" data-i18n="popup.record.diskStop">Save and stop now</button>
+    </div>
+    <!-- P1-1: the first-run pointer adds one control, "Open practice"; it has no dismiss and goes once a real session has finished. -->
+    <section class="pointer" id="pointer">
+      <img src="../brand/mark-small.svg" alt="" width="26" height="26" />
+      <p id="pointer-line"><b data-i18n="popup.pointer.first">First time here?</b><span data-i18n="popup.pointer.practiceTail"> Try Bug Hunt, the practice game: five short levels.</span></p>
+      <div class="pointer-actions">
+        <button type="button" class="btn btn-sm" id="pointer-practice" data-i18n="popup.pointer.try">Open practice</button>
+      </div>
+    </section>
+      <!--
+        The gate in front of the gate.
+
+        The store's rule is that disclosure and consent live inside the product,
+        with a specific affirmative action, and that a store description and a
+        privacy policy do not count (research/51d, section 1). So until the
+        welcome page has been read and accepted there is nothing here but this
+        card and the way back to it. Tutorials stays reachable, because reading
+        about a tool is what somebody does before deciding to allow it.
+      -->
+      <section class="consent" id="consent-card" hidden>
+        <img src="../brand/mark-small.svg" alt="" width="26" height="26" />
+  <div class="consent-text">
+          <strong data-i18n="popup.consent.title">Before you start</strong>
+          <span data-i18n="popup.consent.body">
+            QA Wrap records what you do in the page you are testing, and keeps
+            all of it in this browser. Read the one-page notice and say you
+            understand, and the tools open up.
+          </span>
+          <a id="consent-trust" href="#" target="_blank" rel="noopener noreferrer" hidden data-i18n="popup.consent.trust">How to check this yourself</a>
+        </div>
+        <a id="consent-org" href="#" target="_blank" rel="noopener noreferrer" hidden data-i18n="popup.consent.orgNotice">Your organisation's notice</a>
+        <button id="consent-open" class="btn btn-primary" type="button" data-i18n="popup.consent.open">Read the notice</button>
+      </section>
+      <!-- The switch, and nothing else: awake or asleep on THIS site (popup.css, "the switch"). -->
+      <section class="wake" id="switch-card" data-live>
+        <button id="switch" class="wake-switch" type="button" role="switch" aria-checked="false" data-sound="switch.wake">
+          <span id="switch-title" data-i18n="popup.switch.asleep">Asleep</span>
+          <span class="wake-track" aria-hidden="true"><span class="wake-thumb"></span></span>
+        </button>
+      </section>
+      <p class="status" id="status" role="status" aria-live="polite" data-live></p>
+
+      <section id="step-idle">
+        <input id="charter" type="text" autocomplete="off" data-i18n-aria="popup.session.charterAria" aria-label="What are you testing?" data-i18n-placeholder="popup.session.charterPlaceholder" placeholder="What are you testing?" />
+        <p class="fine" data-i18n="popup.session.startNote">
+          Records every tab in this window until you press stop. No time limit.
+        </p>
+        <!-- Opt-in, off by default, per site. Shown only on a web page; the list lives in Settings > Permissions. -->
+        <label class="remember" id="remember-row" hidden>
+          <input type="checkbox" id="remember-site" />
+          <span data-i18n="popup.onboard.rememberLabel">Wake up on this site by itself next time</span>
+        </label>
+        <!-- Decision 4: the 2-minute replay buffer. Off by default, per site, shown only where QA Wrap is awake. popup/buffer.js -->
+        <div class="buffer-row" id="buffer-row" hidden>
+          <label class="remember">
+            <input type="checkbox" id="buffer-site" />
+            <span data-i18n="buffer.popup.label">Keep the last 2 minutes on this site (in memory only)</span>
+          </label>
+          <p class="fine" id="buffer-state" role="status" aria-live="polite"></p>
+          <button id="buffer-save" class="btn btn-xs btn-quiet" type="button" hidden data-i18n="buffer.save" data-i18n-title="buffer.save.hint" title="Starts a session that begins with what just happened on this page.">Save last 2 minutes</button>
+        </div>
+        <div class="last-locator">
+          <span class="ll-label t-caption" data-i18n="popup.live.lastLocator">Last locator</span>
+          <code class="ll-code is-empty" data-i18n="popup.live.noLocator">No locator yet</code>
+          <button type="button" class="icon-btn ll-copy" data-icon="copy" aria-label="" hidden></button>
+        </div>
+      </section>
+
+      <section id="step-live" hidden>
+        <p class="live"><span class="star is-live" aria-hidden="true"></span><strong id="live-charter" data-i18n="popup.live.charter">Recording</strong></p>
+        <p class="meta">
+          <!-- S7: #live-events/#live-fails stay bare numbers — diagnose.mjs:821-829
+               (S6's file, outside this stage's write-set) reads them with
+               Number(). The pluralised sentence NEW-STRINGS row 29-30 wants
+               (Arabic disagreed on "1 problems") is the visible text beside
+               them, wired to popup.live.eventsCount/problemsCount. -->
+          <span id="live-time" data-live>00:00</span> · <span id="live-events" hidden>0</span><span id="live-events-text" data-live>0 events</span> ·
+          <span id="live-fails" hidden>0</span><span id="live-fails-text" data-live>0 problems</span>
+        </p>
+        <p id="live-loss" class="fine loss-line" role="status" aria-live="polite" hidden></p>
+        <p id="tone-live" class="sr-only" role="status" aria-live="polite"></p>
+        <p id="tech-cover-live" class="sr-only" role="status" aria-live="polite"></p>
+        <p id="mask-broken" class="fine loss-line" role="status" aria-live="polite" hidden></p>
+        <div class="last-locator">
+          <span class="ll-label t-caption" data-i18n="popup.live.lastLocator">Last locator</span>
+          <code class="ll-code is-empty" id="live-locator-code" data-i18n="popup.live.noLocator">No locator yet</code>
+          <button type="button" class="icon-btn ll-copy" id="live-locator-copy" data-icon="copy" data-i18n-aria="popup.live.copyAgain" aria-label="Copy again" hidden></button>
+        </div>
+
+        <!--
+          One row for "I noticed something": pick what it is, say it, then
+          either write it down or photograph it with those words attached.
+        -->
+        <!-- cap1022: a button, not a toggle. The last minute of this tab is kept in memory only while a session runs. popup/buffer.js -->
+        <button id="roll-save" class="btn btn-xs btn-quiet" type="button" hidden data-i18n="popup.cap1022.rollSave" data-i18n-title="popup.cap1022.rollHint" title="Saves the last minute of this tab as a video. The minute is kept in memory only while a session runs.">Save last 1 minute</button>
+        <div class="note-row" id="note-row">
+          <input id="note-text" type="text" data-i18n-aria="popup.note.textAria" aria-label="Note" data-i18n-placeholder="popup.note.placeholder" placeholder="Name it, e.g. Submit stays disabled" autocomplete="off" />
+          <span class="note-split"><button id="note-add" class="btn" data-i18n="popup.note.add">Add note</button><button id="note-type" class="icon-btn" type="button" data-icon="chevron-down" aria-expanded="false" aria-controls="note-chips" data-i18n-aria="popup.note.typeChevron" aria-label="Note type"></button></span>
+          <!-- One row with the note: the row is the field, the Note split button and this icon. -->
+          <button id="shot" class="icon-btn note-shot" type="button" data-icon="screenshot" data-i18n-title="popup.note.shotTitle" data-i18n-aria="popup.note.shot" title="Take a screenshot and attach this note to it" aria-label="Screenshot, note" data-sound="none"></button>
+        </div>
+        <!-- The four types sit behind the chevron (REQ-P1-3); the last one chosen is the default. -->
+        <div class="tags" id="note-chips" role="group" hidden data-i18n-aria="popup.tags.aria" aria-label="What is it?">
+          <button data-tag="bug" aria-pressed="true" data-i18n="popup.tags.bug">Bug</button>
+          <button data-tag="issue" aria-pressed="false" data-i18n="popup.tags.issue">Issue</button>
+          <button data-tag="question" aria-pressed="false" data-i18n="popup.tags.question">Question</button>
+          <button data-tag="" aria-pressed="false" data-i18n="popup.tags.note">Note</button>
+        </div>
+      </section>
+
+      <section id="step-done" hidden>
+        <!--
+          S7 (DESIGN-SPEC §4.5): the review pane. #review-heading is the focus
+          target on entry (Entry: focus moves to the "Session saved." heading);
+          #done-summary keeps its existing job — the dynamic
+          "{charter}: {secs}s recorded" line JS already writes into it.
+        -->
+        <h2 class="review-heading" id="review-heading" tabindex="-1"><span class="tick" aria-hidden="true"></span><span data-i18n="popup.done.saved">Session saved.</span></h2>
+        <p class="saved"><span id="done-summary" data-i18n="popup.done.saved">Session saved.</span></p>
+        <!-- P1-5: Copy report first (the one filled button), Open full report second, Start another third; everything else under More. -->
+        <p class="done-clean" id="done-clean" role="status" hidden></p>
+        <button id="copy-report" class="btn btn-block" type="button" data-i18n="popup.done.copyReport">Copy report</button>
+        <button id="view-report" class="btn" data-i18n="popup.review.openFullReport">Open full report</button>
+        <button id="new-session" class="btn btn-quiet" data-i18n="popup.session.another">Start another</button>
+
+        <div class="stat-grid" id="review-stats">
+          <div class="stat-tile"><span class="stat-num" id="stat-duration">00:00</span><span class="stat-label" data-i18n="panel.stats.duration">Duration</span></div>
+          <div class="stat-tile"><span class="stat-num" id="stat-steps">0</span><span class="stat-label" data-i18n="panel.stats.steps">Steps recorded</span></div>
+          <div class="stat-tile"><span class="stat-num" id="stat-problems">0</span><span class="stat-label" data-i18n="panel.stats.problems">Problems found</span></div>
+          <div class="stat-tile"><span class="stat-num" id="stat-notes">0</span><span class="stat-label" data-i18n="panel.timeline.kind.note">Notes</span></div>
+        </div>
+
+        <div id="sg-done"></div>
+
+        <div class="key-findings" id="key-findings">
+          <p class="section-head" data-i18n="popup.review.keyFindings">Key findings</p>
+          <div id="findings-list"></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="findings-see-all" hidden></button>
+        </div>
+
+        <details id="done-more" class="done-more">
+          <summary data-i18n="popup.done.more">More</summary>
+          <!-- The one-press start leaves the test unnamed; the name is asked here, once, and may be skipped. -->
+          <div class="done-name" id="done-name-row" hidden>
+            <input id="done-name" type="text" autocomplete="off" data-i18n-aria="popup.onboard.nameLabel" aria-label="Name this test" data-i18n-placeholder="popup.onboard.namePlaceholder" placeholder="Name this test (optional)" />
+            <button type="button" class="btn btn-sm" id="done-name-save" data-i18n="popup.onboard.nameSave">Save name</button>
+          </div>
+          <label class="keep-row"><input type="checkbox" id="keep-session" /> <span data-i18n="popup.keep.label">Keep this test (the 30-day cleanup skips it)</span></label>
+          <p class="section-head" data-i18n="videoedit.header.export">Export</p>
+          <div class="row-4">
+            <button class="btn" data-format="sbtm"><span data-icon="export-sheet" aria-hidden="true"></span><span data-i18n="popup.done.formatSbtm">Session sheet</span></button>
+            <button class="btn" data-format="markdown"><span data-icon="export-markdown" aria-hidden="true"></span><span data-i18n="popup.done.formatMarkdown">Markdown</span></button>
+            <button class="btn" data-format="playwright"><span data-icon="export-playwright" aria-hidden="true"></span><span data-i18n="popup.done.formatPlaywright">Playwright</span></button>
+            <button class="btn" data-format="json"><span data-icon="export-json" aria-hidden="true"></span><span data-i18n="popup.done.formatJson">JSON</span></button>
+          </div>
+
+          <details id="breakdown">
+            <summary><span data-i18n="popup.breakdown.title">Task breakdown</span> <span class="fine" data-i18n="popup.breakdown.hint">(makes the sheet audit-ready)</span></summary>
+            <div class="bd-grid">
+              <label><span data-i18n="popup.breakdown.testing">Testing</span><input type="number" id="bd-design" min="0" max="100" value="70" /></label>
+              <label><span data-i18n="popup.breakdown.bugs">Bugs</span><input type="number" id="bd-bugs" min="0" max="100" value="20" /></label>
+              <label><span data-i18n="popup.breakdown.setup">Setup</span><input type="number" id="bd-setup" min="0" max="100" value="10" /></label>
+              <label><span data-i18n="popup.breakdown.onCharter">On-charter</span><input type="number" id="bd-charter" min="0" max="100" value="100" /></label>
+            </div>
+            <p class="fine" id="bd-state"></p>
+            <button id="bd-save" class="btn" data-i18n="popup.breakdown.save">Save breakdown</button>
+          </details>
+        </details>
+      </section>
+    </section>
+
+    <!--
+      Each tool is a row: press the name to use it, press the chevron to go one
+      level deeper (what it does, the explainer, its options). Favourites sit on
+      top, in the order they were starred.
+    -->
+    <nav class="tools" id="tool-sheet" data-i18n-aria="popup.tools.aria" aria-label="Tools">
+      <div class="tools-head">
+        <span data-i18n="popup.tools.aria">Tools</span>
+        <span class="badge" id="tool-count">19</span>
+      </div>
+      <div class="tools-body" id="tools"></div>
+    </nav>
+
+    <!-- The work pane. Inert until the notice has been accepted. -->
+    <main class="work scroll" id="body" inert aria-hidden="true">
+      <!--
+        S7 (DESIGN-SPEC §3.6/§4.4): the live-session work pane — wide only
+        (popup.css gates it by the app container query), live state only
+        (paintWorkLive() sets [hidden]). ".app:has(.tool-row.is-open) .work"
+        already hides the whole `.work` pane while a tool detail is open, which
+        is what "Tool detail replaces Session so far" means here.
+      -->
+      <section class="work-live" id="work-live" hidden>
+        <div class="wl-col">
+          <p class="section-head" id="wl-steps-head"></p>
+          <div class="wl-list" id="wl-steps"></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="wl-timeline" hidden data-i18n="popup.foot.timeline">Timeline</button>
+        </div>
+        <div class="wl-col">
+          <p class="section-head" id="wl-problems-head"></p>
+          <div class="wl-list" id="wl-problems"></div>
+          <p class="section-head" id="wl-notes-head"></p>
+          <div class="wl-list" id="wl-notes"></div>
+        </div>
+      </section>
+      <!--
+        The tool option panels, as templates rather than as live elements.
+
+        They used to be live divs down here that renderTools() *moved* onto the
+        row they belong to. Every re-render then threw them away with the rows
+        they were living in, so a parking div had to catch them first — and a
+        dozen places still read them by global id, which is a null the moment a
+        render, a surface or an ordering changes. A template cannot be moved,
+        destroyed or parked: each render stamps a fresh copy into the row that
+        owns it, and every reader goes through that row. See renderTools().
+
+        Each stamped panel carries `class="opts-tool"` and `data-panel`, which
+        is what popup.js and the suites match on; the id is kept so the row's
+        disclosure can name it in `aria-controls`.
+
+        The stamped copies carry their `data-i18n` keys with them, and
+        `stampPanel()` runs `QAWi18n.apply(panel)` on the fresh clone, so a
+        panel drawn after a language change is drawn in that language.
+      -->
+
+      <!--
+        Screenshot options. Two scopes, because they are genuinely different
+        pictures: the visible part is one photograph, the whole page is several
+        stitched together and takes a moment.
+      -->
+      <template id="tpl-shot-panel">
+      <div class="opts opts-tool" id="shot-panel" data-panel="shot" hidden>
+        <p class="opts-head" data-i18n="popup.shot.head">How much of the page</p>
+        <div class="scope" role="radiogroup" data-i18n-aria="popup.shot.scopeAria" aria-label="Screenshot scope">
+          <label class="scope-opt">
+            <input type="radio" name="shot-scope" value="visible" checked />
+            <span class="scope-art" aria-hidden="true">
+              <svg viewBox="0 0 34 24" width="34" height="24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <rect x="1" y="1" width="32" height="22" rx="2.5" opacity=".35" />
+                <rect x="1" y="1" width="32" height="13" rx="2.5" fill="currentColor" fill-opacity=".16" />
+              </svg>
+            </span>
+            <b data-i18n="popup.shot.visible">Visible part</b>
+            <em data-i18n="popup.shot.visibleNote">One screenshot, instantly.</em>
+          </label>
+          <label class="scope-opt">
+            <input type="radio" name="shot-scope" value="full" />
+            <span class="scope-art" aria-hidden="true">
+              <svg viewBox="0 0 34 24" width="34" height="24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <rect x="1" y="1" width="32" height="22" rx="2.5" fill="currentColor" fill-opacity=".16" />
+                <path d="M1 8.3h32M1 15.6h32" opacity=".55" stroke-dasharray="2 2" />
+              </svg>
+            </span>
+            <b data-i18n="popup.shot.full">Whole page</b>
+            <em data-i18n="popup.shot.fullNote">Scrolled and stitched. Fixed headers appear once.</em>
+          </label>
+        </div>
+      </div>
+      </template>
+
+      <!--
+        Video options. Stamped onto the "Record the screen" row, and opened from
+        that row's own disclosure — sitting at the bottom of the tool list they
+        read as three settings for the whole extension rather than three choices
+        for one tool.
+      -->
+      <template id="tpl-capture-panel">
+      <div class="opts opts-tool" id="capture-panel" data-panel="capture" hidden>
+        <p class="opts-head" data-i18n="popup.capture.head">What to film</p>
+        <div class="scope" role="radiogroup" data-i18n-aria="popup.capture.scopeAria" aria-label="Recording scope">
+          <label class="scope-opt">
+            <input type="radio" name="rec-scope" value="tab" checked />
+            <span class="scope-art" aria-hidden="true">
+              <svg viewBox="0 0 34 24" width="34" height="24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <rect x="1" y="1" width="32" height="22" rx="2.5" opacity=".35" />
+                <path d="M1 6h11v-5" opacity=".9" />
+                <rect x="1" y="6" width="32" height="17" rx="2.5" fill="currentColor" fill-opacity=".16" />
+              </svg>
+            </span>
+            <b data-i18n="popup.capture.tab">This tab</b>
+            <em data-i18n="popup.capture.tabNote">Follows the tab even if you switch away.</em>
+          </label>
+          <label class="scope-opt">
+            <input type="radio" name="rec-scope" value="screen" />
+            <span class="scope-art" aria-hidden="true">
+              <svg viewBox="0 0 34 24" width="34" height="24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <rect x="1" y="1" width="24" height="17" rx="2" opacity=".35" />
+                <rect x="9" y="6" width="24" height="17" rx="2" fill="currentColor" fill-opacity=".16" />
+              </svg>
+            </span>
+            <b data-i18n="popup.capture.screen">Window or screen</b>
+            <em data-i18n="popup.capture.screenNote">Chrome asks which: this whole browser window, another app, or the entire screen. Catches native dialogs.</em>
+          </label>
+        </div>
+
+        <p class="opts-head" data-i18n="popup.capture.extrasHead">What goes in besides the screenshot</p>
+        <div class="capture-row" id="capture-row">
+          <label class="chip">
+            <input type="checkbox" id="cap-tabAudio" />
+            <span class="chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h2.5L9 3v10L5.5 10H3z" /><path d="M11.5 6.2a2.6 2.6 0 0 1 0 3.6" />
+              </svg>
+            </span>
+            <span data-i18n="popup.capture.tabAudio">Tab sound</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" id="cap-mic" />
+            <span class="chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="1.8" width="4" height="7.5" rx="2" /><path d="M3.6 7.6a4.4 4.4 0 0 0 8.8 0M8 12v2.2" />
+              </svg>
+            </span>
+            <span data-i18n="popup.capture.mic">Mic</span>
+          </label>
+          <label class="chip">
+            <input type="checkbox" id="cap-webcam" />
+            <span class="chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1.5" y="4" width="9" height="8" rx="1.5" /><path d="M10.5 7.5l4-2v5l-4-2z" />
+              </svg>
+            </span>
+            <span data-i18n="popup.capture.webcam">Webcam</span>
+          </label>
+          <!--
+            GROUP G, 7 September 2026 — brief item G2, "cursor capture as a
+            selectable option like the mic". This chip and the two lines that
+            read it in popup.js (CAPTURE_KEYS and readCaptureOptions) are the
+            only edit Group G made anywhere in popup/; everything else about
+            this panel is Group E's.
+
+            What it does, so it is not mistaken for a cosmetic toggle: a
+            `tabCapture` recording genuinely has no pointer in it, because
+            Chrome composites the cursor at the window level, above everything
+            a tab capture can see. Ticked, the page reports its pointer
+            position and the offscreen document draws a cursor into the frame
+            it is compositing (content/recorder.js reportCursor,
+            offscreen/offscreen.js drawPointer). A window or screen capture
+            already has the operating system's own cursor in it and ignores
+            the tick, which is what the sentence under it says.
+          -->
+          <label class="chip">
+            <input type="checkbox" id="cap-cursor" />
+            <span class="chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 1.6v10.2l2.5-2.3 1.7 3.9 1.9-.8-1.7-3.8h3.4z" />
+              </svg>
+            </span>
+            <span data-i18n="popup.capture.cursor">Cursor</span>
+          </label>
+        </div>
+        <!--
+          Where the webcam inset goes, 8 September 2026 — "make me able to
+          choose where to put my facecam on the recording".
+
+          A select rather than four chips: it is one answer out of four, not
+          four independent ticks, and the capture row above is already a row of
+          ticks. It is beside them rather than in Settings only, because the
+          corner that is right depends on what is being filmed — the corner the
+          site's own chat bubble sits in changes per site — and that decision is
+          made at the moment of pressing Record.
+
+          The inset is composited into the frame (offscreen/offscreen.js
+          composite() and startGifCapture()), not floated over the page, so
+          there is nothing to drag: the corner IS the control. Settings holds
+          the same choice as the default, and both write `webcamPosition`.
+        -->
+        <label class="cap-field" for="cap-webcam-pos">
+          <span data-i18n="popup.capture.webcamCorner">Webcam corner</span>
+          <select id="cap-webcam-pos">
+            <option value="top-left" data-i18n="popup.capture.cornerTopLeft">Top left</option>
+            <option value="top-right" data-i18n="popup.capture.cornerTopRight">Top right</option>
+            <option value="bottom-left" data-i18n="popup.capture.cornerBottomLeft">Bottom left</option>
+            <option value="bottom-right" data-i18n="popup.capture.cornerBottomRight">Bottom right</option>
+          </select>
+        </label>
+        <p class="fine" id="cap-cursor-note" data-i18n="popup.capture.cursorNote">
+          Tick to show the pointer in the clip. A tab recording draws one for you, with a mark at each click.
+        </p>
+        <!--
+          The one line a tester sees before the first recording of a session
+          that has the microphone on.
+
+          Decision 29, item 3. Recording a room is not the same act as recording
+          a screen: in an all-party jurisdiction (much of the United States,
+          parts of Europe, and Jordan's own workplace practice) everyone whose
+          voice is captured has to have agreed. The extension cannot know where
+          it is running or who is in the room, so it does not rule; it says the
+          thing once, at the moment the choice is real, and offers the other
+          option beside it.
+
+          Once per session, not once per recording: a tester making a series of
+          clips has answered this, and asking again on each one is how a warning
+          stops being read. Not a dialog either, because a popup that opens a
+          modal over itself loses its own click target; it is a line in the panel
+          that already holds the mic tick, and the two buttons are the answer.
+        -->
+        <div class="mic-consent" id="mic-consent" hidden>
+          <p class="fine" id="mic-consent-line" data-i18n="popup.capture.micConsent">The microphone is on for this recording; the law in some places needs everyone&rsquo;s consent</p>
+          <div class="mic-consent-actions">
+            <button type="button" class="btn btn-sm" id="mic-consent-go" data-i18n="popup.capture.micGo">Continue</button>
+            <button type="button" class="btn btn-sm btn-quiet" id="mic-consent-mute" data-i18n="popup.capture.micMute">Record without mic</button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm" id="grant-media" data-i18n="popup.capture.grant">Enable sound, mic and camera</button>
+        <p class="fine" id="grant-media-note" data-i18n="popup.capture.grantNote">
+          Opens Settings and walks through the three grants in order.
+          The microphone and the camera are granted once, there.
+          The recorder itself runs in a hidden page, and a hidden page has
+          nowhere to draw the browser&rsquo;s permission prompt. Anything that is
+          not granted is named when recording starts, so a silent clip is never
+          a surprise on playback.
+        </p>
+        <p class="fine" id="record-state" hidden></p>
+      </div>
+      </template>
+
+      <template id="tpl-spec-panel">
+      <div class="opts opts-tool" id="spec-panel" data-panel="spec" hidden>
+        <p class="opts-head" data-i18n="popup.spec.head">What to write it as</p>
+        <div class="scope-row" role="radiogroup" data-i18n-aria="popup.spec.formatAria" aria-label="Document format">
+          <label class="scope-opt">
+            <input type="radio" name="spec-format" value="markdown" checked />
+            <b data-i18n="popup.spec.markdown">Markdown</b>
+            <span data-i18n="popup.spec.markdownNote">Requirements with acceptance criteria, ready to paste into a wiki.</span>
+          </label>
+          <label class="scope-opt">
+            <input type="radio" name="spec-format" value="sheet" />
+            <b data-i18n="popup.spec.sheet">Session sheet</b>
+            <span data-i18n="popup.spec.sheetNote">The same requirements as a table, one row each, for a reviewer.</span>
+          </label>
+        </div>
+        <p class="fine" data-i18n="popup.spec.privacy">
+          Nothing is sent anywhere. The page is read in your browser and the draft is kept
+          with the session, where every other export already lives.
+        </p>
+      </div>
+      </template>
+
+      <!-- Filled from the field the tester is standing in. -->
+      <template id="tpl-partitions-panel">
+      <div class="opts opts-tool" id="partitions-panel" data-panel="partitions" hidden>
+        <p class="opts-head" data-i18n="popup.partitions.head">The classes this field declares</p>
+        <p class="fine">
+          <span data-i18n="popup.partitions.hintLead">Press</span> <b data-i18n="popup.partitions.hintPick">Pick a field</b><span data-i18n="popup.partitions.hintTail">, then click any field on the page: a box, a
+          dropdown, a radio, a tickbox, a date, a slider, a file chooser or a
+          rich-text editor. Nothing is guessed: every class below comes from an
+          attribute the field carries.</span>
+        </p>
+        <div class="row-2">
+          <button id="partitions-read" class="btn btn-sm btn-primary" data-i18n="popup.partitions.pick">Pick a field</button>
+          <button id="partitions-clear" class="btn btn-sm btn-quiet" type="button" data-i18n="popup.partitions.clear">Clear the pick</button>
+        </div>
+        <div id="partitions-out"></div>
+      </div>
+      </template>
+
+      <!--
+        Copy a locator: what the pick is FOR. The same four the bar on the page
+        offers, here because this is where a tester looks for a tool's options;
+        each one starts the crosshair already in that mode.
+      -->
+      <template id="tpl-pick-panel">
+      <div class="opts opts-tool" id="pick-panel" data-panel="pick" hidden>
+        <p class="opts-head" data-i18n="popup.pick.head">What the pick is for</p>
+        <p class="fine" data-i18n="popup.pick.hint">
+          Say why you pick. The report sorts each locator by that reason. Keys 1 to 4 switch it on the page.
+        </p>
+        <div class="pick-purposes">
+          <button class="btn btn-sm" type="button" data-pick-purpose="any" data-i18n="popup.pick.any">Any locator</button>
+          <button class="btn btn-sm" type="button" data-pick-purpose="step" data-i18n="popup.pick.step">Steps of the flow</button>
+          <button class="btn btn-sm" type="button" data-pick-purpose="element" data-i18n="popup.pick.element">Elements to account for</button>
+          <button class="btn btn-sm" type="button" data-pick-purpose="sensitive" data-i18n="popup.pick.sensitive">Sensitive values</button>
+        </div>
+      </div>
+      </template>
+
+      <!--
+        Try nasty values. The picker and its reset, so the tester can say which
+        field they mean and then say they have changed their mind.
+      -->
+      <template id="tpl-inject-panel">
+      <div class="opts opts-tool" id="inject-panel" data-panel="inject" hidden>
+        <p class="opts-head" data-i18n="popup.inject.head">Which field</p>
+        <p class="fine" data-i18n="popup.inject.hint">
+          Press the tool, then click a field. You get the awkward values for that field.
+        </p>
+        <button id="inject-clear" class="btn btn-sm btn-quiet" type="button" data-i18n="popup.inject.clear">Clear the pick</button>
+      </div>
+      </template>
+
+      <!--
+        Fill the form. The card states what it will do before, and what it did
+        after: filled, rejected, skipped, each named.
+      -->
+      <template id="tpl-autofill-panel">
+      <div class="opts opts-tool" id="autofill-panel" data-panel="autofill" hidden>
+        <p class="opts-head" data-i18n="popup.autofill.head">What this fills</p>
+        <p class="fine" data-i18n="popup.autofill.hint">
+          Fills every field with a realistic value: phone, IBAN, date, amount. It does not press submit.
+        </p>
+        <div id="autofill-out"></div>
+      </div>
+      </template>
+
+      <!--
+        Send a request. One line about what it is for, and a worked example,
+        because "an API client in the browser" means nothing to somebody who has
+        not already used one.
+      -->
+      <template id="tpl-api-panel">
+      <div class="opts opts-tool" id="api-panel" data-panel="api" hidden>
+        <p class="opts-head" data-i18n="popup.api.head">What it is for</p>
+        <p class="fine" data-i18n="popup.api.hint">
+          Calling the site's own API as the logged-in user, without copying a
+          token into another app.
+        </p>
+        <p class="opts-head" data-i18n="popup.api.exampleHead">A worked example</p>
+        <ol class="worked">
+          <li data-i18n="popup.api.step1">You are on a page whose Save button fails.</li>
+          <li data-i18n="popup.api.step2">Press this. The panel opens with the requests this session already
+            watched.</li>
+          <li><span data-i18n="popup.api.step3Lead">Import</span> <code>POST /api/applications</code><span data-i18n="popup.api.step3Tail">, the one that returned 500.</span></li>
+          <li data-i18n="popup.api.step4">Change one field in the body, press Send, and read the status, the
+            time and the body it answers with.</li>
+          <li data-i18n="popup.api.step5">Both the request and the answer land in the timeline beside the
+            traffic the page made on its own.</li>
+        </ol>
+      </div>
+      </template>
+
+      <!--
+        Check accessibility. The findings, here, where the tester is standing.
+      -->
+      <template id="tpl-a11y-panel">
+      <div class="opts opts-tool" id="a11y-panel" data-panel="a11y" hidden>
+        <p class="opts-head" data-i18n="popup.a11y.head">What the last scan found</p>
+        <div id="a11y-out">
+          <p class="fine" data-i18n="popup.a11y.empty">Press the tool. Every rule it breaks is listed here, with the
+            elements, and a button that puts each one on screen.</p>
+        </div>
+      </div>
+      </template>
+
+      <!--
+        Measure code coverage. What it needs, whether this page can give it, and
+        the reason in full when it cannot.
+      -->
+      <template id="tpl-whitebox-panel">
+      <div class="opts opts-tool" id="whitebox-panel" data-panel="whitebox" hidden>
+        <p class="opts-head" data-i18n="popup.coverage.head">Whether this page can be measured</p>
+        <div id="whitebox-out">
+          <p class="fine" data-i18n="popup.coverage.checking">Checking…</p>
+        </div>
+        <p class="fine" data-i18n="popup.coverage.note">
+          Coverage attaches Chrome's debugger, so Chrome puts a bar across the top
+          of the window while it runs. It comes off when you press stop.
+        </p>
+      </div>
+      </template>
+
+      <template id="tpl-viewport-panel">
+      <div class="opts opts-tool" id="viewport-panel" data-panel="viewport" hidden>
+        <p class="opts-head" data-i18n="popup.viewport.head">Open this page at</p>
+        <p class="fine" id="viewport-inherit" data-i18n="popup.viewport.inherit">
+          A new window carries this session on: it is awake there, it is masked
+          there if you have masked anything here, and what you find goes into
+          the report under Window sizes.
+        </p>
+        <div id="viewport-list"></div>
+      </div>
+      </template>
+
+      <div class="opts" id="break-panel" hidden>
+        <!-- The way back to the Tools list: Back, Escape (tool-rows.js) and the row itself all close it. -->
+        <div class="panel-head"><button id="break-back" class="panel-back" type="button"><span data-icon="back" aria-hidden="true"></span><span data-i18n="popup.break.back">All tools</span></button><strong data-i18n="tools.break.label">Break a request</strong></div>
+        <label class="field"><span data-i18n="popup.break.whatHappens">What happens</span>
+          <select id="break-preset">
+            <option value="500" data-i18n="popup.break.preset500">Server error (500)</option>
+            <option value="503" data-i18n="popup.break.preset503">Service unavailable (503)</option>
+            <option value="403" data-i18n="popup.break.preset403">Forbidden (403)</option>
+            <option value="404" data-i18n="popup.break.preset404">Not found (404)</option>
+            <option value="empty" data-i18n="popup.break.presetEmpty">Empty response</option>
+            <option value="slow" data-i18n="popup.break.presetSlow">Slow response</option>
+            <option value="offline" data-i18n="popup.break.presetOffline">Network failure</option>
+            <option value="redirect" data-i18n="popup.break.optRedirect">Send it somewhere else</option>
+            <option value="header" data-i18n="popup.break.optHeader">Change a request header</option>
+            <option value="noauth" data-i18n="popup.break.optNoauth">Strip the Authorization header</option>
+          </select>
+        </label>
+        <label class="field"><span data-i18n="popup.break.onlyUrls">Only URLs containing</span>
+          <input type="text" id="break-pattern" data-i18n-placeholder="popup.break.patternPlaceholder" placeholder="empty = every request" />
+        </label>
+        <div class="range-field">
+          <div class="range-head"><label for="break-count" data-i18n="popup.break.howMany">How many</label><output id="break-count-out"></output></div>
+          <input type="range" id="break-count" />
+        </div>
+        <label class="field" id="break-redirect-field" hidden><span data-i18n="popup.break.sendTo">Send it to</span>
+          <input type="text" id="break-redirect" placeholder="https://localhost:3000/api" />
+        </label>
+        <div class="row-2" id="break-header-field" hidden>
+          <label class="field"><span data-i18n="popup.break.headerName">Header</span>
+            <input type="text" id="break-header-name" placeholder="X-Tenant" />
+          </label>
+          <label class="field"><span data-i18n="popup.break.headerValue">Value</span>
+            <input type="text" id="break-header-value" data-i18n-placeholder="popup.break.headerValuePlaceholder" placeholder="empty = remove it" />
+          </label>
+        </div>
+        <div class="range-field" id="break-delay-field" hidden>
+          <div class="range-head"><label for="break-delay" data-i18n="popup.break.delay">Delay</label><output id="break-delay-out"></output></div>
+          <input type="range" id="break-delay" />
+        </div>
+        <div class="row-2">
+          <button id="break-arm" class="btn btn-primary" data-i18n="popup.break.arm">Start</button>
+          <button id="break-clear" class="btn btn-quiet"
+            data-i18n="popup.break.clear" data-i18n-title="popup.break.clearTitle"
+            title="Take every rule off. Nothing reloads, and what the broken requests already recorded stays in the session.">Stop</button>
+        </div>
+        <p class="fine" id="break-state" data-i18n="popup.break.stateInitial">No rule on.</p>
+        <div id="rule-list"></div>
+      </div>
+    </main>
+    </div>
+
+    <!-- Start / Stop, pinned under everything at every width (Lead rule, research/56). -->
+    <div class="session-strip" id="session-strip">
+      <button id="start" class="btn btn-primary btn-block" data-sound="none"><span id="start-label" data-i18n="popup.onboard.testSite">Test this site</span><kbd class="cmd" dir="ltr" hidden></kbd></button>
+      <button id="stop" class="btn btn-primary btn-block" data-sound="none" data-i18n="popup.live.stop">Stop &amp; review</button>
+    </div>
+    </div>
+
+    <!--
+      The ⋯ menu: theme, language, the pages, the reporter and who made it. What
+      it covers is inert while it is open, and focus stays inside it.
+    -->
+    <div class="menu glass" id="more-menu" role="menu" aria-labelledby="more" hidden>
+      <div class="menu-group" role="group" id="theme" aria-labelledby="menu-theme-head">
+        <span class="menu-label" id="menu-theme-head" data-i18n="popup.header.themeAria">Theme</span>
+        <button type="button" class="menu-row" role="menuitemradio" aria-checked="false" data-theme-choice="system"><span data-icon="theme-system"></span><span class="menu-text" data-i18n="common.theme.system.label">Follows your machine</span><span class="menu-check" data-icon="check"></span></button>
+        <button type="button" class="menu-row" role="menuitemradio" aria-checked="false" data-theme-choice="light"><span data-icon="theme-light"></span><span class="menu-text" data-i18n="common.theme.light.label">Light</span><span class="menu-check" data-icon="check"></span></button>
+        <button type="button" class="menu-row" role="menuitemradio" aria-checked="false" data-theme-choice="dark"><span data-icon="theme-dark"></span><span class="menu-text" data-i18n="common.theme.dark.label">Night</span><span class="menu-check" data-icon="check"></span></button>
+      </div>
+      <div class="menu-divider" role="separator"></div>
+      <div class="menu-group" role="group" id="lang" aria-labelledby="menu-lang-head">
+        <span class="menu-label" id="menu-lang-head" data-i18n="options.rail.language">Language</span>
+        <button type="button" class="menu-row" role="menuitemradio" aria-checked="false" data-lang-choice="auto"><span class="menu-slot"></span><span class="menu-text" data-i18n="options.language.auto">Automatic (follow the browser)</span><span class="menu-check" data-icon="check"></span></button>
+        <button type="button" class="menu-row" role="menuitemradio" aria-checked="false" data-lang-choice="en"><span class="menu-slot"></span><span class="menu-text" lang="en" data-i18n="options.language.en">English</span><span class="menu-check" data-icon="check"></span></button>
+        <button type="button" class="menu-row" role="menuitemradio" aria-checked="false" data-lang-choice="ar"><span class="menu-slot"></span><span class="menu-text" lang="ar" data-i18n="options.language.ar">العربية</span><span class="menu-check" data-icon="check"></span></button>
+      </div>
+      <div class="menu-divider" role="separator"></div>
+      <button type="button" class="menu-row" role="menuitem" id="open-tutorials"><span data-icon="tutorials"></span><span class="menu-text" data-i18n="popup.foot.tutorials">Tutorials</span><span data-icon="external"></span></button>
+      <button type="button" class="menu-row" role="menuitem" id="open-panel" data-i18n-title="popup.foot.timelineTitle" title="Open this session's report on its Timeline tab"><span data-icon="timeline"></span><span class="menu-text" id="open-panel-text" data-i18n="popup.foot.timeline">Timeline</span><span data-icon="external"></span></button>
+      <button type="button" class="menu-row" role="menuitem" id="open-reporter" data-i18n-title="popup.session.reporterNote" title="For somebody who is not testing: one box, and the details are attached for them."><span data-icon="report-problem"></span><span class="menu-text" data-i18n="popup.session.reporter">Report a problem</span></button>
+      <a class="menu-row" role="menuitem" id="report-mail" href="#" hidden data-i18n-title="popup.foot.mailTitle" title="Opens your mail program with the support details filled in. Nothing is sent until you press Send there."><span data-icon="report-problem"></span><span class="menu-text" data-i18n="popup.foot.mail">Report a problem by email</span><span data-icon="external"></span></a>
+      <button type="button" class="menu-row" role="menuitem" id="menu-updates"><span data-icon="external"></span><span class="menu-text" id="menu-updates-text" data-i18n="popup.e1022.updates">Updates</span></button>
+      <div class="menu-divider" role="separator"></div>
+      <div class="menu-foot">
+        <img src="../brand/mark-small.svg" alt="" width="14" height="14" />
+        <span class="menu-lines">
+          <span data-i18n="popup.foot.by">Made by Nader Alzghoul · NJ-Burrito</span>
+          <span data-i18n="popup.foot.noSpill" data-i18n-title="popup.foot.noSpillTitle" title="No account, no upload, no telemetry.">No account · no upload · nothing leaves this browser</span>
+        </span>
+      </div>
+    </div>
+    </div>
+
+    <!--
+      Deferred, in this order. defer runs them after the HTML is parsed and in
+      document order, so UQAIcons, UQAScenes, UQADownload and UQASound are on the
+      window before popup.js calls boot(). Only ../ui/theme.js and
+      ../platform/i18n.js stay blocking: a popup that opens light and flips to
+      night, or left-to-right and flips, is worse than one that opens right.
+    -->
+    <script defer src="../ui/dom.js"></script>
+    <script defer src="../ui/icons.js"></script>
+    <script defer src="../ui/tone.js"></script>
+    <script defer src="../ui/download.js"></script>
+    <script defer src="../ui/scenes.js"></script>
+    <script defer src="../ui/sound.js"></script>
+    <script defer src="../ui/vfx.js"></script>
+    <script defer src="../ui/motion.js"></script>
+    <script defer src="../ui/live.js"></script>
+    <script defer src="tool-actions.js"></script>
+    <script defer src="tool-rows.js"></script>
+    <script defer src="viewport.js"></script>
+    <script defer src="popup.js"></script>
+    <script defer src="onboard.js"></script>
+    <script defer src="buffer.js"></script>
+    <script defer src="autopilot-banner.js"></script>
+    <script defer src="next.js"></script>
+    <script defer src="tools-fold.js"></script>
+    <script defer src="done-card.js"></script>
+    <script defer src="../ui/update-card.js"></script>
+    <script defer src="guards.js"></script>
+    <script defer src="interrupted.js"></script>
+    <script type="module" src="action-stack.js"></script>
+    <script type="module" src="note-slider.js"></script>
+    <script defer src="updates-menu.js"></script>
+  </body>
+</html>

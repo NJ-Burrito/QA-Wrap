@@ -1,0 +1,114 @@
+{
+  "_note": "DEC-05 / T-008: the ten sentences the store form and the verify page quote. Each is an exact substring of its file, bound to one test that is in package.json scripts.test, with a named owner. tools/test-copy-truth.mjs fails when an anchor moves, a test leaves the chain, or a new absolute sentence appears in PRIVACY.md without a row here or an entry in copy-claims-baseline.json.",
+  "claims": [
+    {
+      "id": "C-01",
+      "file": "extension/store/LISTING.md",
+      "anchor": "It never uploads anything of its own. No server, no analytics, no remote code.",
+      "test": "tools/test-independent.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-02",
+      "file": "extension/PRIVACY.md",
+      "anchor": "nothing leaves it except where you configure Jira, a tracker or a webhook, or where you send the one request you wrote in the API tool or run the link checker",
+      "test": "tools/test-independent.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-03",
+      "file": "extension/store/LISTING.md",
+      "anchor": "It installs with access to no website.",
+      "test": "tools/test-permissions.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-04",
+      "file": "extension/store/LISTING.md",
+      "anchor": "Code coverage needs Chrome's debugger permission",
+      "test": "tools/test-permissions.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-05",
+      "file": "extension/PRIVACY.md",
+      "anchor": "Asleep does not mean nothing is loaded.",
+      "test": "tools/test-sleep.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-06",
+      "file": "extension/PRIVACY.md",
+      "anchor": "The one place a cookie value is kept is a **saved cookie",
+      "test": "tools/test-erase.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-07",
+      "file": "extension/PRIVACY.md",
+      "anchor": "**Erase all** (Settings, then Privacy) removes every session",
+      "test": "tools/test-erase.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-08",
+      "file": "extension/PRIVACY.md",
+      "anchor": "**Finished sessions are deleted after 30 days by default.**",
+      "test": "tools/test-sessions.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-09",
+      "file": "extension/SECURITY.md",
+      "anchor": "7. **Secrets stay local.** Tokens and webhooks are one AES-GCM-256 ciphertext",
+      "test": "tools/test-vault.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-10",
+      "file": "extension/SECURITY.md",
+      "anchor": "it is attribution, not proof the file was not edited",
+      "test": "tools/test-provenance.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-11",
+      "file": "extension/PRIVACY.md",
+      "anchor": "Once a day, and a minute after the browser starts, QA Wrap asks GitHub whether a newer release exists",
+      "test": "tools/test-update-check.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-12",
+      "file": "extension/PRIVACY.md",
+      "anchor": "If one exists, the popup and Settings show a card with what changed; updating is always your press",
+      "test": "tools/test-update-check.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-13",
+      "file": "extension/PRIVACY.md",
+      "anchor": "Once a session is within eight days of the window, a desktop notice says",
+      "test": "tools/test-sessions.mjs",
+      "owner": "Nader"
+    },
+    {
+      "id": "C-14",
+      "file": "extension/PRIVACY.md",
+      "anchor": "A recording that reaches its event limit goes on as \"part 2\" of the same",
+      "test": "tools/test-interrupted-and-keep.mjs",
+      "owner": "Nader"
+    }
+  ],
+  "nothingLeaves": {
+    "_note": "T-008 step 6: every \"nothing leaves\" claim names the Jira / tracker / webhook exception in its sentence or the next one. carriedBy maps an i18n key whose short chip text cannot hold the clause to the tooltip key that does. open lists a line the guard found that still needs a copy edit; it is empty (1 Oct 2026, completion fix) and a new row is a known fault.",
+    "carriedBy": {
+      "popup.foot.noSpill": "popup.foot.noSpillTitle"
+    },
+    "open": []
+  },
+  "browsers": {
+    "_note": "T-047: no public page, README or LISTING names Firefox or Safari as working (the support.html \"not launched\" row and the \"cannot\" sentences are allowed). open is empty (1 Oct 2026, completion fix); a new row is a known fault.",
+    "open": []
+  }
+}

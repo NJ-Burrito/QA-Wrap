@@ -1,0 +1,27 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QA Wrap · Media</title>
+  </head>
+  <body>
+    <!--
+      Never seen by anyone. A service worker has no DOM, so it cannot hold a
+      MediaRecorder, draw to a canvas, or decode an image — all three of which
+      are needed to record a tab and to write a file in a format other than the
+      one Chrome handed us. This document exists to own those, and nothing else.
+    -->
+    <video id="feed" muted playsinline></video>
+    <!-- The webcam, when one was asked for. A video clip now records it as its
+         own companion clip, straight off the camera track, so this element is
+         only needed by the GIF path, which has no second layer to put a face on
+         and must paint it into the frames. -->
+    <video id="cam" muted playsinline></video>
+    <!-- Capturing a tab's audio silences it for the person watching unless it
+         is played back somewhere. This element is that somewhere. -->
+    <audio id="echo"></audio>
+    <script src="../ui/sound.js"></script>
+    <script type="module" src="offscreen.js"></script>
+  </body>
+</html>

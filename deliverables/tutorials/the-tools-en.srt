@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:04,133
+Sixteen tools, filed by job.
+
+2
+00:00:04,333 --> 00:00:06,800
+Accessibility, from the engine DevTools uses.
+
+3
+00:00:07,000 --> 00:00:09,033
+Page speed, on this page, logged in.
+
+4
+00:00:09,267 --> 00:00:11,633
+Then a page map, every locator verified.
+
+5
+00:00:11,867 --> 00:00:13,700
+All of it lands in one report.

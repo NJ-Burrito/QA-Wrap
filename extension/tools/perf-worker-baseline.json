@@ -1,0 +1,51 @@
+{
+  "n": 10,
+  "realKB": 763.23046875,
+  "cold": {
+    "stub": {
+      "median": 6.799999997019768,
+      "samples": 10
+    },
+    "763 KB": {
+      "median": 23.69999998807907,
+      "samples": 10
+    },
+    "real +70 KB": {
+      "median": 23.44999998807907,
+      "samples": 10
+    }
+  },
+  "paint": {
+    "with": 68,
+    "without": 64
+  },
+  "overlay": {
+    "first": 33.10000002384186,
+    "warm": 13.799999982118607
+  },
+  "deltaMs": {
+    "x1": -0.25,
+    "x6": -1.5
+  },
+  "measuredOn": "2026-10-10, win32 10.0.26300, headless Chromium, 10 cold starts per variant, temp profiles",
+  "decision": "keep-byte-cap",
+  "why": "The rule (830 KB under 15 ms worse than 760 KB at 6x -> ms gate) read literally is met (the padded copy measured faster), but run-to-run spread of one variant is tens of ms, so 15 ms cannot be resolved, and comment padding costs parse only, not evaluation. Evidence too weak to delete the ledger. The cap is not raised; the 6x column is projected (no CPU throttle exists for a service worker).",
+  "soak": {
+    "events": 200000,
+    "factor": 1.5,
+    "measuredOn": "2026-10-10, win32 10.0.26300, headless Chromium",
+    "measured": {
+      "seedMs": 32146,
+      "timelineMs": 4434,
+      "htmlMs": 16291,
+      "peakBytes": 1074987008,
+      "timelineRows": 200000,
+      "htmlBytes": 7368067
+    },
+    "ceilings": {
+      "peakBytes": 1612480512,
+      "timelineMs": 6651,
+      "htmlMs": 24436
+    }
+  }
+}

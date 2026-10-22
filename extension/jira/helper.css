@@ -1,0 +1,102 @@
+/* QA Wrap Jira helper. Every rule is behind an attribute helper.js sets from the Settings switch, so with it off the page is untouched. */
+html[data-qaw-jira-fix="1"] [role="listbox"],
+html[data-qaw-jira-fix="1"] [role="menu"],
+html[data-qaw-jira-fix="1"] .aui-list-scroll,
+html[data-qaw-jira-fix="1"] .select2-results,
+html[data-qaw-jira-fix="1"] .aui-dropdown2 {
+  max-height: min(60vh, 26rem);
+  overflow-y: auto;
+  overscroll-behavior: contain; /* the end of the list does not hand the wheel to the page */
+}
+
+/* Only leaf text blocks carry data-qaw-dir (helper.js never marks a wrapper that holds a toolbar or a field), so !important reaches
+   no chrome; it is needed because Jira's own sheet sets the editor textarea's alignment with an id selector (jira-edit-rtl-2). */
+html[data-qaw-jira-dir] [data-qaw-dir] { unicode-bidi: plaintext !important; } /* each line of Arabic with an English key in it reads in its own order */
+html[data-qaw-jira-dir] [data-qaw-dir="rtl"] { direction: rtl !important; text-align: right !important; } /* the switch sets the side, plaintext alone would align each line by its own script */
+html[data-qaw-jira-dir] [data-qaw-dir="ltr"] { direction: ltr !important; text-align: left !important; }
+
+/* The switch is a water balance hung from the top edge by two thin strings, one at each end (no centre pivot): the picked cup is full, its string stretches like a spring, so that end hangs lower and the bar tips toward it (7deg). A switch runs the water along the bar; one string springs back, the other stretches, with one small bounce, all within 640 ms. The water surface stays level. Plain CSS transitions on data-side, one set for both directions, mirrored by --qaw-sign; nothing moves while idle. Brand values copied from the extension theme (this sheet loads on a stranger's page, so no var() from the extension): basalt, limestone, corn amber (RTL water), guac green (LTR water). */
+#qaw-jira-dir {
+  --qaw-bg: rgba(29, 32, 36, 0.62); /* literal: brand-basalt, translucent cup */
+  --qaw-line: #8A7656; /* literal: brand-tortilla, lighter for the outline */
+  --qaw-text: #F1EFE9; /* literal: brand-limestone */
+  --qaw-ink: #15181B; /* literal: brand-basalt, text on water */
+  --qaw-pill: #7ED08A; /* literal: brand-guac, the LTR water / stream */
+  --qaw-glow: rgba(126, 208, 138, 0.6);
+  --qaw-sign: 1; /* +1 LTR (right cup full, right string long), -1 RTL */
+  --qaw-tilt: 7deg;
+  --qaw-drop: 7px; /* 57px x sin 7deg: how far the full end hangs below the middle; the empty end rises as much */
+  --qaw-spring: linear(0, 0.42 12%, 0.82 26%, 1.06 40%, 1.1 47%, 1.04 58%, 0.98 70%, 0.995 84%, 1); /* one small bounce */
+  --qaw-move: 560ms var(--qaw-spring) 80ms; /* tilt, strings and the level water share it, so they stay in step */
+  position: fixed;
+  top: 0;
+  left: 50%; /* helper.js sets the real left in px (distance from the nearest edge, clamped) */
+  transform: translate(-50%, -22%); /* tucked up */
+  transform-origin: 50% 0;
+  z-index: 1000; /* above Jira's header, below its dialogs, blankets and dropdown layers */
+  width: 120px; /* W in helper.js */
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+  background: none;
+  color: var(--qaw-text);
+  font: 600 11px/20px "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  direction: ltr;
+  opacity: 0.55;
+  transition: transform 200ms ease, opacity 200ms ease, filter 200ms ease;
+}
+#qaw-jira-dir[data-drag] { cursor: grabbing; transition: opacity 200ms ease; }
+#qaw-jira-dir[data-side="rtl"] { --qaw-sign: -1; --qaw-pill: #FFD166; --qaw-glow: rgba(255, 209, 102, 0.6); } /* literal: brand-corn */
+#qaw-jira-dir:hover,
+#qaw-jira-dir:focus-visible {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1.08);
+  filter: drop-shadow(0 4px 8px var(--qaw-glow));
+}
+#qaw-jira-dir:focus-visible { outline: 2px solid var(--qaw-text); outline-offset: 1px; }
+/* the two strings, from the top edge to each end of the bar; only their length changes, the button (and the stored position) never moves */
+#qaw-jira-dir .qaw-str { position: absolute; top: 0; width: 1px; background: var(--qaw-line); opacity: 0.8; transition: height var(--qaw-move); pointer-events: none; }
+#qaw-jira-dir .qaw-str-r { left: 3px; height: calc(10px - var(--qaw-sign) * var(--qaw-drop)); } /* the RTL end */
+#qaw-jira-dir .qaw-str-l { right: 3px; height: calc(10px + var(--qaw-sign) * var(--qaw-drop)); } /* the LTR end */
+/* the bar: its middle hangs 10px down (both strings equally long mid-pour); it tips by the difference of the strings */
+#qaw-jira-dir .qaw-beam {
+  position: absolute; top: 10px; left: 0; width: 100%; height: 22px;
+  transform-origin: 50% 0;
+  rotate: calc(var(--qaw-sign) * var(--qaw-tilt));
+  transition: rotate var(--qaw-move);
+  pointer-events: none;
+}
+#qaw-jira-dir .qaw-bar { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--qaw-line); }
+#qaw-jira-dir .qaw-c {
+  position: absolute; top: 2px; width: 56px; height: 20px; overflow: hidden; box-sizing: border-box;
+  border: 1px solid var(--qaw-line); border-top: 0; border-radius: 0 0 10px 10px; background: var(--qaw-bg);
+}
+#qaw-jira-dir .qaw-r { left: 0; }
+#qaw-jira-dir .qaw-l { right: 0; }
+/* the water: wider and taller than the cup and turned back by the tilt, so its surface stays level; empty = pushed below the cup */
+#qaw-jira-dir .qaw-w {
+  position: absolute; left: -10px; top: -5px; width: calc(100% + 20px); height: calc(100% + 10px);
+  translate: 0 30px; rotate: calc(var(--qaw-sign) * -1 * var(--qaw-tilt)); fill: var(--qaw-water);
+  transition: translate 420ms ease-in-out, rotate var(--qaw-move);
+}
+#qaw-jira-dir .qaw-r { --qaw-water: #FFD166; } /* literal: brand-corn */
+#qaw-jira-dir .qaw-l { --qaw-water: #7ED08A; } /* literal: brand-guac */
+#qaw-jira-dir[data-side="rtl"] .qaw-r .qaw-w,
+#qaw-jira-dir[data-side="ltr"] .qaw-l .qaw-w { translate: 0 0; transition-delay: 160ms, 80ms; } /* the filling side waits for the pour */
+#qaw-jira-dir .qaw-lbl { position: absolute; inset: 0; text-align: center; line-height: 19px; color: var(--qaw-text); transition: color 120ms ease 420ms; }
+#qaw-jira-dir[data-side="rtl"] .qaw-r .qaw-lbl,
+#qaw-jira-dir[data-side="ltr"] .qaw-l .qaw-lbl { color: var(--qaw-ink); }
+/* the water running along the bar to the picked side, once per press, never a loop */
+#qaw-jira-dir .qaw-flow { position: absolute; top: 0; left: 50%; width: 14px; height: 3px; margin-left: -7px; border-radius: 2px; background: var(--qaw-pill); opacity: 0; }
+#qaw-jira-dir[data-flow] .qaw-flow { animation: qaw-stream 460ms ease-in-out 1; }
+@keyframes qaw-stream { 0% { opacity: 0; translate: calc(var(--qaw-sign) * -38px) 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; translate: calc(var(--qaw-sign) * 38px) 0; } }
+@media (prefers-reduced-motion: reduce) {
+  #qaw-jira-dir, #qaw-jira-dir .qaw-beam, #qaw-jira-dir .qaw-str, #qaw-jira-dir .qaw-w, #qaw-jira-dir .qaw-lbl { transition: none; animation: none; }
+  #qaw-jira-dir:hover, #qaw-jira-dir:focus-visible { transform: translate(-50%, 0); }
+  #qaw-jira-dir[data-flow] .qaw-flow { animation: none; }
+}

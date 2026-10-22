@@ -1,0 +1,466 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* ==========================================================================
+   QA Wrap primitives.
+
+   The palette is NOT defined here any more — it comes from ui/identity-tokens.css,
+   which is a verbatim copy of identity/tokens/tokens.css. Regenerate it there and
+   copy it across; never hand-edit either file's variables.
+
+   Every surface links identity-tokens.css first, then this.
+   ========================================================================== */
+
+* { box-sizing: border-box; }
+
+/* The browser paints scrollbars, form controls and the canvas default from this
+   (T-023). `light dark` follows the machine; an explicit theme overrides it. */
+:root { color-scheme: light dark; }
+
+/* T-060: the one focus ring. Every page loads this file, so a control no page rule styled (links, canvases,
+   role=button, the editors' toolbars) still shows where the keyboard is. Pages may restyle; none may remove it. */
+:root { --focus-ring-width: 2px; --focus-ring-offset: 2px; }
+:focus-visible { outline: var(--focus-ring-width) solid var(--accent); outline-offset: var(--focus-ring-offset); }
+@media (forced-colors: active) { :focus-visible { outline-color: Highlight; } }
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+
+/* Glass is a nicety: where the person asks for less transparency or more
+   contrast, or the browser cannot blur, every glass token becomes the solid
+   surface. `:root:root` outranks the per-theme `:root[data-theme]` blocks. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  :root:root { --blur: 0px; --glass-sat: 100%; --surface-glass: var(--surface); --surface-glass-strong: var(--surface); }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  :root:root { --blur: 0px; --glass-sat: 100%; --surface-glass: var(--surface); --surface-glass-strong: var(--surface); }
+}
+
+/* UI rework round 2 (DESIGN-SPEC §1.1): only 400/500/700 ship now, so a
+   browser reaching for a synthetic bold or italic on a weight/style Thmanyah
+   never shipped is exactly the faux type this line forbids. */
+html { font-synthesis: none; }
+
+/* An author `display` rule beats the UA stylesheet's [hidden] { display: none },
+   so every card with display:grid would ignore the attribute. Re-assert it. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--surface-sunken);
+  color: var(--text);
+  font: var(--weight-body) var(--t-body)/var(--lead-body) var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; font-size: var(--t-body); font-weight: 600; line-height: var(--lead-body); }
+p { margin: 0; }
+.muted { color: var(--text-muted); font-weight: 400; }
+
+/* --------------------------------------------------------------- primitives */
+
+input[type='text'], input:not([type]), select, textarea {
+  width: 100%;
+  padding: var(--sp-2) 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+input[type='text']::placeholder { color: var(--text-muted); }
+
+input:focus, select:focus, textarea:focus, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ── the button system ─────────────────────────────────────────────────
+   One family, four intents, three sizes, every state. See
+   research/09-workflow-guidelines.md §4. Weight 700 and one radius, so a
+   button is recognisable as a button before it is read. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-body);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--dur-tap) var(--ease), border-color var(--dur-tap) var(--ease),
+    color var(--dur-tap) var(--ease), transform var(--dur-tap) var(--ease), box-shadow var(--dur-tap) var(--ease);
+}
+
+.btn:hover { background: var(--surface-sunken); border-color: var(--accent); }
+.btn:active { box-shadow: none; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn:disabled:hover { background: var(--surface); border-color: var(--border-strong); }
+
+.btn-block { width: 100%; }
+/* 28px of ink, 44px of hit target: the visible button does not grow (the
+   report toolbar has no room), but ::after extends the pressable area 8px
+   above and below, the same instrument popup.css already uses for its own
+   small controls. inset is vertical-only, so it never reaches sideways into
+   a neighbouring button's own extended box. */
+.btn-sm { position: relative; min-height: 28px; padding: 0 10px; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); }
+.btn-sm::after { content: ''; position: absolute; inset: -8px 0; }
+.btn-lg { min-height: 40px; padding: 0 18px; font-size: var(--t-head); font-weight: var(--weight-head); letter-spacing: var(--track-head); }
+
+/* The next step. One per view. */
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-primary:disabled:hover { background: var(--accent); border-color: var(--accent); }
+
+/* Destructive shares Petra with the primary: FAIL and the action are one hue.
+   The label and the confirmation are what tell them apart. */
+.btn-danger { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn-danger:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+.btn-quiet { background: transparent; border-color: var(--border); color: var(--text-muted); font-weight: 600; }
+.btn-quiet:hover { color: var(--text); border-color: var(--accent); background: transparent; }
+
+.btn-ghost { background: transparent; border-color: transparent; color: var(--text-muted); font-weight: 600; }
+.btn-ghost:hover { background: var(--surface-sunken); border-color: var(--border); color: var(--text); }
+
+.btn-icon { padding: 0 10px; }
+
+/* A toggle that is on. */
+.btn[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Working. The width does not change, the label dims, a ring turns. */
+.btn[aria-busy='true'],
+.btn.is-busy { color: transparent; pointer-events: none; }
+.btn[aria-busy='true']::after,
+.btn.is-busy::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-color: var(--text-muted) transparent var(--text-muted) transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.8s linear infinite;
+}
+/* accent-text ok: the ::after has no ground of its own, and the ground it
+   inherits is `.btn-primary`, which is a solid accent fill — the one place this
+   token belongs. */
+.btn-primary[aria-busy='true']::after,
+.btn-primary.is-busy::after { border-color: var(--accent-text) transparent var(--accent-text) transparent; }
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+
+/* ── the four results ────────────────────────────────────────────────── */
+
+.result {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-sm);
+  font-size: var(--t-micro);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: var(--lead-micro);
+  text-transform: uppercase;
+}
+.result i { font-style: normal; font-weight: 600; opacity: 0.85; }
+/* UI rework round 2 (S1): the *-ink tokens (added to identity/tools/tokens.source.mjs)
+   are what the prototype's own badge draws with (prototype/base.css .badge-fail
+   etc.) — plain --fail on --fail-soft measures 4.56:1, under the badge floor of
+   5:1; --fail-ink on the same ground measures 5.89:1. */
+.result-pass { background: var(--pass-soft); color: var(--pass-ink); }
+.result-fail { background: var(--fail-soft); color: var(--fail-ink); }
+.result-blocked { background: var(--blocked-soft); color: var(--blocked-ink); }
+.result-skipped { background: var(--skipped-soft); color: var(--skipped-ink); }
+
+/* ── identity furniture ──────────────────────────────────────────────── */
+
+/* The recording dot. Muted at rest, ochre and steady while a session
+   records — no idle loop (UI rework round 2, S11b): the status chip's own
+   timer is the sign of life, the same rule the mark's own motion follows
+   (ui/motion.css). Nothing to turn off under reduced motion any more. */
+.star {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  color: var(--text-muted);
+  border-radius: 50%;
+  background: currentColor;
+}
+.star.is-live { color: var(--live); }
+
+/* One shemagh strip, four pixels, under a header. Nowhere else. */
+.shemagh {
+  height: 4px;
+  border-radius: 2px;
+  opacity: 0.45;
+  background-color: var(--surface);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M0 0h6v6H0zM6 6h6v6H6z' fill='%23D8C6A4' opacity='.85'/></svg>");
+  background-size: 12px 12px;
+}
+:root[data-theme='dark'] .shemagh, :root[data-theme='midnight'] .shemagh { opacity: 0.3; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-pill);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+  border: 1px solid var(--border);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+kbd {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  line-height: 1;
+  padding: var(--sp-1) var(--sp-1);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--r-sm);
+  color: var(--text-muted);
+  background: var(--surface-sunken);
+  white-space: nowrap;
+}
+
+.brand { display: flex; align-items: center; gap: var(--sp-2); }
+
+.brand-mark {
+  display: block;
+  flex: none;
+  border-radius: var(--r-sm);
+}
+
+.brand-avatar {
+  display: block;
+  border-radius: 50%;
+}
+
+/* The name is set in Thmanyah Sans 800 (research/138),
+   bundled in ui/fonts.css — the wordmark in brand/wordmark.svg predates the
+   font swap and is not redrawn by this stage. */
+.brand-name {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: var(--t-head);
+  letter-spacing: var(--track-head);
+  line-height: var(--lead-head);
+}
+
+.brand-mark-lg { display: block; margin: 0 auto; }
+
+.tagline {
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: 0.5px;
+  line-height: var(--lead-micro);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Impact colours, shared by the a11y list and the timeline. */
+.sev-critical, .sev-serious { color: var(--danger); }
+.sev-moderate { color: var(--warn); }
+.sev-minor { color: var(--info); }
+
+/* ------------------------------------------------------------------- ranges */
+/* Shared by the popup and the settings page so a slider looks the same in both. */
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+}
+
+input[type='range']:disabled { cursor: not-allowed; opacity: 0.45; }
+
+input[type='range']::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--fill, 50%),
+    var(--border-strong) var(--fill, 50%),
+    var(--border-strong) 100%
+  );
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5.5px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow-1);
+  transition: transform 100ms ease-out;
+}
+
+/* Hover changes the fill, not the size: growing the thumb 14% moves the target
+   while the pointer is on its way to it. The press still moves, because a press
+   is a thing you did and wants an answer. */
+input[type='range']:hover::-webkit-slider-thumb { background: var(--accent-soft); }
+input[type='range']:active::-webkit-slider-thumb { transform: scale(var(--press-scale)); }
+
+input[type='range']:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.range-field { display: grid; gap: var(--sp-1); }
+
+.range-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.range-head label { font-size: var(--t-small); font-weight: 600; line-height: var(--lead-small); }
+
+.range-head output {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: var(--t-small);
+  line-height: 1;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+
+.inline-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+/* The sentence a screen reader gets where a sighted reader gets a shape. Not
+   `display: none`, which is not announced, and not `visibility: hidden`, which
+   is not either. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── loading, drawn ───────────────────────────────────────────────────────
+ *
+ * A page that shows nothing while it loads is a page that looks broken, and
+ * the report is the slowest thing this extension opens: it reads a session out
+ * of storage, decodes its screenshots and lays out a timeline that can run to
+ * thousands of rows. Until now the answer to all of that was the word
+ * "Loading…" and an empty column.
+ *
+ * A skeleton is not a spinner. It says how much is coming and where it will
+ * land, so the layout does not jump when the real thing arrives — which is the
+ * whole reason to draw one rather than dim the page.
+ *
+ * The shimmer travels a background-position, so it costs one composited layer
+ * and no reflow, and it is the palette's own two surfaces rather than the
+ * white-on-grey every framework ships. Under reduced motion it holds still and
+ * stays a shape; it never becomes a blank space again.
+ *
+ * The markup is placed in the HTML, not injected: every renderer on the report
+ * page starts with `host.replaceChildren()`, so the real content removes the
+ * placeholder itself and no script has to know this exists.
+ */
+.skeleton {
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  background-image: linear-gradient(
+    90deg,
+    var(--surface-sunken) 0%,
+    var(--surface-raised) 50%,
+    var(--surface-sunken) 100%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-sweep 1.4s var(--ease) infinite;
+}
+@keyframes skeleton-sweep { from { background-position: 150% 0; } to { background-position: -150% 0; } }
+
+/* Screen readers get the word; the shapes are decoration and say so. */
+.skeleton-group { display: grid; gap: var(--sp-2); }
+.skeleton-line { height: 12px; }
+.skeleton-line.is-short { width: 42%; }
+.skeleton-line.is-mid { width: 68%; }
+.skeleton-row { display: grid; grid-template-columns: 62px 20px 1fr; gap: 10px; align-items: center; padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--border); }
+.skeleton-row .skeleton { height: 12px; }
+.skeleton-card { height: 68px; border: 1px solid var(--border); }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; background-image: none; }
+}
+
+/* Respect a reduced-motion preference across every surface. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* The lockup on every surface: the product, then the brand behind it. */
+.brand-by, .product-line .by, .made-by { font-size: var(--t-micro); font-weight: 500; line-height: var(--lead-micro); color: var(--text-muted); margin-inline-start: 6px; letter-spacing: 0.01em; }
+
+/* The footer every full page carries: the product, then who publishes it. */
+.page-foot { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-4) 28px 22px; margin-top: 26px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); }
+.page-foot .made-by { margin-inline-start: var(--sp-1); }
+
+/* Brand mark: both tones on every ground. On dark grounds the near-black ring
+   vanishes against the ink page, so swap the whole asset for the light-ring
+   variant rather than trying to recolour an <img>. Paths are relative to
+   THIS stylesheet (ui/tokens.css), so ../brand/ is correct. */
+:root[data-theme="dark"] img[src$="brand/mark-small.svg"],
+:root[data-theme="midnight"] img[src$="brand/mark-small.svg"] { content: url("../brand/mark-small-dark.svg"); }
+:root[data-theme="dark"] img[src$="brand/mark.svg"],
+:root[data-theme="midnight"] img[src$="brand/mark.svg"] { content: url("../brand/mark-dark.svg"); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) img[src$="brand/mark-small.svg"] { content: url("../brand/mark-small-dark.svg"); }
+  :root:not([data-theme="light"]) img[src$="brand/mark.svg"] { content: url("../brand/mark-dark.svg"); }
+}

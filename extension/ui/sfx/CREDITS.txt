@@ -1,0 +1,173 @@
+QA Wrap UI sounds: provenance and licence
+==========================================
+
+Set:           "Glass & Air" (family A4, the A3 set with every sound given its own identity), 24 OGG Vorbis files, 48 kHz stereo.
+Author:        QA Wrap (original synthesis: pitched, shaped and mixed in Python),
+               with recorded CC0 layers by the authors listed below.
+Licence:       the synthesis is part of QA Wrap; every recorded layer is CC0 1.0,
+               a public domain dedication.
+Licence URL:   https://creativecommons.org/publicdomain/zero/1.0/
+               (http://creativecommons.org/publicdomain/zero/1.0/)
+Source:        freesound.org, found through the Openverse API (https://api.openverse.org)
+Retrieved:     2026-10-06
+Layer format:  128 kbps preview (MP3) of each recording: no Freesound API key was available, so no original WAV was used.
+
+Loudness is matched in the files; ui/sound.js sets the play-time gain (0 dB, except error +2.5 dB).
+CC0 needs no credit; it is given anyway.
+
+Recorded layers (all CC0 1.0, retrieved 2026-10-06, 128 kbps preview):
+
+Title:   Wine Glass Sustained Hard Note A4
+Author:  spectral9
+URL:     https://freesound.org/people/spectral9/sounds/256940
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: A4 and D4 notes of start, stop; low notes of error
+
+Title:   20180325_Wine glass.wav (struck, decaying ring)
+Author:  cabled_mess
+URL:     https://freesound.org/people/cabled_mess/sounds/566925
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: D5 and up notes in wake, sleep, start, stop, done, notice
+
+Title:   Wine glass rubbing
+Author:  cribbler
+URL:     https://freesound.org/people/cribbler/sounds/511458
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: wake swell
+
+Title:   Audio 01_07 (pen click)-01.wav
+Author:  shanecutrufello
+URL:     https://freesound.org/people/shanecutrufello/sounds/556289
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: copy
+
+Title:   Audio 01_07 (pen click)-02.wav
+Author:  shanecutrufello
+URL:     https://freesound.org/people/shanecutrufello/sounds/556288
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: copy
+
+Title:   Audio 01_07 (pen click)-03.wav
+Author:  shanecutrufello
+URL:     https://freesound.org/people/shanecutrufello/sounds/556304
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: copy
+
+Title:   Tactile Button Click.wav
+Author:  mrh4hn
+URL:     https://freesound.org/people/mrh4hn/sounds/426634
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: copy2, on2
+
+Title:   Light Switch Variations - Slow Normal Fast
+Author:  neverak
+URL:     https://freesound.org/people/neverak/sounds/708606
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: on
+
+Title:   Glass Tapped By Fingernail.wav
+Author:  RutgerMuller
+URL:     https://freesound.org/people/RutgerMuller/sounds/51038
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: strike tick
+
+Title:   small wine glass.wav
+Author:  Tairblenn
+URL:     https://freesound.org/people/Tairblenn/sounds/549899
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: glass taps in the A2-derived sounds
+
+Title:   medium wine glass.wav
+Author:  Tairblenn
+URL:     https://freesound.org/people/Tairblenn/sounds/549900
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: same
+
+Title:   large wine glass.wav
+Author:  Tairblenn
+URL:     https://freesound.org/people/Tairblenn/sounds/549895
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: same
+
+Title:   larger wine glass.wav
+Author:  Tairblenn
+URL:     https://freesound.org/people/Tairblenn/sounds/549896
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: same
+
+Title:   Vibrato Celesta C.wav
+Author:  acollier123
+URL:     https://freesound.org/people/acollier123/sounds/573617
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: high notes, blended with glass
+
+Title:   1/100 second camera shutter
+Author:  FenrirFangs
+URL:     https://freesound.org/people/FenrirFangs/sounds/213180
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: shot
+
+Title:   Camera shutter analogue film SLR 1/4 01
+Author:  cabled_mess
+URL:     https://freesound.org/people/cabled_mess/sounds/338220
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: shot2
+
+Title:   Switch click 4.wav
+Author:  deleted_user_2104797
+URL:     https://freesound.org/people/deleted_user_2104797/sounds/164549
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: on, off family
+
+Title:   Switch click 5.wav
+Author:  deleted_user_2104797
+URL:     https://freesound.org/people/deleted_user_2104797/sounds/164553
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: on, off family
+
+Title:   Paper Handling 1.wav
+Author:  Geoff-Bremner-Audio
+URL:     https://freesound.org/people/Geoff-Bremner-Audio/sounds/684077
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: copy family
+
+Title:   Fabric Rustling 2.aif
+Author:  RutgerMuller
+URL:     https://freesound.org/people/RutgerMuller/sounds/103994
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: remove family
+
+Title:   Whoosh_Simple_ER_SFX_1.wav
+Author:  Alex_hears_things
+URL:     https://freesound.org/people/Alex_hears_things/sounds/521044
+Licence: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
+Format:  128 kbps preview, retrieved 2026-10-06; used for: sleep, open, close air layer
+
+The per-file layer choice is in the mix record named above (the MANIFEST), which also lists layers downloaded but not used.
+
+Only these 24 files ship. sha256 of each file as shipped:
+
+9853610cd5d99210b292be27fe612bec5eea1f34c62845e4b0b888eb5f68c50b  close.ogg  8271 bytes
+318ece52b8b664af1050de2ed39245f872d7a5415db5fa80fba9f671e703810f  close2.ogg  8161 bytes
+3aaaf424a6aec2ab1cb75dca7c99ee88569b0ac3616e67a29912954cf2173a63  copy.ogg  8613 bytes
+512d7680540a1c248dd2df9ec71fcf879fec3da7912109ef2011af5b433c5c89  copy2.ogg  8442 bytes
+6815aad2f002f2fa7fee3fab4a8e2b8012e541269598ce4972b74707b59a9de9  done.ogg  20068 bytes
+6c41b7532ef858289c6132b3a6dd8d42e508aa86e659347bac3c8eb966f38717  error.ogg  16781 bytes
+0c801bf60d3051caf490764d64400abbfb4ea3c2cb8af381b654c0d1e1b72f9d  notice.ogg  18560 bytes
+1196f8c12c0b68e0aebfce17417e7760416ad7fac35a3c259c7634d3a2d5f235  off.ogg  6873 bytes
+391a6e2bff4012f1093563e698ae1298a3b7320bd45acf640fce19291188a3b2  off2.ogg  6680 bytes
+4c1ab280e83cc959ef0b393ed5657feefd233bfb532b967397134cb472480e20  on.ogg  6521 bytes
+e82fd168b861e1bb481c857b436442fe4da402b033df291060bc02c6a291b1de  on2.ogg  6438 bytes
+ad8c864fe9ee0350724e74a71e2eeb7cf47fc1e2207d9a8dff4e3f8927e7df1f  open.ogg  11397 bytes
+270c1f6914de2c474c5a4b31f12ad8d017c8eeb3970397a2971f611c35ca691f  open2.ogg  11093 bytes
+ace0f2e24c2e9c006cc290102f1f65d4faa16c0d035cefe3c9be0b258d1828bf  remove.ogg  6791 bytes
+17a3c41eb8e38f105b33fe4d785ea34b1026c09c0424e9c3fe5fcc58542fb5a1  remove2.ogg  6492 bytes
+de8dc0f795cd72e85031401c7896b21c95c0986fb70dac829c28256d24eaf01e  shot.ogg  11788 bytes
+0a41339b576192d9626c8795a05ce31026330d599d32fe4ccafb0f39896e2abf  shot2.ogg  10128 bytes
+20e7d667337aa33e471e23a8350224e00f55ed9b59dbb60b384bd1e683773ab8  sleep.ogg  20867 bytes
+703d10b5f187b59f66383df3a6172974bd9d17f9a44cb6d2877bfd50177a417f  start.ogg  17817 bytes
+c456fb99c9bf1017af236434ac8b6961e667c47ee74497a4759ecab14c9dca61  stop.ogg  21226 bytes
+f4d727fd1a84522816ed6236cb73e2b2ea75a637f0b53e5fd064ab86ffbfdefd  tap.ogg  6056 bytes
+0a1fe97ebf390274a5feae7129f8ad44053145965a30df173b40ca2c2abcc58a  tap2.ogg  6090 bytes
+1dd46bf7f7f55532cf480e951b35bc52bdc84a8e511775d18fc6988047ae08f9  tap3.ogg  6009 bytes
+021d0a2d7b53c705d1dd3b1c6eb1185153c72b6a85d3f94bd35216af8bfd83b3  wake.ogg  22737 bytes

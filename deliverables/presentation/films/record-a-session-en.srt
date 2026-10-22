@@ -1,0 +1,15 @@
+1
+00:00:02,400 --> 00:00:03,733
+Name what you are testing.
+
+2
+00:00:03,967 --> 00:00:06,300
+Press Start, and it holds every tab in the window.
+
+3
+00:00:06,533 --> 00:00:08,567
+No time limit. It runs until you stop it.
+
+4
+00:00:09,767 --> 00:00:12,100
+Stop, and the session is already a report.

@@ -1,0 +1,103 @@
+{
+  "manifest_version": 3,
+  "name": "QA Wrap",
+  "short_name": "QA Wrap",
+  "version": "3.6.4",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvwe01lG3fHxIKOX0Y8dx44PBTB1FrpjEHKOXXzyZ/sVRXNc4Yh17AXJkt6Hse6hKEKAz5bfm3FJMzAMiGWFANpZyzIxVxwSP77yQ7qGxasyS3o3TrF2gmRLxv1HjbL0kqx+ob50A1PthiGt3CS6DflRy7PvqDXv86Go0dMGFLpnKweL3ahiuZjKndxvc4g4H0Jnp3B3Ih7YS/Hi/GnAqplKcnDGGEPLYOHxBGes5hspU6qJ13x6R+mUwWUY5ZJsBEK68j6kxY0D6qc0UZ5lq4+Fok/QKm2JJo4CNqSjfoBjSmu7lDFUw06gYBaWvIJizAuW5UF4ifIFGkMRHI3ZyzQIDAQAB",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "contextMenus",
+    "tabs",
+    "scripting",
+    "webNavigation",
+    "clipboardWrite",
+    "alarms",
+    "downloads",
+    "notifications",
+    "offscreen",
+    "activeTab",
+    "tabCapture",
+    "debugger",
+    "webRequest",
+    "sidePanel",
+    "system.display"
+  ],
+  "optional_permissions": [
+    "cookies",
+    "desktopCapture",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "QA Wrap",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "devtools_page": "devtools/devtools.html",
+  "commands": {
+    "toggle-recording": {
+      "suggested_key": {
+        "default": "Alt+Shift+Q"
+      },
+      "description": "__MSG_cmdToggleRecording__"
+    },
+    "pick-element": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "__MSG_cmdPickElement__"
+    },
+    "_execute_action": {
+      "description": "__MSG_cmdExecuteAction__"
+    },
+    "toggle-rtl": {
+      "description": "__MSG_cmdToggleRtl__"
+    },
+    "inject-data": {
+      "suggested_key": {
+        "default": "Alt+Shift+E"
+      },
+      "description": "__MSG_cmdInjectData__"
+    },
+    "record-tab": {
+      "suggested_key": {
+        "default": "Alt+Shift+V"
+      },
+      "description": "__MSG_cmdRecordTab__"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "storage": {
+    "managed_schema": "managed-schema.json"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; img-src 'self' data: blob:; media-src 'self' blob:; form-action 'none'; frame-ancestors 'self'"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "homepage_url": "https://nj-burrito.github.io/QA-Wrap/"
+}

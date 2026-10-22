@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "about": "Bug Hunt feature map: each level is centred on one real QA Wrap feature. Names, icons and sources are the extension's own (tested against platform/i18n and _locales). The game page shows `primary` on the level card, `extras` as optional bonus, and \"You learned: <name> - use it at work <learn>\" on the clear card.",
+  "features": {
+    "wake": {
+      "icon": "awake",
+      "source": {
+        "file": "platform/i18n",
+        "key": "popup.onboard.testSite"
+      },
+      "en": "Test this site",
+      "ar": "اختبر هذا الموقع"
+    },
+    "shortcut": {
+      "icon": "key",
+      "source": {
+        "file": "_locales",
+        "key": "cmdToggleRecording"
+      },
+      "en": "Start / stop a QA session",
+      "ar": "ابدأ جلسة اختبار أو أوقفها",
+      "keys": "Alt+Shift+Q"
+    },
+    "recorder": {
+      "icon": "event-console",
+      "source": {
+        "file": "platform/i18n",
+        "key": "overlay.autopilot.caught"
+      },
+      "en": "Caught: {what}",
+      "ar": "تم التقاط: {what}"
+    },
+    "notbug": {
+      "icon": "event-request",
+      "source": {
+        "file": "platform/i18n",
+        "key": "overlay.autopilot.notBug"
+      },
+      "en": "Not a bug",
+      "ar": "ليست علّة"
+    },
+    "note": {
+      "icon": "note",
+      "source": {
+        "file": "platform/i18n",
+        "key": "popup.note.add"
+      },
+      "en": "Add note",
+      "ar": "أضف ملاحظة"
+    },
+    "notetype": {
+      "icon": "tag-bug",
+      "source": {
+        "file": "platform/i18n",
+        "key": "popup.note.typeChevron"
+      },
+      "en": "Note type",
+      "ar": "نوع الملاحظة"
+    },
+    "shot": {
+      "icon": "tool-shot",
+      "source": {
+        "file": "platform/i18n",
+        "key": "tools.shot.label"
+      },
+      "en": "Take a screenshot",
+      "ar": "التقط لقطة شاشة"
+    },
+    "markup": {
+      "icon": "shape-circle",
+      "source": {
+        "file": "platform/i18n",
+        "key": "report.media.markUp"
+      },
+      "en": "Mark up",
+      "ar": "ضع علامات"
+    },
+    "stop": {
+      "icon": "stop",
+      "source": {
+        "file": "platform/i18n",
+        "key": "popup.live.stop"
+      },
+      "en": "Stop",
+      "ar": "أوقف"
+    },
+    "copy": {
+      "icon": "copy",
+      "source": {
+        "file": "platform/i18n",
+        "key": "popup.done.copyReport"
+      },
+      "en": "Copy report",
+      "ar": "انسخ التقرير"
+    },
+    "buffer": {
+      "icon": "timeline",
+      "source": {
+        "file": "platform/i18n",
+        "key": "buffer.save"
+      },
+      "en": "Save last 2 minutes",
+      "ar": "احفظ آخر دقيقتين"
+    }
+  },
+  "chips": {
+    "shortcut": {
+      "en": "I used the shortcut",
+      "ar": "استخدمت الاختصار"
+    },
+    "notbug": {
+      "en": "I pressed Not a bug",
+      "ar": "ضغطت «ليست علّة»"
+    },
+    "notetype": {
+      "en": "I picked a note type",
+      "ar": "اخترت نوع الملاحظة"
+    },
+    "markup": {
+      "en": "I marked the spot",
+      "ar": "وضعت علامة على الموضع"
+    },
+    "buffer": {
+      "en": "I saved the last 2 minutes",
+      "ar": "حفظت آخر دقيقتين"
+    },
+    "note": {
+      "en": "I added a note",
+      "ar": "أضفت ملاحظة"
+    },
+    "shot": {
+      "en": "I took a screenshot",
+      "ar": "التقطت لقطة شاشة"
+    }
+  },
+  "levels": {
+    "1": {
+      "primary": "wake",
+      "with": [],
+      "extras": [
+        "shortcut"
+      ],
+      "learn": {
+        "en": "when a page acts up, wake QA Wrap first, then repeat what you did.",
+        "ar": "حين تتصرف صفحة بغرابة، شغّل QA Wrap أولًا ثم أعد ما فعلته."
+      }
+    },
+    "2": {
+      "primary": "recorder",
+      "with": [
+        "notbug"
+      ],
+      "extras": [],
+      "learn": {
+        "en": "when something fails, QA Wrap records it by itself; mark harmless noise as expected.",
+        "ar": "حين يفشل شيء يسجّله QA Wrap وحده؛ وسِم الضجيج غير الضار على أنه متوقَّع."
+      }
+    },
+    "3": {
+      "primary": "note",
+      "with": [],
+      "extras": [
+        "notetype"
+      ],
+      "learn": {
+        "en": "the moment you see something odd, type a note and press Enter.",
+        "ar": "لحظة ترى شيئًا غريبًا، اكتب ملاحظة واضغط Enter."
+      }
+    },
+    "4": {
+      "primary": "shot",
+      "with": [],
+      "extras": [
+        "markup"
+      ],
+      "learn": {
+        "en": "when a layout looks wrong, take a screenshot and mark the spot.",
+        "ar": "حين يبدو التصميم خاطئًا، التقط لقطة شاشة وضع علامة على الموضع."
+      }
+    },
+    "5": {
+      "primary": "stop",
+      "with": [
+        "copy"
+      ],
+      "extras": [
+        "buffer"
+      ],
+      "learn": {
+        "en": "when you finish, stop, copy the report and paste it into your ticket.",
+        "ar": "حين تنتهي، أوقف التسجيل وانسخ التقرير والصقه في تذكرتك."
+      }
+    }
+  }
+}

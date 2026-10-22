@@ -1,0 +1,181 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/*
+  The first-run notice. Tokens and primitives come from ../ui/tokens.css.
+
+  Why a sheet this plain: the store rule this page exists for (`research/51d`
+  section 1) is about a person actually reading a disclosure, not about the
+  disclosure being present. So there is one column, one measure, and nothing on
+  the page that competes with the six facts — no illustration, no accent block,
+  no card sitting inside another card. The only colour is the shemagh strip
+  under the header and the one primary button, which is the affirmative action.
+
+  The pair is the layout, not a decoration on it. `.pair` is two equal columns,
+  Arabic and English, sharing a row and a rule; each fact is one `<li>`, so the
+  two halves of a fact cannot drift apart vertically however long either runs.
+  Under 760px they stack — a phone-width column of two 20ch measures is worse
+  than one after the other, and the reading order (Arabic first, matching the
+  source) is preserved either way.
+*/
+
+body {
+  min-height: 100vh;
+  background: var(--backdrop);
+  background-attachment: fixed;
+}
+
+.sheet {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px clamp(var(--sp-4), 5vw, 40px) 0;
+}
+
+/* ── the header ───────────────────────────────────────────────────────── */
+
+.head { display: grid; gap: var(--sp-3h); }
+
+.head .brand { gap: 9px; }
+
+.head .shemagh { max-width: 120px; }
+
+.head h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.2px; line-height: 1.25; }
+
+.lede { margin-top: var(--sp-half); font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+
+.head-pair { border-bottom: 1px solid var(--border); padding-bottom: 22px; }
+
+/* ── one fact, twice ──────────────────────────────────────────────────── */
+
+/* UI rework round 2 (research/56 round-2, "glass on floating layers only;
+   content cards solid"): the six facts are the whole page's content, not a
+   floating layer, so the list and its rows are the opaque surfaces. */
+.points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-top: 22px;
+  box-shadow: var(--shadow-1);
+}
+
+/* The 1px gap above is the rule between facts; each row paints over it. */
+.point { background: var(--surface-raised); padding: var(--sp-4) clamp(var(--sp-3h), 3vw, 22px); }
+
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(var(--sp-4), 4vw, 36px);
+  align-items: start;
+}
+
+.side { min-width: 0; }
+
+.point h2 { font-size: 14px; font-weight: 700; line-height: 1.4; }
+
+.point p { margin-top: 5px; font-size: 13.5px; line-height: 1.75; color: var(--text); }
+
+/* ── the answer ───────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2h);
+  margin-top: 26px;
+}
+
+#accept { flex: 0 0 auto; }
+
+/* r7 F1 carry: the three link buttons carry a bilingual label each; at 320-440 px they wrap inside the sheet instead of running past it. */
+.actions .btn { max-width: 100%; white-space: normal; text-align: start; }
+
+.note { flex: 1 0 100%; font-size: 12px; line-height: 1.6; }
+
+/* Both states are one line of type on a tinted ground: they replace a row of
+   buttons, so they need to be findable without being an alarm. */
+.done, .failed {
+  margin-top: 26px;
+  padding: var(--sp-3h) 18px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.done { background: var(--pass-soft); color: var(--pass); border-color: var(--pass); }
+
+.failed { background: var(--fail-soft); color: var(--fail); border-color: var(--fail); }
+
+.sheet .page-foot { margin-top: 34px; padding-inline: 0; }
+
+/* Two 20ch measures side by side is not a column, it is a puzzle. */
+@media (max-width: 760px) {
+  .pair { grid-template-columns: minmax(0, 1fr); gap: var(--sp-3h); }
+  .head-pair .side + .side { border-top: 1px solid var(--border); padding-top: var(--sp-3h); }
+  .point .side + .side { border-top: 1px solid var(--border); padding-top: var(--sp-3); }
+}
+
+/* ════════════════════════════════════ the welcome sheet in motion (v5) ══ */
+/*
+  This page is a disclosure a person is meant to actually read, so it gets the
+  least motion of any surface in the product: the header and the six facts
+  arrive once, in reading order, and after that nothing on the page moves until
+  the person answers it. The vocabulary is `ui/motion.css`, which this page now
+  loads for the tokens as much as for the keyframes.
+
+  The stagger runs down the list of facts rather than across the two columns,
+  because the pair — Arabic and English — is one fact and has to arrive as one.
+*/
+
+.head { animation: qaw-in-down 180ms var(--motion-ease) both; }
+
+.points > .point { animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards; }
+.points > .point { animation-delay: calc(var(--motion-step) * 5); }
+.points > .point:nth-child(1) { animation-delay: 0ms; }
+.points > .point:nth-child(2) { animation-delay: var(--motion-step); }
+.points > .point:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+.points > .point:nth-child(4) { animation-delay: calc(var(--motion-step) * 3); }
+.points > .point:nth-child(5) { animation-delay: calc(var(--motion-step) * 4); }
+
+.actions { animation: qaw-fade-in var(--motion-base) var(--motion-ease) var(--motion-fast) both; }
+
+/* The answer. Both outcomes replace the row of buttons, so both arrive the way
+   a notice arrives rather than simply being there. */
+.done, .failed { animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards; }
+@supports (interpolate-size: allow-keywords) {
+  .done, .failed { animation-name: qaw-unfold-h; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin-ring { animation: none !important; stroke-dashoffset: 0; }
+  .head, .points > .point, .actions, .done, .failed {
+    animation: none !important;
+    animation-delay: 0ms !important;
+    opacity: 1 !important;
+    transform: none !important;
+    height: auto !important;
+    clip-path: none !important;
+  }
+}
+
+/* Shorter welcome: three facts, the button, the rest under a disclosure; then the pin hint. */
+.key-facts { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+.key { background: var(--surface-raised); padding: var(--sp-3) clamp(var(--sp-3h), 3vw, 22px); }
+.key p { font-size: 14px; line-height: 1.7; }
+.all-facts { margin-top: 18px; }
+.all-facts > summary { cursor: pointer; font-weight: 700; padding: var(--sp-2h) 0; }
+.all-facts .points { margin-top: var(--sp-2h); }
+.pin-hint { margin: var(--sp-2h) 0; }
+.pin-hint svg { max-inline-size: 100%; block-size: auto; direction: ltr; }
+.pin-bar { fill: var(--surface-raised); stroke: var(--border); stroke-width: 2; }
+.pin-url { fill: var(--border); }
+.pin-glyph { fill: var(--text-muted); }
+.pin-ring { fill: none; stroke: var(--pass); stroke-width: 3; stroke-dasharray: 126; animation: qaw-draw-on var(--motion-slow) var(--motion-ease) var(--motion-base) both; stroke-dashoffset: 126; } /* one-shot draw, on the page's own answer */
+.pin-block[hidden], .pin-steps li[hidden] { display: none; }
+.pin-num { fill: var(--text); font-size: 14px; font-weight: 800; text-anchor: middle; }
+.pin-steps { margin: var(--sp-half) 0 var(--sp-3); padding-inline-start: 22px; line-height: 1.8; }
+.done { display: grid; gap: var(--sp-2); }

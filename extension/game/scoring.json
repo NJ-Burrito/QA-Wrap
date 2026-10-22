@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "about": "Bug Hunt scoring table, keyed by QA Wrap feature (see features.json for names and icons): ONE file, read by engine.js (through scoring.js), the level-clear card, the finale and the tests. Correct rows are multiplied by the quick-catch multiplier (x1..x5); wrong rows are not, reset the multiplier quietly, and the score never goes below 0. Every wrong row carries `reason`, a string key the game page supplies in EN and AR (one short sentence that teaches the right use).",
+  "tools": {
+    "page": {
+      "correct": {
+        "points": 100,
+        "kinds": {
+          "catch": 100,
+          "bonus": 150
+        }
+      },
+      "wrong": {
+        "points": -25,
+        "reason": "score.wrong.page-decoy",
+        "kinds": {
+          "decoy": {
+            "points": -25,
+            "reason": "score.wrong.page-decoy"
+          }
+        }
+      }
+    },
+    "wake": {
+      "correct": {
+        "points": 50,
+        "kinds": {
+          "awake": 50
+        }
+      },
+      "wrong": null
+    },
+    "shortcut": {
+      "correct": {
+        "points": 50,
+        "kinds": {
+          "chip": 50
+        }
+      },
+      "wrong": null
+    },
+    "recorder": {
+      "correct": {
+        "points": 50,
+        "kinds": {
+          "caught": 50
+        }
+      },
+      "wrong": null
+    },
+    "notbug": {
+      "correct": {
+        "points": 100,
+        "kinds": {
+          "chip": 100
+        }
+      },
+      "wrong": null
+    },
+    "note": {
+      "correct": {
+        "points": 100,
+        "kinds": {
+          "after-catch": 100,
+          "chip": 50
+        }
+      },
+      "wrong": {
+        "points": -25,
+        "reason": "score.wrong.note-early",
+        "kinds": {
+          "early": {
+            "points": -25,
+            "reason": "score.wrong.note-early"
+          },
+          "duplicate": {
+            "points": -25,
+            "reason": "score.wrong.note-duplicate"
+          }
+        }
+      }
+    },
+    "notetype": {
+      "correct": {
+        "points": 50,
+        "kinds": {
+          "chip": 50
+        }
+      },
+      "wrong": null
+    },
+    "shot": {
+      "correct": {
+        "points": 100,
+        "kinds": {
+          "after-catch": 100,
+          "chip": 50
+        }
+      },
+      "wrong": {
+        "points": -25,
+        "reason": "score.wrong.shot-early",
+        "kinds": {
+          "early": {
+            "points": -25,
+            "reason": "score.wrong.shot-early"
+          },
+          "wrong-level": {
+            "points": -25,
+            "reason": "score.wrong.shot-wrong-level"
+          }
+        }
+      }
+    },
+    "markup": {
+      "correct": {
+        "points": 50,
+        "kinds": {
+          "chip": 50
+        }
+      },
+      "wrong": null
+    },
+    "stop": {
+      "correct": {
+        "points": 100,
+        "kinds": {
+          "after-catch": 100
+        }
+      },
+      "wrong": {
+        "points": -50,
+        "reason": "score.wrong.stop-early",
+        "kinds": {
+          "early": {
+            "points": -50,
+            "reason": "score.wrong.stop-early"
+          }
+        }
+      }
+    },
+    "copy": {
+      "correct": {
+        "points": 100,
+        "kinds": {
+          "report": 100
+        }
+      },
+      "wrong": {
+        "points": -50,
+        "reason": "score.wrong.copy-no-bug",
+        "kinds": {
+          "no-bug": {
+            "points": -50,
+            "reason": "score.wrong.copy-no-bug"
+          }
+        }
+      }
+    },
+    "buffer": {
+      "correct": {
+        "points": 50,
+        "kinds": {
+          "chip": 50
+        }
+      },
+      "wrong": null
+    }
+  },
+  "par": {
+    "1": 60,
+    "2": 45,
+    "3": 60,
+    "4": 50,
+    "5": 80
+  },
+  "num": {
+    "speedMax": 50,
+    "chainMax": 5,
+    "dupMs": 3000,
+    "hintIdleMs": 8000,
+    "clearGraceMs": 2500,
+    "clearGraceBonusMs": 6000,
+    "pasteHeadingMax": 60,
+    "starsPerLevel": 3
+  },
+  "trial": {
+    "about": "Hard trials (stages 6 and 7, game/trial.js). Points for a correct action = tools.<tool>.correct.kinds.<kind> x factor. Score exists only for a full clear, best kept per stage in bughunt.trial.v1, never added to the main run score or stars. Every death ends the run (the run points are lost with it); `wrong` names the existing deduction row where one exists, null where the cause is new.",
+    "factor": 2,
+    "clearBonus": {
+      "6": 500,
+      "7": 1000
+    },
+    "restEvery": 8,
+    "stillHereAt": 10,
+    "unlockStars": 2,
+    "actions": {
+      "shortcut": { "tool": "shortcut", "kind": "chip" },
+      "buffer": { "tool": "buffer", "kind": "chip" },
+      "shot": { "tool": "shot", "kind": "after-catch" },
+      "note": { "tool": "note", "kind": "after-catch" },
+      "markup": { "tool": "markup", "kind": "chip" },
+      "notbug": { "tool": "notbug", "kind": "chip" },
+      "recorder": { "tool": "recorder", "kind": "caught" },
+      "stop": { "tool": "stop", "kind": "after-catch" },
+      "copy": { "tool": "copy", "kind": "report" }
+    },
+    "causes": {
+      "buffer-early": { "wrong": null },
+      "buffer-missed": { "wrong": null },
+      "shot-early": { "wrong": "shot/early" },
+      "shot-missed": { "wrong": null },
+      "shot-over": { "wrong": "shot/wrong-level" },
+      "note-early": { "wrong": "note/early" },
+      "note-missed": { "wrong": null },
+      "note-over": { "wrong": "note/duplicate" },
+      "dead-missed": { "wrong": null },
+      "decoy-click": { "wrong": "page/decoy" },
+      "notbug-missed": { "wrong": null },
+      "notbug-real": { "wrong": null },
+      "stop-early": { "wrong": "stop/early" },
+      "stop-missed": { "wrong": null },
+      "start-missed": { "wrong": null },
+      "start-nokey": { "wrong": null },
+      "markup-missed": { "wrong": null },
+      "paste-missed": { "wrong": null }
+    },
+    "badges": ["trial6", "trial7", "nodeath6", "sekiro", "stillhere"]
+  },
+  "notDetectable": [
+    "note-empty (the extension saves no empty note, so the count never moves)",
+    "note-text-duplicate (only timing is judged)",
+    "shortcut, notbug, notetype, markup, buffer: the page cannot see these presses (no signal), so they are optional self-report chips; notbug is accepted only after the harmless failure really fired"
+  ]
+}

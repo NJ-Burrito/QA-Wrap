@@ -1,0 +1,124 @@
+{
+  "_comment": [
+    "Hosts whose presence on a page is a fact worth reporting, grouped by what",
+    "they are for. JSON and not a module: background/fine-print.js is loaded",
+    "through the offscreen door and this file is fetched beside it, so neither",
+    "is in the service worker's boot graph, which tools/test-worker-imports.mjs",
+    "holds to a hard byte ceiling.",
+    "",
+    "Suffix matching, so 'www.google-analytics.com' and any regional variant of",
+    "it are one entry. A host being here is not an accusation: analytics on a",
+    "site is normal and often disclosed. What the check reports is that the page",
+    "called it, and whether the policy pages that ought to name it exist.",
+    "",
+    "Deliberately short. A list of nine hundred hosts is a maintenance burden",
+    "that goes stale in a month and turns a QA finding into a blocklist",
+    "argument. These are the ones a tester will actually meet."
+  ],
+  "categories": {
+    "analytics": {
+      "label": "Analytics",
+      "why": "Records what visitors do. Needs consent in the EU and a line in the privacy policy.",
+      "hosts": [
+        "google-analytics.com",
+        "analytics.google.com",
+        "googletagmanager.com",
+        "stats.g.doubleclick.net",
+        "matomo.cloud",
+        "plausible.io",
+        "segment.com",
+        "segment.io",
+        "mixpanel.com",
+        "amplitude.com",
+        "heap.io",
+        "statcounter.com",
+        "clarity.ms",
+        "hotjar.com",
+        "hotjar.io",
+        "fullstory.com",
+        "logrocket.com",
+        "smartlook.com",
+        "yandex.ru",
+        "mc.yandex.ru"
+      ]
+    },
+    "advertising": {
+      "label": "Advertising",
+      "why": "Builds a profile of the visitor across sites. Consent is not optional in most jurisdictions.",
+      "hosts": [
+        "doubleclick.net",
+        "googlesyndication.com",
+        "googleadservices.com",
+        "adservice.google.com",
+        "facebook.net",
+        "connect.facebook.net",
+        "ads-twitter.com",
+        "analytics.twitter.com",
+        "ads.linkedin.com",
+        "px.ads.linkedin.com",
+        "snap.licdn.com",
+        "bat.bing.com",
+        "criteo.com",
+        "criteo.net",
+        "taboola.com",
+        "outbrain.com",
+        "adroll.com",
+        "pubmatic.com",
+        "rubiconproject.com",
+        "tiktok.com",
+        "analytics.tiktok.com"
+      ]
+    },
+    "social": {
+      "label": "Social embeds",
+      "why": "A widget from another company, loaded into your page, that can see the visitor.",
+      "hosts": [
+        "platform.twitter.com",
+        "syndication.twitter.com",
+        "facebook.com",
+        "instagram.com",
+        "youtube.com",
+        "youtube-nocookie.com",
+        "vimeo.com",
+        "linkedin.com",
+        "pinterest.com",
+        "disqus.com",
+        "addthis.com",
+        "sharethis.com"
+      ]
+    },
+    "support": {
+      "label": "Support and chat",
+      "why": "A live chat widget is a third party reading the page and often the visitor's details.",
+      "hosts": [
+        "intercom.io",
+        "intercomcdn.com",
+        "zendesk.com",
+        "zdassets.com",
+        "crisp.chat",
+        "tawk.to",
+        "drift.com",
+        "livechatinc.com",
+        "freshchat.com",
+        "hubspot.com",
+        "hs-scripts.com"
+      ]
+    },
+    "payments": {
+      "label": "Payments",
+      "why": "Expected on a shop, and worth naming: the visitor's card details pass through it.",
+      "hosts": [
+        "stripe.com",
+        "js.stripe.com",
+        "paypal.com",
+        "paypalobjects.com",
+        "checkout.com",
+        "adyen.com",
+        "razorpay.com",
+        "hyperpay.com",
+        "tap.company",
+        "moyasar.com"
+      ]
+    }
+  }
+}

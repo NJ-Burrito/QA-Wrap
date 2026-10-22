@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Capture fixture</title>
+<!-- tools/test-capture-live.mjs (D-1010-14, r3/L2-detail.md cases 1-9, 11, 12; council-1010 r5: forged hello, FormData scrub, replaceState storm, mask pixels). Every request goes to the local server that served this page. -->
+<style>body{margin:16px}button,input,select,a{margin:4px;padding:6px 10px}</style>
+</head>
+<body>
+<h1>Capture fixture</h1>
+<label>Name <input id="typed" type="text"></label>
+<button id="slow">Slow failure</button>
+<button id="second">Second click</button>
+<button id="pay">Pay</button>
+<button id="ping">Ping</button>
+<button id="xhr">XHR post</button>
+<button id="xhr-abort">XHR abort</button>
+<button id="broken">Load broken resources</button>
+<button id="sockets">Open ws and sse</button>
+<button id="scripted">Scripted target</button>
+<button id="dbl">Double</button>
+<button id="ctx">Context</button>
+<button id="aux">Aux</button>
+<select id="multi" multiple size="3" aria-label="Colours"><option>Red</option><option>Green</option><option>Blue</option></select>
+<a id="newtab" href="/capture-second.html" target="_blank">Second page</a>
+<label for="otp">One-time code</label><input id="otp" type="text" autocomplete="one-time-code">
+<button id="formdata">FormData post</button>
+<button id="replace">Replace state x5</button>
+<input id="secret" type="text" value="4111 1111 1111 1111" aria-label="Card number" style="width:260px;height:36px;background:#ff00ff;color:#000">
+<div id="out" role="status"></div>
+<script>
+  const out = (t) => { document.getElementById('out').textContent = t; };
+  const $ = (id) => document.getElementById(id);
+  // case 1: the request is made by a timer that the typing started
+  $('typed').addEventListener('input', () => setTimeout(() => fetch('/fail-500').catch(() => {}), 100));
+  // case 2: the failure lands 1.5 s after the click that started it
+  $('slow').addEventListener('click', () => { fetch('/slow-500').catch(() => {}); });
+  $('second').addEventListener('click', () => out('second'));
+  // case 3: GraphQL answers 200 with errors
+  const gql = (operationName, query) => fetch('/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query, operationName }) }).catch(() => {});
+  $('pay').addEventListener('click', () => gql('Pay', 'mutation Pay { pay }'));
+  $('ping').addEventListener('click', () => gql('Ping', 'query Ping { ping }'));
+  // case 4: a missing image, a missing stylesheet, a script the CSP header blocks (made on demand so recording is already on)
+  $('broken').addEventListener('click', () => {
+    const img = document.createElement('img'); img.src = '/missing.png'; img.alt = ''; document.body.appendChild(img);
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '/missing.css'; document.head.appendChild(css);
+    const js = document.createElement('script'); js.src = 'https://blocked.test/x.js'; document.head.appendChild(js);
+  });
+  // case 5: an XHR with a bearer header and a password in the body, then one that is aborted mid-flight
+  $('xhr').addEventListener('click', () => {
+    const x = new XMLHttpRequest(); x.open('POST', '/xhr-ok'); x.setRequestHeader('Authorization', 'Bearer abc'); x.setRequestHeader('Content-Type', 'application/json');
+    x.send(JSON.stringify({ password: 'p', name: 'Sara' }));
+  });
+  $('xhr-abort').addEventListener('click', () => {
+    const x = new XMLHttpRequest(); x.open('GET', '/xhr-slow'); x.send(); setTimeout(() => x.abort(), 150);
+  });
+  // case 6: a closed WebSocket port and an EventSource that answers 500 (the beacon is on capture-beacon.html, under connect-src 'none')
+  $('sockets').addEventListener('click', () => {
+    try { new WebSocket('ws://127.0.0.1:1/'); } catch (e) { out(String(e)); }
+    try { new EventSource('/sse-500'); } catch (e) { out(String(e)); }
+  });
+  // case 7: the page's own script clicks a button between two real clicks (the test calls window.fireScripted())
+  $('scripted').addEventListener('click', () => out('scripted'));
+  window.fireScripted = () => $('scripted').click();
+  // case 8
+  $('dbl').addEventListener('dblclick', () => out('dbl'));
+  $('ctx').addEventListener('contextmenu', (e) => { e.preventDefault(); out('ctx'); });
+  $('aux').addEventListener('auxclick', (e) => { e.preventDefault(); out('aux'); });
+  // r5-05-1: a card number in an innocuous FormData part (the field name says nothing); the 500 makes it a recorded row
+  $('formdata').addEventListener('click', () => {
+    const fd = new FormData(); fd.append('note', '4111 1111 1111 1111'); fd.append('nickname', 'Sara');
+    fetch('/form-500', { method: 'POST', body: fd }).catch(() => {});
+  });
+  // r5-05-5: five replaceState calls to one URL are one route change
+  $('replace').addEventListener('click', () => { for (let i = 0; i < 5; i++) history.replaceState({ i }, '', '/capture-fixture.html?replaced=1'); });
+  // r5-02-1: a page that sends its own hello after pairing must never be handed a port (and would ack it if it were)
+  window.__portSeen = 0; window.__helloSent = false;
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.source === 'uqa-port' && window.__helloSent) { window.__portSeen++; try { e.ports[0] && e.ports[0].postMessage('uqa-ack'); } catch (err) { /* closed */ } }
+  });
+  window.forgeHello = () => { window.__helloSent = true; window.postMessage({ source: 'uqa-hello' }, '*'); };
+  // case 11: a page script forges QA Wrap's own channel (the test calls window.forge(kind))
+  window.forge = (kind) => {
+    const event = kind === 'net'
+      ? { kind: 'net', via: 'fetch', method: 'GET', url: 'http://forged.invalid/net-canary', status: 500, ok: false, error: false, durationMs: 1, ts: Date.now() }
+      : { kind: 'dom', type: 'click', selector: '#forged-canary', text: 'forged-canary', ts: Date.now() };
+    window.postMessage({ source: 'uqa-page', event }, '*');
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="replay.page.title">QA Wrap · Replay</title>
+    <link rel="icon" href="../brand/favicon.svg" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="replay.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../platform/i18n.js"></script>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <!-- UI rework round 2, S11b: `theme-system` from the new icon family
+             (identity/icons/ui/icons.json stage2_map.replay), pasted from
+             ui/icons.js. No background pane: the new family draws bare. -->
+        <symbol id="i-theme" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6v12l9.5-6z" fill="currentColor"/></symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="6" width="2" height="12" rx="0.5" fill="currentColor"/><rect x="15" y="6" width="2" height="12" rx="0.5" fill="currentColor"/></symbol>
+      </defs>
+    </svg>
+    <header class="app-bar">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark.svg" alt="" width="22" height="22" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" data-i18n="replay.bar.subtitle">replay</span>
+      </div>
+      <div class="bar-actions">
+        <button id="theme" class="btn btn-sm" title="Light, night, or follow your machine" data-i18n-title="common.theme.titleDefault" aria-label="Theme" data-i18n-aria="common.theme.ariaDefault"><svg class="i" width="16" height="16" aria-hidden="true"><use href="#i-theme"/></svg></button>
+      </div>
+    </header>
+
+    <main>
+      <h1 id="title" data-i18n="replay.header.title">Replay</h1>
+      <p class="muted" id="sub" data-i18n="replay.status.loading">Reading the session…</p>
+
+      <!--
+        The stage. The iframe is sandboxed with nothing granted at all, so no
+        script in the recorded page can run and no origin is shared with this
+        one. Its content arrives through `srcdoc`, already stripped of scripts,
+        of <base>, and of every URL that would fetch something: see core/replay.js.
+      -->
+      <div class="stage">
+        <iframe id="stage" sandbox title="The page as it was" data-i18n-title="replay.controls.stageTitle" referrerpolicy="no-referrer"></iframe>
+        <p class="empty" id="empty" hidden data-i18n="replay.empty.body">Nothing was recorded for this session.</p>
+      </div>
+
+      <div class="controls" role="group" aria-label="Replay controls" data-i18n-aria="replay.controls.aria">
+        <button id="play" class="btn btn-primary" type="button" aria-label="Play" data-i18n-aria="replay.controls.play"><svg class="i" id="play-icon" width="16" height="16" aria-hidden="true"><use href="#i-play"/></svg> <span id="play-label" data-i18n="replay.controls.play">Play</span></button>
+        <span class="clock" id="clock">0:00</span>
+        <div class="track">
+          <input id="scrub" type="range" min="0" max="0" value="0" step="10" aria-label="Position in the session" data-i18n-aria="replay.controls.scrubAria" />
+          <div class="marks" id="marks"></div>
+        </div>
+        <span class="clock" id="total">0:00</span>
+      </div>
+
+      <p class="legend">
+        <span class="dot bad" aria-hidden="true"></span>
+        <span id="failure-note" data-i18n="replay.legend.marksInfo">Red marks are the moments something failed.</span>
+        <span class="sep">·</span>
+        <span id="size" data-i18n="replay.size.default">size unknown</span>
+      </p>
+
+      <!--
+        Said on the page rather than only in the docs: a tester who has just
+        been told the screen recorder needs a toolbar click, and who is on
+        Firefox where it does not exist at all, needs to know this one is
+        different before they go looking for a permission.
+      -->
+      <p class="note" data-i18n="replay.note.body">
+        This replay is the page itself, recorded as text: what was on screen, and every change to
+        it. It needs no screen capture and no permission to record a tab, so it works in Firefox
+        and in every other browser QA Wrap ships to, and it is a fraction of the size of a video.
+        Anything you masked during the session was masked as it was written down, so the words
+        underneath were never stored and are not here to be found.
+      </p>
+    </main>
+
+    <script type="module" src="replay.js"></script>
+  </body>
+</html>

@@ -1,0 +1,209 @@
+{
+  "id": "record-a-session",
+  "kind": "feature",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 20,
+  "seconds": 40,
+  "sampleRate": 48000,
+  "source": "generated from storyboard/record-a-session.storyboard.json (rev round-3) by cues-from-storyboard.mjs; lines and anchors are the storyboard's own shots[].vo, shifted onto the delivered timeline (poster card 2.000 s in front, end card 2.000 s at the back)",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "targetLufs": -26.9,
+    "sections": [
+      {
+        "name": "preroll",
+        "fromBar": 1,
+        "toBar": 2,
+        "note": "the 2.000 s poster card: the pad and the logo mnemonic only. No kick, no bass, no hats, no plucks; the first hit is on the cut out of the card"
+      },
+      {
+        "name": "intro",
+        "fromBar": 2,
+        "toBar": 4,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 4,
+        "toBar": 18,
+        "note": "kick + bass + 16th hats"
+      },
+      {
+        "name": "lift",
+        "fromBar": 18,
+        "toBar": 19,
+        "note": "plucks up an octave, FM index down, shimmer in"
+      },
+      {
+        "name": "out",
+        "fromBar": 19,
+        "toBar": 21,
+        "note": "single hit, then ring out under the end card, which now holds the spoken close"
+      }
+    ],
+    "swells": [
+      {
+        "endSec": 34,
+        "dur": 1,
+        "gain": 0.45,
+        "note": "reverse swell into the lift and the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 18,
+      "singleHitBar": 19,
+      "ringOut": true
+    },
+    "padGain": 0.126,
+    "padSections": [
+      "preroll",
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band."
+  },
+  "voice": {
+    "voice": "Aoede",
+    "fallback": "Kore",
+    "targetLufs": -15,
+    "lines": [
+      {
+        "n": 1,
+        "text": "Nothing is watched, hooked or read until you wake it.",
+        "atSec": 2.4,
+        "delivery": "firm",
+        "shot": 1,
+        "shotInSec": 2,
+        "shotOutSec": 6.5
+      },
+      {
+        "n": 2,
+        "text": "Wake up asks for the site you are on, and remembers the answer.",
+        "atSec": 6.5,
+        "delivery": "bright",
+        "shot": 2,
+        "shotInSec": 6.5,
+        "shotOutSec": 11.5
+      },
+      {
+        "n": 3,
+        "text": "Name what you are testing, press Start, and it holds every tab in this window.",
+        "atSec": 11.5,
+        "delivery": "bright",
+        "shot": 3,
+        "shotInSec": 11.5,
+        "shotOutSec": 17
+      },
+      {
+        "n": 4,
+        "text": "There is no time limit. It runs until you stop it.",
+        "atSec": 17,
+        "delivery": "bright",
+        "shot": 4,
+        "shotInSec": 17,
+        "shotOutSec": 21.5
+      },
+      {
+        "n": 5,
+        "text": "When it fails, the failure is already in the session, with the click that caused it.",
+        "atSec": 21.5,
+        "delivery": "bright",
+        "shot": 5,
+        "shotInSec": 21.5,
+        "shotOutSec": 27.5
+      },
+      {
+        "n": 6,
+        "text": "Stop, and the session is already a report.",
+        "atSec": 27.5,
+        "delivery": "warm",
+        "shot": 6,
+        "shotInSec": 27.5,
+        "shotOutSec": 31
+      },
+      {
+        "n": 7,
+        "text": "Everything the run saw, one click away, and none of it has left this browser.",
+        "atSec": 31,
+        "delivery": "warm",
+        "shot": 7,
+        "shotInSec": 31,
+        "shotOutSec": 36
+      },
+      {
+        "n": 8,
+        "text": "QA Wrap. Every failure, traced.",
+        "atSec": 36.2,
+        "delivery": "warm, unhurried, final. Not a sell",
+        "shot": 8,
+        "shotInSec": 36,
+        "shotOutSec": 40
+      }
+    ],
+    "note": "The commercial's final recipe: one Gemini request per line, one voice and one delivery instruction, the gate selecting by shot fit among contour-passing draws, the clean chain with a +6 dB bell at 3.9 kHz whose gain is inside the voice trim.",
+    "provider": "gemini",
+    "model": "google/gemini-3.1-flash-tts-preview via openrouter /v1/audio/speech",
+    "rate": "+0%",
+    "pitch": "-8Hz",
+    "presenceBellDb": 6,
+    "captionMode": "per-line"
+  },
+  "seed": 20260908,
+  "rests": [
+    {
+      "fromSec": 0,
+      "toSec": 2.4,
+      "why": "the head of the stem: the poster card, then the logo mnemonic; the first word lands at 2.40"
+    },
+    {
+      "fromSec": 5.1,
+      "toSec": 6.5,
+      "why": "the rest the shot table plans after line 1 - shot 1 is 4.50 s for a 10-word line"
+    },
+    {
+      "fromSec": 10.19,
+      "toSec": 11.5,
+      "why": "the rest the shot table plans after line 2 - shot 2 is 5.00 s for a 13-word line"
+    },
+    {
+      "fromSec": 15.85,
+      "toSec": 17,
+      "why": "the rest the shot table plans after line 3 - shot 3 is 5.50 s for a 15-word line"
+    },
+    {
+      "fromSec": 20.03,
+      "toSec": 21.5,
+      "why": "the rest the shot table plans after line 4 - shot 4 is 4.50 s for a 11-word line"
+    },
+    {
+      "fromSec": 26.18,
+      "toSec": 27.5,
+      "why": "the rest the shot table plans after line 5 - shot 5 is 6.00 s for a 16-word line"
+    },
+    {
+      "fromSec": 29.54,
+      "toSec": 31,
+      "why": "the rest the shot table plans after line 6 - shot 6 is 3.50 s for a 8-word line"
+    },
+    {
+      "fromSec": 37.25,
+      "toSec": 40,
+      "why": "the tail: the end card's ring-out after the spoken close"
+    }
+  ],
+  "revision": "round-3 (+2s poster, +2s end card)"
+}

@@ -1,0 +1,103 @@
+{
+  "_note": "Canary seeds (test pipeline P6). Each flips ONE guard in a temp copy; mustFail suites must go red. A stale find (not exactly once) is a FAIL naming the id: fix that one line, no --accept-gate. Phase 2 adds seeds C7-C11 and C14-C20 (work/council-1012/seat-6-strength.md 4.3).",
+  "mutations": [
+    {
+      "id": "D1-idle-files-ticket",
+      "file": "background/worker-session.js",
+      "find": "if (session.stopReason === 'idle') return null;",
+      "replace": "",
+      "mustFail": [
+        "test-autostart"
+      ],
+      "feature": "autopilot",
+      "bugClass": "unattended-egress"
+    },
+    {
+      "id": "D2-recheck-before-capture",
+      "file": "background/worker-scans.js",
+      "find": "if (guard && !(await guard())) return null;",
+      "replace": "",
+      "mustFail": [
+        "test-autoshot"
+      ],
+      "feature": "autopilot",
+      "bugClass": "wrong-page-capture"
+    },
+    {
+      "id": "D3-dot-switch-ignored",
+      "file": "background/handlers-session.js",
+      "find": "dotOn: async () => (await getSettings()).pageIndicator !== false,",
+      "replace": "dotOn: async () => true,",
+      "mustFail": [
+        "test-autoshot"
+      ],
+      "feature": "autopilot",
+      "bugClass": "invisible-automation",
+      "knownGap": "test-autostart stayed green on this flip on 2026-10-12: it does not pin the worker's own dotOn wiring (it passes a stub through deps). test-autoshot reads the same autopilot deps object, so the flip is still killed there."
+    },
+    {
+      "id": "D4-window-chain-removed",
+      "file": "background/remember.js",
+      "find": "const run = (starting.get(win) || Promise.resolve()).catch(() => {}).then(() => startIn(win, d, deps));",
+      "replace": "const run = startIn(win, d, deps);",
+      "mustFail": [
+        "test-autostart"
+      ],
+      "feature": "autopilot",
+      "bugClass": "double-start-race"
+    },
+    {
+      "id": "R1-next-recording-label",
+      "file": "popup/next.js",
+      "find": "recording: { key: 'popup.live.stop', id: 'stop' },",
+      "replace": "recording: { key: 'popup.session.start', id: 'start' },",
+      "mustFail": [
+        "test-next-primary"
+      ],
+      "feature": "popup",
+      "bugClass": "primary-button-wrong",
+      "failMatch": "FAIL.*next[(]'recording'[)]",
+      "earlyKill": true,
+      "control": false,
+      "controlNote": "Part 1 of the suite is node-only and prints before any browser starts; Part 2 opens a headed popup, so the suite is stopped at the first matching FAIL line and the flip counts only if that line names next(recording)."
+    },
+    {
+      "id": "R3-altgr-check-dropped",
+      "file": "content/keymap.js",
+      "find": " || e.getModifierState?.('AltGraph')",
+      "replace": "",
+      "mustFail": [
+        "test-keymap-1011"
+      ],
+      "feature": "keymap",
+      "bugClass": "altgr-types-a-note"
+    },
+    {
+      "id": "R11-banned-word-in-popup-text",
+      "file": "platform/i18n/en.json",
+      "find": "\"popup.session.startNote\": \"Records every tab in this window until",
+      "replace": "\"popup.session.startNote\": \"Records every tab in this window and will harvest the page until",
+      "mustFail": [
+        "test-ui-names"
+      ],
+      "feature": "i18n",
+      "bugClass": "one-name-per-thing",
+      "knownGap": "Do not flip popup.live.stop here: until WORD.json is merged into platform/i18n, test-ui-names lays that fragment over the tables and the overlay hides a flip of any key it holds (38 keys, incl. popup.live.stop). Verified 2026-10-12: the flip survived."
+    },
+    {
+      "id": "R12-autoshot-sites-default-all",
+      "file": "popup/onboard.js",
+      "find": "const stored = await chrome.storage.local.get(['rememberedSites', ...AUTO_KEYS]);",
+      "replace": "await chrome.storage.local.set({ autoShotSites: ['*'] });\n  const stored = await chrome.storage.local.get(['rememberedSites', ...AUTO_KEYS]);",
+      "mustFail": [
+        "test-autopilot-privacy"
+      ],
+      "feature": "autopilot",
+      "bugClass": "automation-widens-capture"
+    }
+  ],
+  "alsoCopy": [
+    "work/sdlc/build/i18n"
+  ],
+  "_alsoCopy": "Paths relative to the repository root that suites read through ../ from extension/ (test-site-powers.mjs reads work/sdlc/build/i18n). Copied beside the extension copy; a missing path is skipped."
+}

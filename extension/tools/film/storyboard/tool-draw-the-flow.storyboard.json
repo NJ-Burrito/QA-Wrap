@@ -1,0 +1,752 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "tool-draw-the-flow",
+  "kind": "tool",
+  "tool": "diagram",
+  "label": "Draw the flow",
+  "group": "Design",
+  "mode": "expert",
+  "batch": "b3",
+  "en": "Draw the flow",
+  "ar": "ارسم المسار",
+  "blurb": "The session as a workflow on one A4 page, every box yours to move, reword and recolour.",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 8,
+  "seconds": 16,
+  "frames": 480,
+  "aspects": [
+    "h"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    }
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 4,
+    "frame": 240,
+    "why": "The draw the flow tool doing its job."
+  },
+  "srt": "deliverables/tutorials/tool-draw-the-flow-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "They ask for a picture.",
+      "inSec": 0.15,
+      "outSec": 2.15,
+      "inFrame": 5,
+      "outFrame": 65,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "They ask for a picture.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 2000,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "No time to draw it.",
+      "inSec": 2.15,
+      "outSec": 4.15,
+      "inFrame": 65,
+      "outFrame": 125,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "No time to draw it.",
+      "dwell": {
+        "needMs": 1650,
+        "gotMs": 2000,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "Start, steps, decision.",
+      "inSec": 4.15,
+      "outSec": 7.15,
+      "inFrame": 125,
+      "outFrame": 215,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Start, steps, decision.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 3000,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "A red box where it failed.",
+      "inSec": 7.15,
+      "outSec": 10.15,
+      "inFrame": 215,
+      "outFrame": 305,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "A red box where it failed.",
+      "dwell": {
+        "needMs": 2150,
+        "gotMs": 3000,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "One A4 page, all yours.",
+      "inSec": 10.15,
+      "outSec": 14,
+      "inFrame": 305,
+      "outFrame": 420,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "One A4 page, all yours.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 3850,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "Every failure, traced.",
+      "inSec": 14,
+      "outSec": 16,
+      "inFrame": 420,
+      "outFrame": 480,
+      "shots": [
+        6
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 2000,
+        "ok": true
+      },
+      "note": "The tool films reveal the end card as one card: two seconds cannot stage four reveals and still give the tagline its reading time. The tagline therefore has no entrance of its own, which is why its reading clock carries the standard 150 ms and not the 400 ms of a staged display line. The last frame is identical to the commercial."
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0,
+      "outSec": 2,
+      "inFrame": 0,
+      "outFrame": 59,
+      "frames": 60,
+      "picture": "REPORT. A finished session timeline, dense with events.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/tool-draw-the-flow/h/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "assert": [
+          {
+            "kind": "noRealHost"
+          }
+        ],
+        "mode": "expert"
+      },
+      "chip": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A product owner asks for the picture.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 2,
+      "outSec": 4,
+      "inFrame": 60,
+      "outFrame": 119,
+      "frames": 60,
+      "picture": "PANEL. Draw the flow pressed.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/tool-draw-the-flow/h/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"diagram\"]"
+          }
+        ],
+        "mode": "expert"
+      },
+      "chip": "Draw the flow",
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "A tester never has time to draw it.",
+        "startSec": 1.75,
+        "jCut": true,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "swish",
+          "atSec": 2
+        },
+        {
+          "cue": "tick",
+          "atSec": 2.4,
+          "fromMark": true
+        },
+        {
+          "cue": "bed",
+          "section": "drive",
+          "atSec": 4
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 4,
+      "outSec": 7,
+      "inFrame": 120,
+      "outFrame": 209,
+      "frames": 90,
+      "picture": "DIAGRAM. The A4 sheet builds box by box from the session: start, each step.",
+      "capture": {
+        "rect": "DIAGRAM",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/tool-draw-the-flow/h/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "assert": [
+          {
+            "kind": "minNodes",
+            "selector": "#sheet [data-node]",
+            "min": 3
+          }
+        ],
+        "mode": "expert"
+      },
+      "chip": "Draw the flow",
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Start, each step, the decision the application answered.",
+        "startSec": 3.75,
+        "jCut": true,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 4.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 7,
+      "outSec": 10,
+      "inFrame": 210,
+      "outFrame": 299,
+      "frames": 90,
+      "picture": "DIAGRAM, cut on action. The red failure box draws, then the end.",
+      "capture": {
+        "rect": "DIAGRAM",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/tool-draw-the-flow/h/shot-04"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "assert": [
+          {
+            "kind": "minNodes",
+            "selector": "#sheet [data-node]",
+            "min": 3
+          }
+        ],
+        "mode": "expert"
+      },
+      "chip": "Draw the flow",
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "And a red box where it failed.",
+        "startSec": 6.75,
+        "jCut": true,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 7.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 10,
+      "outSec": 14,
+      "inFrame": 300,
+      "outFrame": 419,
+      "frames": 120,
+      "picture": "SHEET. A box reworded in the inspector, then the sheet alone on the ground.",
+      "capture": {
+        "rect": "SHEET",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1018,
+              "h": 720
+            },
+            "place": {
+              "x": 451,
+              "y": 140
+            },
+            "placeSource": "A4 landscape fitted to the stage box height",
+            "clip": "film/capture/tool-draw-the-flow/h/shot-05"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "assert": [
+          {
+            "kind": "svgViewBox",
+            "equals": "0 0 1123 794"
+          }
+        ],
+        "mode": "expert"
+      },
+      "chip": "Draw the flow",
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Every box moves, rewords and recolours. The legend explains itself.",
+        "startSec": 9.75,
+        "jCut": true,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 10.3
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 14,
+      "outSec": 16,
+      "inFrame": 420,
+      "outFrame": 479,
+      "frames": 60,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 14,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 14.52,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 14,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 14,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 15.3,
+          "toSec": 16
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 14.2,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 14
+        },
+        {
+          "cue": "logo",
+          "atSec": 14
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 14
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 6,
+    "cuts": 5,
+    "cutsPer10s": 3.13,
+    "asl": 2.67,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 5
+  }
+}

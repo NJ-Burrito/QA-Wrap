@@ -1,0 +1,134 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* The replay page. Every colour is a token: see ui/identity-tokens.css. */
+
+body {
+  margin: 0;
+  background: var(--backdrop);
+  background-attachment: fixed;
+  color: var(--text);
+  font: 14px/1.55 var(--font);
+}
+
+.app-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--glass-edge);
+}
+.brand { display: flex; align-items: center; gap: var(--sp-2); }
+.brand-name { font-weight: 800; letter-spacing: -0.01em; }
+.muted { color: var(--text-muted); }
+.bar-actions { margin-inline-start: auto; display: flex; gap: var(--sp-2); }
+
+main { max-width: 1180px; margin: 0 auto; padding: 18px 18px 48px; }
+h1 { font-size: var(--t-title); letter-spacing: var(--track-title); line-height: var(--lead-title); margin: 0 0 2px; font-weight: 800; }
+#sub { margin: 0 0 14px; font-size: var(--t-body); font-weight: var(--weight-body); letter-spacing: var(--track-body); line-height: var(--lead-body); }
+
+/* The stage keeps the recorded page's own aspect rather than stretching it:
+   a replay that reflows is a replay of a different layout. */
+.stage {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md, 7px);
+  overflow: hidden;
+  min-height: 320px;
+}
+#stage {
+  display: block;
+  width: 100%;
+  height: 62vh;
+  border: 0;
+  background: #fff;
+}
+.empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 14px 0 6px;
+}
+.clock {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small);
+  color: var(--text-muted);
+  min-width: 42px;
+  text-align: center;
+}
+.track { position: relative; flex: 1; }
+#scrub { width: 100%; margin: 0; height: 24px; }
+
+/* The failure marks sit under the track, not on it, so they never swallow a
+   click meant for the scrubber. */
+.marks {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 1px;
+  height: 6px;
+  pointer-events: none;
+}
+.marks button {
+  position: absolute;
+  top: 0;
+  width: 24px; /* WCAG 2.5.8 target size; the visible mark is the 6 px square below */
+  height: 24px;
+  margin-inline-start: -12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.marks button::after {
+  content: '';
+  position: absolute;
+  inset: 0 9px 18px;
+  background: var(--fail);
+  border-radius: 1px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small);
+  color: var(--text-muted);
+  margin: 0 0 14px;
+}
+.legend .sep { opacity: 0.5; }
+.dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+.dot.bad { background: var(--fail); }
+
+.note {
+  max-width: 62ch;
+  font-size: var(--t-body);
+  color: var(--text-muted);
+  border-inline-start: 3px solid var(--border-strong, var(--border));
+  padding-inline-start: var(--sp-3);
+  margin: 0;
+}
+
+/* ── motion (research/72) ──────────────────────────────────────────────
+ * Tokens, curves and keyframes come from ui/motion.css, linked above — no
+ * new durations, no new curves. The bar arrives, the stage follows it in,
+ * and the shared `.btn` class already answers a pointer everywhere motion.css
+ * is loaded — this page adds nothing new for it. */
+.app-bar { animation: qaw-in-down var(--motion-base) var(--motion-ease) both; }
+.stage { animation: qaw-in-up var(--motion-base) var(--motion-ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-bar, .stage { animation: none !important; }
+}
+.i { width: 16px; height: 16px; vertical-align: -3px; flex: none; }

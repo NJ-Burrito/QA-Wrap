@@ -1,0 +1,2817 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* QA Wrap popup.
+ *
+ * Two regions, and the split is the whole design. The **topper** never moves:
+ * who this is, whether it is awake, what it just said, and the way out to the
+ * settings and the timeline. The **body** scrolls under it. A tester three
+ * screens down a tool list should still be able to see that the extension is
+ * awake and read the last thing it told them.
+ *
+ * The identity does the rest: warm ground, corn accent, hairline rules, one
+ * face for display and one for text. Nothing composites — no blend modes, no
+ * filters, no shadows on anything repeated — because this panel is 348px wide
+ * and every gram shows.
+ */
+
+html, body { height: 100%; }
+
+/*
+ * Tell the engine which way the page reads.
+ *
+ * Without `color-scheme` the scrolling region's scrollbar, the caret and the
+ * native controls stay in their light dress on a night panel — the one part of
+ * dark mode a stylesheet cannot repaint. The three cases mirror ui/theme.js
+ * exactly: an explicit dark choice, an explicit light choice that must survive
+ * a dark machine, and no attribute at all, which follows the machine.
+ */
+:root { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { color-scheme: dark; }
+}
+
+/*
+ * One spacing scale, in fours. Deliberately 4-pt, not 8-pt.
+ *
+ * The layout mixed 6, 7, 9, 11 and 13px in rules that sit next to each other,
+ * which is invisible in any one screenshot and obvious across all of them:
+ * nothing lines up between the topper, the cards and the footer. These are the
+ * only gaps the layout uses now. Micro-spacing inside a chip, a kbd or a
+ * partition row is left alone — that is type detail, not layout rhythm.
+ *
+ * Why 4 and not 8. The audit of 5 September asked for an 8-pt grid on the
+ * strength of Apple's guidance. Apple's Human Interface Guidelines set a
+ * target size (44 pt, honoured below and now on every control in this sheet);
+ * the 8-pt grid is Material's rule, and it is written for a phone screen, not
+ * for a 380px popup that has to hold sixteen tools beside the application
+ * under test. Every gap here is already an 8-pt multiple or its half: --sp-2
+ * and --sp-4 are 8 and 16, --sp-1 and --sp-3 the half-steps that a two-line
+ * tool row and a chip need. Rounding 4 up to 8 and 12 up to 16 costs roughly
+ * two tool rows of the visible list per screen, which is a Hick's-law loss to
+ * buy a rhythm nobody can see at this width. The scale stays 4-pt on purpose.
+ */
+:root {
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+}
+
+/*
+ * Three rows, one window: topper, scrolling body, footer.
+ *
+ * `auto 1fr auto` is what puts the footer on the bottom edge of whatever window
+ * this page is drawn in and gives the middle row everything left over. The old
+ * flex column said the same thing, but it could never be seen, because the body
+ * was hard-sized to the classic popup's box in all three surfaces.
+ */
+body {
+  /* Chrome sizes the classic popup to its document, so the popup surface — and
+     only the popup surface — names a size. In the float, 348x580 left a 112px
+     dead strip down the right and stranded the footer 215px above the bottom
+     edge of a 460x760 window. */
+  width: var(--sz-surface-w);
+  max-width: 100vw; /* r7-08-2: a 320 px viewport must not scroll sideways */
+  height: 580px;
+  margin: 0;
+  display: block;
+  overflow: hidden;
+  /* Layered-glass: a soft backdrop wash sits behind every translucent card
+     (topper, scroll body, footer, tool sheet) drawn on top of it. The token
+     falls back to a flat `--surface`-toned value under
+     `@supports not (backdrop-filter)` (identity-tokens.css), so this line
+     never needs its own fallback. */
+  background: var(--backdrop);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+/*
+ * The float and the side panel are windows the user drags, so the page takes
+ * the window rather than the popup's box.
+ *
+ * `100vh` is declared first and `100dvh` second on purpose: an engine that does
+ * not know `dvh` drops that line and keeps the one before it, which is the only
+ * way to write a fallback for a unit rather than for a property.
+ */
+html[data-surface='float'] body,
+html[data-surface='panel'] body {
+  width: 100%;
+  max-width: none;
+  min-width: var(--sz-surface-min);
+  height: 100vh;
+  height: 100dvh;
+}
+
+/*
+ * The float is a window the user drags to any width (research/56, round 2):
+ * it opens at 560 and the page follows it, through the container breakpoints at
+ * the end of this sheet, instead of stopping at a fixed column.
+ */
+html[data-surface='float'] { background: var(--surface-sunken); }
+
+/* ── the switch ────────────────────────────────────────────────────────── */
+
+/*
+ * The switch, and nothing else (Nader, 16 Oct 2026): one 44px row. The word says the state, the track says it again.
+ * The row IS the button (role="switch"), so the whole width is the hit target. It is never a .btn and never [data-primary]
+ * (rule 1), and its height never changes (rule 7). Logical properties only, so the thumb and the word swap sides in Arabic.
+ */
+.wake {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.wake-switch {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  box-sizing: border-box; inline-size: 100%; block-size: 44px; margin: 0; padding: 0 var(--sp-3);
+  border: 0; border-radius: inherit; background: transparent; color: var(--text);
+  font-family: var(--display); font-size: var(--t-head); font-weight: var(--weight-head); line-height: var(--lead-head); letter-spacing: 0.2px;
+  text-align: start; cursor: pointer;
+}
+.wake-switch:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.wake-track {
+  position: relative; flex: none; inline-size: 46px; block-size: 26px; box-sizing: border-box;
+  border: 2px solid var(--border-strong); border-radius: var(--r-pill); background: transparent;
+  transition: background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease);
+}
+/* The thumb is the tortilla: a ring with the filling in it. Asleep it is grey and sits at the start; awake it is corn and sits at the end. */
+.wake-thumb {
+  position: absolute; inset-block-start: 2px; inset-inline-start: 2px; inline-size: 18px; block-size: 18px; box-sizing: border-box;
+  display: grid; place-items: center; border: 2px solid var(--border-strong); border-radius: 50%; background: var(--surface);
+  transition: inset-inline-start var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease);
+}
+.wake-thumb::after { content: ''; inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--border-strong); transition: background-color var(--motion-fast) var(--motion-ease); }
+
+/* The consent gate. Laid out like the pointer card above it, because it is the
+   same shape of thing: a mark, a short paragraph, and one way forward. */
+.consent {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+}
+
+.consent-text { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.consent-text strong { font-family: var(--display); font-size: var(--t-body); font-weight: var(--weight-head); letter-spacing: var(--track-body); line-height: var(--lead-body); color: var(--accent-ink); }
+.consent-text a { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: 1.4; color: var(--accent-ink); text-decoration: underline; }
+.consent-text span { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: 1.4; color: var(--accent-ink); }
+
+/* Everything the notice gates, hidden until it is accepted. The footer stays,
+   because Tutorials is the one thing somebody should be able to reach first. */
+body[data-consented='false'] .state-banner,
+body[data-consented='false'] .pointer,
+body[data-consented='false'] .wake,
+body[data-consented='false'] #step-idle,
+body[data-consented='false'] #step-live,
+body[data-consented='false'] #step-done,
+body[data-consented='false'] .tools,
+body[data-consented='false'] .session-strip,
+body[data-consented='false'] #open-panel { display: none; }
+
+/* R05 (decision 113): the tool wall stays on screen behind the gate, dimmed,
+   instead of leaving the panel mostly empty — so a new user sees what is
+   being unlocked. Dimming here is presentational only; what actually stops
+   anything under it from being focused, tabbed to or activated is the real
+   `inert` attribute JS sets on #body (see paintConsent in popup.js), which
+   Chrome also treats as aria-hidden. pointer-events: none is belt-and-braces
+   for a browser without `inert` support. */
+/* dim ok: presentational only — the real gate is `inert` on #body (paintConsent
+   in popup.js), which already removes focus, tab order and pointer/AT access;
+   this opacity exists to show a new user what is being unlocked, so leaving it
+   above the gate's 0.85 floor would defeat the point of showing it at all. */
+body[data-consented='false'] .scroll { opacity: 0.45; pointer-events: none; overflow: hidden; }
+
+@media (prefers-contrast: more) {
+  /* dim ok: raised for anyone who asked the OS for more contrast — `inert` is
+     still the real gate, this opacity is still presentational; 0.75 keeps
+     muted body copy at 4.5:1 instead of the 0.45 default's failing ratio. */
+  body[data-consented='false'] .scroll { opacity: 0.75; }
+}
+
+body[data-awake='true'] .wake {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+body[data-awake='true'] .wake-switch { color: var(--accent-ink); }
+body[data-awake='true'] .wake-track { background: var(--accent); border-color: var(--accent); }
+body[data-awake='true'] .wake-thumb { inset-inline-start: 22px; border-color: var(--accent-text); background: var(--accent-text); }
+body[data-awake='true'] .wake-thumb::after { background: var(--accent); }
+@media (forced-colors: active) {
+  .wake-track { border-color: ButtonText; }
+  .wake-thumb { background: ButtonFace; border-color: ButtonText; }
+  .wake-thumb::after { background: ButtonText; }
+  body[data-awake='true'] .wake-track { background: Highlight; border-color: Highlight; }
+  body[data-awake='true'] .wake-thumb { background: HighlightText; border-color: HighlightText; }
+  body[data-awake='true'] .wake-thumb::after { background: Highlight; }
+}
+
+.topper-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding-top: var(--sp-2);
+}
+
+.product-line { display: inline-flex; align-items: center; gap: var(--sp-1); font-size: var(--t-micro); font-weight: 600; letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+.product-line img { opacity: 0.9; }
+.topper-foot .link { font-weight: 600; }
+
+/* ══════════════════════════════════════════════════════════════ scroll ══ */
+
+/* The 1fr row of the body grid. `min-height: 0` is the part that matters: a
+   grid row's default minimum is its content, so without it a long tool list
+   grows the row and pushes the footer off the bottom instead of scrolling. */
+.scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--sp-3) var(--sp-3) var(--sp-4);
+  /* The middle card: glass over the backdrop, same degrade path as
+     `.topper`. Asleep still wins via the higher-specificity rule below. */
+  background: var(--surface-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+}
+
+/*
+ * Asleep, the body is visibly not in play — and every word of it still readable.
+ *
+ * `opacity: 0.62` here was the same fault as the one on `.tool-row` below, one
+ * level up and worse: it dimmed the entire scrolling body, notes and headings
+ * included, to well under AA. Opacity is the wrong instrument for "unavailable"
+ * wherever there is text underneath it; a ground and an edge say the same thing
+ * and cost no contrast.
+ */
+body[data-awake='false'] .scroll { background: var(--surface-sunken); }
+body[data-awake='false'] .tool-help { opacity: 1; }
+
+.no-spill-note {
+  margin: var(--sp-3h) 0 0;
+  padding-top: var(--sp-2h);
+  border-top: 1px dashed var(--border);
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  line-height: var(--lead-micro);
+  letter-spacing: 0.04em;
+  color: var(--ok);
+  text-align: center;
+}
+
+/*
+ * `.btn-xs` — the smallest button, and still 44px of target.
+ *
+ * `#pointer-dismiss` has carried this class since it was written and no
+ * stylesheet has ever defined it, so it drew as an unstyled `.btn` at whatever
+ * the base size is. The size that shrinks is the *ink*: 11px type and tight
+ * padding, with the touch target restored by a transparent inset pseudo-element
+ * rather than by padding, so the control looks small and is not. 44px is the
+ * floor every other control in this file is held to; a dismiss button that is
+ * hard to hit is a dismiss button people press twice.
+ */
+.btn-xs {
+  position: relative;
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1.4;
+  border-radius: var(--r-sm);
+}
+.btn-xs::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, var(--sz-hit));
+  height: var(--sz-hit);
+  transform: translate(-50%, -50%);
+}
+
+/*
+ * A button that reads as a link, for a route inside a sentence.
+ *
+ * Used by the capture panel to point at the one page that can ask for the
+ * microphone and the camera. It is a `<button>` and not an `<a>` because it
+ * opens the options page through the extension API rather than by navigating,
+ * and a link that does not navigate is a lie to anyone using a screen reader.
+ */
+.linkish {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.linkish:hover { text-decoration-thickness: 2px; }
+.linkish:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+/* ══════════════════════════════════════════════════════ tools & help ══ */
+
+/*
+ * The tool wall: a fixed list. Below 440 it sits right under the session card and
+ * fills the room down to the strip, scrolling inside itself; nothing slides.
+ * `renderTools()`/`setMode()` just fill `#tools`.
+ */
+
+.tools { display: grid; gap: var(--sp-1); margin-bottom: var(--sp-3); }
+
+.tool-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-1);
+  align-items: center;
+}
+
+.tool-row .tool-help { grid-column: 1 / -1; }
+
+.tool-info {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1;
+  cursor: pointer;
+}
+/* `--accent-ink`, not `--accent-text`. The two tokens are not interchangeable
+   and the names do not say so: `--accent-text` is the colour to put ON a solid
+   accent fill, and here the fill is `--surface`. Corn on parchment measured
+   1.02:1 — the glyph was, in the most literal sense, invisible on hover, which
+   is when the tester is looking straight at it. `--accent-ink` is the token
+   tuned to pass AA against the surfaces. */
+.tool-info:hover { border-color: var(--accent); color: var(--accent-ink); }
+.tool-info[aria-expanded='true'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  /* Not --accent-text: that token is corn-on-pale, and corn on corn is nothing
+     at all. --n-0 is the end of the ramp that flips with the theme, so it reads
+     in both. */
+  color: var(--n-0);
+  font-weight: 700;
+}
+
+/* No accent rail. A stripe down the side of a panel is a colour that means
+   nothing: every help panel had one, so it distinguished none of them. The
+   sunken ground already says "this opened out of the row above". */
+.tool-help {
+  padding: var(--sp-2) var(--sp-3);
+  margin: 0 0 var(--sp-1);
+  border-inline-start: 1px solid var(--border);
+  border-start-start-radius: 0;
+  border-start-end-radius: var(--r-sm);
+  border-end-end-radius: var(--r-sm);
+  border-end-start-radius: 0;
+  background: var(--surface-sunken);
+}
+
+.tool-help p { margin: 0; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: 1.5; }
+.tool-what { color: var(--text); }
+.tool-why { color: var(--text-muted); margin-top: var(--sp-1) !important; }
+
+.tool-row.is-open .tool { border-color: var(--accent); }
+
+/* ───────────────────────────────────────────────────────────── sections *//* ───────────────────────────────────────────────────────────── sections */
+
+/* minmax(0, 1fr), not the implicit auto column: an auto column grows to its
+   widest child's min-content (a nowrap locator, a three-button row), which
+   pushed #step-idle 50px past a 320px side panel and gave the session a
+   sideways scrollbar. */
+section { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); margin-bottom: var(--sp-3); }
+
+.row { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-3); align-items: end; }
+.row-2 { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-2); }
+.row-4 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+
+.off {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding-bottom: var(--sp-1);
+}
+
+.fine { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); color: var(--text-muted); line-height: 1.45; }
+
+/* recording */
+
+.live { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--t-head); font-weight: var(--weight-head); letter-spacing: var(--track-head); line-height: var(--lead-head); }
+
+.live .star { flex: none; width: 13px; height: 13px; }
+/* While a session records, the header dot is live too. */
+
+.meta { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.meta.has-problems { color: var(--danger); font-weight: 600; }
+.timebox-line.soon { color: var(--warn); font-weight: 600; }
+.timebox-line.over { color: var(--danger); font-weight: 700; }
+
+.note-row { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-2); }
+
+.tags { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-1); }
+
+.tags button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 0;
+  font: inherit;
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  
+}
+.tags button:hover { border-color: var(--accent); color: var(--text); background: var(--surface-sunken); }
+.tags button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tags button:active { transform: translateY(1px); }
+/*
+ * A leading shape per tag, CSS-only (no markup change, no new id): once a tag
+ * is pressed its label is the same weight as the others, and colour alone is
+ * never a safe way to tell them apart (contrast rules, colour-blindness).
+ * Triangle / diamond / ring / square are the four the tags already suggest in
+ * words — warning, flagged, asked, noted.
+ */
+.tags button::before { content: ''; flex: none; width: 8px; height: 8px; }
+.tags button[data-tag='bug']::before {
+  width: 0; height: 0; background: none;
+  border-left: 4px solid transparent; border-right: 4px solid transparent;
+  border-bottom: 7px solid currentColor;
+}
+.tags button[data-tag='issue']::before { border: 1.5px solid currentColor; transform: rotate(45deg); }
+.tags button[data-tag='question']::before { border: 1.5px solid currentColor; border-radius: 50%; }
+.tags button[data-tag='']::before { border: 1.5px solid currentColor; border-radius: 1px; }
+
+/* saved */
+
+.saved { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--t-body); font-weight: var(--weight-body); letter-spacing: var(--track-body); line-height: var(--lead-body); }
+
+.tick {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--pass);
+  flex: none;
+  position: relative;
+}
+
+.tick::after {
+  /* Physical on purpose (r10-10-6): the mark is centred by hand inside a 15px circle that is not mirrored. A tick is not
+     directional, and inset-inline-start would slide it 1px off-centre in Arabic. */
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2.5px;
+  width: 4px;
+  height: 7px;
+  border: solid var(--surface);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+details#breakdown { font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); }
+details#breakdown summary { cursor: pointer; color: var(--text-muted); padding: var(--sp-1) 0; }
+details#breakdown[open] summary { color: var(--text); }
+
+.bd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-half); margin: var(--sp-half) 0; }
+.bd-grid label { display: grid; gap: 2px; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+.bd-grid input {
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+}
+
+/* ─────────────────────────────────────────────────────────────── tools */
+/* A list, not five cards. The accent rail appears on hover only, so the
+   resting state is almost pure text. */
+
+.tools {
+  display: grid;
+  border-top: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+
+
+
+/* The row-gap and the bottom padding are what the chips' hit boxes need: 24
+   clears two 44px boxes on wrapped lines, 12 keeps the last line's box off the
+   help text under it. */
+.capture-row { display: flex; gap: var(--sp-5) var(--sp-1); flex-wrap: wrap; padding: 0 var(--sp-3h) var(--sp-3); }
+
+/*
+ * A named choice on the capture panel: the webcam's corner, today.
+ *
+ * Laid out as label-then-control on one line rather than stacked, because the
+ * panel above it is a row of chips and a stacked field would read as a new
+ * section rather than one more option for the same recording. The select keeps
+ * a 28px box: it is a real target, unlike the 22px chips, which buy their hit
+ * area back with a pseudo-element.
+ */
+.cap-field {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-3h) var(--sp-2h);
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  color: var(--text-muted);
+}
+.cap-field select {
+  flex: 1;
+  min-width: 0;
+  min-height: 28px;
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+/*
+ * The pill is 22px tall and stays 22px tall: at this size it is a label with a
+ * tick, and three of them in a row is the whole "what goes in besides the
+ * picture" answer. But a 22px target is half of what a chip deciding whether
+ * the microphone is in the clip deserves, so the *hit box* is a 44px
+ * pseudo-element centred on the pill, drawing nothing. Target 44, mark 22.
+ */
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+/* Same pair of tokens, same mistake, and this one is worse: a ticked chip is
+   the only thing that says "the microphone is going into this clip". At 1.16:1
+   on `--accent-soft` the label was unreadable exactly when it mattered, so the
+   state the tester needed to check before pressing Record could not be checked
+   at all. `--accent-ink` is the accent tuned for a tinted ground. */
+.chip:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+.chip:has(input:disabled) { opacity: 0.5; cursor: default; }
+/* Refused by the browser, not by us: the chip stays readable and says where to
+   change it, rather than looking like a control that is merely busy. */
+.chip.is-denied { border-style: dashed; text-decoration: line-through; }
+.chip input { margin: 0; }
+.chip::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: var(--sz-hit);
+  transform: translateY(-50%);
+}
+
+#rule-list { display: grid; gap: var(--sp-1); margin-top: var(--sp-half); }
+
+.rule-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  /* 44 so the drop button's hit box has a row to sit in without spilling into
+     the row above or below, where it would delete the wrong rule. */
+  min-height: var(--sz-hit);
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--border);
+  border-inline-start: 2px solid var(--danger);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+}
+
+.rule-row > div { flex: 1; min-width: 0; display: grid; }
+.rule-row strong { font-size: var(--t-small); font-weight: 600; letter-spacing: var(--track-small); line-height: var(--lead-small); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rule-row em { font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+/* A spent rule stays visible: knowing it fired is part of the story — and
+   readable, which `opacity: 0.62` was not. The rail goes grey and the ground
+   sinks; the words keep every bit of their contrast. */
+.rule-row.is-spent {
+  border-inline-start-color: var(--border-strong);
+  border-style: dashed;
+  background: var(--surface);
+}
+
+/*
+ * The × keeps its 20px square: it is a quiet control on a row that is mostly
+ * text, and a 44px block of hover colour beside every rule would read as the
+ * point of the row. The hit box is a 44 x 44 pseudo-element instead, pinned to
+ * the row's right edge and reaching left over the label, which is not itself
+ * clickable. Its height matches .rule-row's min-height, so two neighbouring
+ * rows can never overlap targets.
+ */
+.rule-drop {
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--t-head);
+  font-weight: var(--weight-head);
+  letter-spacing: var(--track-head);
+  line-height: 1;
+  cursor: pointer;
+}
+.rule-drop:hover { background: var(--danger-soft); color: var(--danger); }
+.rule-drop::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  inset-inline-end: -8px;
+  width: var(--sz-hit);
+  height: var(--sz-hit);
+  transform: translateY(-50%);
+}
+
+/* A recording in progress is the one state the popup must never be ambiguous
+   about — it is capturing the screen. */
+.tool.is-recording {
+  border-color: var(--live);
+  color: var(--live);
+}
+.tool.is-recording::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tool.is-recording::before { animation: none; }
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding-block: var(--sp-2);
+  padding-inline: var(--sp-2h) 2px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-inline-start: 2px solid transparent;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-body);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--track-body);
+  text-align: start;
+  cursor: pointer;
+  
+}
+
+/* Only the name stretches. This used to be `.tool span`, which caught the icon
+   and the used-mark too and stretched a 14px circle into a wide green ellipse
+   while squeezing the label to "Check acc…". */
+.tool > span { flex: none; }
+.tool .tool-text { flex: 1; }
+.tool:hover { border-inline-start-color: var(--accent); background: var(--surface-sunken); }
+.tool[aria-pressed='true'] { border-inline-start-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.tool[aria-expanded='true'] { border-inline-start-color: var(--accent); }
+
+.tool kbd {
+  font: var(--t-micro)/1 var(--mono);
+  color: var(--text-muted);
+  border: 0;
+  background: none;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* ───────────────────────────────────────────────────── inline option panes */
+
+.opts {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-2h);
+  margin-bottom: var(--sp-3);
+  border-inline-start: 1px solid var(--border);
+  background: var(--surface-sunken);
+  border-start-start-radius: 0;
+  border-start-end-radius: var(--r-md);
+  border-end-end-radius: var(--r-md);
+  border-end-start-radius: 0;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+}
+
+.check { display: flex; align-items: center; gap: var(--sp-2); cursor: pointer; }
+.field { display: grid; gap: var(--sp-1); }
+.field > span { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+/* ─────────────────────────────────────────────────────────────── footer */
+
+
+
+.status { unicode-bidi: plaintext; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); min-height: 1em; }
+.status.err { color: var(--danger); }
+.status.ok { color: var(--ok); }
+/* No empty reservation: with nothing to say the line leaves the flow (a flex item still costs its gap), stays in the accessibility tree
+   so the live region is there when the next message lands, and takes its space only while it has words (1014 B1, bug 2). */
+.app .session > .status:empty { position: absolute; inline-size: 1px; block-size: 1px; min-block-size: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+
+.links { display: flex; gap: var(--sp-3h); }
+
+.link {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.link:hover { text-decoration: underline; }
+
+.tagline {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: 0.06em;
+  /* `--text-muted` is already the quiet end of the ramp and is tuned to pass
+     against the surfaces. Multiplying it by 0.75 took a 10px monospace line
+     below AA — the smallest type in the popup, dimmed hardest. The colour does
+     the quietening; the opacity only removed the contrast. */
+  color: var(--text-muted);
+}
+
+/* Shown only when the loaded worker does not match the extension on disk. */
+.stale-bar {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-2h) var(--sp-3);
+  margin: 0 -14px var(--sp-3);
+  background: var(--warn-soft);
+  border-bottom: 2px solid var(--warn);
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: 1.45;
+}
+
+.stale-bar strong { color: var(--warn); }
+
+/* ══════════════════════════════════════════ the test process, drawn ══ */
+/*
+   Everything in this block exists to answer one question the popup could not
+   answer before: what have I actually done on this run? It answers it three
+   times over, at two distances — a pip row per activity and a mark on each tool. That repetition is
+   deliberate; a tester glancing at a popup is not reading it.
+
+   Nothing here carries meaning by colour alone. Every state also changes shape
+   or weight, so it survives a high-contrast mode, a colour-blind reader and a
+   printed screenshot.
+*/
+
+/* ── an activity group ───────────────────────────────────────────────── */
+
+.activity { display: grid; margin-bottom: var(--sp-2h); }
+
+.activity-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-1);
+  padding: 0 2px;
+  font-size: var(--t-micro);
+  font-weight: 700;
+  line-height: var(--lead-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* The step number, because the activities are a sequence and the order is
+   information the tester is meant to read. */
+.activity-n {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.activity.is-touched .activity-n {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.activity.is-touched .activity-label { color: var(--text); }
+
+.activity-label { flex: 1; }
+
+.activity-meter { display: flex; gap: 2px; flex: none; }
+.activity-meter i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.activity-meter i.on { background: var(--accent); }
+
+/* The group's one-line description used to sit under every heading — eleven
+   sentences of explanation before a single tool. Each tool still explains
+   itself behind its own ?; the group needs only its name. */
+.activity-what { display: none; }
+
+/* ── a tool row ──────────────────────────────────────────────────────── */
+
+.tool-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+}
+.tool:hover .tool-icon,
+.tool[aria-pressed='true'] .tool-icon { color: var(--text); }
+
+/* The name and the one line under it, as a column.
+
+   The card used to be a row of nouns and nothing else: eighteen names, each a
+   ⓘ press away from the sentence that says what it is for, and that is a press
+   nobody makes about a tool they have not yet decided to use. The line is on
+   the card now. It wraps to at most two lines and then clips, so a long
+   sentence cannot push a card to four times its height. */
+.tool-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* A tool's name is never cut short: it wraps inside its column instead of
+   eliding. Arabic names run about half again as wide as the English ones, so
+   at the rail's narrowest a longer one takes a second line and the row grows
+   (min-block-size, not a fixed height). See tools/i18n-shots.mjs. */
+.tool-name { min-inline-size: 0; }
+.tool-one {
+  font-size: var(--t-micro);
+  font-weight: 400;
+  letter-spacing: var(--track-micro);
+  line-height: 1.35;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tool-row.is-unavailable .tool-one { opacity: 0.7; }
+/* One more line in Arabic: Arabic type measured about half again as wide per
+   character at 11px, so the same sentence wraps to three. Keyed on the
+   language and not on the direction, because this is about the script rather
+   than about which way it runs. See tools/i18n-shots.mjs. */
+:root[lang='ar'] .tool-one { -webkit-line-clamp: 3; }
+
+/* The one thing on the status line that is a control, and the ring it puts
+   round whatever it is sending the tester to.
+
+   E2: an error that names a problem and offers no way to it is a dead end. The
+   button appears only with the message it belongs to and goes when that
+   message does, so there is never a fix on screen for a problem that has been
+   fixed. */
+.status-fix {
+  display: inline-block;
+  margin-inline-start: var(--sp-half);
+  padding: 2px var(--sp-2);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--t-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+  cursor: pointer;
+}
+.status-fix:hover { background: var(--surface-sunken); }
+.is-spotlit {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+  border-radius: var(--r-md);
+  /* M04 (2026-09-17), Nader decision 120: shortened, not replaced — was
+     effectively 1.4 breathe cycles cleared late by JS; now one pass on the
+     slow duration, cleared right after it finishes. */
+  animation: qaw-spotlight var(--motion-slow) var(--motion-ease) 1;
+}
+@keyframes qaw-spotlight {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  20%, 60% { box-shadow: 0 0 0 5px var(--accent-soft); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-spotlit { animation: none; }
+}
+
+/*
+   Used, or not used, on THIS run.
+
+   An empty ring reads as "nothing here yet" at a glance without needing a
+   legend; a filled disc with a tick reads as done. The count only appears from
+   the second use, because "1" beside a tick is noise.
+*/
+.tool-state {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+  font: 600 var(--t-micro)/1 var(--mono);
+  color: transparent;
+  
+}
+
+.tool-state[data-used='true'] {
+  border-color: var(--pass);
+  background: var(--pass);
+  color: var(--n-0);
+}
+
+/* The tick, drawn rather than typed, so it sits on the same pixel grid as the
+   icons and does not depend on a font having a glyph for it. */
+.tool-state[data-used='true']:empty::after {
+  content: '';
+  width: 6px;
+  height: 3px;
+  border: 1.5px solid var(--n-0);
+  border-top: 0;
+  border-right: 0;
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+.tool-row.is-used .tool-name { color: var(--text); }
+
+/* The disclosure for a tool that has options of its own. */
+.tool-more {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--t-body);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--track-body);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform var(--dur-tap) var(--ease);
+}
+.tool-more:hover { border-color: var(--accent); color: var(--accent-ink); }
+/* Rotating the whole control was right when it was a bare chevron. It now
+   carries a word, and rotating that renders "Scope" as "ǝdoɔS" — which is
+   exactly what it did. Only the caret turns. */
+.tool-more[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Three controls on the right now, not two. */
+.tool-row { grid-template-columns: 1fr auto auto; }
+.tool-row:not(:has(.tool-more)) { grid-template-columns: 1fr auto; }
+.tool-row .tool-help,
+.tool-row .opts-tool { grid-column: 1 / -1; }
+
+/* ── what the syllabus calls it ──────────────────────────────────────── */
+
+.tool-istqb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  margin-top: var(--sp-2) !important;
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--border);
+}
+
+.tool-technique,
+.tool-type {
+  padding: 2px var(--sp-2);
+  border-radius: var(--r-pill);
+  font-size: var(--t-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+}
+.tool-technique { background: var(--accent-soft); color: var(--accent-ink); }
+.tool-type { border: 1px solid var(--border-strong); color: var(--text-muted); }
+
+.tool-principle {
+  margin-top: var(--sp-1) !important;
+  font-size: var(--t-micro) !important;
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1.45;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── options that belong to one tool ─────────────────────────────────── */
+
+.opts-tool {
+  margin: 0 0 var(--sp-2);
+  border-inline-start-color: var(--border);
+}
+
+.opts-head {
+  margin: 0;
+  font-size: var(--t-micro);
+  font-weight: 700;
+  line-height: var(--lead-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chip-icon { display: grid; place-items: center; }
+
+/* A recording in progress is the one state that gets the full glow, because it
+   is the one state where being wrong about it matters most. */
+.tool.is-recording { box-shadow: var(--ring-live); border-radius: var(--r-sm); }
+
+/* ── choosing a scope ─────────────────────────────────────────────────── */
+/*
+   Two cards with a small drawing each, rather than two words in a dropdown.
+   "Visible part" and "Whole page" are the same length and mean very different
+   things; the drawing is what makes the difference land before the label does.
+*/
+
+.scope { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+
+.scope-opt {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-2) var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow var(--dur-tap) var(--ease);
+}
+
+.scope-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.scope-art { color: var(--text-muted); line-height: 0; }
+.scope-opt b { font-size: var(--t-small); font-weight: 600; letter-spacing: var(--track-small); line-height: var(--lead-small); }
+.scope-opt em { font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: 1.35; color: var(--text-muted); }
+
+.scope-opt:hover { border-color: var(--border-strong); }
+
+.scope-opt:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: var(--ring-quiet);
+}
+.scope-opt:has(input:checked) .scope-art,
+.scope-opt:has(input:checked) b { color: var(--accent-ink); }
+
+/* Keyboard users get the same ring the rest of the popup uses. */
+.scope-opt:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ── designed values, and sizes ───────────────────────────────────────── */
+/*
+   Valid and invalid classes are separated by colour AND by a rail on the left,
+   because the distinction is the technique: several valid partitions can share
+   one test, while each invalid one needs its own or the first rejection masks
+   the rest. A reader who cannot tell them apart at a glance has a list, not a
+   design.
+*/
+
+.part-list { display: grid; gap: var(--sp-1); margin: var(--sp-1) 0 var(--sp-2); }
+
+.part {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px var(--sp-2);
+  width: 100%;
+  padding: var(--sp-half) var(--sp-2) var(--sp-2);
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  
+}
+.part:hover { background: var(--surface-sunken); }
+.part b { font-size: var(--t-small); font-weight: 600; letter-spacing: var(--track-small); line-height: var(--lead-small); }
+.part em { grid-column: 1 / -1; font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: 1.4; color: var(--text-muted); }
+
+.part-sample {
+  justify-self: end;
+  padding: 1px var(--sp-half);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font: var(--t-micro)/1.5 var(--mono);
+  color: var(--text-muted);
+  max-width: 46%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.part.is-valid { border-inline-start-color: var(--ok); }
+.part.is-invalid { border-inline-start-color: var(--danger); }
+/* Neither: the field declares no limit, so nobody knows which side this is on
+   — and pretending to know would be the whole failure this case reports. */
+.part.is-unknown { border-inline-start-color: var(--warn); border-inline-start-style: dashed; }
+.part.is-plain { border-inline-start-color: var(--accent); }
+
+.part.is-valid:hover { border-color: var(--ok); }
+.part.is-invalid:hover { border-color: var(--danger); }
+.part.is-plain:hover { border-color: var(--accent); }
+
+/* A tool this browser cannot run. Disabled and explained, never silently
+   broken — "chrome.offscreen is undefined" reads as a broken extension rather
+   than a platform limit. */
+/* Not `opacity: 0.5`. The row's own explanation of WHY the browser cannot run
+   this tool sits directly underneath, and halving the contrast of the name
+   above it is the one thing that makes that explanation harder to reach. */
+.tool-row.is-unavailable .tool { cursor: not-allowed; color: var(--text-muted); }
+.tool-row.is-unavailable .tool-name { text-decoration: line-through; text-decoration-thickness: 1px; }
+
+.tool-unavailable {
+  margin-top: var(--sp-2) !important;
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--border);
+  font-size: var(--t-micro) !important;
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1.5;
+  color: var(--warn);
+}
+
+/* ══════════════════════════════ tools, as buttons that look like it ══ */
+/*
+   The problem this replaces: a tool was a borderless row of text with a hairline
+   under it, which reads as a table of contents rather than as something you can
+   press. Worse, the only things on the row that DID look pressable — the round
+   "?" and the chevron — were the two least important controls, so the eye went
+   to them first.
+
+   The fix is affordance, in the plain sense: the whole row is a raised surface
+   with an edge, it lifts on hover, and it moves when pressed. The secondary
+   controls are ghosted until you reach for them, so they stop competing with
+   the thing they belong to.
+
+   Every rule here is written last on purpose — it overrides the earlier
+   list-styled version rather than editing it in place, so the two treatments
+   can be compared by deleting this block.
+*/
+
+.tools { display: grid; gap: 0; margin-bottom: var(--sp-3); border-top: 0; }
+
+/* The card. Everything about a tool lives inside it, including its help panel
+   and its options — so opening either reads as the card growing, not as a
+   separate thing appearing underneath. */
+.tool-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0;
+  margin-bottom: var(--sp-half);
+  border: 1px solid var(--border-strong);
+  /* The rail carries the used/unused state, which is status and not a control —
+     so it never competes with the buttons for attention. */
+  border-inline-start: 3px solid transparent;
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  transition: transform var(--dur-tap) var(--ease);
+}
+
+/* Hover moves the edge, not the card. The row used to carry `--shadow-1` at
+   rest and swap to `--shadow-2` under the pointer, which on a list of a dozen
+   rows is a dozen drop shadows and one of them growing. The press still moves,
+   because a press is a thing the tester did. */
+.tool-row:hover { border-color: var(--accent); }
+.tool-row:has(.tool:active) { transform: translateY(1px); }
+.tool-row:has(.tool:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tool-row.is-used { border-inline-start-color: var(--ok); }
+.tool-row.is-open { border-color: var(--accent); }
+
+/* The primary target: the whole left side of the card, edge to edge. */
+.tool {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding-block: var(--sp-3);
+  padding-inline: var(--sp-3) var(--sp-1);
+  border: 0;
+  border-start-start-radius: var(--r-md);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-end-start-radius: var(--r-md);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-body);
+  font-weight: 600;
+  letter-spacing: var(--track-body);
+  text-align: start;
+  cursor: pointer;
+}
+.tool:focus-visible { outline: none; } /* the card takes the ring, not the button */
+.tool:hover { background: none; }
+.tool:disabled { cursor: not-allowed; }
+.is-managed:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.tool-icon { color: var(--accent-ink); opacity: 0.85; }
+.tool-row:hover .tool-icon { opacity: 1; }
+
+.tool-name { font-weight: 600; }
+
+/* A toggle that is ON is the loudest thing in the list, because it is the one
+   state where being wrong costs something. */
+.tool[aria-pressed='true'] {
+  color: var(--accent-ink);
+}
+.tool-row:has(.tool[aria-pressed='true']) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.tool-row:has(.tool.is-recording) {
+  border-color: var(--live);
+  background: var(--accent-soft);
+  box-shadow: var(--ring-live);
+}
+.tool.is-recording { color: var(--live); }
+
+/* Status, not a control: no border, no button shape, just a mark. */
+.tool-state {
+  width: 15px;
+  height: 15px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  box-shadow: none;
+  color: var(--text-muted);
+  font: 600 var(--t-micro)/1 var(--mono);
+}
+.tool-state[data-used='false'] { background: none; box-shadow: none; }
+.tool-state[data-used='false']::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.tool-state[data-used='true'] { background: var(--ok); color: var(--n-0); box-shadow: none; }
+
+/* Secondary controls: present, findable, and quiet until reached for. */
+.tool-info,
+.tool-more {
+  width: 26px;
+  height: 26px;
+  margin: 0 var(--sp-1);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text-muted);
+  /* Visible enough to be discovered at rest, quiet enough not to compete with
+     the tool it belongs to. At 0.55 it read as decoration. */
+  opacity: 0.72;
+  transition: opacity var(--dur-tap) var(--ease);
+}
+.tool-row:hover .tool-info,
+.tool-row:hover .tool-more { opacity: 1; }
+.tool-info:hover,
+.tool-more:hover { background: var(--surface-sunken); color: var(--accent-ink); border-color: transparent; }
+.tool-info[aria-expanded='true'] {
+  opacity: 1;
+  background: var(--accent);
+  color: var(--n-0);
+}
+.tool-more[aria-expanded='true'] { opacity: 1; color: var(--accent-ink); background: var(--surface-sunken); }
+.tool-info:focus-visible,
+.tool-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* The shortcut belongs to the tool but is not part of the sentence, so it sits
+   apart rather than inline with the name. */
+.tool kbd {
+  padding: 2px var(--sp-half);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font: 500 var(--t-micro)/1.4 var(--mono);
+  color: var(--text-muted);
+}
+
+/* The help and the options grow the card rather than appearing beneath it. */
+.tool-row .tool-help,
+.tool-row .opts-tool {
+  grid-column: 1 / -1;
+  margin: 0;
+  border-top: 1px solid var(--border);
+  border-inline-start: 0;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  box-shadow: none;
+}
+.tool-row .tool-help { padding: var(--sp-3); background: var(--surface-sunken); }
+.tool-row .opts-tool { padding: var(--sp-3); background: var(--surface-sunken); }
+
+/*
+ * Asleep: unmistakably not available, and still fully readable.
+ *
+ * `opacity: 0.72` on the row multiplied every colour inside it — including the
+ * tool names and the one-line explanations — and dropped the whole list to
+ * between 2.5:1 and 4.0:1. That fails AA for body text, and it fails it for the
+ * one screen a new tester spends longest on: reading about the tools is
+ * precisely what somebody does BEFORE deciding to wake the extension, so the
+ * state that most needs to be legible was the state that was dimmed.
+ *
+ * The affordance is carried by the border and the ground instead. A dashed
+ * edge and a sunken, unlit surface say "not yet" without touching a single
+ * character's contrast, and the stripe down the left says which switch turns it
+ * on. Text stays at full opacity, explicitly, so a future rule cannot inherit
+ * a dimming from an ancestor.
+ */
+body[data-awake='false'] .tool-row {
+  border-style: dashed;
+  border-color: var(--border);
+  background: var(--surface-sunken);
+  box-shadow: none;
+}
+body[data-awake='false'] .tool-row > * { opacity: 1; }
+body[data-awake='false'] .tool-row .tool-icon { opacity: 0.55; }
+body[data-awake='false'] .tool-row:hover { border-color: var(--border-strong); box-shadow: none; }
+
+/*
+ * A tool this browser cannot run: plainly not available, and still readable.
+ *
+ * The same fault as the asleep state above — `opacity: 0.6` on the row dimmed
+ * the tool's name and its explanation along with everything else, and the
+ * explanation is the whole point: it is what tells the tester why the row is
+ * greyed and what to do instead. The edge and the ground carry it now.
+ */
+.tool-row.is-unavailable {
+  border-style: dashed;
+  background: var(--surface-sunken);
+}
+.tool-row.is-unavailable:hover { border-color: var(--border-strong); box-shadow: var(--shadow-1); }
+
+/* Activity headings get room, since the cards below them now carry weight. */
+.activity { margin-bottom: var(--sp-4); }
+.activity-head { margin-bottom: var(--sp-1); padding: 0; }
+.activity-what { margin-bottom: var(--sp-2); padding: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-row { transition: none; }
+  .tool-row:has(.tool:active) { transform: none; }
+}
+
+/* The tiles (v4) card wall is gone with UI round 2 (S6): rows, a rail and a grid, at the end of this sheet. */
+/* ── how many tools ─────────────────────────────────────────────────────
+   Both states visible at once. A single button reading "Simple" could be the
+   state or the destination, and either way it does not say that most of the
+   tools are hidden behind it — which is the question it actually provoked. */
+
+html:not([data-surface='float']) #dock { display: none; }
+
+/* The capture row: tags first, then the words, then the two actions. */
+.tags button[aria-pressed='true'] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+.note-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--sp-2); }
+
+/* ── the one-time pointer to the films ──────────────────────────────────── */
+.pointer { display: none; grid-template-columns: auto 1fr; gap: var(--sp-1) var(--sp-3); align-items: center; margin: var(--sp-2) 0 var(--sp-1); padding: var(--sp-3); border: 1px solid var(--border-strong); border-radius: var(--r-lg); background: var(--surface-raised); }
+.pointer.is-on { display: grid; }
+.pointer p { grid-column: 2; margin: 0; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: 1.45; }
+.pointer-actions { grid-column: 2; display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
+.tool-scene { display: flex; justify-content: center; margin: 2px 0 var(--sp-half); }
+.tool-scene svg { width: 120px; height: 72px; }
+
+/* The footer belongs under the scroll, not at the bottom of the fixed topper,
+   where it read as a line stranded in the middle of the window. */
+/* "Timeline" was a 43x18 target. The link keeps its look and gets the row's
+   full height to be hit in. */
+/* "Timeline" is disabled until there is a session to show, and a disabled
+   control that looks exactly like a live one is a worse answer than the dead
+   link it replaced. Muted and not dimmed: opacity would take the text with it,
+   which `tools/test-styles.mjs` refuses for good reason. */
+
+/* ── expert mode looks different, because it is ──────────────────────────
+
+   Simple and Expert were visually identical, so the only way to know which one
+   you were in was to count the cards. The first answer to that was a 4%-accent
+   wash fading down 220px, a 3px accent rail beside every activity heading, and
+   cards that lifted a pixel under the pointer. Three effects for one bit of
+   information, and each is a thing generated interfaces reach for by reflex:
+   an ambient gradient, a coloured left stripe, a hover lift.
+
+   The bit is now carried by typography and by air, which is where a mode
+   difference belongs. Expert sets the activity headings smaller, heavier and
+   in caps, and gives each group more room above it — so a screenshot of Expert
+   is recognisable as Expert from the rhythm of the page, at any zoom, in
+   greyscale, and with the pointer nowhere near it. */
+
+/* ── the options disclosure ──────────────────────────────────────────────
+   A word, then the chevron. This is the only route to the recording scope,
+   the viewport sizes and the break rules; as a bare 26px caret at 0.72
+   opacity, it was not found. */
+.tool-more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  width: auto;
+  min-height: 28px;
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font: 600 var(--t-micro)/1 var(--font);
+  opacity: 1;
+}
+.tool-more .more-caret { font-size: var(--t-body); font-weight: var(--weight-body); letter-spacing: var(--track-body); line-height: 1; transition: transform var(--dur-tap) var(--ease); }
+.tool-more[aria-expanded='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.tool-more[aria-expanded='true'] .more-caret { transform: rotate(180deg); }
+.tool-row:hover .tool-more { border-color: var(--accent); }
+
+/* ── can this tool actually run? ─────────────────────────────────────────
+   The used-mark says what happened this session. This says whether pressing
+   it will do anything at all — the missing answer behind "I don't think
+   screen record works". */
+.tool-health {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-inline-start: 2px;
+  border-radius: 50%;
+}
+.tool-health[data-health='ready'] { background: var(--ok); opacity: 0.5; }
+/* Information, not a warning: the browser will ask, nothing is wrong, and the
+   sentence on the card says so. This dot used to be amber with a ring, on the
+   one tool in the wall that is meant to read as ready. Muted and ringless, it
+   is still a mark that distinguishes "the browser gates this" from "ready",
+   which is what it was added for, without claiming anything went wrong. */
+.tool-health[data-health='asks'] { background: var(--text-muted); opacity: 0.65; }
+/* Amber, and only here: the browser refused after a press, which is a thing
+   the tester can put right and has to know about. */
+.tool-health[data-health='warned'] { background: var(--warn); box-shadow: 0 0 0 2px color-mix(in oklab, var(--warn) 24%, transparent); }
+.tool-health[data-health='blocked'] { background: var(--text-muted); opacity: 0.45; }
+.tool-health[data-health='running'] { background: var(--accent); }
+.tool-health[data-health='ok'] { background: var(--ok); }
+.tool-health[data-health='failed'] { background: var(--danger); }
+@media (prefers-reduced-motion: reduce) { .tool-health[data-health='running'] { animation: none; } }
+
+/* The amber note and border that used to sit on the Record card, when Chrome
+   had not yet granted `activeTab`, were removed on 8 September 2026. The reason
+   is written where the code was, in popup.js beside `UQA_CAN_RECORD`; the short
+   version is that it warned about a limitation that does not apply to half of
+   what that card does, and its cure was to press the button it was drawn on.
+   The fact survives as the quiet health mark and its tooltip. Nothing else ever
+   set `data-needs-invoke` or `.tool-invoke`, so both rules went with it. */
+
+/*
+ * While a session is running, the topper gives the wall its room back.
+ *
+ * At the real popup size (392x660) the mode switch, the wake card, the process
+ * meter and the status line took 350px, leaving 308px for sixteen tools: six
+ * screens of scrolling for the beat the demo calls "the wall of tools". None of
+ * that top matter is telling the tester anything new once a session is live —
+ * the session card below it already says the recording is running, for how long
+ * and with how many events — so while `#step-live` is on screen the wake card
+ * drops its explanatory sentence and tightens, and the meter loses its outer
+ * margins. Nothing is removed and nothing shrinks below 44px: the Sleep button
+ * keeps its target, the meter keeps its seven segments and its sentence.
+ */
+body:has(#step-live:not([hidden])) .status:empty { display: none; }
+
+/* ══════════════════════════════════════════════════════ touch targets ══ */
+/*
+ * Apple's 44pt minimum, applied once and late.
+ *
+ * Three generations of tool-row rules above left the ⓘ at 22px and the options
+ * pill at 26px tall — the two smallest controls in the popup and the two
+ * hardest to hit, on a panel people drive with a trackpad while reading a bug.
+ * Both keep exactly the look they had: the button itself becomes 44px of hit
+ * area, and the ring or pill you can see is drawn by ::before inside it. That
+ * is what "widen the hit area, not the control" means in CSS.
+ *
+ * `isolation: isolate` on each host keeps its `z-index: -1` chip inside the
+ * button instead of sending it behind the card the button sits on.
+ */
+
+.tools .tool-info {
+  position: relative;
+  isolation: isolate;
+  width: var(--sz-hit);
+  height: var(--sz-hit);
+  margin: 0;
+  border: 0;
+  background: none;
+}
+.tools .tool-info::before {
+  content: '';
+  position: absolute;
+  /* 44 − 2×11 = 22px: the ring is exactly the size it has always been. */
+  inset: 11px;
+  z-index: -1;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.tools .tool-info:hover { background: none; color: var(--accent-ink); }
+.tools .tool-info:hover::before { border-color: var(--accent); background: var(--surface-sunken); }
+.tools .tool-info[aria-expanded='true'] { background: none; color: var(--n-0); }
+.tools .tool-info[aria-expanded='true']::before { background: var(--accent); border-color: var(--accent); }
+.tools .tool-info:focus-visible { outline: 2px solid var(--accent); outline-offset: -9px; }
+
+.tools .tool-more {
+  position: relative;
+  isolation: isolate;
+  min-height: var(--sz-hit);
+  padding: 0 var(--sp-3);
+  border: 0;
+  background: none;
+}
+.tools .tool-more::before {
+  content: '';
+  position: absolute;
+  /* 44 − 2×8 = 28px: the pill keeps its height, centred in the target. */
+  inset: var(--sp-2) 0;
+  z-index: -1;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+}
+.tools .tool-more:hover { background: none; color: var(--accent-ink); }
+.tools .tool-row:hover .tool-more::before { border-color: var(--accent); }
+.tools .tool-more[aria-expanded='true'] { background: none; color: var(--accent-text); }
+.tools .tool-more[aria-expanded='true']::before { background: var(--accent); border-color: var(--accent); }
+.tools .tool-more:focus-visible { outline: 2px solid var(--accent); outline-offset: -6px; }
+
+/* The bar's own padding comes off, because each button now carries 8px of
+   transparent inset of its own and the two together read as a gutter twice the
+   size it looks. */
+.tools .tool-bar { padding: 0 var(--sp-1); }
+
+/*
+ * Every button in the popup clears 44px tall.
+ *
+ * `.btn` is 34 and `.btn-sm` 28 in ui/tokens.css, which is right for the
+ * Settings page's dense forms and wrong for a panel used one-handed beside the
+ * application under test. Scoped to this stylesheet, so nothing else moves.
+ */
+.btn { min-height: var(--sz-hit); }
+
+/*
+ * So does every field the tester types into.
+ *
+ * `ui/tokens.css` gives a text input 8px of padding on a 13px line, which
+ * measured 37.1px on `#charter` — the first control in the popup and the one
+ * every session starts with. This is height by padding: the border radius
+ * (--r-md), the border and the type scale are untouched, the box just stops
+ * being smaller than a fingertip. Scoped to the popup, so the Settings page's
+ * dense forms keep their own density.
+ */
+input[type='text'], select, textarea { min-height: var(--sz-hit); }
+
+/* ══════════════════════════════════════════════════════════ Hick's law ══ */
+/*
+ * Four bordered buttons in a row are four decisions; one segmented control
+ * with a default already chosen is one. Nothing is removed — the same four
+ * tags, the same `[data-tag]` hooks, the same aria-pressed state — but the
+ * frame now says "pick which of these", and Bug is already picked.
+ */
+.tags {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+}
+.tags button {
+  /* 44 in the segment, 2px of frame either side: the control is 48 tall, the
+     same as the Simple/Expert switch it echoes. */
+  min-height: var(--sz-hit);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: none;
+}
+.tags button:hover { background: var(--surface); border: 0; }
+.tags button[aria-pressed='true'] {
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.tags button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ═══════════════════════════ painted, not yet confirmed ══ */
+/*
+ * `popup.js`'s `optimistic()` paints what a press is about to do, sends the
+ * message, and reconciles when the worker answers. In between, whatever it
+ * painted wears `.is-pending`. This is what that looks like, and it is one
+ * rule because the five things it lands on have nothing else in common: a
+ * bordered card (`#switch-card`), two borderless sections (`#step-live`,
+ * `#step-done`), a list row, and a 15px status dot.
+ *
+ * An `outline` is what lets one rule reach all five. It needs no border to
+ * modify, it takes no space in the layout, it cannot be confused with the
+ * accent BORDER the same card already uses for "awake", and it does not
+ * disturb the `:focus-visible` ring, which is solid where this is dashed.
+ *
+ * It is deliberately NOT `opacity`. The whole point of painting early is that
+ * the tester can read the new state before the round trip finishes; dimming it
+ * would make the one thing they are trying to read harder to read than the
+ * state it replaced. Dashes are the vocabulary this stylesheet already uses
+ * for "not settled yet": an asleep tool row and an unavailable one are both
+ * dashed, and neither costs a character of contrast.
+ *
+ * `optimistic()` removes the class on both exits, so this is short-lived by
+ * construction and never has to survive being stared at.
+ */
+.is-pending {
+  outline: 1px dashed var(--accent);
+  outline-offset: 3px;
+  cursor: progress;
+}
+/* The used-mark is 15px and sits in a tile's corner, so its dashes come in
+   closer or they land on the tile's own edge. */
+.tool-state.is-pending { outline-offset: 2px; }
+
+/* ══════════════════════════════════ the note receipts ══ */
+/*
+ * What this session has been told, newest first, capped at ten by `popup.js`.
+ *
+ * The two spans were laid out by nothing at all, so a bug note read
+ * "BugSubmit stays disabled": one word, no seam, and the tag looked like the
+ * first syllable of the sentence. They are a label and its subject, so they
+ * are set as one. The tag is small, upper-case and in the mono face at a fixed
+ * 58px, which is the width of "QUESTION" at that size; the note sits in body
+ * type beside it. Holding the column constant is what makes ten receipts read
+ * as a list rather than as ten ragged lines.
+ *
+ * A hairline above separates the list from the buttons that write into it, and
+ * a hairline between rows is what makes a note that wraps to two lines
+ * obviously one note.
+ */
+#note-echo {
+  display: grid;
+  gap: 0;
+  margin: var(--sp-2) 0 0;
+  padding: var(--sp-2) 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.note-echo-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: var(--sp-2);
+  align-items: baseline;
+  padding: var(--sp-1) 0;
+}
+.note-echo-row + .note-echo-row { border-top: 1px solid var(--border); }
+
+.note-echo-tag {
+  font: 700 9.5px/1.6 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.note-echo-text {
+  min-width: 0;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: 1.4;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/*
+ * The one-time sign to the films is for somebody who has not started yet.
+ * Once a session is running it is one more thing to read past on the busiest
+ * screen the popup has, so it goes — answered or not. `#step-idle` is hidden
+ * exactly when a session is live or just finished, which is the same question
+ * asked of the markup that already exists.
+ */
+body:has(#step-idle[hidden]) .pointer.is-on { display: none; }
+
+/*
+ * The microphone line, before the first recording of a session.
+ *
+ * Deliberately not a dialog and deliberately not amber. It is not a warning
+ * about something that has gone wrong; it is one fact and two ways forward, in
+ * the panel that already holds the mic tick, where the tester's eye already is.
+ * The left border is the only colour it gets, so the panel does not start
+ * shouting at somebody who has already decided.
+ */
+.mic-consent {
+  margin: 0 var(--sp-3h) var(--sp-2h);
+  padding: var(--sp-2h) var(--sp-3);
+  border-inline-start: 3px solid var(--accent);
+  border-start-start-radius: 0;
+  border-start-end-radius: 6px;
+  border-end-end-radius: 6px;
+  border-end-start-radius: 0;
+  background: var(--surface-sunken);
+}
+.mic-consent p { margin: 0 0 var(--sp-2); }
+.mic-consent-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* ═════════════════════════════════════════════ the popup in motion (v5) ══ */
+/*
+  Nader, 9 September 2026: "the new design of the UI is lacking a lot in
+  animations, fix that."
+
+  Every rule below spends a duration and a curve from `ui/motion.css` and
+  invents neither. The keyframes are that file's too — `qaw-in-up`,
+  `qaw-unfold`, `qaw-tick`, `qaw-breathe-soft` — so the popup, Settings, the
+  side panel, the welcome sheet and the report all move the same way. What is
+  here is only the mapping: which of this surface's state changes gets which
+  piece of the vocabulary.
+
+  The one thing this block is careful about is the popup's own open. A popup is
+  drawn from nothing every single time the toolbar button is pressed, several
+  hundred times a day, and an entrance that is even slightly too long turns
+  into the product feeling slow. So: 180 ms on the topper, 160 ms on the wall
+  of cards, and a stagger capped at 90 ms — 250 ms from blank to settled, and
+  nothing on the page waits for any of it.
+*/
+
+/* ── the popup arrives ───────────────────────────────────────────────── */
+
+.topper { animation: qaw-in-down 180ms var(--motion-ease) both; }
+.scroll { animation: qaw-fade-in 160ms var(--motion-ease) both; }
+
+/* ── the wall of cards ───────────────────────────────────────────────── */
+
+/*
+  The tiles are rebuilt from scratch by renderTools(), which runs on boot, on a
+  language change and on the Simple/Expert switch — and nowhere else. So this
+  one rule covers both things rule 1 asks for: the cards entering with a short
+  stagger, and the mode switch reading as the wall being rebuilt rather than as
+  a page swapping under the pointer.
+
+  160 ms, not 200: nineteen of them are on screen at once in Expert, and the
+  last one has to be finished before the first press could land.
+*/
+.tiles > .tool-row { animation: qaw-in-up 160ms var(--motion-ease) backwards; }
+.tiles > .tool-row { animation-delay: calc(var(--motion-step) * 5); }
+.tiles > .tool-row:nth-child(1) { animation-delay: 0ms; }
+.tiles > .tool-row:nth-child(2) { animation-delay: var(--motion-step); }
+.tiles > .tool-row:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+.tiles > .tool-row:nth-child(4) { animation-delay: calc(var(--motion-step) * 3); }
+.tiles > .tool-row:nth-child(5) { animation-delay: calc(var(--motion-step) * 4); }
+
+/* Expert draws six groups; they arrive in order, on the same cap. */
+.tools > .activity { animation: qaw-in-up 160ms var(--motion-ease) backwards; }
+.tools > .activity { animation-delay: calc(var(--motion-step) * 3); }
+.tools > .activity:nth-child(1) { animation-delay: 0ms; }
+.tools > .activity:nth-child(2) { animation-delay: var(--motion-step); }
+.tools > .activity:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+
+/*
+  Hover and press, on one timing.
+
+  The earlier design took the hover lift off the cards deliberately, because it
+  was one of three things all saying "you are in Expert mode" at once. It comes
+  back here as what it actually is — the answer to a pointer, on every card in
+  every mode — and it is the only thing saying it. 1px and a single soft
+  shadow: the edge still carries the accent, the lift only says the card is
+  live under the cursor.
+*/
+.tools .tool-row {
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+}
+/* A card holding an open panel has stopped being a target and become a
+   container, so it stops answering the pointer with a lift. */
+/* An asleep or unrunnable card must not pretend to be pressable. */
+
+.tools .tool-icon { transition: opacity var(--motion-fast) var(--motion-ease); }
+/* The used-mark going on is the one small piece of good news on a card. */
+.tool-state[data-used='true'] { animation: qaw-tick var(--motion-base) var(--motion-ease); }
+.tool-more .more-caret { transition: transform var(--motion-fast) var(--motion-ease); }
+
+/* ── unfolding: help, options, and the extra fields inside them ──────── */
+
+/*
+  Opening reads as the card growing, because that is what the layout does —
+  the panel is a grid item of the card, not a thing that appears under it. The
+  wipe plus the fade is the growth; where the browser can interpolate to
+  `height: auto` (ui/motion.css, @supports) the height grows too.
+
+  Closing is instant, and deliberately. `hidden` is the state every one of this
+  popup's suites reads a moment after the press, and holding it back by 200 ms
+  to play an animation would mean the state on screen and the state in the DOM
+  disagree for exactly as long as a harness needs to be wrong.
+*/
+.tool-row .tool-help:not([hidden]),
+.tool-row .opts-tool:not([hidden]),
+.opts:not([hidden]),
+#mic-consent:not([hidden]),
+#record-state:not([hidden]),
+#break-redirect-field:not([hidden]),
+#break-header-field:not([hidden]),
+#break-delay-field:not([hidden]) {
+  animation: qaw-unfold var(--motion-base) var(--motion-ease) backwards;
+}
+@supports (interpolate-size: allow-keywords) {
+  .tool-row .tool-help:not([hidden]),
+  .tool-row .opts-tool:not([hidden]),
+  .opts:not([hidden]),
+  #mic-consent:not([hidden]),
+  #record-state:not([hidden]),
+  #break-redirect-field:not([hidden]),
+  #break-header-field:not([hidden]),
+  #break-delay-field:not([hidden]) {
+    animation-name: qaw-unfold-h;
+  }
+}
+
+/* ── the session: idle, live, done ───────────────────────────────────── */
+
+/* Three sections, one at a time, and the switch between them is the biggest
+   state change the popup has. `--motion-base` and a rise: the new step comes
+   up into the place the old one was. */
+#step-idle:not([hidden]),
+#step-live:not([hidden]),
+#step-done:not([hidden]),
+#consent-card:not([hidden]) {
+  animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards;
+}
+
+/* ── what the popup just said ────────────────────────────────────────── */
+
+/*
+  The status line is one element that gets new text over and over, so a CSS
+  rule can never replay: an animation only starts when the element starts
+  matching. `ui/motion.js` restarts it by hand from `say()` — but only when the
+  message has no tone, because a tone already gets `pop` or `shake` from
+  ui/vfx.js and two animations on one element is the second one winning.
+*/
+.status-fix { animation: qaw-in-trail var(--motion-base) var(--motion-ease) backwards; }
+
+.pointer.is-on { animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards; }
+
+/* ── being awake ─────────────────────────────────────────────────────── */
+
+/* Waking is a whole-surface change: the tool wall comes back with it. */
+body[data-awake='true'] .tools .tool-row {
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+}
+
+/* ── working, and running ────────────────────────────────────────────── */
+
+/*
+  A tool that is actually running right now.
+
+  The dot beside the name already pulses; this is the card. An `::after` ring
+  rather than an animated `box-shadow`, because a box-shadow loop repaints the
+  card sixty times a second for as long as a harvest takes, and an opacity loop
+  on a borrowed layer costs nothing.
+*/
+.tools .tool-row:has(.tool-health[data-health='running'])::after,
+.tools .tool-row:has(.tool.is-recording)::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--accent);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.tools .tool-row:has(.tool.is-recording)::after { border-color: var(--live); }
+
+/* ══════════════════════════════════════ M2: popup + icon motion (MOTION.md) ══
+   Rule: transform/opacity/stroke-dashoffset only, one moving part per icon,
+   200-320ms, once per hover, transform-box: fill-box so a path inside a 24x24
+   viewBox rotates/scales about its own shape, not the SVG's corner. */
+.tools .tool-icon svg .mv,
+.hdr-icon .mv {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.tools .tool-row:hover .tool-icon svg .mv,
+.tools .tool-row:focus-within .tool-icon svg .mv {
+  animation-duration: var(--motion-slow);
+  animation-timing-function: var(--motion-ease);
+  animation-fill-mode: both;
+}
+/* Per-icon move, keyed by data-tool (rule: literal, one small meaningful
+   move — MOTION.md "Icons in motion" + ICONS.md metaphors). */
+@keyframes qaw-mv-scale { 0%, 100% { transform: scale(1); } 50% { transform: scale(.86); } }
+@keyframes qaw-mv-scale-up { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+@keyframes qaw-mv-blink { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.2); } }
+@keyframes qaw-mv-rotate25 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(25deg); } }
+@keyframes qaw-mv-nudge-x { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(1px); } }
+@keyframes qaw-mv-nudge-xy { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1px, 1px); } }
+@keyframes qaw-mv-drop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+@keyframes qaw-mv-lift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes qaw-mv-diag { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1px, -1px); } }
+@keyframes qaw-mv-flip { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(-1); } }
+@keyframes qaw-mv-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes qaw-mv-apart { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1.5px, -1.5px); } }
+
+.tool-row[data-tool='shot'] .mv,        /* shutter ring closes a little */
+.tool-row[data-tool='api'] .mv,         /* the two arrows nudge apart */
+.tool-row[data-tool='record'] .mv       /* dot pulses once */
+{ animation-name: qaw-mv-scale; }
+.tool-row[data-tool='viewport'] .mv { animation-name: qaw-mv-scale-up; } /* other-size frame grows */
+.tool-row[data-tool='perf'] .mv { animation-name: qaw-mv-rotate25; transform-origin: 12px 18px; } /* needle swings */
+.tool-row[data-tool='a11y'] .mv { animation-name: qaw-mv-blink; } /* eye blinks once */
+.tool-row[data-tool='links'] .mv,       /* the two links nudge apart */
+.tool-row[data-tool='partitions'] .mv,  /* the shaded class nudges */
+.tool-row[data-tool='coverage'] .mv     /* the lit line nudges */
+{ animation-name: qaw-mv-nudge-x; }
+.tool-row[data-tool='pick'] .mv { animation-name: qaw-mv-nudge-xy; } /* cursor taps */
+.tool-row[data-tool='inject'] .mv,      /* the value drops into the field */
+.tool-row[data-tool='harvest'] .mv      /* the basket's items settle */
+{ animation-name: qaw-mv-drop; }
+.tool-row[data-tool='break-toggle'] .mv { animation-name: qaw-mv-apart; } /* the plug halves separate */
+.tool-row[data-tool='mask'] .mv { animation-name: qaw-mv-nudge-xy; } /* the strike bar slides across */
+.tool-row[data-tool='fineprint'] .mv { animation-name: qaw-mv-diag; } /* the magnifier sweeps */
+.tool-row[data-tool='rtl'] .mv { animation-name: qaw-mv-flip; } /* the arrows swap */
+.tool-row[data-tool='diagram'] .mv,     /* the connector draws on */
+.tool-row[data-tool='spec'] .mv,        /* the written lines draw on */
+.tool-row[data-tool='autofill'] .mv     /* the check draws on */
+{ stroke-dasharray: 1; animation-name: qaw-mv-draw; animation-direction: alternate; }
+
+/* Header icons: dock, theme, settings (MOTION.md "UI motion by surface"). */
+.hdr-icon .mv { animation-duration: var(--motion-base); animation-timing-function: var(--motion-ease); animation-fill-mode: both; }
+#dock:hover .hdr-icon .mv, #dock:focus-visible .hdr-icon .mv { animation-name: qaw-mv-nudge-x; }
+#theme:hover .hdr-icon .mv, #theme:focus-visible .hdr-icon .mv { animation-name: qaw-mv-rotate25; animation-timing-function: linear; }
+@keyframes qaw-mv-rotate45 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(45deg); } }
+#open-options:hover .hdr-icon .mv, #open-options:focus-visible .hdr-icon .mv { animation-name: qaw-mv-rotate45; transform-origin: 12px 12px; }
+
+/* the tool wall staggers once when the sheet opens, capped at 8 steps */
+.app .tiles > .tool-row {
+  animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards;
+}
+.app .tiles > .tool-row:nth-child(n+9) { animation-delay: calc(var(--motion-step) * 8); }
+.app .tiles > .tool-row:nth-child(1) { animation-delay: calc(var(--motion-step) * 0); }
+.app .tiles > .tool-row:nth-child(2) { animation-delay: calc(var(--motion-step) * 1); }
+.app .tiles > .tool-row:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+.app .tiles > .tool-row:nth-child(4) { animation-delay: calc(var(--motion-step) * 3); }
+.app .tiles > .tool-row:nth-child(5) { animation-delay: calc(var(--motion-step) * 4); }
+.app .tiles > .tool-row:nth-child(6) { animation-delay: calc(var(--motion-step) * 5); }
+.app .tiles > .tool-row:nth-child(7) { animation-delay: calc(var(--motion-step) * 6); }
+.app .tiles > .tool-row:nth-child(8) { animation-delay: calc(var(--motion-step) * 7); }
+/* Rows inside the closed fold are not on screen: they rise when the fold opens, not by themselves a second after the popup (R7). */
+.app .tools-fold:not([open]) .tiles > .tool-row { animation: none; }
+
+/* Activation: pane to .28 with the emphasis ease (MOTION.md "Icons in motion"). */
+.tools .tool[aria-pressed='true'] .tool-icon svg [opacity='.16'] {
+  opacity: .28;
+  transition: opacity var(--motion-base) var(--motion-ease);
+}
+
+/* ── reduced motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .tools .tool-icon svg .mv, .hdr-icon .mv { animation: none !important; transform: none !important; }
+  .app .tiles > .tool-row { animation: none !important; opacity: 1 !important; }
+  .topper, .scroll,   .tools .tool-row,
+  .tools .tool-row:hover,
+  .tools .tool-row:has(.tool:active),
+  .tools .tool-icon, .tool-state, .tool-more .more-caret,
+  .wake-track, .wake-thumb, .wake-thumb::after,
+  .status { transition: none !important; }
+  .tools .tool-row:hover, .tools .tool-row:has(.tool:active) { transform: none !important; }
+  .tools .tool-row:has(.tool-health[data-health='running'])::after,
+  .tools .tool-row:has(.tool.is-recording)::after,
+  .tools .tool-row:has(.tool-health[data-health='running']) .tool-icon { animation: none !important; }
+}
+
+/* Copy a locator: the four purposes, as a wrapping row of buttons. */
+.pick-purposes { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-block-start: var(--sp-1); }
+
+/* ═══════════════════════════════════ UI round 2 (S6): one page, three widths ══ */
+/*
+ * DESIGN-SPEC §3, ported from the prototype (work/ui-rework-0927/prototype/
+ * float.css). `.app` is the container, so the float, the side panel and the
+ * bare popup each take the layout their own width asks for:
+ *   below 440   the session stacks, the tools are a fixed list under it;
+ *   440-719     one scroller under the header, the tools an in-flow grid;
+ *   720 and up  a rail of tools beside the session and the work pane.
+ * Start and Stop sit in the session strip, the last grid row, outside every
+ * scroller: nothing is ever drawn over them.
+ */
+.app {
+  --header-h: 52px;
+  --rail-w: 320px; /* 280 left "accessibility" no room beside the health dots, star and chevron */
+  --strip-h: 0px;
+  --work-top: var(--header-h);
+  --z-strip: 21;
+  --z-head: 22;
+  --z-menu: 30;
+  container: app / inline-size;
+  position: relative;
+  block-size: 100%;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--backdrop);
+}
+.app-grid {
+  display: grid;
+  block-size: 100%;
+  overflow: clip;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--header-h) minmax(0, 1fr) auto;
+}
+.app-body { display: contents; }
+
+/* Glass on the floating layers only (§9): the header and the ⋯ menu. */
+.app .glass {
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--shadow-glass);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .app .glass { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+[data-icon] { display: inline-grid; place-items: center; flex: none; }
+[dir='rtl'] .app svg.mirror { transform: scaleX(-1); }
+
+/* ── the edge rule (fix round 6) is retired (r1-08-1, D-F1-01) ───────────────────────────────────────────
+      It faded a control as it neared the scrollport's edge. axe measured what that costs: at the 0.45 floor a control's
+      name read 2.4 to 3.8:1, at 0.75 a primary button 3.5:1 and at 0.9 a quiet button 4.23:1, all against the 4.5:1
+      AA floor, on every row that rests at an edge (every first and last tool, and the buttons of an opened panel).
+      Scroll position changed a pass into a fail, so the fade went; a clipped row already says it is clipped.
+      `--dim` keeps the one static opacity: disabled controls (exempt from the contrast rule) are shown at 0.45. */
+@property --dim { syntax: '<number>'; inherits: false; initial-value: 1; }
+.app-body :is(button, a[href], input, select, textarea, summary, [tabindex]:not([tabindex='-1'])) { opacity: var(--dim); }
+.app-body :is(button, input, select, textarea):is(:disabled, [aria-disabled='true']) { --dim: 0.45; }
+.app .work, .app .tools, .app .tools-body, .app .app-body { scroll-padding-block: var(--sp-4); }
+
+/* ── header (52, glass, all widths) ─────────────────────────────────────── */
+.app-head {
+  position: relative;
+  z-index: var(--z-head);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+  block-size: var(--header-h);
+  padding-inline: var(--sp-3);
+}
+.app .app-head.glass { border: 0; border-block-end: 1px solid var(--glass-line); box-shadow: none; border-radius: 0; }
+.brand-mark { flex: none; }
+.brand-name {
+  /* The wordmark is never cut, ellipsised or shortened (5 Oct 2026): it does not
+     shrink, and the Awake pill and the timer give way to it instead. */
+  flex: none;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: var(--t-title);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.head-actions { display: flex; align-items: center; gap: var(--sp-1); margin-inline-start: auto; flex: none; }
+.icon-btn {
+  position: relative;
+  flex: none;
+  inline-size: 36px;
+  block-size: 36px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.icon-btn:hover { color: var(--text); background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.icon-btn:active { background: color-mix(in srgb, currentColor calc(var(--state-press) * 100%), transparent); }
+.icon-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.icon-btn[aria-expanded='true'] { color: var(--text); }
+#dock { display: none; }
+html[data-surface='float'] #dock { display: inline-grid; }
+#dock[hidden], html[data-surface='float'] #dock[hidden] { display: none; } /* no chrome.sidePanel here (popup/guards.js) */
+/* Give way, in order: the timer pill tightens. Icons stay. */
+@container app (width < 400px) {
+  .status-chip { padding-inline: var(--sp-half); gap: var(--sp-1); }
+}
+
+/* ── the ⋯ menu ─────────────────────────────────────────────────────────── */
+.app .menu {
+  position: absolute;
+  inset-block-start: calc(var(--header-h) + 4px);
+  inset-inline-end: 8px;
+  inline-size: min(280px, 100% - 16px);
+  max-block-size: calc(100% - var(--header-h) - var(--strip-h) - 12px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--sp-half);
+  border-radius: var(--r-lg);
+  z-index: var(--z-menu);
+  transform-origin: top right;
+}
+[dir='rtl'] .app .menu { transform-origin: top left; }
+.app .menu[hidden] { display: none; }
+.menu.is-entering { animation: qaw-menu-in var(--motion-base) var(--motion-ease) both; }
+@keyframes qaw-menu-in { from { opacity: 0; transform: translateY(-4px); } }
+.menu-group { display: block; }
+.menu-label {
+  display: block;
+  padding: var(--sp-2) var(--sp-3) var(--sp-1);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  color: var(--text-muted);
+}
+.menu-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-inline: var(--sp-3);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-label);
+  text-align: start;
+  cursor: pointer;
+}
+a.menu-row { text-decoration: none; }
+.menu-row:hover, .menu-row:focus-visible { background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.menu-row:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.menu-row:disabled { color: var(--text-muted); cursor: default; }
+.menu-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu-slot { inline-size: 20px; flex: none; }
+.menu-check { visibility: hidden; color: var(--accent-ink); }
+.menu-row[aria-checked='true'] .menu-check { visibility: visible; }
+.menu-divider { block-size: 1px; background: var(--border); margin: var(--sp-half); }
+.menu-foot { display: flex; gap: var(--sp-2); align-items: flex-start; padding: var(--sp-2) var(--sp-3) var(--sp-1); }
+.menu-foot img { flex: none; margin-block-start: 2px; }
+.menu-lines { display: flex; flex-direction: column; gap: 2px; font-size: var(--t-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+/* ── the session region ─────────────────────────────────────────────────── */
+.app section.session { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; margin: 0; padding: var(--sp-3) var(--sp-3) 0; }
+/* Children keep their content height and the column scrolls. Shrinkable (the
+   flex default), a child with its own min-height — `.status` has 1em — was
+   squeezed to that and its text painted over the next child: the long
+   "Chrome drops permission…" refusal over "Session saved." (29 Sept). */
+.app section.session > * { flex-shrink: 0; }
+.app .session > section { margin: 0; }
+/* The column's gap is the only spacing between its children: a row's own block margin on top of it was a second, empty band. */
+.app .session .remember, .app .session .buffer-row, .app .session .last-locator { margin-block: 0; }
+/* A locator row with no locator is a reserved empty row; it appears when there is something in it. */
+.app .session .last-locator:has(.ll-code.is-empty) { display: none; }
+.app #charter { min-block-size: 44px; }
+.app .btn-primary { min-block-size: 44px; min-inline-size: 44px; }
+.app .btn-xs { min-block-size: 32px; }
+.app .tags button { min-block-size: 32px; }
+
+/* ── the session strip: Start / Stop, pinned (Lead rule, research/56) ─────── */
+.session-strip {
+  position: relative;
+  z-index: var(--z-strip);
+  display: none;
+  grid-column: 1 / -1;
+  grid-row: 3;
+  padding: var(--sp-3);
+  background: var(--surface);
+  border-block-start: 1px solid var(--border);
+}
+body[data-consented='true'] .app:has(#step-idle:not([hidden])) .session-strip, /* asleep too: "Test this site" is the one press that wakes and starts */
+body[data-consented='true'] .app:has(#step-live:not([hidden])) .session-strip { display: flex; }
+.session-strip > .btn { flex: 1; min-block-size: 44px; }
+/* D-218: the browser shortcut chip beside the label on Start, and nothing at all when none is assigned. */
+#start kbd.cmd { margin-inline-start: var(--sp-2); font: var(--t-micro)/1 var(--mono); white-space: nowrap; } /* full opacity: 0.85 took the chip under 4.5:1 on the light button */
+.app:has(#step-idle[hidden]) #start,
+.app:has(#step-live[hidden]) #stop { display: none; }
+
+/* ── the tool list: favourites on top, then the four groups ─────────────── */
+.app .tools { min-width: 0; margin: 0; display: block; }
+.app .tools-body { display: block; min-width: 0; }
+.app section.favourites,
+.app section.activity { display: block; margin: 0 0 var(--sp-3); }
+.fav-head,
+.app .activity-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  min-block-size: 32px;
+  margin: 0;
+  padding: var(--sp-2) var(--sp-1) var(--sp-1);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+  text-transform: none;
+  color: var(--text);
+}
+.app .activity-hint { color: var(--text-muted); }
+.app .activity-meter { margin-inline-start: auto; }
+.fav-empty { margin: 0; padding: var(--sp-1); }
+.app .tiles,
+.fav-list { display: flex; flex-direction: column; gap: var(--sp-1); }
+
+/* A row: the press (icon, name), then the star and the way one level deeper. */
+.app .tool-row,
+.fav-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: none;
+}
+.fav-item { display: flex; }
+.app .tool-row .tool,
+.fav-run {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  inline-size: 100%;
+  min-width: 0;
+  min-block-size: 44px;
+  padding-block: 0;
+  padding-inline: var(--sp-3) var(--sp-1);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-label);
+  font-weight: var(--weight-label);
+  text-align: start;
+  cursor: pointer;
+}
+.fav-run { flex: 1; }
+.app .tool-row .tool:hover,
+.fav-run:hover { background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.app .tool-row .tool:active,
+.fav-run:active { background: color-mix(in srgb, currentColor calc(var(--state-press) * 100%), transparent); }
+.app .tool-row .tool:focus-visible,
+.fav-run:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.app .tool-row .tool[aria-pressed='true'] { color: var(--accent-ink); box-shadow: inset 3px 0 0 var(--accent); }
+[dir='rtl'] .app .tool-row .tool[aria-pressed='true'] { box-shadow: inset -3px 0 0 var(--accent); }
+.app .tool-icon,
+.fav-run > svg { display: grid; place-items: center; flex: none; inline-size: 20px; block-size: 20px; color: var(--text-muted); }
+.app .tool .tool-text { flex: 1; min-width: 0; display: block; }
+.fav-name,
+/* Words wrap whole, never mid-word (Nader, 29 Sept: "Accessibilit / y"): the
+   tile grid below is sized so the longest tool word always fits. */
+.app .tool-name { display: block; min-inline-size: 0; line-height: 1.3; padding-block: 2px; }
+/* The shortcut chip lives in Settings and in the detail's words; a row this
+   narrow spends its width on the name. */
+.app .tool-row .tool kbd { display: none; }
+
+.app .tool-bar { display: flex; align-items: center; gap: 0; padding-inline-end: var(--sp-1); }
+.tool-star,
+.app .tool-bar > .tool-more {
+  inline-size: 32px;
+  block-size: 32px;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transform: none;
+}
+.tool-star:hover,
+.app .tool-bar > .tool-more:hover { color: var(--text); background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.tool-star:focus-visible,
+.app .tool-bar > .tool-more:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.tool-star[aria-pressed='true'] { color: var(--accent); }
+.fav-item .tool-star { margin-inline-end: var(--sp-1); }
+/* The unstarred star shows on hover or focus, or always where there is no
+   hover (§3.6). Through --dim, so the edge rule still applies. */
+.app .tool-row .tool-star[aria-pressed='false'] { --dim: 0; }
+.app .tool-row:hover .tool-star,
+.app .tool-row:focus-within .tool-star { --dim: 1; }
+@media (hover: none) { .app .tool-row .tool-star { --dim: 1; } }
+.app .tool-bar > .tool-more[aria-expanded='true'] { color: var(--accent-ink); transform: rotate(calc(90deg * var(--motion-dir))); }
+
+/* The detail: one level deeper (§3.7.5). Under its row in the sheet and the
+   grid; over the work pane on the wide float. */
+.app .tool-row .tool-help {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: var(--sp-3) var(--sp-3) var(--sp-4);
+  border: 0;
+  border-block-start: 1px solid var(--border);
+  border-radius: 0;
+  background: none;
+  opacity: 1;
+}
+.app .tool-row .tool-help[hidden] { display: none; }
+.app .tool-row.is-open { border-color: var(--accent); }
+.app .tool-row.is-open::after { display: none; }
+.detail-head { display: none; align-items: center; gap: var(--sp-2); }
+.detail-title { flex: 1; min-width: 0; margin: 0; font-family: var(--display); font-size: var(--t-head); font-weight: 700; line-height: var(--lead-head); }
+.app .tool-help .tool-scene {
+  inline-size: min(100%, 320px);
+  aspect-ratio: 240 / 144;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.app .tool-help .tool-scene svg { display: block; inline-size: 100%; block-size: auto; }
+.app .tool-help > p { max-inline-size: 65ch; }
+.app .tool-help .tool-what { font-size: var(--t-body); line-height: var(--lead-body); }
+.app .tool-help .opts-tool { margin: 0; }
+
+/* ── the tools heading: a plain label and count, not a control ─────────── */
+.tools-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  color: var(--text);
+  font-size: var(--t-label);
+  font-weight: var(--weight-label);
+}
+.tools-head .badge {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 24px;
+  block-size: 20px;
+  padding-inline: var(--sp-half);
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-label);
+}
+@container app (width >= 720px) { .tools-head { display: none; } }
+
+/* ── narrow: the session, then the tools as a fixed list down to the strip ─ */
+@container app (width < 440px) {
+  /* Rows: header, session (its own height, scrolls past its share), the work
+     pane (only while the break panel is open), the tools (all that is left,
+     scrolling inside themselves), the strip. Nothing slides, nothing overlaps. */
+  .app-grid { grid-template-rows: var(--header-h) minmax(0, auto) auto minmax(0, 1fr) auto; }
+  .app section.session { grid-row: 2; min-block-size: 0; max-block-size: 62vh; overflow-y: auto; padding-block-end: var(--sp-3); }
+  .app .work { grid-row: 3; min-block-size: 0; overflow-y: auto; max-block-size: 40vh; padding: var(--sp-3); }
+  .app .work:not(:has(#break-panel:not([hidden]))) { display: none; }
+  .session-strip { grid-row: 5; }
+  .app .tools {
+    grid-row: 4;
+    display: flex;
+    flex-direction: column;
+    min-block-size: 0;
+    margin: 0;
+    overflow: hidden;
+    background: var(--surface);
+    border-block-start: 1px solid var(--border);
+  }
+  .tools-head { flex: none; }
+  .app .tools-body { display: block; flex: 1; min-block-size: 0; overflow-y: auto; padding: 0 var(--sp-2) var(--sp-3); }
+  .app .activity-head { flex-direction: column; align-items: flex-start; gap: 0; }
+  .app .activity-meter { display: none; }
+}
+
+/* ── medium: one scroller, an in-flow grouped grid (the 560 window, §3.5) ── */
+@container app (440px <= width < 720px) {
+  /* A fixed column: the session at its own height, the tools directly under it
+     taking all that is left down to the strip and scrolling inside themselves. */
+  .app-body {
+    display: flex;
+    flex-direction: column;
+    grid-row: 2;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+  .app section.session { flex: 0 1 auto; min-block-size: 0; overflow-y: auto; padding: var(--sp-4) var(--sp-4) 0; }
+  .app .tools { flex: 1 1 12rem; min-block-size: 8rem; overflow-y: auto; overscroll-behavior: contain; padding: var(--sp-3) var(--sp-4) 0; }
+  .app .work { flex: none; overflow: visible; min-block-size: 0; padding: 0 var(--sp-4) var(--sp-4); background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .app .work:not(:has(#break-panel:not([hidden]))) { display: none; }
+  .session-strip { padding-inline: var(--sp-4); }
+  .app .tiles,
+  .fav-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-auto-flow: row dense;
+    gap: var(--sp-2);
+  }
+  .app .tiles > .tool-row.is-open { grid-column: 1 / -1; }
+}
+
+/* ── wide: a rail of tools beside the session and the work pane (§3.6) ──── */
+@container app (width >= 720px) {
+  .app-grid {
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    grid-template-rows: var(--header-h) auto minmax(0, 1fr) auto;
+    grid-template-areas: "head head" "tools session" "tools work" "tools strip";
+  }
+  .app-head { grid-area: head; }
+  .app .tools {
+    grid-area: tools;
+    position: static;
+    min-block-size: 0;
+    overflow-y: auto;
+    padding: var(--sp-2) var(--sp-2) var(--sp-4);
+    background: var(--surface);
+    border-inline-end: 1px solid var(--border);
+  }
+  .app section.session { grid-area: session; padding: var(--sp-4) var(--sp-5) 0; max-inline-size: 60rem; }
+  .app .work { grid-area: work; min-block-size: 0; overflow-y: auto; padding: var(--sp-4) var(--sp-5) var(--sp-5); max-inline-size: 60rem; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .session-strip { grid-area: strip; padding-inline: var(--sp-5); }
+  .app .activity-head { flex-direction: column; align-items: flex-start; gap: 0; }
+  .app .tiles > .tool-row { border-color: transparent; background: none; }
+  /* The detail replaces the work pane, beside the rail and under the session
+     card; everything between it and .app stays unpositioned so .app is its
+     containing block, not the rail that scrolls. */
+  .app .tools-body, .app .activity, .app .tiles, .app .tool-row.is-open { position: static; }
+  .app .tool-row.is-open > .tool-help {
+    position: absolute;
+    inset-block: var(--work-top) var(--strip-h);
+    inset-inline: var(--rail-w) 0;
+    z-index: 2;
+    overflow-y: auto;
+    padding: var(--sp-4) var(--sp-5) var(--sp-5);
+    background: var(--surface);
+    border: 0;
+  }
+  .app .tool-row.is-open .detail-head { display: flex; }
+  .app:has(.tool-row.is-open) .work { visibility: hidden; }
+}
+.detail-back { display: none; }
+@container app (width < 440px) {
+  .app .tool-row.is-open .detail-head { display: flex; }
+  .app .tool-row.is-open .detail-head > :not(.detail-back) { display: none; }
+  .detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-block-size: 44px;
+    padding-inline: var(--sp-2);
+    border: 0;
+    border-radius: var(--r-md);
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: var(--t-label);
+    cursor: pointer;
+  }
+  .detail-back:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+}
+.app .status-fix { min-block-size: 24px; }
+
+/* ══════════════════════════════════ S7: session states (DESIGN-SPEC §4) ══ */
+
+/* ── the header status chip (live only; paintChip in popup.js) ──────────── */
+/* Shown or hidden by JS (paintChip in popup.js), which knows "recording"
+   before the stylesheet could derive it from any attribute on .app. */
+.status-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-half);
+  block-size: 32px;
+  padding-inline: var(--sp-2h);
+  border: 0;
+  border-radius: var(--r-pill, 999px);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font: inherit;
+  cursor: pointer;
+}
+.status-chip .chip-dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--live); flex: none; }
+.status-chip .timer { font-variant-numeric: tabular-nums; font-size: var(--t-small); font-weight: var(--weight-small); }
+
+/* ── restricted / worker banner (§4.7): warn colours, never red ─────────── */
+.state-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  margin-block-end: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--warn-soft);
+  color: var(--warn-ink);
+}
+.state-banner-icon { flex: none; inline-size: 20px; block-size: 20px; color: var(--warn-ink); }
+.state-banner-text { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.state-banner-line { margin: 0; font-size: var(--t-small); font-weight: var(--weight-small); line-height: var(--lead-small); }
+.state-banner-sub { color: var(--warn-ink); opacity: 0.85; }
+.state-banner .btn { flex: none; align-self: center; }
+
+/* Last locator (idle and live; DESIGN-SPEC §3.7.3): the quick row that sat above it is gone, Tools carries Copy a locator and Screenshot. */
+/*
+ * The classic popup surface (no ?surface=) is hard-capped at 348×580
+ * (`body` rule at the top of this file — Chrome's own action-popup box, kept
+ * because clickthrough/diagnose/uat still open it bare). [V, a scratch
+ * measurement script]: the live session card's own content (title, meta,
+ * tags, note composer) already used ~390-440px of that before the quick row
+ * or the last locator existed; adding both left only 64px — the peek's own
+ * floor — for the whole tool sheet, so the tool list rendered
+ * under the strip instead of inside it (clickthrough: "session-strip
+ * subtree intercepts pointer events" on a chevron press).
+ *
+ * A `(max-height)` media query looks like the right tool, but it reads the
+ * *viewport* the harness gave the page, not this `body`'s own 348×580 —
+ * measured the same way and still 64px [V, same script, re-run]. `body` is
+ * what is actually capped (float/panel override it to 100dvh, just above),
+ * so this keys off the same attribute `#dock` already does for the reverse
+ * question. Below it, Copy a locator and Screenshot are still one press away
+ * on the rail; only the idle echo of the last
+ * locator is what goes.
+ */
+html:not([data-surface]) .last-locator { display: none; }
+
+.last-locator {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-block-size: 32px;
+  margin-block-start: var(--sp-2);
+  padding-inline: var(--sp-1);
+}
+.ll-label { flex: none; color: var(--text-muted); font-size: var(--t-micro); font-weight: var(--weight-micro); }
+.ll-code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  color: var(--text);
+  /* T-053: a locator, verb or status code keeps its own order inside Arabic text. */
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+.ll-code.is-empty { color: var(--text-muted); font-family: inherit; }
+.ll-copy { flex: none; }
+.ll-copy.is-done { color: var(--ok); }
+
+/* ── the live-session work pane (wide only; DESIGN-SPEC §3.6/§4.4) ──────── */
+/* JS sets [hidden] by state (live or not); this gates it by width on top —
+   ":not([hidden])" so the wide rule cannot out-cascade the state JS set. */
+.work-live { display: none; }
+@container app (width >= 720px) {
+  .work-live:not([hidden]) { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--sp-4); }
+}
+.wl-col { display: grid; align-content: start; gap: var(--sp-3); min-width: 0; }
+.work-live .section-head { margin: 0; font-size: var(--t-label); font-weight: 600; color: var(--text-muted); }
+.wl-list {
+  display: grid;
+  gap: 1px;
+  max-block-size: 15rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+.wl-list > div { display: flex; align-items: center; gap: var(--sp-2); min-block-size: 36px; padding-inline: var(--sp-3); font-size: var(--t-body); }
+.wl-list > div > svg { flex: none; inline-size: 16px; block-size: 16px; }
+.wl-list .wl-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wl-list .wl-time { flex: none; font-variant-numeric: tabular-nums; font-size: var(--t-micro); color: var(--text-muted); }
+.wl-list .wl-empty { color: var(--text-muted); font-size: var(--t-small); }
+.wl-list .wl-problem svg { color: var(--fail-ink); }
+
+/* ── the review pane (§4.5): #step-done, restyled in place ──────────────── */
+.review-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  font-family: var(--display);
+  font-size: var(--t-title);
+  font-weight: 700;
+}
+.review-heading .tick { flex: none; inline-size: 20px; block-size: 20px; border-radius: 50%; background: var(--ok); }
+.review-heading:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); margin-block-start: var(--sp-3); }
+@container app (width >= 440px) {
+  .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.stat-tile { display: grid; gap: 2px; padding: var(--sp-2); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); }
+.stat-num { font-family: var(--display); font-size: var(--t-title); font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-label { font-size: var(--t-micro); font-weight: var(--weight-micro); color: var(--text-muted); }
+
+.section-head { font-size: var(--t-label); font-weight: 600; margin: var(--sp-4) 0 var(--sp-1); }
+.key-findings[hidden] { display: none; }
+.key-findings .section-head { margin-block-start: var(--sp-3); }
+.finding-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-block-size: 44px;
+  padding-inline: var(--sp-2);
+  border-radius: var(--r-md);
+}
+.finding-row:nth-child(odd) { background: var(--surface-sunken); }
+.finding-row svg { flex: none; inline-size: 16px; block-size: 16px; color: var(--fail-ink); }
+.finding-row .fr-text { flex: 1; min-width: 0; font-size: var(--t-body); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.finding-row .fr-time { flex: none; font-variant-numeric: tabular-nums; font-size: var(--t-micro); color: var(--text-muted); }
+.finding-row.is-empty svg { color: var(--ok); }
+
+#view-report { margin-block-start: var(--sp-3); }
+.row-4 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-1); }
+.row-4 .btn svg { inline-size: 16px; block-size: 16px; }
+
+/* the one problem number's companions: control, hiding line, rows (spec §7) */
+.sg { display: grid; gap: var(--sp-2); margin-block: var(--sp-2); }
+.sg-btn { font: inherit; font-size: var(--t-small); padding: 2px var(--sp-2h); border: 0; border-radius: 999px; background: transparent; color: var(--text-muted); cursor: pointer; }
+.sg-line { margin: 0; font-size: var(--t-small); color: var(--text-muted); }
+.sg-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-half); min-inline-size: 0; padding: var(--sp-1) var(--sp-half); font-size: var(--t-small); } /* wraps: three chips and a button no longer push a narrow panel sideways */
+.sg-row.is-d { color: var(--text); }
+.sg-chip { flex: none; padding: 0 var(--sp-half); border: 1px solid var(--border); border-radius: 999px; font-size: var(--t-micro); color: var(--text-muted); }
+.sg-warn { color: var(--warn-ink, var(--text-muted)); }
+.sg-msg { flex: 1 1 8ch; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sg-n { flex: none; font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.sg-induced summary { font-size: var(--t-small); color: var(--text-muted); cursor: pointer; }
+
+/* r3-06-1: the capture-loss line and the technique-coverage line. */
+.loss-line { margin: 0 0 var(--sp-2); color: var(--warn); font-weight: 500; }
+.tech-cover { margin: 0 0 var(--sp-2); font-variant-numeric: tabular-nums; }
+.part-cut { color: var(--warn); }
+.part-own { display: flex; gap: var(--sp-2); margin: 0 0 var(--sp-2); }
+.part-own input { flex: 1; min-width: 0; }
+
+/* r3-08-1 (D-1010-60): under forced colours a lit activity dot and a pressed tool keep an outline, since background and
+   border colours are replaced. One rule per selector (tools/test-styles.mjs asserts it). */
+@media (forced-colors: active) {
+  .activity-meter i.on { outline: 2px solid Highlight; outline-offset: 0; }
+  .tool[aria-pressed='true'] { outline: 2px solid Highlight; outline-offset: -2px; }
+  .tool:focus-within { outline: 2px solid Highlight; outline-offset: -2px; } /* D-1010-159 / r7-08-4 */
+}
+
+/* Onboarding: "Remember this site" (opt-in) and the name asked after the stop. */
+.remember { display: flex; align-items: center; gap: var(--sp-2); margin-block: var(--sp-2); font-size: var(--t-micro); color: var(--text-muted); cursor: pointer; }
+.remember[hidden], .done-name[hidden] { display: none; }
+.remember input { inline-size: 16px; block-size: 16px; }
+.done-name { display: flex; gap: var(--sp-2); margin-block: var(--sp-2); }
+.done-name input { flex: 1; min-inline-size: 0; }
+.buffer-row { margin-block: var(--sp-2); }
+.buffer-row[hidden] { display: none; }
+.buffer-row .fine { margin-block: var(--sp-1); }
+
+/* ── autopilot-1011 lane POP ───────────────────────────────────────────────
+   One filled button per screen, a note row of three controls, a done card that leads with Copy report, the tool list behind
+   one disclosure, and a way back from a tool. Logical properties only, so it mirrors in Arabic. */
+.state-banner[hidden] { display: none; }
+.state-banner.is-info { background: var(--surface-sunken); color: var(--text); }
+.tags[hidden] { display: none; }
+.note-row { display: flex; align-items: center; gap: var(--sp-2); }
+.note-row #note-text { flex: 1; min-inline-size: 0; }
+.note-row #note-add { flex: none; }
+.note-row { position: relative; }
+.note-slider { position: absolute; block-size: 4px; border-radius: 2px; background: var(--surface-sunken); cursor: pointer; touch-action: none; }
+.note-slider[hidden] { display: none; }
+.note-slider-thumb { position: absolute; inset-block: 0; border-radius: 2px; background: var(--text-muted, var(--border)); }
+.note-shot { justify-self: start; margin-block-start: var(--sp-1); }
+#copy-report { margin-block-start: var(--sp-2); min-block-size: 44px; }
+#copy-report[hidden], .done-clean[hidden] { display: none; }
+.done-clean { margin: var(--sp-2) 0 0; color: var(--ok); font-size: var(--t-small); }
+.done-more { margin-block-start: var(--sp-3); }
+.done-more > summary { cursor: pointer; color: var(--text-muted); font-size: var(--t-small); padding: var(--sp-1) 0; }
+.done-more[open] > summary { color: var(--text); }
+.tools-fold > summary { cursor: pointer; font-size: var(--t-small); color: var(--text-muted); padding: var(--sp-2) 0; }
+.tools-fold[open] > summary { color: var(--text); }
+.back-to-session { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); inline-size: 100%; min-block-size: 36px; padding: var(--sp-1) var(--sp-2); border: 0; border-radius: var(--r-md); background: var(--surface-sunken); color: var(--text); font: inherit; font-size: var(--t-small); cursor: pointer; }
+.back-to-session:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.back-to-session .back-timer { font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.back-to-session .back-timer[hidden] { display: none; }
+
+/* Rule 5: the Keep row under More on the finished-session card. */
+.keep-row { display: flex; gap: var(--sp-2); align-items: center; margin-block: var(--sp-2); }
+
+/* ── lane A, 15 Oct 2026 ─────────────────────────────────────────────────── */
+
+/* Break a request: a view of its own with a way back. The Tools list is hidden while it is open (narrow and medium), so
+   nothing is squeezed to 12px any more; Back, Escape and the row all close it (tool-rows.js setBreakPanel). */
+.panel-head { display: flex; align-items: center; gap: var(--sp-2); margin-block-end: var(--sp-2); }
+.panel-head strong { font-family: var(--display); font-size: var(--t-head); font-weight: var(--weight-head); }
+.panel-back {
+  display: inline-flex; align-items: center; gap: var(--sp-2); min-block-size: 36px; padding-inline: var(--sp-2);
+  border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface); color: var(--text);
+  font: inherit; font-size: var(--t-small); cursor: pointer;
+}
+.panel-back:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.panel-back [data-icon] { display: inline-grid; inline-size: 16px; block-size: 16px; }
+@container app (width < 720px) {
+  .app:has(#break-panel:not([hidden])) .tools { display: none; }
+  .app:has(#break-panel:not([hidden])) .work { grid-row: 4; flex: 1 1 auto; max-block-size: none; overflow-y: auto; }
+}
+
+/* The note row is one row: the field, the Note split button (Note + type chevron), and the screenshot icon. */
+.note-split { display: inline-flex; flex: none; }
+.note-split #note-add { border-start-end-radius: 0; border-end-end-radius: 0; padding-inline: var(--sp-3); }
+.note-split #note-type, .note-row .note-shot {
+  block-size: 44px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-muted);
+}
+.note-split #note-type { border-inline-start: 0; border-start-start-radius: 0; border-end-start-radius: 0; inline-size: 30px; }
+.note-row .note-shot { inline-size: 44px; }
+.note-row .note-shot.is-done { color: var(--ok); border-color: var(--ok); }
+
+/* While a session records: the session line is one line, and the room goes to the Tools list. */
+#step-live:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-2); row-gap: var(--sp-2); }
+#step-live > * { flex: 1 1 100%; min-inline-size: 0; }
+#step-live > .live { flex: 0 1 auto; font-size: var(--t-body); }
+#step-live > .live strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#step-live > .meta { flex: 1 1 0; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* The notes and bugs are in the report; the panel shows the count (in the line above), never the list. */
+html[data-surface='panel'] .work-live { display: none !important; }
+/* e1022: the panel's session line is the test title only; time, events and problems stay in the header chip and the report. */
+html[data-surface='panel'] #step-live > .meta { display: none; }
+/* e1022: the last three actions as status lines (green saved, red failed), with a round count of all of them on the box. popup/action-stack.js */
+.action-stack { position: relative; margin-block-start: var(--sp-3); padding: var(--sp-2); border: 1px solid var(--border); border-radius: var(--r-md, 8px); }
+.action-stack ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-1); }
+.action-stack li { padding: var(--sp-1) var(--sp-2); border-radius: 6px; font-size: var(--t-small); overflow-wrap: anywhere; }
+.action-stack li.is-ok { background: var(--ok-soft); color: var(--text); border-inline-start: 3px solid var(--ok); }
+.action-stack li.is-err { background: var(--fail-soft); color: var(--fail-ink); border-inline-start: 3px solid var(--fail); }
+.action-badge { position: absolute; inset-block-start: -9px; inset-inline-end: -7px; min-inline-size: 20px; block-size: 20px; padding-inline: 5px; box-sizing: border-box; border-radius: 10px; background: var(--fail); color: #fff; font: 700 11px/20px var(--font); text-align: center; font-variant-numeric: tabular-nums; }
+
+/* The tool panel shows no paragraph: what it does, why, its technique and principle sit behind this one disclosure. */
+.tool-about { margin-block: var(--sp-2); }
+.tool-about > summary { cursor: pointer; padding: var(--sp-1) 0; color: var(--text-muted); font-size: var(--t-small); }
+.tool-about[open] > summary { color: var(--text); }
+
+/* The finished card and the tools are ONE column that scrolls together (ui-1016 H2). Two scrollers stacked in a fixed-height popup cut the
+   first finding line under the first tool row; here nothing is cut at a seam, the card is simply followed by the tools. Wide keeps its rail. */
+@container app (width < 720px) {
+  .app:has(#step-done:not([hidden])) .app-body { display: block; grid-row: 2 / 5; min-block-size: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .app:has(#step-done:not([hidden])) section.session { max-block-size: none; overflow: visible; }
+  .app:has(#step-done:not([hidden])) .tools { overflow: visible; padding-block-end: var(--sp-3); }
+  .app:has(#step-done:not([hidden])) .tools-body { overflow: visible; }
+}
+
+/* cap1022: in the side panel the tools take 60% of the height; the other 40% holds the session (title, status, the Start button). The island toolbar is not this page. */
+@container app (width < 440px) {
+  html[data-surface='panel'] .app-grid { grid-template-rows: var(--header-h) minmax(0, 2fr) auto minmax(0, 3fr) auto; }
+  html[data-surface='panel'] .app section.session { max-block-size: none; }
+}
+@container app (440px <= width < 720px) {
+  html[data-surface='panel'] .app section.session { flex: 2 1 0; }
+  html[data-surface='panel'] .app .tools { flex: 3 1 0; }
+}

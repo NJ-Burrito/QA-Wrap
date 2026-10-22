@@ -1,0 +1,52 @@
+{
+  "_readme": "Per-line draw overrides for the round-3 voice stage, read by cues-from-storyboard.mjs and merged into the generated cue sheet. Keys are the film id, then the line number as it appears in voice.mjs's report. `drawSalt` buys a fresh set of k draws for that line and nothing else; `maxTailSt` may only ever be TIGHTENED below the film-wide +1.0 ST. Nothing here changes a word of the frozen script.",
+  "_pattern": "Every line that has needed a second set is an ENUMERATION whose last word is the last item of a list. Gemini gives those the list-in-progress contour: the fall happens on time, and then a sustained voiced tone 2.0-2.5x the line's own median hangs on the last 0.3-0.4 s, as loud as the speech at -16 to -21 dB. It is not a quiet artefact and it is not the gate misreading a breath. voice.mjs's own remedy for a whole set failing is a fresh set of tickets, which is all this file buys.",
+  "save-and-diagram": {
+    "2": {
+      "drawSalt": 1,
+      "why": "all five draws of \"Thirty-five formats, from a bug report to a Playwright spec.\" ended +12.3 to +15.9 ST against a +1.0 ST ceiling (tail 416-500 Hz on a 182-245 Hz median, held for 0.4 s). The second set passed."
+    }
+  },
+  "file-it": {
+    "2": {
+      "drawSalt": 1,
+      "why": "all five draws of \"Seven kinds of ticket, in the ISTQB shape.\" ended +4.6 to +16.5 ST against a +1.0 ST ceiling."
+    }
+  },
+  "cat-break": {
+    "5": {
+      "drawSalt": 1,
+      "why": "all five draws of \"Stop breaking it takes every rule off at once, and the rules stack.\" ended +1.3 to +17.4 ST. Three of the five were inside 3 ST, so the spread is wide and a second set is worth its five tickets."
+    }
+  },
+  "cat-design": {
+    "3": {
+      "drawSalt": 1,
+      "why": "all five draws of \"Its type, its minimum, its maximum, its options, whether it is required.\" ended +4.4 to +14.6 ST. A four-item list, which is the shape this fault keeps choosing."
+    },
+    "27": {
+      "drawSalt": 2,
+      "why": "TWO full sets of five draws of \"Every form and what it accepts, every button, and where the links go.\" failed the contour gate (set 1 +1.4 to +10.6 ST, set 2 +4.5 to +11.4 ST). A three-item list ending on \"where the links go\", which is the shape this fault keeps choosing. A third set is being bought rather than leaving the film unvoiced; if it fails too, this line is the director's to rewrite."
+    }
+  },
+  "cat-capture": {
+    "6": {
+      "drawSalt": 2,
+      "why": "TWO full sets of five draws of \"The picture lands in the report, and long forms hide their bugs below the fold.\" failed the contour gate (+4.1 to +18.1 ST against +1.0). By voice.mjs's own doctrine two failed sets means the WORDING reliably produces the rising terminal, not the weather. A third set is being bought because the alternative is a film with no read at all; if it fails too, this line is the director's to rewrite - it ends on \"below the fold\", a prepositional tail the model keeps lifting."
+    },
+    "16": {
+      "drawSalt": 1,
+      "why": "all five draws of \"What you find is filed under Window sizes, never as a desktop bug.\" ended +5.0 to +9.4 ST against a +1.0 ST ceiling."
+    }
+  },
+  "cat-check": {
+    "20": {
+      "drawSalt": 1,
+      "why": "all five draws of \"It comes off the moment you stop, and nothing is attached until you start.\" ended +2.6 to +14.9 ST against a +1.0 ST ceiling. Two draws were within 3 ST, so the spread is worth a second set."
+    },
+    "28": {
+      "drawSalt": 1,
+      "why": "all five draws of the close, \"QA Wrap. Every failure, traced.\", ended +5.9 to +13.8 ST. The same six words landed first time on all nine other films, so this one is the lottery the draw gate exists for, not the wording."
+    }
+  }
+}

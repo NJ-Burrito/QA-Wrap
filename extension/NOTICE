@@ -1,0 +1,106 @@
+QA Wrap
+Copyright (c) 2026 Nader Alzghoul (NJ-Burrito). MIT licence: see LICENSE.
+
+This product includes software developed by Nader Alzghoul.
+
+LICENCE
+-------
+QA Wrap is released under the MIT licence (LICENSE). Third-party components
+keep their own licences and are not relicensed; see below and
+THIRD-PARTY-NOTICES.md at the repository root.
+
+HOW OUTPUT IS ATTRIBUTED
+------------------------
+Every artefact this tool generates carries its origin, in the channel that
+artefact's own format provides — never painted onto the content:
+
+  PNG screenshots   tEXt chunks: Software, Author, Copyright, Comment,
+                    qaw-provenance, qaw-session. No pixel is altered.
+  Markdown          an HTML comment carrying the token
+  JSON, Postman     a `_provenance` object
+  YAML, CSV         a leading comment line
+  JUnit / XML       an XML comment
+  HTML              meta tags, a schema.org JSON-LD block, and a corner mark
+  Generated code    a two-line comment banner
+  Jira and trackers a one-line colophon plus an invisible issue property
+
+Each carries a token of the form:
+
+  qaw1:<base64url payload>.<fnv1a checksum>
+
+The payload names the product, the owner, the version, the artefact kind, the
+session and the time. It is verifiable with the checksum, so a payload that has
+been edited can be detected.
+
+THIS IS ATTRIBUTION, NOT A SEAL
+-------------------------------
+The checksum makes tampering detectable, not impossible. A browser extension
+cannot hold a private key that the person running it cannot also read, so no
+claim of cryptographic provenance is made or implied. Anyone determined can
+strip any of these marks. What they do is make accidental loss of attribution
+very unlikely, and deliberate removal demonstrable.
+
+THIRD-PARTY COMPONENTS
+----------------------
+Everything redistributed in this package that was not written by Nader Alzghoul
+Software is listed here, with the file it is, the licence it is under, and where
+its source can be obtained. `tools/release-check.mjs` fails the build if a file
+under vendor/ is not named below, or if a loose font file ships under ui/fonts/
+(the typefaces travel embedded in the pages, and the families are named below).
+
+axe-core 4.13.0 — Copyright (c) 2015-2026 Deque Systems, Inc.
+  Mozilla Public License, Version 2.0 (MPL-2.0).
+  Redistributed unmodified at vendor/axe.min.js. Its licence is unaffected by
+  the terms above and continues to grant the rights it grants; a copy of the
+  MPL-2.0 is available at https://mozilla.org/MPL/2.0/.
+  Source availability (MPL-2.0 section 3.2): vendor/axe.min.js is the minified
+  distribution of axe-core. Its complete corresponding Source Code Form, for
+  this and every version, is published by Deque Systems at
+  https://github.com/dequelabs/axe-core — release 4.13.0 is tagged v4.13.0
+  there. No modification has been made to the file, so that tag is the source
+  for what ships here.
+
+thmanyah Sans (Regular 400, Medium 500, Bold 700) and thmanyah Serif Display
+(Regular 400, Bold 700)
+  Carried in ui/fonts.css, and written into the documents and diagrams QA Wrap
+  exports (core/docshell.js, core/flow.js) as base64 data: URIs inside those
+  files. In every case the faces are embedded as data, in the HTML or SVG the
+  tester chooses to export; an exported file travels with its author and
+  carries the faces only in that embedded form. No standalone font file is
+  shipped in this package and none is offered: there is no font download, link
+  or export. Copyright 2026 thmanyah Publishing and Distribution
+  (https://thmanyah.com/, ask@thmanyah.com), Reserved Font Name "thmanyah".
+  Licence: thmanyah's Font License, not an open licence. The clause this
+  package relies on, quoted from the licence text: "Embed the Font Software in
+  websites, web applications, mobile applications, or software products only as
+  part of a compiled, packaged, or obfuscated product." The same licence
+  forbids making the files available for extraction as standalone font files,
+  so no font file is shipped, none is modified, and none is offered for
+  download. The complete licence text is the publisher's PDF ("thmanyah's Font
+  License"), which Nader Alzghoul keeps with its licensed font files; it is not
+  reproduced in this package.
+
+thmanyah Serif Display Black (900), as outlines only
+  Used once: the "QA Wrap" wordmark in brand/lockup.svg is that face converted
+  to vector outlines (by identity/tools/product-lockup.mjs); the by-line in the
+  same file is thmanyah Sans Medium, also as outlines. The Black face is not a
+  font file here and no font bytes of it are carried: the lockup contains
+  paths, not a font, and cannot be installed or extracted as one. Copyright
+  and licence as for the faces above (thmanyah Publishing and Distribution,
+  Reserved Font Name "thmanyah"; thmanyah's Font License).
+
+No other third-party code, font or asset is redistributed with this package.
+Earlier versions of this file claimed three display and mono faces were
+loaded from Google Fonts. None of the three appears anywhere in the source. No
+extension page loads any font from a remote host; every one of them reads
+Thmanyah from ui/fonts.css. Exported HTML documents used to be the exception:
+the shared shell in core/docshell.js @imported an open-licence face from
+Google's font service, so a document QA Wrap had written fetched a font on
+whatever machine later opened it. That line was removed on 5 September 2026
+and the faces are embedded in the document instead, as base64 data: URIs.
+Nothing this package ships, and nothing it writes, requests a font from
+anywhere.
+
+UI sounds are 24 short original files (family "Glass & Air": QA Wrap's own synthesis, with CC0 1.0 recorded layers of wine glass, pen,
+switch and tactile clicks from freesound.org, http://creativecommons.org/publicdomain/zero/1.0/), shipped in ui/sfx/. Author, URL,
+licence and retrieval date of every layer, and the sha256 of every file: ui/sfx/CREDITS.txt. Nothing else third-party in the audio path.

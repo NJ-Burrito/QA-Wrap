@@ -1,0 +1,30 @@
+{
+  "name": "QA Wrap",
+  "code": "QAW",
+  "tagline": "Every failure, traced.",
+  "kind": "Local-first QA toolkit in the ISTQB shape",
+  "since": 2026,
+  "extensionId": "dbdhilacpjeojfnmdbnpcbmohkhgaihn",
+  "geckoId": "qa-wrap@qa-wrap.invalid",
+  "maker": { "en": "Nader Alzghoul", "ar": "نادر الزغول" },
+  "publisher": { "en": "Nader Alzghoul", "ar": "نادر الزغول" },
+  "urls": { "homepage": "https://nj-burrito.github.io/QA-Wrap/", "support": "https://nj-burrito.github.io/QA-Wrap/support.html", "privacy": "https://nj-burrito.github.io/QA-Wrap/privacy.html", "practice": "https://nj-burrito.github.io/QA-Wrap/try/", "trust": "https://nj-burrito.github.io/QA-Wrap/trust.html", "terms": "https://nj-burrito.github.io/QA-Wrap/terms.html" },
+  "emails": { "support": "naderalzghoulbusiness@gmail.com", "security": "naderalzghoulbusiness@gmail.com" },
+  "reviewUrl": "",
+  "listed": false,
+  "icons": {
+    "action": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+    "store": "icons/icon512.png",
+    "notification": 128,
+    "devtools": 48,
+    "favicon": "brand/favicon.svg",
+    "ui": { "s": 16, "m": 20, "l": 24 }
+  },
+  "madeBy": { "en": "Made by {maker}", "ar": "من تطوير {maker}" },
+  "textTargets": [
+    "extension/ADMIN.md", "extension/LICENSE", "extension/NOTICE", "extension/PRIVACY.md", "extension/ROADMAP.md",
+    "extension/SECURITY.md", "extension/SLA.md", "extension/SUPPORT.md", "extension/TERMS.md", "extension/store/LISTING.md",
+    "extension/tools/film/storyboard/*.json", "extension/tools/fixtures/copy-report-b.md",
+    "extension/tools/fixtures/copy-report-c.md", "site/**"
+  ]
+}

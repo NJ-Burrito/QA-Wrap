@@ -1,0 +1,8213 @@
+{
+ "_doc": "Test manifest v2 for tools/pipeline.mjs. One row per runnable file under extension/tools plus helper-test. Built from the QUARANTINE table (byHand is authoritative there) and the source scan in lib-select.mjs (lane, headed, python are checked against it by test-pipeline-manifest; an `overrides` entry with a reason skips one field). Lanes are the only scheduler axis; the old stage names live on as stage:<name> tags and --stage aliases for one release. Timeouts are null until measured (timeoutSource guess = the lane default).",
+ "version": 2,
+ "laneOrder": [
+  "gate",
+  "node",
+  "headless",
+  "headed",
+  "measure"
+ ],
+ "lanes": {
+  "gate": {
+   "gate": "fail-fast",
+   "pool": "node",
+   "defaultTimeout": 30,
+   "doc": "executes no product code (text, structure, tsc, git)"
+  },
+  "node": {
+   "gate": "fail-fast-after-gate",
+   "pool": "node",
+   "defaultTimeout": 60,
+   "doc": "any other node-only suite"
+  },
+  "headless": {
+   "gate": "continue",
+   "pool": 2,
+   "defaultTimeout": 180,
+   "doc": "playwright, not headed"
+  },
+  "headed": {
+   "gate": "continue",
+   "pool": 1,
+   "defaultTimeout": 300,
+   "secondaryMonitor": true,
+   "doc": "lib-launch / lib-test-window / test-next-primary (transitive) or headless:false; serial, secondary monitor"
+  },
+  "measure": {
+   "gate": "report-only",
+   "pool": 1,
+   "exclusive": true,
+   "defaultTimeout": 600,
+   "doc": "wall-clock and perf; serial, alone, report-only"
+  }
+ },
+ "poolSizes": {
+  "node": "min(4, max(2, floor(cpus/2)))",
+  "headless": 2,
+  "headed": 1,
+  "measure": 1
+ },
+ "tiers": {
+  "smoke": {
+   "tag": "smoke",
+   "failFast": true,
+   "budgetSeconds": 120,
+   "budgetState": "provisional",
+   "skippedMemberIs": "FAIL",
+   "doc": "preflight, manifest check, incremental tsc, node --check closure, zip boot (headless-new), canary set"
+  },
+  "regression": {
+   "lanes": [
+    "gate",
+    "node",
+    "headless"
+   ],
+   "byHand": false,
+   "measure": false,
+   "budgetSeconds": 360,
+   "budgetState": "provisional"
+  },
+  "e2e": {
+   "lanes": [
+    "headless",
+    "headed"
+   ],
+   "byHand": true,
+   "measure": false,
+   "budgetSeconds": 1200,
+   "budgetState": "provisional",
+   "chunk": 60,
+   "doc": "headless first, then headed serial; headlessOk rows run headless; sweeps in chunks of 60"
+  },
+  "full": {
+   "lanes": [
+    "gate",
+    "node",
+    "headless",
+    "headed",
+    "measure"
+   ],
+   "byHand": true,
+   "measure": true,
+   "deliveryGate": true,
+   "budgetSeconds": 2100,
+   "budgetState": "provisional",
+   "extras": [
+    "release-tag",
+    "cft-leg",
+    "canary",
+    "human-ledger",
+    "gate-baseline",
+    "autopilot-rules"
+   ],
+   "doc": "every reachable suite; measure report-only; byHand per QUARANTINE; the only delivery candidate with release"
+  },
+  "release": {
+   "tag": "release",
+   "deliveryGate": true,
+   "budgetSeconds": 600,
+   "budgetState": "provisional",
+   "extras": [
+    "human-ledger",
+    "gate-baseline",
+    "cft-leg"
+   ],
+   "doc": "suites tagged release plus the ledger check; refuses ready while a human check is below the manifest version"
+  }
+ },
+ "stageAliases": {
+  "note": "--stage <name> = tag stage:<name>, kept for one release",
+  "names": [
+   "static",
+   "unit",
+   "contract",
+   "smoke",
+   "integration",
+   "e2e-headless",
+   "e2e-headed",
+   "visual",
+   "perf",
+   "release"
+  ]
+ },
+ "features": [
+  "a11y",
+  "ai-writing",
+  "autopilot",
+  "build-package",
+  "content-page",
+  "exporters-formats",
+  "game",
+  "helper-mcp",
+  "i18n-copy",
+  "jira-integrations",
+  "media-replay-annotate",
+  "onboarding-practice",
+  "options-settings",
+  "perf",
+  "popup",
+  "privacy-security",
+  "report",
+  "tutorials-films",
+  "worker"
+ ],
+ "featureSmoke": {
+  "a11y": "test-a11y-static",
+  "ai-writing": "test-ai-write",
+  "autopilot": "test-autopilot-privacy",
+  "build-package": "test-worker-imports",
+  "content-page": "test-wrappers",
+  "exporters-formats": "test-formats",
+  "helper-mcp": "test-agent-bridge",
+  "i18n-copy": "test-i18n",
+  "jira-integrations": "test-jira-adf",
+  "media-replay-annotate": "test-replay",
+  "onboarding-practice": "test-onboarding-1010",
+  "options-settings": "test-options-save",
+  "perf": "test-perf-worker",
+  "popup": "test-popup-structure",
+  "privacy-security": "test-privacy-contract",
+  "report": "test-report",
+  "tutorials-films": "test-film-transitions",
+  "worker": "test-handlers",
+  "game": "test-game-levels"
+ },
+ "smokeOrder": [
+  "test-pipeline-manifest",
+  "test-types",
+  "test-worker-loads",
+  "test-boot-zip",
+  "test-a11y-static",
+  "test-agent-bridge",
+  "test-ai-write",
+  "test-autopilot-privacy",
+  "test-copy",
+  "test-film-transitions",
+  "test-formats",
+  "test-handlers",
+  "test-i18n",
+  "test-jira-adf",
+  "test-onboarding-1010",
+  "test-options-save",
+  "test-perf-worker",
+  "test-popup-structure",
+  "test-privacy-contract",
+  "test-replay",
+  "test-report",
+  "test-secret-scan",
+  "test-sender-checks",
+  "test-worker-imports",
+  "test-wrappers",
+  "test-game-levels"
+ ],
+ "pendingRows": [],
+ "pendingExpires": "2026-10-19",
+ "pendingNote": "empty after the 1012 integration; list ids here only for a lane that lands a test without its row (expires with pendingExpires).",
+ "i18nParity": [
+  "test-i18n",
+  "test-ui-names"
+ ],
+ "enforceC2From": "2027-01-01",
+ "envSkips": {
+  "python:hard": {
+   "probe": {
+    "argv": [
+     "uv",
+     "run",
+     "python",
+     "-c",
+     "print(1)"
+    ]
+   },
+   "reason": "Windows Application Control can block uv python (os error 4551)",
+   "suites": [
+    "test-glyphs",
+    "test-report-filing-live"
+   ],
+   "note": "per-row pythonVia says which probe applies: uv (this one) or plain python",
+   "verdict": "ENV-BLOCKED (never green; tier INCOMPLETE unless --accept-env python)"
+  },
+  "python:soft": {
+   "probe": {
+    "argv": [
+     "python",
+     "--version"
+    ]
+   },
+   "note": "the suite prints its own skip / NOT VERIFIED line; the pipeline records it as degraded",
+   "suites": [
+    "test-formats-contract",
+    "test-eml",
+    "test-portable-zip"
+   ]
+  },
+  "secondary-monitor": {
+   "probe": "lib-test-window.monitors().length > 1",
+   "onMissing": "headed suites refuse to run unless --allow-primary; never silently use the main monitor"
+  }
+ },
+ "hubFiles": [
+  "extension/background/service-worker.js",
+  "extension/background/handlers-app.js",
+  "extension/background/handlers-session.js",
+  "extension/background/handlers-tools.js",
+  "extension/background/worker-base.js",
+  "extension/background/worker-filing.js",
+  "extension/background/worker-lifecycle.js",
+  "extension/background/worker-scans.js",
+  "extension/background/worker-scrub.js",
+  "extension/background/worker-session.js",
+  "extension/background/worker-tabs.js",
+  "extension/popup/popup.js",
+  "extension/report/report.js",
+  "extension/manifest.json",
+  "extension/platform/settings.js",
+  "extension/**/tool-catalogue.json",
+  "extension/**/store-registry.js",
+  "extension/_locales/**",
+  "extension/platform/i18n/*.json",
+  "extension/package.json",
+  "extension/tools/run-suites.mjs",
+  "extension/tools/lib-*.mjs",
+  "extension/tools/test-manifest.json"
+ ],
+ "hubNote": "a changed hub file escalates --changed to the whole regression tier (G-23); en.json / ar.json also add i18nParity (G-25). --changed never satisfies the delivery gate (G-24).",
+ "changedMap": [
+  {
+   "glob": "extension/popup/**",
+   "addFeatureSmoke": [
+    "popup",
+    "autopilot",
+    "onboarding-practice"
+   ]
+  },
+  {
+   "glob": "extension/report/**",
+   "addFeatureSmoke": [
+    "report"
+   ]
+  },
+  {
+   "glob": "extension/background/**",
+   "addFeatureSmoke": [
+    "worker"
+   ]
+  },
+  {
+   "glob": "extension/content/**",
+   "addFeatureSmoke": [
+    "content-page",
+    "autopilot"
+   ]
+  },
+  {
+   "glob": "extension/options/**",
+   "addFeatureSmoke": [
+    "options-settings"
+   ]
+  },
+  {
+   "glob": "extension/platform/i18n/**",
+   "addFeatureSmoke": [
+    "i18n-copy",
+    "popup",
+    "report"
+   ]
+  },
+  {
+   "glob": "extension/platform/**",
+   "addFeatureSmoke": [
+    "options-settings",
+    "privacy-security",
+    "worker"
+   ]
+  },
+  {
+   "glob": "extension/{replay,annotate,diagram,videoedit,offscreen}/**",
+   "addFeatureSmoke": [
+    "media-replay-annotate"
+   ]
+  },
+  {
+   "glob": "extension/{welcome,practice}/**",
+   "addFeatureSmoke": [
+    "onboarding-practice"
+   ]
+  },
+  {
+   "glob": "extension/tutorials/**",
+   "addFeatureSmoke": [
+    "tutorials-films"
+   ]
+  },
+  {
+   "glob": "extension/{api,reporter}/**",
+   "addFeatureSmoke": [
+    "exporters-formats",
+    "jira-integrations"
+   ]
+  },
+  {
+   "glob": "extension/{manifest.json,package.json,_locales/**}",
+   "addFeatureSmoke": [
+    "build-package",
+    "i18n-copy"
+   ]
+  },
+  {
+   "glob": "helper/**",
+   "addFeatureSmoke": [
+    "helper-mcp"
+   ]
+  },
+  {
+   "glob": "extension/{game/**,tools/lib-game*.mjs,tools/voice-render.mjs}",
+   "addFeatureSmoke": [
+    "game"
+   ]
+  }
+ ],
+ "sourceScope": {
+  "ext": "\\.(m?js|json|html|css)$",
+  "skip": "^package-lock\\.json$",
+  "note": "every .js/.mjs/.json/.html/.css under extension/ (node_modules, dist and tools/film output are never walked) must be reached by a suite (the import graph) or be on unmappedOk with a reason; docs, icons and store assets are not in this set"
+ },
+ "unmappedOk": [
+  {
+   "glob": "work/**",
+   "reason": "local scratch and test-run output: not product, not shipped"
+  },
+  {
+   "glob": "research/**",
+   "reason": "owner notes and decisions: not product"
+  },
+  {
+   "glob": "deliverables/**",
+   "reason": "delivery artefacts: output"
+  },
+  {
+   "glob": "dist/**",
+   "reason": "build output (gitignored)"
+  },
+  {
+   "glob": "graphify-out/**",
+   "reason": "generated graph output"
+  },
+  {
+   "glob": ".agent-ops/**",
+   "reason": "local run ledger"
+  },
+  {
+   "glob": ".claude/**",
+   "reason": "local tool configuration"
+  },
+  {
+   "glob": ".vscode/**",
+   "reason": "editor settings"
+  },
+  {
+   "glob": ".github/**",
+   "reason": "CI configuration, exercised by CI itself and test-ci-hardening reads it where it matters"
+  },
+  {
+   "glob": "tools/**",
+   "reason": "repo-root helper scripts (sdlc), not extension code"
+  },
+  {
+   "glob": "skills/**",
+   "reason": "local tool skills"
+  },
+  {
+   "glob": "identity/**",
+   "reason": "brand identity files, not shipped"
+  },
+  {
+   "glob": "keys/**",
+   "reason": "key material folder: never read by tests"
+  },
+  {
+   "glob": "docs/**",
+   "reason": "repo docs"
+  },
+  {
+   "glob": "*.md",
+   "reason": "repo root documents (handoff, CLAUDE, README)"
+  },
+  {
+   "glob": ".gitignore",
+   "reason": "repo metadata"
+  },
+  {
+   "glob": ".gitattributes",
+   "reason": "repo metadata"
+  },
+  {
+   "glob": ".graphifyignore",
+   "reason": "repo metadata"
+  },
+  {
+   "glob": "extension/docs/**",
+   "reason": "extension docs, read by no suite beyond test-docs which the graph already maps"
+  },
+  {
+   "glob": "extension/icons/**",
+   "reason": "icon binaries and generators output"
+  },
+  {
+   "glob": "extension/brand/**",
+   "reason": "brand assets"
+  },
+  {
+   "glob": "extension/vendor/**",
+   "reason": "third-party bundles, checked by test-axe-banner and test-vendor-risk when touched"
+  },
+  {
+   "glob": "extension/types/**",
+   "reason": "ambient type declarations, checked by test-types"
+  },
+  {
+   "glob": "extension/store/**",
+   "reason": "store listing assets, checked by test-listing-assets when touched"
+  },
+  {
+   "glob": "extension/*.md",
+   "reason": "extension root documents (README, CHANGELOG, PRIVACY ...): copy-truth reads the ones that matter"
+  }
+ ],
+ "infraScripts": [
+  {
+   "file": "build-brand.mjs",
+   "reason": "the brand generator: writes brand/brand.json into the manifest, i18n, footers and product.js (test-brand-sync is its gate)"
+  },
+  {
+   "file": "build-practice.mjs",
+   "reason": "writes practice/practice.html from game/index.html; test-practice-game.mjs runs it with --check"
+  },
+  {
+   "file": "canary.mjs",
+   "reason": "the mutation-canary engine (lane P6), run by the full and release tiers as an extra, not a suite"
+  },
+  {
+   "file": "check-updater-host.mjs",
+   "reason": "Windows/bash by-hand check of the native update host (npm run test:updater-host); PowerShell, so not a CI suite"
+  },
+  {
+   "file": "pipeline.mjs",
+   "reason": "the test pipeline runner (lane P1)"
+  },
+  {
+   "file": "release-notes.mjs",
+   "reason": "update-1020: cuts one version section out of CHANGELOG.md for the release workflow; asserted by test-release-notes"
+  },
+  {
+   "file": "run-suites.mjs",
+   "reason": "the delivery-gate runner itself (kept in parallel with pipeline.mjs for one release, D-1010-67)"
+  },
+  {
+   "file": "sweep-e2e.mjs",
+   "reason": "sdlc-1014b: walks every popup state in the built extension, EN and AR, and writes work/sdlc/pipeline-1014b/results/sweep-*.json; a fault-finding tool, the assertions are in test-e2e-practice"
+  },
+  {
+   "file": "voice-render-local.mjs",
+   "reason": "Bug Hunt LOCAL voice render (Kokoro via kokoro-js, owner exception 2026-10-12): owner runs it once (--go), the output is checked by test-game-voice"
+  },
+  {
+   "file": "voice-render.mjs",
+   "reason": "Bug Hunt voice render: calls the TTS model, owner runs it once (npm run game:voice -- --go); tested by test-voice-render"
+  }
+ ],
+ "suites": [
+  {
+   "id": "clickthrough",
+   "path": "tools/clickthrough.mjs",
+   "kind": "script",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "report",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "buttons",
+    "net:loopback",
+    "release-gate",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "shard": 60
+  },
+  {
+   "id": "manifest-check",
+   "path": "tools/manifest-check.mjs",
+   "kind": "script",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "perf-editor",
+   "path": "tools/perf-editor.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "stage": "perf",
+   "features": [
+    "media-replay-annotate",
+    "perf"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "stage:perf"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "perf-page",
+   "path": "tools/perf-page.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "stage": "perf",
+   "features": [
+    "perf"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "stage:perf",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "perf-worker",
+   "path": "tools/perf-worker.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "stage": "perf",
+   "features": [
+    "worker",
+    "perf"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "stage:perf",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "perf",
+   "path": "tools/perf.mjs",
+   "kind": "script",
+   "lane": "measure",
+   "stage": "perf",
+   "features": [
+    "perf"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "byHand",
+    "exclusive",
+    "net:loopback",
+    "serial",
+    "stage:perf",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "serial": true,
+   "exclusive": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "lane": "CPU-throttled performance budget run (header, D-1010-158): measure lane although it launches headed"
+   }
+  },
+  {
+   "id": "recording",
+   "path": "tools/recording.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "release-check",
+   "path": "tools/release-check.mjs",
+   "kind": "script",
+   "lane": "node",
+   "stage": "release",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:release"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "self-a11y",
+   "path": "tools/self-a11y.mjs",
+   "kind": "script",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "a11y"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": 900,
+   "timeoutSource": "measured",
+   "assertMode": "counted",
+   "measuredSeconds": 569
+  },
+  {
+   "id": "smoke",
+   "path": "tools/smoke.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "worker",
+    "exporters-formats",
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "legacy",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "stress",
+   "path": "tools/stress.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "stage": "perf",
+   "features": [
+    "perf"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "stage:perf",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "test-a11y-flow",
+   "path": "tools/test-a11y-flow.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report",
+    "a11y"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-a11y-static",
+   "path": "tools/test-a11y-static.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "a11y"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.2
+  },
+  {
+   "id": "test-accept-fix-s3",
+   "path": "tools/test-accept-fix-s3.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "integration",
+   "features": [
+    "content-page",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-action-join",
+   "path": "tools/test-action-join.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints no per-assertion line (ok / N passed) in a static scan of the source: the exit code is the verdict [A, confirm on the first run.json]"
+  },
+  {
+   "id": "test-agent-bridge",
+   "path": "tools/test-agent-bridge.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "helper-mcp"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "contract",
+    "smoke",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.9
+  },
+  {
+   "id": "test-agent-brief",
+   "path": "tools/test-agent-brief.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-ai-write",
+   "path": "tools/test-ai-write.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "ai-writing",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.5
+  },
+  {
+   "id": "test-annotate",
+   "path": "tools/test-annotate.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-api",
+   "path": "tools/test-api.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats",
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-arabic-edges",
+   "path": "tools/test-arabic-edges.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-assert-may-record",
+   "path": "tools/test-assert-may-record.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "worker",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-autopilot-live",
+   "path": "tools/test-autopilot-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "rule12",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-autopilot-privacy",
+   "path": "tools/test-autopilot-privacy.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "autopilot",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "rule12",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.2
+  },
+  {
+   "id": "test-autoshot",
+   "path": "tools/test-autoshot.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-autostart",
+   "path": "tools/test-autostart.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-axe-banner",
+   "path": "tools/test-axe-banner.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "a11y"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-bar-dead",
+   "path": "tools/test-bar-dead.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-f1022",
+   "path": "tools/test-f1022.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page",
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-bar-geometry",
+   "path": "tools/test-bar-geometry.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-blackbox",
+   "path": "tools/test-blackbox.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-boot-smoke",
+   "path": "tools/test-boot-smoke.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "smoke",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:smoke"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-bridge-port",
+   "path": "tools/test-bridge-port.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "helper-mcp"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-buttons-all",
+   "path": "tools/test-buttons-all.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "report",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "buttons",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "shard": 60,
+   "headlessOk": false
+  },
+  {
+   "id": "test-canvas-font",
+   "path": "tools/test-canvas-font.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-capabilities",
+   "path": "tools/test-capabilities.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "build-package",
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-capture-live",
+   "path": "tools/test-capture-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-ci-hardening",
+   "path": "tools/test-ci-hardening.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-clip-duration",
+   "path": "tools/test-clip-duration.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-compress",
+   "path": "tools/test-compress.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-console-brand",
+   "path": "tools/test-console-brand.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-context-menus",
+   "path": "tools/test-context-menus.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-cookie-offscreen",
+   "path": "tools/test-cookie-offscreen.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-cookies",
+   "path": "tools/test-cookies.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-copy-length",
+   "path": "tools/test-copy-length.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "headlessOk",
+    "rule12",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-copy-report",
+   "path": "tools/test-copy-report.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report",
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-copy-truth",
+   "path": "tools/test-copy-truth.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "i18n-copy",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-copy",
+   "path": "tools/test-copy.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "canary",
+    "smoke",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "observed: prints no ok lines and no N passed summary (R8 / run on 2026-10-12)",
+   "measuredSeconds": 0.3
+  },
+  {
+   "id": "test-correlate",
+   "path": "tools/test-correlate.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-coverage",
+   "path": "tools/test-coverage.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-cue-door",
+   "path": "tools/test-cue-door.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-db-upgrade",
+   "path": "tools/test-db-upgrade.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-deadlines",
+   "path": "tools/test-deadlines.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-brand-sync",
+   "path": "tools/test-brand-sync.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-deployment-values",
+   "path": "tools/test-deployment-values.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-devil-a1",
+   "path": "tools/test-devil-a1.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-devil-a2",
+   "path": "tools/test-devil-a2.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "worker",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-devil-a3",
+   "path": "tools/test-devil-a3.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "worker",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-devil-b",
+   "path": "tools/test-devil-b.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-devil-d-literals",
+   "path": "tools/test-devil-d-literals.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "i18n-copy",
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "council",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "observed: prints no ok lines and no N passed summary (R8 / run on 2026-10-12)"
+  },
+  {
+   "id": "test-devil-f",
+   "path": "tools/test-devil-f.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-devil-r2-c2",
+   "path": "tools/test-devil-r2-c2.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "worker",
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-devil-r2-i1",
+   "path": "tools/test-devil-r2-i1.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "jira-integrations",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-dock-live",
+   "path": "tools/test-dock-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "browser-live",
+    "byHand",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints no per-assertion line (ok / N passed) in a static scan of the source: the exit code is the verdict [A, confirm on the first run.json]"
+  },
+  {
+   "id": "test-docs",
+   "path": "tools/test-docs.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-done-card",
+   "path": "tools/test-done-card.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "headlessOk",
+    "rule12",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-popup-outcomes",
+   "path": "tools/test-popup-outcomes.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-draft-and-cap",
+   "path": "tools/test-draft-and-cap.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-draft-door-live",
+   "path": "tools/test-draft-door-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-draft-door",
+   "path": "tools/test-draft-door.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-editor-craft",
+   "path": "tools/test-editor-craft.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-editors-keyboard-live",
+   "path": "tools/test-editors-keyboard-live.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-egress",
+   "path": "tools/test-egress.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "net:loopback",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-eml",
+   "path": "tools/test-eml.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "needs-python:soft",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "soft",
+   "pythonVia": "python",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-erase",
+   "path": "tools/test-erase.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-events",
+   "path": "tools/test-events.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-explainers",
+   "path": "tools/test-explainers.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-export-door",
+   "path": "tools/test-export-door.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-exporters",
+   "path": "tools/test-exporters.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "lockedProfile": true,
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-fence",
+   "path": "tools/test-fence.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-field-picker",
+   "path": "tools/test-field-picker.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-nasty-palette",
+   "path": "tools/test-nasty-palette.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-filing",
+   "path": "tools/test-filing.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report",
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-film-transitions",
+   "path": "tools/test-film-transitions.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "tutorials-films"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.1
+  },
+  {
+   "id": "test-films-hosted",
+   "path": "tools/test-films-hosted.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "tutorials-films"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-finding-count",
+   "path": "tools/test-finding-count.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-problem-number",
+   "path": "tools/test-problem-number.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-fine-print",
+   "path": "tools/test-fine-print.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-first-run-live",
+   "path": "tools/test-first-run-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "onboarding-practice"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-first-run",
+   "path": "tools/test-first-run.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup",
+    "onboarding-practice"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-fixes-1011",
+   "path": "tools/test-fixes-1011.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "rule12",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-float-front",
+   "path": "tools/test-float-front.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints no per-assertion line (ok / N passed) in a static scan of the source: the exit code is the verdict [A, confirm on the first run.json]"
+  },
+  {
+   "id": "test-float-place",
+   "path": "tools/test-float-place.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-flow",
+   "path": "tools/test-flow.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-footer-url",
+   "path": "tools/test-footer-url.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-formats-contract",
+   "path": "tools/test-formats-contract.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "needs-python:soft",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "soft",
+   "pythonVia": "uv",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-formats-keep",
+   "path": "tools/test-formats-keep.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-formats",
+   "path": "tools/test-formats.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "contract",
+    "smoke",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.1
+  },
+  {
+   "id": "test-frames",
+   "path": "tools/test-frames.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "content-page",
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "lockedProfile": true,
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-gif",
+   "path": "tools/test-gif.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "exporters-formats",
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "lockedProfile": true,
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-glyphs",
+   "path": "tools/test-glyphs.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "needs-python:hard",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "hard",
+   "pythonVia": "uv",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints no per-assertion line (ok / N passed) in a static scan of the source: the exit code is the verdict [A, confirm on the first run.json]"
+  },
+  {
+   "id": "test-graphql",
+   "path": "tools/test-graphql.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-handlers",
+   "path": "tools/test-handlers.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.5
+  },
+  {
+   "id": "test-harvest",
+   "path": "tools/test-harvest.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-i18n",
+   "path": "tools/test-i18n.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "canary",
+    "smoke",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "observed: prints no ok lines and no N passed summary (R8 / run on 2026-10-12)",
+   "reads": [
+    "popup",
+    "options",
+    "report",
+    "welcome",
+    "tutorials",
+    "devtools",
+    "annotate",
+    "diagram",
+    "videoedit",
+    "replay",
+    "api",
+    "practice",
+    "platform/i18n.js"
+   ],
+   "measuredSeconds": 0.7
+  },
+  {
+   "id": "test-icons",
+   "path": "tools/test-icons.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "popup",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-independent",
+   "path": "tools/test-independent.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "build-package",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-ingest",
+   "path": "tools/test-ingest.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-inpage-bar",
+   "path": "tools/test-inpage-bar.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-integrations-live",
+   "path": "tools/test-integrations-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-integrations-perm",
+   "path": "tools/test-integrations-perm.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-integrity",
+   "path": "tools/test-integrity.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "worker",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-interrupted-and-keep",
+   "path": "tools/test-interrupted-and-keep.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-istqb",
+   "path": "tools/test-istqb.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-adf",
+   "path": "tools/test-jira-adf.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "contract",
+    "smoke",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.1
+  },
+  {
+   "id": "test-jira-auth",
+   "path": "tools/test-jira-auth.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-connect",
+   "path": "tools/test-jira-connect.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "net:loopback",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-dc-basic",
+   "path": "tools/test-jira-dc-basic.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "jira-integrations",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "net:loopback",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-integrations-typing",
+   "path": "tools/test-integrations-typing.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-autosubmit",
+   "path": "tools/test-jira-autosubmit.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-file",
+   "path": "tools/test-jira-file.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-live",
+   "path": "tools/test-jira-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-sync",
+   "path": "tools/test-jira-sync.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-layout-checks",
+   "path": "tools/test-layout-checks.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-keymap-1011",
+   "path": "tools/test-keymap-1011.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "rule12",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-keymap",
+   "path": "tools/test-keymap.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-layers",
+   "path": "tools/test-layers.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-listing-assets-ar",
+   "path": "tools/test-listing-assets-ar.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints one summary line (\"N images carry the version ...\") and exits 1 on any failure; no ok lines, no \"N passed\" summary"
+  },
+  {
+   "id": "test-listing-assets",
+   "path": "tools/test-listing-assets.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints one summary line (\"N images carry the version ...\") and exits 1 on any failure; no ok lines, no \"N passed\" summary"
+  },
+  {
+   "id": "test-locator-notes",
+   "path": "tools/test-locator-notes.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-locator-truth",
+   "path": "tools/test-locator-truth.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "observed: prints no ok lines and no N passed summary (R8 / run on 2026-10-12)"
+  },
+  {
+   "id": "test-managed-flavour",
+   "path": "tools/test-managed-flavour.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-managed-schema",
+   "path": "tools/test-managed-schema.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "contract",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-browser-dists",
+   "path": "tools/test-browser-dists.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-masking",
+   "path": "tools/test-masking.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-motion",
+   "path": "tools/test-motion.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-multi-window",
+   "path": "tools/test-multi-window.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-next-primary",
+   "path": "tools/test-next-primary.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "headlessOk",
+    "net:loopback",
+    "rule12",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-not-a-bug",
+   "path": "tools/test-not-a-bug.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-note-capture",
+   "path": "tools/test-note-capture.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "rule12",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints \"all assertions passed\" with no count"
+  },
+  {
+   "id": "test-notify",
+   "path": "tools/test-notify.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-now-fixes",
+   "path": "tools/test-now-fixes.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-of-a-ingest",
+   "path": "tools/test-of-a-ingest.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-of-a-replayseq",
+   "path": "tools/test-of-a-replayseq.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-of-b-agent",
+   "path": "tools/test-of-b-agent.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "helper-mcp"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-of-b-notify",
+   "path": "tools/test-of-b-notify.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-of-c-spec",
+   "path": "tools/test-of-c-spec.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-on-oracle",
+   "path": "tools/test-on-oracle.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-onboarding-1010",
+   "path": "tools/test-onboarding-1010.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup",
+    "onboarding-practice"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "council",
+    "smoke",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.1
+  },
+  {
+   "id": "test-onboarding-live",
+   "path": "tools/test-onboarding-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "onboarding-practice"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-optimistic",
+   "path": "tools/test-optimistic.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-options-save",
+   "path": "tools/test-options-save.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.1
+  },
+  {
+   "id": "test-org-consent",
+   "path": "tools/test-org-consent.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-origin-gate-live",
+   "path": "tools/test-origin-gate-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-page-cost",
+   "path": "tools/test-page-cost.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "perf",
+   "features": [
+    "content-page",
+    "perf"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "serial",
+    "stage:perf",
+    "state"
+   ],
+   "headed": false,
+   "serial": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-page-hooks-attribution",
+   "path": "tools/test-page-hooks-attribution.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-page-indicator",
+   "path": "tools/test-page-indicator.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page",
+    "autopilot"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-perf-worker",
+   "path": "tools/test-perf-worker.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker",
+    "perf"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 1.1
+  },
+  {
+   "id": "test-permissions",
+   "path": "tools/test-permissions.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-plan-run",
+   "path": "tools/test-plan-run.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headed",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed"
+   ],
+   "headed": false,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-plurals",
+   "path": "tools/test-plurals.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "observed: prints no ok lines and no N passed summary (R8 / run on 2026-10-12)"
+  },
+  {
+   "id": "test-policy-refusals",
+   "path": "tools/test-policy-refusals.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-policy-registry",
+   "path": "tools/test-policy-registry.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-policy",
+   "path": "tools/test-policy.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-popup-structure",
+   "path": "tools/test-popup-structure.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.3
+  },
+  {
+   "id": "test-dom-helpers",
+   "path": "tools/test-dom-helpers.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-portable-zip",
+   "path": "tools/test-portable-zip.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "release",
+   "features": [
+    "exporters-formats",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "needs-python:soft",
+    "release",
+    "stage:release",
+    "state"
+   ],
+   "headed": false,
+   "python": "soft",
+   "pythonVia": "python",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-postman",
+   "path": "tools/test-postman.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-practice-1011",
+   "path": "tools/test-practice-1011.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "autopilot",
+    "onboarding-practice"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "net:loopback",
+    "rule12",
+    "stage:e2e-headless",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-privacy-contract",
+   "path": "tools/test-privacy-contract.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "contract",
+    "smoke",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.6
+  },
+  {
+   "id": "test-privacy",
+   "path": "tools/test-privacy.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-provenance",
+   "path": "tools/test-provenance.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-r-ai-copy",
+   "path": "tools/test-r-ai-copy.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report",
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-r-bugfirst",
+   "path": "tools/test-r-bugfirst.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-r-dupes",
+   "path": "tools/test-r-dupes.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-reach-popup",
+   "path": "tools/test-reach-popup.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "headlessOk",
+    "rule12",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-recorder-dom",
+   "path": "tools/test-recorder-dom.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-recording-indicator",
+   "path": "tools/test-recording-indicator.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page",
+    "autopilot",
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-refusals",
+   "path": "tools/test-refusals.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-release-guard",
+   "path": "tools/test-release-guard.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-replay-buffer",
+   "path": "tools/test-replay-buffer.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-replay",
+   "path": "tools/test-replay.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 1
+  },
+  {
+   "id": "test-report-filing-live",
+   "path": "tools/test-report-filing-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "report",
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "needs-python:hard",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "hard",
+   "pythonVia": "python",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-report-header-1011",
+   "path": "tools/test-report-header-1011.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "council",
+    "rule12",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-report",
+   "path": "tools/test-report.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.2
+  },
+  {
+   "id": "test-retention-parity",
+   "path": "tools/test-retention-parity.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-rules",
+   "path": "tools/test-rules.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-run-suites-coverage",
+   "path": "tools/test-run-suites-coverage.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-screen-recording",
+   "path": "tools/test-screen-recording.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-secret-scan",
+   "path": "tools/test-secret-scan.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.1
+  },
+  {
+   "id": "test-secrets-page",
+   "path": "tools/test-secrets-page.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-security-headers",
+   "path": "tools/test-security-headers.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-sender-checks",
+   "path": "tools/test-sender-checks.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "contract",
+   "features": [
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "contract",
+    "smoke",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.1
+  },
+  {
+   "id": "test-service-access",
+   "path": "tools/test-service-access.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-sessions",
+   "path": "tools/test-sessions.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-settings",
+   "path": "tools/test-settings.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-signal-surfaces",
+   "path": "tools/test-signal-surfaces.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-signal-worker",
+   "path": "tools/test-signal-worker.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker",
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints no per-assertion line (ok / N passed) in a static scan of the source: the exit code is the verdict [A, confirm on the first run.json]"
+  },
+  {
+   "id": "test-signal",
+   "path": "tools/test-signal.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-signature",
+   "path": "tools/test-signature.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-site-and-keys",
+   "path": "tools/test-site-and-keys.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "integration",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-site-powers",
+   "path": "tools/test-site-powers.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-sleep-stop",
+   "path": "tools/test-sleep-stop.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "worker",
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-sleep",
+   "path": "tools/test-sleep.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-sound-volume-live",
+   "path": "tools/test-sound-volume-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-sound",
+   "path": "tools/test-sound.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-speed",
+   "path": "tools/test-speed.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "perf",
+   "features": [
+    "perf"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "serial",
+    "stage:perf",
+    "state"
+   ],
+   "headed": false,
+   "serial": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-srs-reverse",
+   "path": "tools/test-srs-reverse.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-stable-layout",
+   "path": "tools/test-stable-layout.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "rule12",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-dock-panel",
+   "path": "tools/test-dock-panel.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed",
+    "browser-live"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-top-space",
+   "path": "tools/test-top-space.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed",
+    "rule7"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-scale-parity",
+   "path": "tools/test-scale-parity.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed",
+    "rule7"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-toolbar-panel",
+   "path": "tools/test-toolbar-panel.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-action-icon-art",
+   "path": "tools/test-action-icon-art.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "stage:e2e-headed",
+    "browser-live"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-store-registry",
+   "path": "tools/test-store-registry.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-styles",
+   "path": "tools/test-styles.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "popup",
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-suite",
+   "path": "tools/test-suite.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-support-bundle",
+   "path": "tools/test-support-bundle.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "privacy-security",
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-tile-wake-live",
+   "path": "tools/test-tile-wake-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-timeline-delete",
+   "path": "tools/test-timeline-delete.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "integration",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-no-windows",
+   "path": "tools/test-no-windows.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-notes-export",
+   "path": "tools/test-notes-export.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-notes-tab",
+   "path": "tools/test-notes-tab.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-markup-layout",
+   "path": "tools/test-markup-layout.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-jira-helper",
+   "path": "tools/test-jira-helper.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "unit",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-tone",
+   "path": "tools/test-tone.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-tool-cards",
+   "path": "tools/test-tool-cards.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "popup"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-tools-together",
+   "path": "tools/test-tools-together.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "integration",
+   "features": [
+    "popup",
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-top-layer",
+   "path": "tools/test-top-layer.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-trackers",
+   "path": "tools/test-trackers.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "jira-integrations",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-integrations-connect",
+   "path": "tools/test-integrations-connect.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "jira-integrations",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-truth",
+   "path": "tools/test-truth.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "net:loopback",
+    "release",
+    "stage:e2e-headless",
+    "state"
+   ],
+   "headed": false,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "overrides": {
+    "lane": "headless unless --headed is passed (headless: !argv.includes('--headed')); not headed by default [seat 1, test-truth header]",
+    "headed": "headless unless --headed is passed (headless: !argv.includes('--headed')); not headed by default [seat 1, test-truth header]"
+   }
+  },
+  {
+   "id": "test-tutorials",
+   "path": "tools/test-tutorials.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "tutorials-films"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "prints \"all N check(s) passed\" and exits 1 on any problem; no ok lines, no \"N passed\" summary"
+  },
+  {
+   "id": "test-types-wide",
+   "path": "tools/test-types-wide.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-types",
+   "path": "tools/test-types.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "smoke",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 4.6
+  },
+  {
+   "id": "test-ui-honesty",
+   "path": "tools/test-ui-honesty.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup",
+    "report",
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-ui-host",
+   "path": "tools/test-ui-host.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-ui-names",
+   "path": "tools/test-ui-names.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "i18n-copy"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "rule12",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-vault-live",
+   "path": "tools/test-vault-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-vault-unreadable",
+   "path": "tools/test-vault-unreadable.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-vault",
+   "path": "tools/test-vault.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "options-settings",
+    "privacy-security"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-vendor-risk",
+   "path": "tools/test-vendor-risk.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "privacy-security",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "release",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-verdict-honesty",
+   "path": "tools/test-verdict-honesty.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-videoedit",
+   "path": "tools/test-videoedit.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-objects-1022",
+   "path": "tools/test-objects-1022.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-viewport-inherit",
+   "path": "tools/test-viewport-inherit.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-viewport-resize",
+   "path": "tools/test-viewport-resize.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-webcam-track",
+   "path": "tools/test-webcam-track.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-worker-imports",
+   "path": "tools/test-worker-imports.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "worker",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.7
+  },
+  {
+   "id": "test-worker-restart",
+   "path": "tools/test-worker-restart.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-workspace-off",
+   "path": "tools/test-workspace-off.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-workspace",
+   "path": "tools/test-workspace.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-wrappers",
+   "path": "tools/test-wrappers.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "content-page"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "measuredSeconds": 0.2
+  },
+  {
+   "id": "test-writequeue",
+   "path": "tools/test-writequeue.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test",
+   "path": "tools/test.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats",
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "helper-test",
+   "path": "../helper/test/helper.test.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "helper-mcp"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "mcp",
+    "net:loopback",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "cwd": "helper"
+  },
+  {
+   "id": "build-browsers",
+   "path": "tools/build-browsers.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "build-fonts",
+   "path": "tools/build-fonts.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "build-ui-icons",
+   "path": "tools/build-ui-icons.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "diagnose",
+   "path": "tools/diagnose.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "float-shots",
+   "path": "tools/float-shots.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "gen-privacy-names",
+   "path": "tools/gen-privacy-names.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "generate-icons",
+   "path": "tools/generate-icons.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "i18n-shots",
+   "path": "tools/i18n-shots.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "inpage-shots",
+   "path": "tools/inpage-shots.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "jira-live",
+   "path": "tools/jira-live.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "liveCredentials"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "liveCredentials": true,
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "launch",
+   "path": "tools/launch.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "liveNetwork",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "liveNetwork": true,
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "measure-signal",
+   "path": "tools/measure-signal.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "origin-check",
+   "path": "tools/origin-check.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "package",
+   "path": "tools/package.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "page-scroll",
+   "path": "tools/page-scroll.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "page-shot",
+   "path": "tools/page-shot.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "paint-cost",
+   "path": "tools/paint-cost.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "probe",
+   "path": "tools/probe.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "reel-shots",
+   "path": "tools/reel-shots.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "release-record",
+   "path": "tools/release-record.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "release",
+   "path": "tools/release.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "report-gates",
+   "path": "tools/report-gates.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "sbom",
+   "path": "tools/sbom.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "scroll",
+   "path": "tools/scroll.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "shots-source",
+   "path": "tools/shots-source.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "sound-doc",
+   "path": "tools/sound-doc.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "sound-measure",
+   "path": "tools/sound-measure.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "store-shots",
+   "path": "tools/store-shots.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "store-status",
+   "path": "tools/store-status.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "liveCredentials"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "liveCredentials": true,
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "targets",
+   "path": "tools/targets.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "tutorial-index",
+   "path": "tools/tutorial-index.mjs",
+   "kind": "tool",
+   "lane": "gate",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "tutorials",
+   "path": "tools/tutorials.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "ui-preview-2026-09-17-b",
+   "path": "tools/ui-preview-2026-09-17-b.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "ui-preview-2026-09-17-c",
+   "path": "tools/ui-preview-2026-09-17-c.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "ui-preview-2026-09-17",
+   "path": "tools/ui-preview-2026-09-17.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "ui-preview-shots",
+   "path": "tools/ui-preview-shots.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "ui-shots",
+   "path": "tools/ui-shots.mjs",
+   "kind": "tool",
+   "lane": "headed",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "net:loopback",
+    "state"
+   ],
+   "headed": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "film-voice",
+   "path": "tools/film/audio/voice.mjs",
+   "kind": "tool",
+   "lane": "node",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool",
+    "liveCredentials"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "liveCredentials": true,
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "test-pipeline-manifest",
+   "path": "tools/test-pipeline-manifest.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "smoke",
+    "stage:static",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-pipeline-select",
+   "path": "tools/test-pipeline-select.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "static",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static",
+    "state"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-audio-engine",
+   "path": "tools/test-audio-engine.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "stage": "unit",
+   "exitcodeReason": "prints \"N assertions passed\" (a form the verdict counter does not read)"
+  },
+  {
+   "id": "test-boot-zip",
+   "path": "tools/test-boot-zip.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "worker",
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "smoke",
+    "stage:smoke",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "smoke"
+  },
+  {
+   "id": "test-game-audio",
+   "path": "tools/test-game-audio.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-b-engine",
+   "path": "tools/test-game-b-engine.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-b-features",
+   "path": "tools/test-game-b-features.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "static"
+  },
+  {
+   "id": "test-game-b-levels",
+   "path": "tools/test-game-b-levels.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-b-server",
+   "path": "tools/test-game-b-server.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-contrast-fonts",
+   "path": "tools/test-game-contrast-fonts.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-features",
+   "path": "tools/test-game-features.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-guardrails",
+   "path": "tools/test-game-guardrails.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-i18n",
+   "path": "tools/test-game-i18n.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "static"
+  },
+  {
+   "id": "test-game-levels-dom",
+   "path": "tools/test-game-levels-dom.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-levels",
+   "path": "tools/test-game-levels.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "canary",
+    "net:loopback",
+    "smoke",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-live",
+   "path": "tools/test-game-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headed"
+  },
+  {
+   "id": "test-game-privacy",
+   "path": "tools/test-game-privacy.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-trial-schedule",
+   "path": "tools/test-game-trial-schedule.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-trial-lagfair",
+   "path": "tools/test-game-trial-lagfair.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-trial-bot",
+   "path": "tools/test-game-trial-bot.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-trial-unlock",
+   "path": "tools/test-game-trial-unlock.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-trial-attune",
+   "path": "tools/test-game-trial-attune.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-trial-ui",
+   "path": "tools/test-game-trial-ui.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-trial-privacy",
+   "path": "tools/test-game-trial-privacy.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-game-trial-live",
+   "path": "tools/test-game-trial-live.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "net:loopback",
+    "stage:e2e-headed",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headed",
+   "overrides": {
+    "byHand": "Bug Hunt hard trials calibration run (DESIGN-bug-hunt-hard s12): headed Chrome on the secondary monitor, the owner presses Allow and Alt+Shift+Q once; run by hand with --by-hand"
+   }
+  },
+  {
+   "id": "test-game-trial-engine",
+   "path": "tools/test-game-trial-engine.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit",
+   "overrides": {
+    "lane": "drives game/trial.js through lib-game-t1 / lib-game-b (dynamic imports in the lib), so it is a node suite and not a pure gate"
+   }
+  },
+  {
+   "id": "test-game-trial-fair",
+   "path": "tools/test-game-trial-fair.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit",
+   "overrides": {
+    "lane": "drives game/trial.js through lib-game-t1 / lib-game-b (dynamic imports in the lib), so it is a node suite and not a pure gate"
+   }
+  },
+  {
+   "id": "test-game-scoring",
+   "path": "tools/test-game-scoring.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "static"
+  },
+  {
+   "id": "test-game-server",
+   "path": "tools/test-game-server.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-signal",
+   "path": "tools/test-game-signal.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-practice-game",
+   "path": "tools/test-practice-game.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-game-voice",
+   "path": "tools/test-game-voice.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "needs-python:soft",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "soft",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "unit"
+  },
+  {
+   "id": "test-pipeline-lock",
+   "path": "tools/test-pipeline-lock.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "contract"
+  },
+  {
+   "id": "test-pipeline-sweep",
+   "path": "tools/test-pipeline-sweep.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "popup",
+    "report",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "buttons",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "contract"
+  },
+  {
+   "id": "test-pipeline-router",
+   "path": "tools/test-pipeline-router.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "contract"
+  },
+  {
+   "id": "test-pipeline-verdict",
+   "path": "tools/test-pipeline-verdict.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "needs-python:soft",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "soft",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "contract"
+  },
+  {
+   "id": "test-sandbox-egress",
+   "path": "tools/test-sandbox-egress.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "byHand",
+    "liveCredentials",
+    "net:loopback",
+    "stage:contract",
+    "state"
+   ],
+   "headed": true,
+   "byHand": true,
+   "liveCredentials": true,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "contract"
+  },
+  {
+   "id": "test-test-quality",
+   "path": "tools/test-test-quality.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:contract",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "contract"
+  },
+  {
+   "id": "test-voice-render",
+   "path": "tools/test-voice-render.mjs",
+   "kind": "test",
+   "lane": "node",
+   "features": [
+    "game"
+   ],
+   "tags": [
+    "assertMode:exitcode",
+    "needs-python:soft",
+    "stage:unit",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "soft",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "stage": "unit",
+   "exitcodeReason": "prints \"N assertions passed\" (a form the verdict counter does not read)"
+  },
+  {
+   "id": "test-worker-loads",
+   "path": "tools/test-worker-loads.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "smoke",
+    "stage:smoke",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "smoke"
+  },
+  {
+   "id": "test-worker-restart-live",
+   "path": "tools/test-worker-restart-live.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "release",
+    "stage:e2e-headless",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-focus-follow-live",
+   "path": "tools/test-focus-follow-live.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "net:loopback",
+    "release",
+    "stage:e2e-headless",
+    "state"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "stage": "e2e-headless"
+  },
+  {
+   "id": "test-e2e-practice",
+   "path": "tools/test-e2e-practice.mjs",
+   "kind": "test",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "features": [
+    "popup",
+    "onboarding-practice",
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "browser-live",
+    "byHand",
+    "headlessOk",
+    "net:loopback",
+    "stage:e2e-headed"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": true,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-cap1022",
+   "path": "tools/test-cap1022.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-update-check",
+   "path": "tools/test-update-check.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-exports-1022",
+   "path": "tools/test-exports-1022.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "exporters-formats",
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-update-1022",
+   "path": "tools/test-update-1022.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-e1022",
+   "path": "tools/test-e1022.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-r363",
+   "path": "tools/test-r363.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "popup",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-links-allowed",
+   "path": "tools/test-links-allowed.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "unit",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-no-ai-updater",
+   "path": "tools/test-no-ai-updater.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-release-notes",
+   "path": "tools/test-release-notes.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "build-package"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  }
+ ]
+}

@@ -1,0 +1,1201 @@
+{
+  "_readme": "Storyboard, checkpoint 2 of research/33-film-bible.md 7.1. Times are seconds from frame 0 at 30 fps. inFrame and outFrame are inclusive; frames is their count. A caption span enters at inSec and starts its exit at outSec, so a span followed immediately by another cross-fades into it and coverage never breaks. Captions live in captions[]; a shot points at one by index, so a caption is never torn down by a shot change. Capture paths are per pass: h is the 16:9 master, s the 1:1 cut, v the 9:16 cut. No shot in this set is a held still: every one has product motion, so every capture is a frame sequence. Written by Builder C. Nothing here is scaled, at any stage.",
+  "id": "the-tools",
+  "rev": "round-3",
+  "kind": "feature",
+  "mode": "expert",
+  "batch": "w",
+  "en": "The tools",
+  "ar": "الأدوات",
+  "blurb": "Nineteen tools in four groups, on the page you are standing on, and one film for each group.",
+  "titleKey": null,
+  "chipKey": null,
+  "bpm": 120,
+  "fps": 30,
+  "bars": 19,
+  "seconds": 38.0,
+  "frames": 1140,
+  "aspects": [
+    "h",
+    "s",
+    "v"
+  ],
+  "canvas": {
+    "h": {
+      "w": 1920,
+      "h": 1080,
+      "label": "16:9 master"
+    },
+    "s": {
+      "w": 1080,
+      "h": 1080,
+      "label": "1:1 cut"
+    },
+    "v": {
+      "w": 1080,
+      "h": 1920,
+      "label": "9:16 cut"
+    }
+  },
+  "rects": {
+    "PANEL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "h": {
+        "w": 420,
+        "h": 720,
+        "x": 750,
+        "y": 140,
+        "source": "research/35-render.md 5.2: PANEL is centred when used"
+      },
+      "s": {
+        "w": 420,
+        "h": 720,
+        "x": 330,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 420,
+        "h": 1160,
+        "x": 330,
+        "y": 254,
+        "source": "bible 5.3 viewport, placement derived"
+      }
+    },
+    "WALL": {
+      "surface": "popup",
+      "url": "popup/popup.html?surface=panel",
+      "mode": "expert",
+      "h": {
+        "w": 720,
+        "h": 720,
+        "x": 600,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 720,
+        "h": 720,
+        "x": 180,
+        "y": 180,
+        "source": "derived, centred"
+      },
+      "v": {
+        "w": 460,
+        "h": 1160,
+        "x": 310,
+        "y": 254,
+        "source": "bible 5.3"
+      }
+    },
+    "STAGE": {
+      "surface": "fixture",
+      "url": "/",
+      "h": {
+        "w": 1080,
+        "h": 720,
+        "x": 420,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "REPORT": {
+      "surface": "report",
+      "url": "report/report.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "DIAGRAM": {
+      "surface": "diagram",
+      "url": "diagram/diagram.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 5.3"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 5.3"
+      }
+    },
+    "SHEET": {
+      "surface": "sheet",
+      "url": "flow.svg",
+      "vector": true,
+      "h": {
+        "w": 1018,
+        "h": 720,
+        "x": 451,
+        "y": 140,
+        "source": "A4 landscape fitted to the stage box height"
+      },
+      "s": {
+        "w": 877,
+        "h": 620,
+        "x": 102,
+        "y": 230,
+        "source": "fitted to the square safe box"
+      },
+      "v": {
+        "w": 792,
+        "h": 560,
+        "x": 144,
+        "y": 554,
+        "source": "fitted to the vertical safe box"
+      }
+    },
+    "PAIR": {
+      "surface": "pair",
+      "parts": [
+        "PANEL",
+        "STAGE"
+      ],
+      "h": {
+        "form": "side by side",
+        "panel": {
+          "w": 420,
+          "h": 720,
+          "x": 96,
+          "y": 140
+        },
+        "page": {
+          "w": 1080,
+          "h": 720,
+          "x": 660,
+          "y": 140
+        },
+        "source": "bible 2.3"
+      },
+      "s": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 300,
+          "x": 330,
+          "y": 140
+        },
+        "page": {
+          "w": 880,
+          "h": 400,
+          "x": 100,
+          "y": 460
+        },
+        "source": "research/35-render.md 5.2"
+      },
+      "v": {
+        "form": "stacked, panel above",
+        "panel": {
+          "w": 420,
+          "h": 390,
+          "x": 330,
+          "y": 96
+        },
+        "page": {
+          "w": 820,
+          "h": 490,
+          "x": 130,
+          "y": 510
+        },
+        "source": "research/35-render.md 5.2"
+      }
+    },
+    "REQUEST": {
+      "surface": "request",
+      "url": "api/api.html",
+      "h": {
+        "w": 1280,
+        "h": 720,
+        "x": 320,
+        "y": 140,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "s": {
+        "w": 880,
+        "h": 620,
+        "x": 100,
+        "y": 230,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      },
+      "v": {
+        "w": 820,
+        "h": 560,
+        "x": 130,
+        "y": 554,
+        "source": "bible 2.3, REPORT geometry (new surface, round 3)"
+      }
+    }
+  },
+  "posterShot": {
+    "shot": 1,
+    "frame": 45,
+    "why": "The tools: the result of the first demonstration, visible in frame.",
+    "pass": "h"
+  },
+  "poster": {
+    "pass": "h",
+    "shot": 1,
+    "frame": 45,
+    "why": "The tools: the result of the first demonstration, visible in frame."
+  },
+  "srt": "deliverables/tutorials/the-tools-en.srt",
+  "captions": [
+    {
+      "i": 0,
+      "text": "Nineteen tools. Four jobs.",
+      "inSec": 0.15,
+      "outSec": 4.5,
+      "inFrame": 4,
+      "outFrame": 135,
+      "shots": [
+        1
+      ],
+      "layer": "band",
+      "enter": "rise",
+      "srt": "Nineteen tools. Four jobs.",
+      "dwell": {
+        "needMs": 2150,
+        "gotMs": 4350,
+        "ok": true
+      }
+    },
+    {
+      "i": 1,
+      "text": "Four groups. Four jobs.",
+      "inSec": 4.5,
+      "outSec": 9.5,
+      "inFrame": 135,
+      "outFrame": 285,
+      "shots": [
+        2
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Four groups. Four jobs.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 2,
+      "text": "Simple, or Expert.",
+      "inSec": 9.5,
+      "outSec": 14.5,
+      "inFrame": 285,
+      "outFrame": 435,
+      "shots": [
+        3
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "Simple, or Expert.",
+      "dwell": {
+        "needMs": 1535,
+        "gotMs": 5000,
+        "ok": true
+      }
+    },
+    {
+      "i": 3,
+      "text": "On the page you are on.",
+      "inSec": 14.5,
+      "outSec": 20.5,
+      "inFrame": 435,
+      "outFrame": 615,
+      "shots": [
+        4
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "On the page you are on.",
+      "dwell": {
+        "needMs": 1950,
+        "gotMs": 6000,
+        "ok": true
+      }
+    },
+    {
+      "i": 4,
+      "text": "All of it, one report.",
+      "inSec": 20.5,
+      "outSec": 24.5,
+      "inFrame": 615,
+      "outFrame": 735,
+      "shots": [
+        5
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "All of it, one report.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 4000,
+        "ok": true
+      }
+    },
+    {
+      "i": 5,
+      "text": "What you have not done.",
+      "inSec": 24.5,
+      "outSec": 30.0,
+      "inFrame": 735,
+      "outFrame": 900,
+      "shots": [
+        6
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "What you have not done.",
+      "dwell": {
+        "needMs": 1919,
+        "gotMs": 5500,
+        "ok": true
+      }
+    },
+    {
+      "i": 6,
+      "text": "One film per group.",
+      "inSec": 30.0,
+      "outSec": 34.5,
+      "inFrame": 900,
+      "outFrame": 1035,
+      "shots": [
+        7
+      ],
+      "layer": "band",
+      "enter": "crossfade",
+      "srt": "One film per group.",
+      "dwell": {
+        "needMs": 1612,
+        "gotMs": 4500,
+        "ok": true
+      }
+    },
+    {
+      "i": 7,
+      "text": "Every failure, traced.",
+      "inSec": 34.5,
+      "outSec": 38.0,
+      "inFrame": 1035,
+      "outFrame": 1140,
+      "shots": [
+        8
+      ],
+      "layer": "endcard",
+      "enter": "rise",
+      "srt": "Every failure, traced.",
+      "dwell": {
+        "needMs": 1842,
+        "gotMs": 3500,
+        "ok": true
+      }
+    }
+  ],
+  "shots": [
+    {
+      "n": 1,
+      "barBeat": null,
+      "inSec": 0.0,
+      "outSec": 4.5,
+      "inFrame": 0,
+      "outFrame": 134,
+      "frames": 135,
+      "picture": "WALL. The whole Expert list as one object: four groups, nineteen tools.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/the-tools/h/shot-01"
+          },
+          "s": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 180,
+              "y": 180
+            },
+            "placeSource": "derived, centred",
+            "clip": "film/capture/the-tools/s/shot-01"
+          },
+          "v": {
+            "viewport": {
+              "w": 460,
+              "h": 1160
+            },
+            "place": {
+              "x": 310,
+              "y": 254
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/the-tools/v/shot-01"
+          }
+        },
+        "assertBefore": [
+          {
+            "kind": "statusEmpty"
+          },
+          {
+            "kind": "noHelpOpen"
+          }
+        ],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "count",
+            "selector": ".tool-row[data-tool]",
+            "equals": 19
+          },
+          {
+            "kind": "count",
+            "selector": ".activity-head",
+            "equals": 4
+          },
+          {
+            "kind": "attr",
+            "selector": "#mode-expert",
+            "attr": "aria-pressed",
+            "equals": "true"
+          },
+          {
+            "kind": "scrolled",
+            "atLeastPx": 300
+          }
+        ]
+      },
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 0,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Nineteen tools, filed by what you are trying to do.",
+        "startSec": 0.4,
+        "jCut": false,
+        "delivery": "firm"
+      },
+      "sfx": [
+        {
+          "cue": "logo",
+          "atSec": 0
+        },
+        {
+          "cue": "bed",
+          "section": "intro",
+          "atSec": 0
+        },
+        {
+          "cue": "tick",
+          "atSec": 0.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "barBeat": null,
+      "inSec": 4.5,
+      "outSec": 9.5,
+      "inFrame": 135,
+      "outFrame": 284,
+      "frames": 150,
+      "picture": "WALL. The four headings with their hints under them: Keep the evidence, Let the machine look, Values locators the page map, Make it fail on purpose.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/the-tools/h/shot-02"
+          },
+          "s": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 180,
+              "y": 180
+            },
+            "placeSource": "derived, centred",
+            "clip": "film/capture/the-tools/s/shot-02"
+          },
+          "v": {
+            "viewport": {
+              "w": 460,
+              "h": 1160
+            },
+            "place": {
+              "x": 310,
+              "y": 254
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/the-tools/v/shot-02"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "count",
+            "selector": ".activity-hint",
+            "equals": 4
+          }
+        ]
+      },
+      "chip": "The tools",
+      "chipKey": null,
+      "caption": {
+        "span": 1,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Capture, Check, Design and Break: the four things you are trying to do.",
+        "startSec": 4.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 4.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "barBeat": null,
+      "inSec": 9.5,
+      "outSec": 14.5,
+      "inFrame": 285,
+      "outFrame": 434,
+      "frames": 150,
+      "picture": "PANEL. Simple pressed: five rows under What do you want to do. Expert pressed: all nineteen come back.",
+      "capture": {
+        "rect": "PANEL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 750,
+              "y": 140
+            },
+            "placeSource": "research/35-render.md 5.2: PANEL is centred when used",
+            "clip": "film/capture/the-tools/h/shot-03"
+          },
+          "s": {
+            "viewport": {
+              "w": 420,
+              "h": 720
+            },
+            "place": {
+              "x": 330,
+              "y": 180
+            },
+            "placeSource": "derived, centred",
+            "clip": "film/capture/the-tools/s/shot-03"
+          },
+          "v": {
+            "viewport": {
+              "w": 420,
+              "h": 1160
+            },
+            "place": {
+              "x": 330,
+              "y": 254
+            },
+            "placeSource": "bible 5.3 viewport, placement derived",
+            "clip": "film/capture/the-tools/v/shot-03"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": "#mode-expert"
+          }
+        ]
+      },
+      "chip": "The tools",
+      "chipKey": null,
+      "caption": {
+        "span": 2,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Simple shows the five a first day needs. Expert shows all of them.",
+        "startSec": 9.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 9.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "barBeat": null,
+      "inSec": 14.5,
+      "outSec": 20.5,
+      "inFrame": 435,
+      "outFrame": 614,
+      "frames": 180,
+      "picture": "PAIR. Panel left: Check accessibility pressed. Stage right: a finding pressed and the element ringed on the page.",
+      "capture": {
+        "rect": "PAIR",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "form": "side by side",
+            "placeSource": "bible 2.3",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 720
+                },
+                "place": {
+                  "x": 96,
+                  "y": 140
+                },
+                "clip": "film/capture/the-tools/h/shot-04/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 1080,
+                  "h": 720
+                },
+                "place": {
+                  "x": 660,
+                  "y": 140
+                },
+                "clip": "film/capture/the-tools/h/shot-04/STAGE"
+              }
+            ]
+          },
+          "s": {
+            "form": "stacked, panel above",
+            "placeSource": "research/35-render.md 5.2",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 300
+                },
+                "place": {
+                  "x": 330,
+                  "y": 140
+                },
+                "clip": "film/capture/the-tools/s/shot-04/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 880,
+                  "h": 400
+                },
+                "place": {
+                  "x": 100,
+                  "y": 460
+                },
+                "clip": "film/capture/the-tools/s/shot-04/STAGE"
+              }
+            ]
+          },
+          "v": {
+            "form": "stacked, panel above",
+            "placeSource": "research/35-render.md 5.2",
+            "parts": [
+              {
+                "role": "panel",
+                "rect": "PANEL",
+                "viewport": {
+                  "w": 420,
+                  "h": 390
+                },
+                "place": {
+                  "x": 330,
+                  "y": 96
+                },
+                "clip": "film/capture/the-tools/v/shot-04/PANEL"
+              },
+              {
+                "role": "stage",
+                "rect": "STAGE",
+                "viewport": {
+                  "w": 820,
+                  "h": 490
+                },
+                "place": {
+                  "x": 130,
+                  "y": 510
+                },
+                "clip": "film/capture/the-tools/v/shot-04/STAGE"
+              }
+            ]
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "inView",
+            "selector": ".tool-row[data-tool=\"a11y\"]"
+          }
+        ],
+        "member": "PANEL"
+      },
+      "chip": "The tools",
+      "chipKey": null,
+      "caption": {
+        "span": 3,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Every one of them works on the page you are standing on, logged in and mid-flow.",
+        "startSec": 14.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 14.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "barBeat": null,
+      "inSec": 20.5,
+      "outSec": 24.5,
+      "inFrame": 615,
+      "outFrame": 734,
+      "frames": 120,
+      "picture": "REPORT, Quality. Accessibility, page speed, links, coverage and the fine print, all with real counts.",
+      "capture": {
+        "rect": "REPORT",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 1280,
+              "h": 720
+            },
+            "place": {
+              "x": 320,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/the-tools/h/shot-05"
+          },
+          "s": {
+            "viewport": {
+              "w": 880,
+              "h": 620
+            },
+            "place": {
+              "x": 100,
+              "y": 230
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/the-tools/s/shot-05"
+          },
+          "v": {
+            "viewport": {
+              "w": 820,
+              "h": 560
+            },
+            "place": {
+              "x": 130,
+              "y": 554
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/the-tools/v/shot-05"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "attr",
+            "selector": ".tab[data-tab=\"quality\"]",
+            "attr": "aria-selected",
+            "equals": "true"
+          },
+          {
+            "kind": "noRealHost"
+          }
+        ]
+      },
+      "chip": "The tools",
+      "chipKey": null,
+      "caption": {
+        "span": 4,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Whatever you press, the finding lands in the same report.",
+        "startSec": 20.5,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "success",
+          "atSec": 20.8
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "barBeat": null,
+      "inSec": 24.5,
+      "outSec": 30.0,
+      "inFrame": 735,
+      "outFrame": 899,
+      "frames": 165,
+      "picture": "WALL again, with the four group meters filled: the process bar shows what this run has covered.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/the-tools/h/shot-06"
+          },
+          "s": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 180,
+              "y": 180
+            },
+            "placeSource": "derived, centred",
+            "clip": "film/capture/the-tools/s/shot-06"
+          },
+          "v": {
+            "viewport": {
+              "w": 460,
+              "h": 1160
+            },
+            "place": {
+              "x": 310,
+              "y": 254
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/the-tools/v/shot-06"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": [
+          {
+            "kind": "count",
+            "selector": ".activity-meter",
+            "equals": 4
+          }
+        ]
+      },
+      "chip": "The tools",
+      "chipKey": null,
+      "caption": {
+        "span": 5,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "The meter beside each group answers what a list cannot: what you have not done.",
+        "startSec": 24.5,
+        "jCut": false,
+        "delivery": "bright"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 24.8,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "barBeat": null,
+      "inSec": 30.0,
+      "outSec": 34.5,
+      "inFrame": 900,
+      "outFrame": 1034,
+      "frames": 135,
+      "picture": "WALL. The four group headings alone, held.",
+      "capture": {
+        "rect": "WALL",
+        "dsf": 2,
+        "still": false,
+        "motion": true,
+        "passes": {
+          "h": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 600,
+              "y": 140
+            },
+            "placeSource": "bible 2.3",
+            "clip": "film/capture/the-tools/h/shot-07"
+          },
+          "s": {
+            "viewport": {
+              "w": 720,
+              "h": 720
+            },
+            "place": {
+              "x": 180,
+              "y": 180
+            },
+            "placeSource": "derived, centred",
+            "clip": "film/capture/the-tools/s/shot-07"
+          },
+          "v": {
+            "viewport": {
+              "w": 460,
+              "h": 1160
+            },
+            "place": {
+              "x": 310,
+              "y": 254
+            },
+            "placeSource": "bible 5.3",
+            "clip": "film/capture/the-tools/v/shot-07"
+          }
+        },
+        "assertBefore": [],
+        "assertDuring": [],
+        "mode": "expert",
+        "assert": []
+      },
+      "chip": "The tools",
+      "chipKey": null,
+      "caption": {
+        "span": 6,
+        "role": "enter"
+      },
+      "graphics": [],
+      "vo": {
+        "line": "Four films, one for each group, go through them one at a time.",
+        "startSec": 30.0,
+        "jCut": false,
+        "delivery": "warm"
+      },
+      "sfx": [
+        {
+          "cue": "tick",
+          "atSec": 30.3,
+          "fromMark": true
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "barBeat": null,
+      "inSec": 34.5,
+      "outSec": 38.0,
+      "inFrame": 1035,
+      "outFrame": 1139,
+      "frames": 105,
+      "picture": "End card, identical to the commercial. Mask-reveal on the ring, then the mark wake once.",
+      "capture": null,
+      "chip": null,
+      "chipKey": null,
+      "caption": {
+        "span": 7,
+        "role": "enter"
+      },
+      "graphics": [
+        {
+          "kind": "maskReveal",
+          "atSec": 34.5,
+          "ms": 520,
+          "easing": "cubic-bezier(.2,.8,.2,1)",
+          "reveals": "the whole card"
+        },
+        {
+          "kind": "markWake",
+          "atSec": 35.02,
+          "ringMs": 520,
+          "checkMs": 260,
+          "overshoot": 0.04
+        },
+        {
+          "kind": "tagline",
+          "text": "Every failure, traced.",
+          "atSec": 34.5,
+          "ms": 400,
+          "role": "display"
+        },
+        {
+          "kind": "fine",
+          "text": "Made by Nader Alzghoul",
+          "atSec": 34.5,
+          "ms": 400,
+          "line": 2
+        },
+        {
+          "kind": "hold",
+          "fromSec": 37.3,
+          "toSec": 38.0
+        }
+      ],
+      "vo": {
+        "line": "QA Wrap. Every failure, traced.",
+        "startSec": 34.7,
+        "delivery": "warm, unhurried, final. Not a sell"
+      },
+      "sfx": [
+        {
+          "cue": "sting",
+          "atSec": 34.5
+        },
+        {
+          "cue": "logo",
+          "atSec": 34.5
+        },
+        {
+          "cue": "bed",
+          "section": "out",
+          "atSec": 34.5
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "shots": 8,
+    "cuts": 7,
+    "cutsPer10s": 1.84,
+    "asl": 4.75,
+    "captionCoverageOfVoicedPct": 100,
+    "captureShots": 7,
+    "pauseBeforeCloseSec": 0.41,
+    "maxLineGapSec": 0.8,
+    "cutsPer10sRendered": 1.9
+  }
+}

@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:04,000
+Below the fold.
+
+2
+00:00:04,200 --> 00:00:07,000
+Visible part, or all of it.
+
+3
+00:00:07,233 --> 00:00:10,300
+Scrolled and stitched.
+
+4
+00:00:10,500 --> 00:00:11,900
+Kept with the session.
+
+5
+00:00:12,100 --> 00:00:14,567
+Every failure, traced.

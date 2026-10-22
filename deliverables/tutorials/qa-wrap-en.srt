@@ -1,0 +1,51 @@
+1
+00:00:02,600 --> 00:00:05,300
+It failed once, and nothing was recording.
+
+2
+00:00:06,167 --> 00:00:09,133
+She tries again. It works, and the proof is gone.
+
+3
+00:00:09,667 --> 00:00:14,167
+No session, nothing to file. Her word against the developer's. The release waits.
+
+4
+00:00:14,667 --> 00:00:18,500
+QA Wrap records the whole session, in the browser she already tests in.
+
+5
+00:00:19,667 --> 00:00:21,867
+Break a request on purpose. Keep working.
+
+6
+00:00:22,167 --> 00:00:23,900
+The report names the click that caused it.
+
+7
+00:00:24,167 --> 00:00:26,500
+Seven kinds of ticket, written from the recording.
+
+8
+00:00:27,167 --> 00:00:30,167
+One press files it, with the screenshots and the video.
+
+9
+00:00:31,167 --> 00:00:33,933
+Click a real name. It is covered for the whole session.
+
+10
+00:00:35,167 --> 00:00:38,833
+It survives the reload. The words underneath never reach the report.
+
+11
+00:00:39,167 --> 00:00:41,700
+The flow sheet, Arabic and English, ready for the reviewer.
+
+12
+00:00:43,167 --> 00:00:47,300
+Nineteen tools. No account, no upload, nothing leaves this machine.
+
+13
+00:00:47,767 --> 00:00:50,267
+QA Wrap. Every failure, traced.

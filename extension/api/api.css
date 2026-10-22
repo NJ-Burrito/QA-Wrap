@@ -1,0 +1,189 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* The API panel. Two columns where there is room, one where there is not; the
+   request always above the response, because that is the order of the act. */
+
+/* api.html links identity-tokens.css but not ui/fonts.css, so the @font-face
+   rules that make "Thmanyah Sans" resolve to anything are pulled in here
+   instead — otherwise --font names a face nothing ever loaded and the panel
+   quietly renders system-ui. */
+@import url('../ui/fonts.css');
+
+body {
+  margin: 0;
+  background: var(--backdrop);
+  background-attachment: fixed;
+  color: var(--text);
+  font: 13px/1.6 var(--font);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--glass-edge);
+  box-shadow: 0 1px 0 var(--glass-highlight) inset;
+}
+.bar-title { display: flex; align-items: baseline; gap: var(--sp-2); }
+.brand-name { font-weight: 700; }
+.muted { color: var(--text-muted); }
+.fine { font-size: 11.5px; color: var(--text-muted); max-width: 68ch; }
+.fine.err { color: var(--danger); }
+.save-state { font-size: 12px; color: var(--text-muted); min-width: 10ch; }
+.save-state.ok { color: var(--ok); }
+.save-state.err { color: var(--danger); }
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  max-width: 1180px;
+  margin: 0 auto;
+  align-items: start;
+}
+#preview-card, #response-card { grid-column: 1 / -1; }
+@media (max-width: 940px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+}
+
+.card {
+  background: var(--surface-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--glass-edge);
+  border-block-start-color: var(--glass-highlight);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4);
+  display: grid;
+  gap: var(--sp-3);
+  box-shadow: var(--shadow-glass);
+}
+.card-head { display: grid; gap: 4px; }
+.card-head h2 { font-size: 15px; margin: 0; }
+.card-head p { margin: 0; font-size: 12.5px; max-width: 68ch; }
+.sub-head { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); margin: var(--sp-2) 0 0; }
+
+.line { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+.line #url { flex: 1 1 22ch; min-width: 0; }
+.rows { display: grid; gap: 6px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto; gap: 6px; }
+.row.row-1 { grid-template-columns: minmax(0, 1fr); }
+
+input[type='text'], select, textarea {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 8px 10px;
+  min-height: 40px;
+  min-width: 0;
+}
+textarea { font-family: var(--mono); font-size: 12px; resize: vertical; }
+input[type='text']:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.btn {
+  font: inherit;
+  min-height: 44px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+.btn:hover { background: var(--surface-raised); }
+.btn-sm { min-height: 36px; font-size: 12px; }
+.btn-primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+label.btn { display: inline-flex; align-items: center; }
+
+.pre {
+  margin: 0;
+  padding: var(--sp-3);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: var(--mono);
+  font-size: 12px;
+  /* Wide bodies scroll inside their own box; the page never scrolls sideways. */
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 42vh;
+  overflow-y: auto;
+}
+
+.pre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } /* r5-08-1: a scrollable box reached by Tab shows where it is */
+
+/* A status is a number first and a colour second: the number is always there. */
+.pill {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-sunken);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.pill[data-tone='good'] { border-color: var(--ok); color: var(--ok); }
+.pill[data-tone='bad'] { border-color: var(--danger); color: var(--danger); }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+/* The primer: what this page is for, above the controls that do it.
+
+   Laid out as a band rather than a card so it reads as an introduction to the
+   page and not as a fifth thing on it, and so dismissing it leaves no hole. */
+.primer {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  max-width: 1180px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-raised);
+}
+.primer-text { flex: 1; min-width: 0; }
+.primer h2 { margin: 0 0 4px; font-size: 15px; }
+.primer p { margin: 0; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+.primer-steps {
+  margin: 8px 0 0;
+  padding-inline-start: 18px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.primer-steps b { color: var(--text); }
+
+/* ── motion (research/72) ──────────────────────────────────────────────
+ * Tokens, curves and keyframes come from ui/motion.css, linked above — no
+ * new durations, no new curves. The bar arrives, the primer and the two
+ * cards follow it in on a short stagger; the shared `.btn`/`.pill` classes
+ * already answer a pointer everywhere motion.css is loaded. */
+.bar { animation: qaw-in-down var(--motion-base) var(--motion-ease) both; }
+.primer { animation: qaw-in-up var(--motion-base) var(--motion-ease) both; }
+.card { animation: qaw-in-up var(--motion-base) var(--motion-ease) both; }
+.shell > .card:nth-child(2) { animation-delay: var(--motion-step); }
+
+.pill { transition: background-color var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bar, .primer, .card { animation: none !important; animation-delay: 0ms !important; }
+  .pill { transition: none !important; }
+}

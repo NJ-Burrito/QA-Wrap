@@ -1,0 +1,175 @@
+{
+ "version": 2,
+ "date": "2026-10-01",
+ "voice": "Kore",
+ "model": "google/gemini-3.1-flash-tts-preview",
+ "persona": "Female, 25-35, warm and confident; Arabic MSA, English neutral American",
+ "tashkeel_rule": "Arabic text sent to TTS carries full tashkeel on EVERY word, on every letter that takes a mark and on case endings (إعراب), no exceptions, proofread with arabic-english-proofreading before voicing; visible text never does. The manifest carries it as tts_text and voice_style_gate.py enforces it.",
+ "direction_rule": "Direction is a natural-language English prefix to the input text, used for both languages; Gemini does not speak it (read-back checked).",
+ "styles": [
+  {
+   "id": "reel",
+   "name_en": "Reel",
+   "name_ar": "ريل",
+   "status": "existing",
+   "direction": "Say this warmly and confidently with a smile in your voice, with more energy and a lively, upbeat pace, like a friendly expert sharing exciting news: ",
+   "sample_en": "Meet Acme. We build artificial intelligence and robotics that work in the real world. Follow along as we build.",
+   "sample_ar": "تعرفوا على أكمي. نبني ذكاء اصطناعيا وروبوتات تعمل في العالم الحقيقي. تابعونا ونحن نبني.",
+   "sample_ar_tashkeel": "تَعَرَّفُوا عَلَى أَكْمِي. نَبْنِي ذَكَاءً اصْطِنَاعِيًّا وَرُوبُوتَاتٍ تَعْمَلُ فِي الْعَالَمِ الْحَقِيقِيِّ. تَابِعُونَا وَنَحْنُ نَبْنِي.",
+   "good_for": "Social reels, short promos, teasers, launch clips under about 60 s.",
+   "never_for": "Safety notices, legal or regulatory statements, step-by-step manuals (energy reads as hype and rushes the listener)."
+  },
+  {
+   "id": "manual",
+   "name_en": "Manual",
+   "name_ar": "دليل",
+   "status": "existing",
+   "direction": "Say this warmly and confidently with a smile in your voice, calm and clear, unhurried, like a friendly expert guiding someone step by step: ",
+   "sample_en": "Welcome to Acme. In this guide, you will learn each step in order. Take your time, and pause whenever you need.",
+   "sample_ar": "مرحبا بكم في أكمي. في هذا الدليل ستتعلمون كل خطوة بالترتيب. خذوا وقتكم، وتوقفوا متى شئتم.",
+   "sample_ar_tashkeel": "مَرْحَبًا بِكُمْ فِي أَكْمِي. فِي هَذَا الدَّلِيلِ سَتَتَعَلَّمُونَ كُلَّ خُطْوَةٍ بِالتَّرْتِيبِ. خُذُوا وَقْتَكُمْ، وَتَوَقَّفُوا مَتَى شِئْتُمْ.",
+   "good_for": "User manuals, tutorials, e-learning explainers, onboarding walkthroughs and narrated product demos (this style also covers explainer, demo and welcome use).",
+   "never_for": "Announcements, ads, anything urgent: the unhurried pace makes urgency sound careless."
+  },
+  {
+   "id": "official",
+   "name_en": "Official",
+   "name_ar": "رسمي",
+   "status": "existing",
+   "direction": "Say this warmly and confidently, composed and measured, with a formal professional tone: ",
+   "sample_en": "Acme is a technology company working in artificial intelligence and robotics. This statement is issued on behalf of the company.",
+   "sample_ar": "أكمي شركة تقنية تعمل في الذكاء الاصطناعي والروبوتات. صدر هذا البيان باسم الشركة.",
+   "sample_ar_tashkeel": "أَكْمِي شَرِكَةٌ تِقْنِيَّةٌ تَعْمَلُ فِي الذَّكَاءِ الِاصْطِنَاعِيِّ وَالرُّوبُوتَاتِ. صَدَرَ هَذَا الْبَيَانُ بِاسْمِ الشَّرِكَةِ.",
+   "good_for": "Company statements, press and ministry-facing text, announcements and news items, formal introductions, investor or grant material.",
+   "never_for": "Reels, stories, casual chat: the formal register sounds cold where warmth is needed."
+  },
+  {
+   "id": "story",
+   "name_en": "Story",
+   "name_ar": "قصة",
+   "status": "existing",
+   "direction": "Say this warmly and confidently, with more emotion and feeling, like a storyteller who cares about the story: ",
+   "sample_en": "It started with a simple question: what if a machine could truly help? That question became Acme.",
+   "sample_ar": "بدأت القصة بسؤال بسيط: ماذا لو استطاعت الآلة أن تساعد حقا؟ وصار هذا السؤال أكمي.",
+   "sample_ar_tashkeel": "بَدَأَتِ الْقِصَّةُ بِسُؤَالٍ بَسِيطٍ: مَاذَا لَوِ اسْتَطَاعَتِ الْآلَةُ أَنْ تُسَاعِدَ حَقًّا؟ وَصَارَ هَذَا السُّؤَالُ أَكْمِي.",
+   "good_for": "Brand story, founder or mission narration, testimonials told as narrative, keynote or inspirational openings, about-us films.",
+   "never_for": "Instructions, data, warnings: emotion gets in the way of the information."
+  },
+  {
+   "id": "alert",
+   "name_en": "Alert",
+   "name_ar": "تنبيه",
+   "status": "new",
+   "direction": "Say this warmly and confidently but firm and serious, clear and deliberate, like a caring safety officer who needs you to listen: ",
+   "sample_en": "Warning. Keep clear of the Acme robot while it is moving. Stop the machine before you reach in.",
+   "sample_ar": "تحذير. ابتعدوا عن روبوت أكمي أثناء حركته. أوقفوا الآلة قبل أن تدخلوا أيديكم فيها.",
+   "sample_ar_tashkeel": "تَحْذِيرٌ. اِبْتَعِدُوا عَنْ رُوبُوتِ أَكْمِي أَثْنَاءَ حَرَكَتِهِ. أَوْقِفُوا الْآلَةَ قَبْلَ أَنْ تُدْخِلُوا أَيْدِيَكُمْ فِيهَا.",
+   "good_for": "Robot and workplace safety notices, warnings, error and failure messages in a product, critical reminders where the listener must act.",
+   "never_for": "Marketing, welcome, storytelling; and gentle recoverable product errors (\"something went wrong, try again\"), which belong to chat: a firm tone turns a friendly message into a scolding."
+  },
+  {
+   "id": "data",
+   "name_en": "Data",
+   "name_ar": "بيانات",
+   "status": "new",
+   "direction": "Say this warmly and confidently, but crisp and matter-of-fact, brisker than usual, with a short beat before each number and a clear stress on the figures, no emotional colouring, like an analyst reading out results: ",
+   "sample_en": "In the last quarter, the Acme system processed twelve thousand requests. Ninety-eight percent finished with no errors.",
+   "sample_ar": "عالج نظام أكمي في الربع الأخير اثني عشر ألف طلب. واكتمل ثمانية وتسعون في المائة منها دون أخطاء.",
+   "sample_ar_tashkeel": "عَالَجَ نِظَامُ أَكْمِي فِي الرُّبْعِ الْأَخِيرِ اثْنَيْ عَشَرَ أَلْفَ طَلَبٍ. وَاكْتَمَلَ ثَمَانِيَةٌ وَتِسْعُونَ فِي الْمِائَةِ مِنْهَا دُونَ أَخْطَاءٍ.",
+   "good_for": "Statistics and results readouts, QA and test-report summaries, dashboard and quarterly-figures narration, benchmark results.",
+   "never_for": "Reels, stories, invitations: the level, even delivery flattens anything meant to move people."
+  },
+  {
+   "id": "invite",
+   "name_en": "Invite",
+   "name_ar": "دعوة",
+   "status": "new",
+   "direction": "Say this warmly and confidently, in a soft, personal, intimate tone, a little slower than a promo, with a gentle rising lift on the final invitation, like a host quietly inviting a friend to join: ",
+   "sample_en": "Join us at the Acme open day. Come meet the team, see the robots at work, and bring your questions.",
+   "sample_ar": "انضموا إلينا في يوم أكمي المفتوح. تعالوا وتعرفوا على الفريق، وشاهدوا الروبوتات وهي تعمل، وأحضروا أسئلتكم.",
+   "sample_ar_tashkeel": "اِنْضَمُّوا إِلَيْنَا فِي يَوْمِ أَكْمِي الْمَفْتُوحِ. تَعَالَوْا وَتَعَرَّفُوا عَلَى الْفَرِيقِ، وَشَاهِدُوا الرُّوبُوتَاتِ وَهِيَ تَعْمَلُ، وَأَحْضِرُوا أَسْئِلَتَكُمْ.",
+   "good_for": "Event and open-day invitations, programme and webinar calls to join, call-to-action closes at the end of a film or post.",
+   "never_for": "Warnings, official statements, data: the bright, personal address sounds out of place."
+  },
+  {
+   "id": "chat",
+   "name_en": "Chat",
+   "name_ar": "حوار",
+   "status": "new",
+   "direction": "Say this warmly and confidently, in a relaxed, natural, conversational way, like talking to a colleague over coffee: ",
+   "sample_en": "Good question. Honestly, it is simpler than it sounds. Acme learns from what you show it, and it gets better every time.",
+   "sample_ar": "سؤال جيد. بصراحة، الأمر أبسط مما يبدو. أكمي تتعلم مما تريها إياه، وتتحسن في كل مرة.",
+   "sample_ar_tashkeel": "سُؤَالٌ جَيِّدٌ. بِصَرَاحَةٍ، الْأَمْرُ أَبْسَطُ مِمَّا يَبْدُو. أَكْمِي تَتَعَلَّمُ مِمَّا تُرِيهَا إِيَّاهُ، وَتَتَحَسَّنُ فِي كُلِّ مَرَّةٍ.",
+   "good_for": "Assistant and chatbot voice, FAQ answers, podcast-style asides, customer-support replies, informal Q and A, short testimonial-style quotes. Also gentle recoverable errors and soft apologies.",
+   "never_for": "Official statements, warnings, long narration: the casual register undermines authority and drifts over length."
+  }
+ ],
+ "rejected": [
+  [
+   "explainer / e-learning",
+   "Same calm, step-by-step, clear delivery as Manual; a second id would produce the same audio."
+  ],
+  [
+   "product demo",
+   "Manual's pace with Reel's warmth; both exist, so the choice is per video, not a new tone."
+  ],
+  [
+   "onboarding welcome",
+   "Manual's own sample line is a welcome; no distinct delivery."
+  ],
+  [
+   "announcement / news",
+   "Needs composed authority (Official) or lift (Reel); a third tone between them cannot be told apart in direction wording."
+  ],
+  [
+   "keynote / inspirational",
+   "Story's emotional storyteller direction covers it; a louder version drifts into Reel energy."
+  ],
+  [
+   "testimonial",
+   "Folded into Chat (first-person quote) and Story (narrative); no separate delivery."
+  ],
+  [
+   "call-to-action close",
+   "Merged with event invitation into Invite: same bright personal address."
+  ],
+  [
+   "longform / narrate",
+   "No Acme or QA piece needs it that the 8 do not cover: multi-minute manuals are already narrated in manual style, and an 8-second sample cannot show sustained delivery over 2 minutes, which is the only claim such a style would make. Revisit when a real long piece exists."
+  ],
+  [
+   "empathetic support / apology",
+   "Folded into chat good_for (soft errors and apologies); no separate delivery."
+  ]
+ ],
+ "pace_target_wpm": {
+  "ar": 115,
+  "en": 150,
+  "band": {
+   "ar": [
+    110,
+    120
+   ],
+   "en": [
+    145,
+    155
+   ]
+  },
+  "method": "words of the visible text / finished clip seconds x 60; per-clip atempo = target / raw wpm after the silence trim."
+ },
+ "loudness": {
+  "I": -14,
+  "TP": -2.0,
+  "LRA": 11,
+  "filter": "loudnorm=I=-14:TP=-2.0:LRA=11",
+  "source": "a single final master pass; reused as is."
+ },
+ "brand_ar": "أكمي",
+ "control": {
+  "en": "Acme builds robots that help people. The first one is ready, and it can already pick up a cup.",
+  "ar": "تبني أكمي روبوتات تساعد الناس. الأول جاهز، وهو يستطيع الآن أن يلتقط كوبا.",
+  "ar_tashkeel": "تَبْنِي أَكْمِي رُوبُوتَاتٍ تُسَاعِدُ النَّاسَ. الْأَوَّلُ جَاهِزٌ، وَهُوَ يَسْتَطِيعُ الْآنَ أَنْ يَلْتَقِطَ كُوبًا.",
+  "note": "Same text through every style, ar and en, so styles compare on equal text."
+ },
+ "max_tempo": 1.7
+}

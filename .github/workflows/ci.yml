@@ -1,0 +1,38 @@
+# Node-only suites: no browser, no live network. Headed and live suites run by hand (run-suites.mjs QUARANTINE / isBrowserSuite).
+# CI proves the tree; the laptop proves the zip (npm run release, test:truth, smoke:boot); RELEASE-<ver>.json joins them.
+# Actions are pinned by commit SHA (the tag in the comment is only a label), so a moved tag cannot retarget the build.
+name: ci
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  suites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: extension
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: extension/package-lock.json
+      # test-glyphs reads the font cmaps through `uv run --with fonttools`; ubuntu-latest has pipx but no uv (completion review 8).
+      - run: pipx install uv
+      - run: npm ci --ignore-scripts
+      # Headless suites (game, nasty-palette, jira-helper) import playwright dynamically or via lib-game, so run-suites cannot tell them from node suites.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ci
+      # manifest-check loads the extension in a headed Chromium; the runner has no display.
+      - run: xvfb-run -a npm run manifest

@@ -1,0 +1,330 @@
+{
+ "corpus": "signal-l1",
+ "authored": "2026-09-30",
+ "labels": {
+  "D": "a tester would file it",
+  "N": "noise"
+ },
+ "fixtures": [
+  {
+   "id": "H1",
+   "split": "tune",
+   "file": "tune/H1.json",
+   "sha256": "116bda51edc4ae8011bebc09032938d3fd8d3870bd24dc6509a1e921f07e0cf4",
+   "events": 3,
+   "labelsD": 0,
+   "labelsN": 0,
+   "defects": 0
+  },
+  {
+   "id": "H2",
+   "split": "tune",
+   "file": "tune/H2.json",
+   "sha256": "8d16ce4b7c0cf7a5acdf753fc333b957e62c79b2e5696e346e45ea1dd4d2ef40",
+   "events": 516,
+   "labelsD": 0,
+   "labelsN": 515,
+   "defects": 0
+  },
+  {
+   "id": "H3",
+   "split": "tune",
+   "file": "tune/H3.json",
+   "sha256": "0189233329c130887eaeb74d78121613c4ea1f19df9e99d40b187f8f6adb53ab",
+   "events": 14,
+   "labelsD": 0,
+   "labelsN": 1,
+   "defects": 0
+  },
+  {
+   "id": "H4",
+   "split": "tune",
+   "file": "tune/H4.json",
+   "sha256": "02faef4a3cb1f48aa3041423f7f315967a3fcc0f34bd28be31a86c5cc031e99e",
+   "events": 16,
+   "labelsD": 0,
+   "labelsN": 0,
+   "defects": 0
+  },
+  {
+   "id": "H5",
+   "split": "held",
+   "file": "held/H5.json",
+   "sha256": "c604b79e80622fb889e9dcaeddc101334cd0c02f7ebb7059c80bbfb92c4cd1f9",
+   "events": 34,
+   "labelsD": 0,
+   "labelsN": 19,
+   "defects": 0
+  },
+  {
+   "id": "H6",
+   "split": "held",
+   "file": "held/H6.json",
+   "sha256": "c3ba46cb37fd2baf9f9dd0636bd576b3c4500a4c0b2b731e74d8ea5116b1470f",
+   "events": 104,
+   "labelsD": 0,
+   "labelsN": 5,
+   "defects": 0
+  },
+  {
+   "id": "D1",
+   "split": "tune",
+   "file": "tune/D1.json",
+   "sha256": "1969adf2c24ff1a185f8b508cab656ae089b104125cf3ac741f16bb4e181c0df",
+   "events": 4,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D2",
+   "split": "tune",
+   "file": "tune/D2.json",
+   "sha256": "5a0b5ff188492585e0c52fbcd3904bf7280e38aea36e0f56d71b9fe0765170d1",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D3",
+   "split": "held",
+   "file": "held/D3.json",
+   "sha256": "1276dbfceec914f4c652b1d277a3abd9027283c20e903ada9e30c821daeed3a2",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D4",
+   "split": "tune",
+   "file": "tune/D4.json",
+   "sha256": "bd977d1c4dff37038db4f9ecf00965d476f43517fb344c92b7bf3433fff6e5e9",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D5",
+   "split": "tune",
+   "file": "tune/D5.json",
+   "sha256": "726c86786ccd31aa994b75c3ffebc7dbed004d390d327c8b98a16833a9dbfe39",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D6",
+   "split": "held",
+   "file": "held/D6.json",
+   "sha256": "866aa984811e4dbdb512637cfa1e7c8b46879bf3fdf1266ff2a2c00f8b6a3da8",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D7",
+   "split": "tune",
+   "file": "tune/D7.json",
+   "sha256": "721739133c38a8c25947168734abd71466e779209a1da30e7148cce89aaf2765",
+   "events": 4,
+   "labelsD": 2,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D8",
+   "split": "tune",
+   "file": "tune/D8.json",
+   "sha256": "84214f85ef5ea8761f46624d5e640641cc80aa777e5baed33841aab72bf4dc09",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D9",
+   "split": "held",
+   "file": "held/D9.json",
+   "sha256": "08261e22ce1a730fbabe5bb3a82302a5bec8bfceb22faa1583ebff55698ddb2b",
+   "events": 8,
+   "labelsD": 6,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D10",
+   "split": "tune",
+   "file": "tune/D10.json",
+   "sha256": "503bb1859ae96f6cd69e3fc149a240c4523aceddc8b5ae6d4e9f4163edd3cecc",
+   "events": 2,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D11",
+   "split": "held",
+   "file": "held/D11.json",
+   "sha256": "7d086b08c9d4873adf31469da0885c50c76902947c5313af072b30068ba1e7b5",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "D12",
+   "split": "tune",
+   "file": "tune/D12.json",
+   "sha256": "77a5fc89c66f30825925e7c9157ca22cbe9cfa418467c393e74330b2c9ec23b3",
+   "events": 2,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "M1",
+   "split": "tune",
+   "file": "tune/M1.json",
+   "sha256": "093eb31785e9cc4f088418d57e51115d962ed36ef8c9d61001612f782ee5e3a3",
+   "events": 520,
+   "labelsD": 3,
+   "labelsN": 515,
+   "defects": 3
+  },
+  {
+   "id": "M2",
+   "split": "tune",
+   "file": "tune/M2.json",
+   "sha256": "3ccec392acfa1e7ef064fe0e2814ef371577a30f49b7cc25fb25607b7fff30c9",
+   "events": 4,
+   "labelsD": 1,
+   "labelsN": 1,
+   "defects": 1
+  },
+  {
+   "id": "M3",
+   "split": "held",
+   "file": "held/M3.json",
+   "sha256": "a9aabecdc4890797e1368c9226b83ec61a5b583db882e3d41aaf5fdcaf02ece4",
+   "events": 5,
+   "labelsD": 2,
+   "labelsN": 1,
+   "defects": 1
+  },
+  {
+   "id": "M4",
+   "split": "tune",
+   "file": "tune/M4.json",
+   "sha256": "acfa51ac5e4c24084a771169b0fea930817dfd78ce04d053d57b03fa15cc7eed",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "M5",
+   "split": "held",
+   "file": "held/M5.json",
+   "sha256": "e4644c5d921505e353c7b4a7d319672b273abc9c15336885fe9d62324c755043",
+   "events": 8,
+   "labelsD": 6,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "M6",
+   "split": "tune",
+   "file": "tune/M6.json",
+   "sha256": "ad7d32aa09d21e0c45334fa0a9838e91b10959f4082a2db0bedc68363af03029",
+   "events": 4,
+   "labelsD": 1,
+   "labelsN": 1,
+   "defects": 1
+  },
+  {
+   "id": "M7",
+   "split": "held",
+   "file": "held/M7.json",
+   "sha256": "362f94e1faef3f1886090ca5fea9a420286dfeba5a8626f49d008563c6066e13",
+   "events": 1002,
+   "labelsD": 1000,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "A1",
+   "split": "tune",
+   "file": "tune/A1.json",
+   "sha256": "a174bc91e596b201b0ef12b02af3072c78a030fe9196e5be7729ba92d2e4eaf3",
+   "events": 3,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "A2",
+   "split": "held",
+   "file": "held/A2.json",
+   "sha256": "d755c65bc09760371759823ff9efecc3d4727e6745b66fece93bd166c5b8f292",
+   "events": 4,
+   "labelsD": 2,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "A3",
+   "split": "tune",
+   "file": "tune/A3.json",
+   "sha256": "fe001f7ea6e2096f207f4a089225628bbf365a1bb620a91a845adb56a645a840",
+   "events": 6,
+   "labelsD": 3,
+   "labelsN": 0,
+   "defects": 2
+  },
+  {
+   "id": "A4",
+   "split": "held",
+   "file": "held/A4.json",
+   "sha256": "5fa0a3e4d2878566eb0598a645aa1e8bc3960076c42e9ba1c9b17bcc19cfe758",
+   "events": 2,
+   "labelsD": 1,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "A5",
+   "split": "tune",
+   "file": "tune/A5.json",
+   "sha256": "37fe87d8e0ae5f14d29106cb3a91adca2d9cd3b60474810f6ebe2e2437854fe8",
+   "events": 7,
+   "labelsD": 2,
+   "labelsN": 1,
+   "defects": 1
+  },
+  {
+   "id": "A6",
+   "split": "tune",
+   "file": "tune/A6.json",
+   "sha256": "9be36d520fa4a13bb24327043202d93cd74bc9c0e439d262116bab7595ccd8f3",
+   "events": 4,
+   "labelsD": 2,
+   "labelsN": 0,
+   "defects": 1
+  },
+  {
+   "id": "A7",
+   "split": "held",
+   "file": "held/A7.json",
+   "sha256": "99ea5fffba9f3c0f4b659540aba5fdfd2dedb1fe781eb4ae795eb136e86d33e7",
+   "events": 5,
+   "labelsD": 3,
+   "labelsN": 0,
+   "defects": 1
+  }
+ ]
+}

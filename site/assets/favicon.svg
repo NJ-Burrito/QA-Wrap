@@ -1,0 +1,8 @@
+<!-- QA Wrap identity — favicon. Geometry from identity/tools/marks.mjs. © 2026 QA Wrap. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="QA Wrap">
+  <rect width="64" height="64" rx="14" fill="#B5432B"/>
+  <g transform="translate(-2 3.5)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#F1EFE9" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+    <path stroke="#F1EFE9" d="M36 36L42.5 44L55 20"/>
+  </g>
+</svg>

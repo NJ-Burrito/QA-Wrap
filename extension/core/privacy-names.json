@@ -1,0 +1,8 @@
+{
+  "names": [
+    "pass", "password", "passwd", "pwd", "passcode", "passphrase", "secret", "token", "auth",
+    "authorization", "bearer", "session", "sessionid", "phpsessid", "jsessionid", "aspsessionid", "cookie", "apikey", "otp", "pin", "credit",
+    "creditcard", "card", "cardnumber", "cvv", "cvc", "ssn", "iban", "jwt", "csrf", "xsrf", "sid",
+    "privatekey", "accesskey", "subscriptionkey", "functionskey", "secretkey", "signingkey", "licensekey", "dpop", "nationalid", "كلمةالمرور", "رقمسري"
+  ]
+}

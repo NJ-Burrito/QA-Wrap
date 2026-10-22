@@ -1,0 +1,44 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<!--
+  The workbench that stays open.
+
+  Clicking the toolbar icon toggles this panel; it stays docked while the
+  tester moves between tabs and tools, which a popup can never do — a popup
+  closes the moment focus leaves it. The content is the same page the popup
+  serves, loaded with ?surface=panel so it knows not to close itself. One
+  page, two homes, no duplicate markup to drift.
+-->
+<html lang="en" data-surface="panel">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA Wrap</title>
+    <link rel="icon" href="../brand/favicon.svg" />
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
+      iframe { display: block; width: 100%; height: 100%; border: 0; }
+      /*
+        The panel docks rather than appears.
+
+        Chrome slides the side panel container in itself; what it cannot do is
+        stop the popup page inside it from painting a frame of unstyled ground
+        first. 200 ms of fade over the frame covers that seam, matching
+        `--motion-base` from ui/motion.css — spelled out here rather than
+        linked, because this document is a shell of four lines and a
+        stylesheet fetch would cost more than it saves.
+
+        The popup inside runs its own entrance; this one is only the frame, so
+        there is no delay and nothing waits for it.
+      */
+      iframe { animation: panel-dock 200ms cubic-bezier(.2, .8, .2, 1) both; }
+      @keyframes panel-dock { from { opacity: 0; } to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        iframe { animation: none; opacity: 1; }
+      }
+    </style>
+  </head>
+  <body>
+    <iframe src="../popup/popup.html?surface=panel" title="QA Wrap" allow="clipboard-write"></iframe>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="tutorials.page.title">QA Wrap · Tutorials</title>
+    <link rel="icon" href="../brand/favicon.svg" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="../ui/vfx.css" />
+    <link rel="stylesheet" href="../ui/motion.css" />
+    <link rel="stylesheet" href="tutorials.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../ui/dom.js"></script>
+    <script src="../ui/icons.js"></script>
+    <script src="../platform/i18n.js"></script>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <g id="i-pane"><rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" opacity=".16"/></g>
+        <symbol id="i-theme" viewBox="0 0 24 24"><use href="#i-pane"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor" opacity=".9"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.75"/></symbol>
+      </defs>
+    </svg>
+    <header class="app-bar">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark.svg" alt="" width="22" height="22" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" data-i18n="tutorials.header.subtitle">tutorials</span>
+      </div>
+      <div class="bar-actions">
+        <button id="theme" class="btn btn-sm" title="Light, night, or follow your machine" aria-label="Theme" data-i18n-title="tutorials.theme.titleDefault" data-i18n-aria="tutorials.theme.ariaDefault"><svg class="i" width="16" height="16" aria-hidden="true"><use href="#i-theme"/></svg></button>
+        <button id="open-options" class="btn btn-sm" data-i18n="tutorials.header.backToSettings">Back to settings</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow" data-i18n="tutorials.hero.eyebrow">HOW IT WORKS</p>
+        <h1 data-i18n="tutorials.hero.title">Watch the product, then the tool you came for.</h1>
+        <p class="lede" data-i18n="tutorials.hero.lede">
+          Every film was recorded from this extension driving itself through a real session:
+          the same buttons you press, the same report at the end. Pick one by its title.
+          Narrated in American English and captioned throughout.
+        </p>
+      </section>
+
+      <section class="feature" id="feature" hidden>
+        <video id="feature-video" controls playsinline preload="metadata"></video>
+        <div class="film-empty" id="feature-empty" role="status" hidden>
+          <h3 data-i18n="tutorials.empty.title">This film is watched online</h3>
+          <p class="muted" data-i18n="tutorials.empty.body">The films are hosted with the QA Wrap site and load when you press one. You are offline, or the host is blocked on this network. Everything else in QA Wrap works without them, and the written tutorials in the documentation cover the same ground.</p>
+        </div>
+        <div class="feature-meta">
+          <p class="eyebrow" id="feature-kind"></p>
+          <h2 id="feature-title"></h2>
+          <p class="muted" id="feature-blurb"></p>
+          <div class="row" id="feature-chips"></div>
+          <div class="feature-chapters" id="feature-chapters" hidden></div>
+          <!--
+            Every film is hosted, so the link and the sentence below render
+            whenever the film is not reachable.
+          -->
+          <p class="muted" id="feature-offline" hidden></p>
+          <p><a id="feature-online" class="btn btn-sm" hidden target="_blank" rel="noopener" data-i18n="tutorials.feature.watchOnline">Watch online</a></p>
+          <button id="feature-close" class="btn btn-sm" data-i18n="common.close">Close</button>
+        </div>
+      </section>
+
+      <h2 class="section-head" id="start-head" data-i18n="tutorials.startHere.heading">Start here</h2>
+      <div class="cards" id="cards"></div>
+
+      <!--
+        One section per popup group, built in tutorials.js: the group's own
+        film with its chapter list, then that group's short tool films. The
+        markup is not written here because the sections come from the groups
+        table beside the films, not from a copy of it in a second file.
+      -->
+      <div id="groups"></div>
+
+      <section class="block quiet">
+        <h2 data-i18n="tutorials.trust.heading">How the films stay true</h2>
+        <p class="muted" data-i18n="tutorials.trust.body">
+          Each one is produced by a script that drives the extension, so a film can only be
+          made if the product still does what it shows. When a film stops recording, the
+          product has changed and the film is already wrong. That is the point of making
+          them this way.
+        </p>
+      </section>
+    </main>
+
+    <footer class="page-foot">
+      <img src="../brand/mark.svg" alt="" width="14" height="14" />
+      <span>QA Wrap</span><span class="made-by" data-i18n="common.madeBy">Made by Nader Alzghoul</span>
+    </footer>
+
+    <script src="../ui/sound.js"></script>
+    <script src="../ui/vfx.js"></script>
+    <script src="../ui/motion.js"></script>
+    <script type="module" src="tutorials.js"></script>
+  </body>
+</html>

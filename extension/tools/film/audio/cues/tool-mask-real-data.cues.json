@@ -1,0 +1,232 @@
+{
+  "id": "tool-mask-real-data",
+  "kind": "tool",
+  "revision": "2+2s-endcard+poster",
+  "label": "Mask real data",
+  "mode": "Simple",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 10,
+  "seconds": 20,
+  "sampleRate": 48000,
+  "seed": 20260923,
+  "source": "research/33-film-bible.md 10.2 (the skeleton) and 10.3 (this film's storyboard, voice and delivery columns verbatim); voice and chain from research/41-voice-and-pitch.md",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "targetLufs": -26.9,
+    "sections": [
+      {
+        "name": "preroll",
+        "fromBar": 1,
+        "toBar": 2,
+        "note": "the 2.000 s poster card: the pad and the logo mnemonic only. No kick, no bass, no hats, no plucks; the first hit is on the cut out of the card"
+      },
+      {
+        "name": "intro",
+        "fromBar": 2,
+        "toBar": 4,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 4,
+        "toBar": 8,
+        "note": "kick + bass + 16th hats enter on bar 3"
+      },
+      {
+        "name": "lift",
+        "fromBar": 8,
+        "toBar": 9,
+        "note": "plucks up an octave, shimmer in"
+      },
+      {
+        "name": "out",
+        "fromBar": 9,
+        "toBar": 11,
+        "note": "the end card: single hit on bar 8 beat 1, ring out. Two bars now: the card holds the spoken close, so the ring-out and the thinned hats carry the whole of it."
+      }
+    ],
+    "swells": [
+      {
+        "endSec": 16,
+        "dur": 1,
+        "gain": 0.45,
+        "note": "reverse swell into the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 8,
+      "singleHitBar": 9,
+      "ringOut": true,
+      "note": "ringOut: the end card is a single bar here, so the thinned hats keep running under the single hit and the logo. Without it the master's gain takes the last ~0.5 s below -40 dBFS and the mix gate fails."
+    },
+    "padGain": 0.126,
+    "padSections": [
+      "preroll",
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band. Same layer and same gain as the commercial: without it these beds carried 4.5-4.9 % of their energy in 1-4 kHz against the commercial bed 25.5 %."
+  },
+  "sfx": [
+    {
+      "cue": "logo",
+      "atSec": 0,
+      "note": "the mnemonic under the poster card; it does NOT shift with everything else, because the pre-roll bar would otherwise carry no sound at all"
+    },
+    {
+      "cue": "swish",
+      "atSec": 4,
+      "note": "the cut into shot 2; the chip enters"
+    },
+    {
+      "cue": "tick",
+      "atSec": 4.3,
+      "note": "the row is pressed in the panel"
+    },
+    {
+      "cue": "tick",
+      "atSec": 6.3,
+      "note": "it does its job, part 1"
+    },
+    {
+      "cue": "tick",
+      "atSec": 9.3,
+      "note": "part 2, cut on action"
+    },
+    {
+      "cue": "success",
+      "atSec": 12,
+      "note": "the result arriving"
+    },
+    {
+      "cue": "sting",
+      "atSec": 16,
+      "note": "on the cut into the end card"
+    },
+    {
+      "cue": "logo",
+      "atSec": 16,
+      "note": "the same mnemonic, ringing to 18.000"
+    }
+  ],
+  "voice": {
+    "voice": "Aoede",
+    "fallback": "Kore",
+    "targetLufs": -15,
+    "noRestOver04": false,
+    "landLastLineBySec": 17.9,
+    "note": "The commercial's final recipe: one Gemini request per line, one voice and one delivery instruction, the gate selecting by shot fit among contour-passing draws, the clean chain with a +6 dB bell at 3.9 kHz whose gain is inside the voice trim.",
+    "lines": [
+      {
+        "n": 1,
+        "shot": 1,
+        "atSec": 2.4,
+        "delivery": "firm",
+        "text": "Staging is full of real people.",
+        "caption": "Staging is full of real people.",
+        "shotInSec": 2,
+        "shotOutSec": 4
+      },
+      {
+        "n": 2,
+        "shot": 2,
+        "atSec": 3.75,
+        "delivery": "warm",
+        "text": "Click what should never leave this machine.",
+        "caption": "Click what should not leave.",
+        "shotInSec": 4,
+        "shotOutSec": 6
+      },
+      {
+        "n": 3,
+        "shot": 3,
+        "atSec": 5.75,
+        "delivery": "firm",
+        "text": "It is covered, not blurred.",
+        "caption": "Covered. Not blurred.",
+        "shotInSec": 6,
+        "shotOutSec": 9
+      },
+      {
+        "n": 4,
+        "shot": 4,
+        "atSec": 8.75,
+        "delivery": "bright",
+        "text": "It survives the reload, the screenshot and the video.",
+        "caption": "It survives the reload.",
+        "shotInSec": 9,
+        "shotOutSec": 12,
+        "drawSalt": 1
+      },
+      {
+        "n": 5,
+        "shot": 5,
+        "atSec": 11.75,
+        "delivery": "warm",
+        "text": "The words underneath never reach the report.",
+        "caption": "It never reaches the report.",
+        "shotInSec": 12,
+        "shotOutSec": 16
+      },
+      {
+        "n": 6,
+        "shot": 6,
+        "atSec": 15.75,
+        "delivery": "warm",
+        "text": "QA Wrap. Every failure, traced.",
+        "caption": "Every failure, traced.",
+        "shotInSec": 16,
+        "shotOutSec": 20,
+        "why": "the spoken close on a 4.25 s end card: anchored at the film end minus 4.25, which is the 13.75 it already sat on."
+      }
+    ],
+    "provider": "gemini",
+    "model": "google/gemini-3.1-flash-tts-preview via openrouter /v1/audio/speech",
+    "rate": "+0%",
+    "pitch": "-8Hz",
+    "presenceBellDb": 6,
+    "captionMode": "per-line"
+  },
+  "rests": [
+    {
+      "fromSec": -0.06,
+      "toSec": 2.48,
+      "why": "the head of the stem: the film opens on the logo mnemonic and the first word lands at 0.40"
+    },
+    {
+      "fromSec": 8.32,
+      "toSec": 8.84,
+      "why": "line 3 ends inside shot 3 at 6.38 and line 4 J-cuts shot 4 at 6.75; the picture holds here and the bed and its cue run under it"
+    },
+    {
+      "fromSec": 14,
+      "toSec": 15.84,
+      "why": "line 5 ends inside shot 5 at 12.05 and line 6 J-cuts shot 6 at 13.75; the picture holds here and the bed and its cue run under it"
+    },
+    {
+      "fromSec": 16.5,
+      "toSec": 17.08,
+      "why": "line 5 ends inside shot 5 at 12.05 and line 6 J-cuts shot 6 at 13.75; the picture holds here and the bed and its cue run under it"
+    },
+    {
+      "fromSec": 18.46,
+      "toSec": 20.06,
+      "why": "the tail: the close ends at 16.52 and the logo cue runs to 18.000, so the mix never stops"
+    }
+  ],
+  "posterHold": 2
+}

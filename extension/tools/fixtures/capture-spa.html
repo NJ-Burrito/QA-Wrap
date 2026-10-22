@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Capture SPA page</title></head>
+<body>
+<!-- r10-05-2 / r10-05-3 in tools/test-capture-live.mjs: SPA routes, a socket closing 1006, an EventSource on a 500, an iframe to a closed port, a div role=button operated by Space, and a 6 s fetch with a second click at 2 s. -->
+<h1>SPA page</h1>
+<button id="push">pushState</button>
+<button id="hash">Hash change</button>
+<button id="back">Back</button>
+<div id="spacebtn" role="button" tabindex="0">Space target</div>
+<button id="long">Start 6 s request</button>
+<button id="other">Other click</button>
+<textarea id="note" rows="2"></textarea>
+<div id="o" role="status">idle</div>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const out = (t) => { $('o').textContent = t; };
+  $('push').addEventListener('click', () => { history.pushState({ s: 1 }, '', '?step=push'); out('pushed'); });
+  $('hash').addEventListener('click', () => { location.hash = 'frag'; out('hash'); });
+  $('back').addEventListener('click', () => { history.back(); out('back'); });
+  $('spacebtn').addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); out('space'); } });
+  $('long').addEventListener('click', () => { fetch('/long-500').then((r) => out('long ' + r.status), () => out('long failed')); });
+  $('other').addEventListener('click', () => out('other'));
+  // the test passes the URLs (the ports are not known to the file)
+  window.openWs = (url) => { try { new WebSocket(url); } catch (e) { out(String(e)); } };
+  window.openSse = (url) => { try { new EventSource(url); } catch (e) { out(String(e)); } };
+  window.openFrame = (url) => { const f = document.createElement('iframe'); f.src = url; f.id = 'sub'; document.body.append(f); };
+</script>
+</body>
+</html>

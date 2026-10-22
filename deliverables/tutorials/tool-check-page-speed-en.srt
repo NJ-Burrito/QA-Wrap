@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:04,233
+Not the page you are on.
+
+2
+00:00:04,433 --> 00:00:06,233
+This page. Right now.
+
+3
+00:00:06,433 --> 00:00:09,900
+Drew, answered, every request.
+
+4
+00:00:10,100 --> 00:00:12,967
+On your real network.
+
+5
+00:00:13,167 --> 00:00:16,000
+Every failure, traced.

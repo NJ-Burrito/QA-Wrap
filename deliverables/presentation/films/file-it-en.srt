@@ -1,0 +1,19 @@
+1
+00:00:02,400 --> 00:00:04,133
+The report already knows what broke.
+
+2
+00:00:04,333 --> 00:00:07,000
+Seven kinds of ticket, in the ISTQB shape.
+
+3
+00:00:07,233 --> 00:00:09,467
+Written from the recording, not from memory.
+
+4
+00:00:09,667 --> 00:00:11,467
+The same session, as a test case.
+
+5
+00:00:11,700 --> 00:00:14,500
+Copy it, or file it into Jira with the evidence attached.

@@ -1,0 +1,15 @@
+1
+00:00:02,400 --> 00:00:04,300
+It fits, in English, today.
+
+2
+00:00:04,533 --> 00:00:07,267
+Flip it right to left; make every label longer.
+
+3
+00:00:09,767 --> 00:00:12,800
+Anything cut off gets outlined, before a translator is hired.
+
+4
+00:00:13,000 --> 00:00:15,233
+QA Wrap. Every failure, traced.
