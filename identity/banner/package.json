@@ -1,0 +1,2 @@
+{ "name": "qaw-banner", "private": true, "type": "module",
+  "scripts": { "check": "npx --yes hyperframes@0.8.144 check", "render": "npx --yes hyperframes@0.8.144 render" } }
