@@ -3213,6 +3213,26 @@
    "assertMode": "counted"
   },
   {
+   "id": "test-jira-defect-table-notes",
+   "path": "tools/test-jira-defect-table-notes.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "integration",
+   "features": [
+    "jira-integrations"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:integration"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
    "id": "test-jira-live",
    "path": "tools/test-jira-live.mjs",
    "kind": "test",

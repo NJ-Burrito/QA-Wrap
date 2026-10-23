@@ -68,7 +68,11 @@ const t = (k, v) => QAWi18n.t(k, v);
  * written tutorials stand in; a closed-network tester loses the films only.
  * S-07 (sdlc-1014): the films were removed and nothing loads remote media any more.
  */
-const hostedUrl = () => ''; // S-07 (sdlc-1014): the films were removed and nothing loads remote media; the extension-page CSP (manifest) allows only 'self' media and images
+/** The one hosted film (Nader, 2026-10-23): the Lead flips FILM_LIVE to true once site/media/qa-wrap-commercial-40s.mp4 is published. Pressed, its card opens the site in a new tab; nothing loads before a press. */
+const FILM_LIVE = false;
+const FILM_FILE = 'qa-wrap-commercial-40s.mp4';
+const FILM_URL = 'https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4';
+const hostedUrl = (f) => (FILM_LIVE && f === FILM_FILE ? FILM_URL : ''); // S-07 (sdlc-1014): the films were removed and nothing loads remote media; the extension-page CSP (manifest) allows only 'self' media and images
 const onlineUrl = (lesson) => hostedUrl(lesson.files[lang] || lesson.files.en);
 /* The poster travels with its film. A hosted one that does not arrive leaves
    the tile the CSS already draws, which carries the title — better than a
@@ -184,7 +188,7 @@ function cardFor(lesson) {
   );
   card.append(poster, body);
   if (lesson.pending) card.disabled = true;
-  else card.addEventListener('click', () => play(lesson));
+  else card.addEventListener('click', () => (lesson.files.en === FILM_FILE ? window.open(FILM_URL, '_blank', 'noopener') : play(lesson)));
   return card;
 }
 
@@ -432,6 +436,7 @@ $('open-options').addEventListener('click', () => chrome.runtime.openOptionsPage
   paintLang();
   try {
     lessons = await (await fetch('lessons.json')).json();
+    if (FILM_LIVE) for (const l of lessons) if (l.files?.en === FILM_FILE) l.pending = false;
   } catch {
     lessons = [];
   }
