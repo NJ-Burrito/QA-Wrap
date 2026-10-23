@@ -115,7 +115,7 @@ const SERVICES = [
  * per press of a button in a report, text masked first. These files may NAME the three providers; the next test pins how narrow
  * the exception is. Any other file naming a model service, or any other service in this list, still fails.
  */
-const AI_WRITING_FILES = new Set(['core/ai-write.js', 'platform/i18n/en.json', 'platform/i18n/ar.json', 'manifest.json', 'options/ai-writing.html-fragment']);
+const AI_WRITING_FILES = new Set(['core/ai-write.js', 'platform/i18n/en.json', 'platform/i18n/ar.json', 'manifest.json', 'options/ai-writing.fragment.html']);
 
 test('AI writing is the one opt-in exception, and it is narrow: off by default, one caller module, no background caller', () => {
   const w = source.get('core/ai-write.js') || '';
