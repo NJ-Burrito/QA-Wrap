@@ -1,0 +1,30 @@
+{
+  "manifest_version": "0.3",
+  "name": "qa-wrap-bridge",
+  "display_name": "QA Wrap bridge",
+  "version": "0.1.0",
+  "description": "Read-only MCP server that lets a coding agent read the test sessions recorded in QA Wrap. Local only, no network.",
+  "long_description": "QA Wrap bridge reads the sessions recorded by the QA Wrap browser extension through Chrome native messaging. It has four read-only tools, no write tool and opens no network connection. One-time setup: run `npx qa-wrap-bridge` in a terminal, then turn on Agent bridge in QA Wrap's Settings.",
+  "author": { "name": "NJ-Burrito", "url": "https://github.com/NJ-Burrito" },
+  "repository": { "type": "git", "url": "https://github.com/NJ-Burrito/QA-Wrap.git" },
+  "homepage": "https://github.com/NJ-Burrito/QA-Wrap",
+  "support": "https://github.com/NJ-Burrito/QA-Wrap/issues",
+  "server": {
+    "type": "node",
+    "entry_point": "bin/cli.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/bin/cli.mjs", "mcp"]
+    }
+  },
+  "tools": [
+    { "name": "list_sessions", "description": "List the sessions on this machine, newest first." },
+    { "name": "get_session", "description": "Return one session in the qawrap.session/1 format (newest if no id)." },
+    { "name": "get_failures", "description": "Return only the failures of a session, duplicates folded with a count." },
+    { "name": "get_ai_brief", "description": "Return the compact plain-text block that Copy for AI produces." }
+  ],
+  "tools_generated": false,
+  "keywords": ["qa", "testing", "bug-report", "browser-extension", "read-only"],
+  "license": "MIT",
+  "compatibility": { "runtimes": { "node": ">=20" } }
+}
