@@ -16,9 +16,9 @@ Files: `helper/package.json` (`mcpName`, `repository`, `keywords` added), `helpe
 | Official MCP Registry | https://registry.modelcontextprotocol.io | no fee on its pages (not stated either way) | `mcp-publisher login github`, `mcp-publisher publish` in `helper/` | `official-mcp-registry.md`, `helper/server.json` | todo, needs npm |
 | mcpservers.org | https://mcpservers.org/submit | Free tier "$0, review within 2 weeks"; $39 premium skipped | fill the form, plan Free | `mcpservers-org.md` | ready |
 | awesome-mcp-servers (punkpeye) | https://github.com/punkpeye/awesome-mcp-servers | free (a pull request) | fork, add one line, open PR | `awesome-mcp-servers.md` | ready after npm |
-| Cline MCP marketplace | https://github.com/cline/mcp-marketplace | no fee mentioned | open the submission issue | `cline.md` | blocked: needs an `llms-install.md` and a 400x400 logo |
+| Cline MCP marketplace | https://github.com/cline/mcp-marketplace | no fee mentioned | open the submission issue | `cline.md` | ready after npm (`helper/llms-install.md`, `identity/logo/qa-wrap-400.png` exist) |
 | Glama | https://glama.ai/mcp/servers | not verified | sign in with GitHub, "Add Server", claim | `glama.md`, `helper/glama.json` | ready |
-| Smithery | https://smithery.ai | not verified | `smithery auth login`, then `smithery mcp publish` | `smithery.md`, `helper/smithery.yaml` | blocked: stdio needs an MCPB bundle (`helper/manifest.json` missing) |
+| Smithery | https://smithery.ai | not verified | `smithery auth login`, then `smithery mcp publish` | `smithery.md`, `helper/smithery.yaml` | ready after npm (`helper/manifest.json` validated; build the bundle with `npx @anthropic-ai/mcpb pack`) |
 | mcp.directory | https://mcp.directory/submit | not verified; review "within 24 hours" | fill the form if it shows no payment step | `mcp-directory.md` | ready |
 
 Skipped, with the reason:
