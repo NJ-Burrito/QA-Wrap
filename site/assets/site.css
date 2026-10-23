@@ -525,3 +525,8 @@ body[data-lang="ar"] [data-lang-block="en"] { display: none; }
 @media (min-width: 52rem) { [dir="rtl"] .groups li:first-child { padding-inline-start: 0; } }
 
 .film .note a { display: inline-flex; align-items: center; min-height: 44px; }
+
+.about-facts { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 0.6rem; max-width: 44rem; }
+.about-facts li { margin: 0; padding-inline-start: 0.9rem; border-inline-start: 3px solid var(--accent); }
+.more-grid small { overflow-wrap: anywhere; }
+.more-grid a > span { min-width: 0; }

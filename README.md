@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/licence-MIT-green.svg)](LICENSE)
 [![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white)](#install)
 [![Arabic and English](https://img.shields.io/badge/Arabic%20%2B%20English-first--class-0d9488.svg)](README.ar.md)
-[![GitHub](https://img.shields.io/badge/GitHub-NJ--Burrito-181717?logo=github&logoColor=white)](https://github.com/NJ-Burrito)
+[![GitHub](https://img.shields.io/badge/GitHub-source-181717?logo=github&logoColor=white)](https://github.com/NJ-Burrito)
 
 **QA Wrap is a local-first QA toolkit that lives in your browser.** It records a test session, links every failure to the action that caused it, and writes the bug report for you. [العربية](README.ar.md)
 
@@ -132,15 +132,21 @@ Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pi
 
 </details>
 
-<a id="more-from-nj"></a>
+<a id="about"></a>
 
-## 🧰 More from NJ
+## 👤 About
+
+- 🎯 **What it is:** a free browser extension for manual testers. It records a test session and writes the bug report.
+- 🙋 **Who made it:** Nader Alzghoul, a QA automation engineer in Amman, Jordan.
+- 📜 **Licence:** MIT. The source is public and third-party parts keep their own licences.
+- ✉️ **Contact:** naderalzghoulbusiness@gmail.com
 
 - 💼 [Portfolio](https://nj-burrito.github.io/): Nader's work and projects, with the contact section
 - 📦 [NJ-Kit](https://nj-burrito.github.io/NJ-Kit/): skills for Claude Code
 - 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): your profile as a page
-- 🐙 [GitHub: NJ-Burrito](https://github.com/NJ-Burrito): all the open repositories
+- 🐙 [GitHub](https://github.com/NJ-Burrito): the source and all the open repositories
+- 🔗 [LinkedIn](https://www.linkedin.com/in/nader-alzghoul): Nader's profile
 
 ---
 
-Copyright (c) 2026 Nader Alzghoul (NJ-Burrito). Released under the [MIT licence](LICENSE). Third-party components keep their own licences: see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+Copyright (c) 2026 Nader Alzghoul. Released under the [MIT licence](LICENSE). Third-party components keep their own licences: see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
