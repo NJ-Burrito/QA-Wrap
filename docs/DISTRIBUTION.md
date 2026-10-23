@@ -1,6 +1,6 @@
 # QA Wrap distribution: free markets, who clicks what
 
-Checked 2026-10-23 from each market's own page. Nothing is submitted. Logins, `npm publish` and submits are Nader's clicks; ready texts are in `docs/listings/`. "Cost" is what the page said, not a guess; "not verified" means the page did not say.
+Checked 2026-10-23 from each market's own page. Status column updated 2026-10-23. Logins, `npm publish` and submits are Nader's clicks; ready texts are in `docs/listings/`. "Cost" is what the page said, not a guess; "not verified" means the page did not say.
 
 ## Order
 
@@ -12,14 +12,14 @@ Files: `helper/package.json` (`mcpName`, `repository`, `keywords` added), `helpe
 
 | Market | URL | Cost | What Nader clicks | Paste / file | Status |
 |---|---|---|---|---|---|
-| npm | https://www.npmjs.com | free (not re-read today) | `cd helper && npm login && npm publish` | `helper/package.json` | todo |
-| Official MCP Registry | https://registry.modelcontextprotocol.io | no fee on its pages (not stated either way) | `mcp-publisher login github`, `mcp-publisher publish` in `helper/` | `official-mcp-registry.md`, `helper/server.json` | todo, needs npm |
-| mcpservers.org | https://mcpservers.org/submit | Free tier "$0, review within 2 weeks"; $39 premium skipped | fill the form, plan Free | `mcpservers-org.md` | ready |
-| awesome-mcp-servers (punkpeye) | https://github.com/punkpeye/awesome-mcp-servers | free (a pull request) | fork, add one line, open PR | `awesome-mcp-servers.md` | ready after npm |
-| Cline MCP marketplace | https://github.com/cline/mcp-marketplace | no fee mentioned | open the submission issue | `cline.md` | ready after npm (`helper/llms-install.md`, `identity/logo/qa-wrap-400.png` exist) |
-| Glama | https://glama.ai/mcp/servers | not verified | sign in with GitHub, "Add Server", claim | `glama.md`, `helper/glama.json` | ready |
-| Smithery | https://smithery.ai | not verified | `smithery auth login`, then `smithery mcp publish` | `smithery.md`, `helper/smithery.yaml` | ready after npm (`helper/manifest.json` validated; build the bundle with `npx @anthropic-ai/mcpb pack`) |
-| mcp.directory | https://mcp.directory/submit | not verified; review "within 24 hours" | fill the form if it shows no payment step | `mcp-directory.md` | ready |
+| npm | https://www.npmjs.com | free (not re-read today) | `cd helper && npm login && npm publish` | `helper/package.json` | live 2026-10-23: qa-wrap-bridge 0.1.0 |
+| Official MCP Registry | https://registry.modelcontextprotocol.io | no fee on its pages (not stated either way) | `mcp-publisher login github`, `mcp-publisher publish` in `helper/` | `official-mcp-registry.md`, `helper/server.json` | live 2026-10-23: io.github.NJ-Burrito/qa-wrap-bridge 0.1.0 |
+| mcpservers.org | https://mcpservers.org/submit | Free tier "$0, review within 2 weeks"; $39 premium skipped | fill the form, plan Free | `mcpservers-org.md` | submitted 2026-10-23, Free plan; page said review within 2 weeks (awaiting approval) |
+| awesome-mcp-servers (punkpeye) | https://github.com/punkpeye/awesome-mcp-servers | free (a pull request) | fork, add one line, open PR | `awesome-mcp-servers.md` | PR open: https://github.com/punkpeye/awesome-mcp-servers/pull/17378 |
+| Cline MCP marketplace | https://github.com/cline/mcp-marketplace | no fee mentioned | open the submission issue | `cline.md` | issue open: https://github.com/cline/mcp-marketplace/issues/3206 |
+| Glama | https://glama.ai/mcp/servers | not verified | sign in with GitHub, "Add Server", claim | `glama.md`, `helper/glama.json` | needs Nader's login (GitHub sign-in) |
+| Smithery | https://smithery.ai | not verified | `smithery auth login`, then `smithery mcp publish` | `smithery.md`, `helper/smithery.yaml` | needs Nader's login (`smithery auth login`) |
+| mcp.directory | https://mcp.directory/submit | not verified; review "within 24 hours" | fill the form if it shows no payment step | `mcp-directory.md` | submitted 2026-10-23, no payment step; page said published within 24 hours |
 
 Skipped, with the reason:
 
