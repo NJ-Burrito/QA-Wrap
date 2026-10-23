@@ -50,7 +50,7 @@ function table(header, rows) {
     type: 'table',
     attrs: { isNumberColumnEnabled: false, layout: 'default' },
     content: [
-      { type: 'tableRow', content: header.map((h) => cell(strong(h), 'tableHeader')) },
+      { type: 'tableRow', content: header.map((h) => cell([h ? strong(h) : text(' ')], 'tableHeader')) },
       ...rows.map((r) => ({
         type: 'tableRow',
         content: header.map((_, i) => cell(r[i] ?? '—', 'tableCell')),
@@ -374,7 +374,14 @@ export function defectToAdf(d) {
       : null,
 
     d.notes.length ? heading(3, 'Tester notes') : null,
-    d.notes.length ? bullets(d.notes.map((n) => (n.tag ? `[${n.tag}] ${n.text}` : n.text))) : null,
+    d.notes.length
+      ? {
+          type: 'orderedList',
+          attrs: { order: 1 },
+          // An Arabic note starts with a right-to-left mark so a leading "[bug]" tag does not flip the line to LTR.
+          content: d.notes.map((n) => ({ type: 'listItem', content: [para(text(`${/[֐-ࣿ]/.test(n.text || '') ? '‏' : ''}${n.tag ? `[${n.tag}] ` : ''}${n.text}`))] })),
+        }
+      : null,
 
     d.relatedFailures > 0
       ? para(
