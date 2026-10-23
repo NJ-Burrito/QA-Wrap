@@ -169,7 +169,7 @@ export const sessionHandlers = {
       soft(getRules(windowId), [], 400),
       soft(recordingState(), { recording: false }, 400),
       soft(storageHeadroom(), null, 400),
-      soft(armed.isArmedWindow(windowId), false, 400),
+      soft(armed.isArmedWindow(windowId), null, 400), // null, not Asleep
       soft(activeSessionId(windowId).then((id) => (id ? sessionState.getUsed(id) : {})), {}, 400),
     ]);
 

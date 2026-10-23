@@ -15,7 +15,7 @@ tools must be open source and locally runnable").
 | --- | --- |
 | Node.js | v22.14.0 (`node --version`) |
 | npm | 11.2.0 (`npm --version`) |
-| `qa-wrap` package version | 3.6.5 (`extension/package.json` `"version"`) |
+| `qa-wrap` package version | 3.6.6 (`extension/package.json` `"version"`) |
 
 `extension/package.json` declares no `engines` field and the build uses no
 bundler, transpiler or minifier (no `esbuild`, `webpack`, `rollup`, `terser`,
@@ -39,7 +39,7 @@ source, eight targets.") The result is:
 - `dist/firefox/` — the unpacked, unsigned Firefox build (load via
   `about:debugging` → *This Firefox* → *Load Temporary Add-on* → its
   `manifest.json`, or submit for signing at addons.mozilla.org)
-- `dist/qa-wrap-3.6.5-firefox.zip` — the same folder, zipped
+- `dist/qa-wrap-3.6.6-firefox.zip` — the same folder, zipped
 
 Both come from `extension/manifest.json` plus the transform in
 `manifestFor()`/`TARGETS.firefox` (`extension/core/capabilities.js`,
