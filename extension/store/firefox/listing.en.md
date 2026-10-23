@@ -1,4 +1,4 @@
-# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.7.1
+# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.8.0
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 

@@ -223,7 +223,7 @@ const ALLOWED_HOSTS = new Set([
   'discord.com', 'discordapp.com', 'api.trello.com', 'app.asana.com',
   'api.clickup.com', 'api.linear.app', 'api.github.com', 'github.com',
   // e1022: the About card's maker links (portfolio), opened only when the tester presses them.
-  'nj-burrito.github.io',
+  'nj-burrito.github.io', 'www.linkedin.com', // the maker's LinkedIn link in About, opened only on a press
   'gitlab.com', 'dev.azure.com',
   // Shortcut and YouTrack, added 8 September 2026 with their adapters. Shortcut
   // has one fixed API host; YouTrack is self-hosted or a per-customer cloud
