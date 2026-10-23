@@ -107,7 +107,7 @@ try {
   if (!started?.ok) throw new Error(`could not start the session: ${JSON.stringify(started)}`); // R15: a report with no session is not a shot
   await page.waitForTimeout(400);
   await page.bringToFront();
-  await page.fill('#applicant', 'Nader');
+  await page.fill('#applicant', 'ACME Demo');
   await page.fill('#pw', 'hunter2');
   await page.click('#submit');
   await page.waitForTimeout(1200);
@@ -236,7 +236,7 @@ try {
         timeboxMinutes: 30,
       });
       await page.bringToFront();
-      await page.fill('#applicant', 'Nader');
+      await page.fill('#applicant', 'ACME Demo');
       await page.fill('#pw', 'hunter2');
       await page.click('#submit');
       await page.waitForTimeout(1200);
@@ -252,7 +252,7 @@ try {
   // In-page surfaces. T-058: a live session with a real failure, so the bar carries its problems chip.
   await call({ type: 'UQA_START', charter: CHARTER, tabId, startUrl: `${origin}/`, timeboxMinutes: 30 });
   await page.bringToFront();
-  await page.fill('#applicant', 'Nader');
+  await page.fill('#applicant', 'ACME Demo');
   await page.click('#submit');
   await page.waitForTimeout(1200);
   await call({ type: 'UQA_INJECT' });

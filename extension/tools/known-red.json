@@ -1,16 +1,4 @@
 {
-  "test-listing-assets": {
-    "id": "T-031",
-    "until": "2026-11-30",
-    "match": "must carry \\d+\\.\\d+\\.\\d+",
-    "reason": "store/shots still carry 3.5.2; re-shoot for the current version needs a headed browser (tools/ui-shots.mjs, tools/store-shots.mjs), Nader's release step"
-  },
-  "test-listing-assets-ar": {
-    "id": "T-031",
-    "until": "2026-11-30",
-    "match": "Arabic set is not the five shots",
-    "reason": "Arabic listing shots are 3.5.2; same re-shoot"
-  },
   "test-site-and-keys": {
     "id": "SK-1022",
     "until": "2026-11-30",
