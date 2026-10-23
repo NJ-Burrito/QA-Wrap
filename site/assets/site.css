@@ -120,7 +120,7 @@ h1, h2, h3 {
   letter-spacing: -0.01em;
   margin: 0 0 0.6rem;
 }
-h1 {
+h1, .h1 {
   font-weight: 800;
   font-size: clamp(2rem, 6vw, 2.9rem);
   letter-spacing: -0.02em;
@@ -235,7 +235,7 @@ section { margin: 0 0 clamp(2.25rem, 5vw, 3.25rem); }
 section:last-child { margin-bottom: 0; }
 .hr { border: 0; border-top: 1px solid var(--border); margin: clamp(2rem, 5vw, 3rem) 0; }
 
-.hero h1 { margin-bottom: 0.35rem; }
+.hero h1, .hero .h1 { margin-bottom: 0.35rem; }
 .tagline {
   font-size: clamp(1.15rem, 3vw, 1.35rem);
   font-weight: 600;
