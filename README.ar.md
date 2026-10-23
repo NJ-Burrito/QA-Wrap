@@ -8,6 +8,8 @@
 
 **QA Wrap أداة اختبار جودة تعمل داخل المتصفح وتحفظ كل شيء محليًّا.** تسجّل جلسة الاختبار، وتربط كل خلل بالإجراء الذي سبّبه، وتكتب لك تقرير الخلل. [English](README.md)
 
+[![شاهد الفيلم في 40 ثانية](site/media/qa-wrap-commercial-40s.jpg)](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
+
 [الموقع](https://nj-burrito.github.io/QA-Wrap/) · [تنزيل آخر إصدار](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · [التثبيت](#التثبيت) · [التحديثات](#التحديثات) · [الخصوصية](#الخصوصية)
 
 ## ماذا تفعل

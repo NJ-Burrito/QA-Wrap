@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "QA Wrap",
   "short_name": "QA Wrap",
-  "version": "3.6.6",
+  "version": "3.6.7",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvwe01lG3fHxIKOX0Y8dx44PBTB1FrpjEHKOXXzyZ/sVRXNc4Yh17AXJkt6Hse6hKEKAz5bfm3FJMzAMiGWFANpZyzIxVxwSP77yQ7qGxasyS3o3TrF2gmRLxv1HjbL0kqx+ob50A1PthiGt3CS6DflRy7PvqDXv86Go0dMGFLpnKweL3ahiuZjKndxvc4g4H0Jnp3B3Ih7YS/Hi/GnAqplKcnDGGEPLYOHxBGes5hspU6qJ13x6R+mUwWUY5ZJsBEK68j6kxY0D6qc0UZ5lq4+Fok/QKm2JJo4CNqSjfoBjSmu7lDFUw06gYBaWvIJizAuW5UF4ifIFGkMRHI3ZyzQIDAQAB",
   "description": "__MSG_extDescription__",
   "default_locale": "en",

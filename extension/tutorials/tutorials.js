@@ -69,7 +69,7 @@ const t = (k, v) => QAWi18n.t(k, v);
  * S-07 (sdlc-1014): the films were removed and nothing loads remote media any more.
  */
 /** The one hosted film (Nader, 2026-10-23): the Lead flips FILM_LIVE to true once site/media/qa-wrap-commercial-40s.mp4 is published. Pressed, its card opens the site in a new tab; nothing loads before a press. */
-const FILM_LIVE = false;
+const FILM_LIVE = true;
 const FILM_FILE = 'qa-wrap-commercial-40s.mp4';
 const FILM_URL = 'https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4';
 const hostedUrl = (f) => (FILM_LIVE && f === FILM_FILE ? FILM_URL : ''); // S-07 (sdlc-1014): the films were removed and nothing loads remote media; the extension-page CSP (manifest) allows only 'self' media and images
