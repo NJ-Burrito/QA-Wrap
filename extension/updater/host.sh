@@ -28,6 +28,7 @@ else
   MSG=$(dd bs=1 count="$len" 2>/dev/null)
 fi
 
+[ "$(field op)" = "ping" ] && { reply '{"ok":true,"ping":true}'; exit 0; }
 [ "$(field op)" = "update" ] || fail "unknown op"
 VERSION=$(field version); ZIP=$(field zip); ZIPAPI=$(field zipApi); SUM=$(field sha256); MTOKEN=$(field token)
 [ -n "$MTOKEN" ] && TOKEN="$MTOKEN"

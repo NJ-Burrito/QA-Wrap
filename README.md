@@ -41,7 +41,7 @@ You need Chrome 116 or newer. Chrome and Edge are the tested browsers; Brave and
 5. In Chrome, type `chrome://extensions` in the address bar and press Enter.
 6. Top right, switch **Developer mode** on.
 7. Press **Load unpacked**, choose the folder from step 3, press **Select Folder**. QA Wrap appears in the list.
-8. Turn on automatic updates (once). Open the folder from step 3, then open the folder called `updater` inside it.
+8. Turn on automatic updates (once), so updates install by themselves. Open the folder from step 3, then open the folder called `updater` inside it.
    - **Windows**: double-click **install.cmd**. A black window shows five short steps in English and Arabic and says Done.
    - **Mac or Linux**: open the Terminal app, type `bash ` (with a space after it), drag the file **install.sh** from the `updater` folder into the Terminal window, press Enter.
    - It needs no admin rights and installs nothing else. It is safe to run twice.

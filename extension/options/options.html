@@ -901,6 +901,18 @@
           <button type="button" class="btn" id="upd-now" data-i18n="options.e1022.updNow" hidden>Update now</button>
           <span id="upd-status" role="status" aria-live="polite"></span>
         </div>
+        <!-- Automatic updates: is the native updater host installed? options/e1022.js asks it (op ping) and shows the one-time guidance. -->
+        <div class="auto-upd" id="upd-auto">
+          <p class="auto-upd-head"><span class="auto-upd-dot" id="upd-auto-dot" aria-hidden="true"></span><strong id="upd-auto-state" role="status"></strong></p>
+          <p class="muted" id="upd-auto-hint"></p>
+          <div id="upd-auto-help" hidden>
+            <p><code dir="ltr" id="upd-auto-file"></code> <span class="muted" data-i18n="update.upd2.inFolder">inside your QA Wrap folder</span></p>
+            <ol id="upd-auto-steps"></ol>
+            <button type="button" class="btn btn-sm" id="upd-auto-copy" data-i18n="update.upd2.copySteps">Copy steps</button>
+            <button type="button" class="btn btn-sm" id="upd-auto-again" data-i18n="update.upd2.checkAgain">Check again</button>
+          </div>
+          <button type="button" class="btn btn-sm" id="upd-auto-on" data-i18n="update.upd2.settingsTurnOn" hidden>Turn on automatic updates</button>
+        </div>
         <!-- Updates: GitHub releases/latest once a day; key checkUpdates (absent = on). ui/update-card.js -->
         <h3 class="sub-head" data-i18n="update.setting">Check for updates</h3>
         <label class="check">
