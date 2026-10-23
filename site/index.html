@@ -3,8 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QA Wrap</title>
-<meta name="description" content="QA Wrap records a browser test session, links every failure to the click that caused it, and files the result as a report you can hand over. Local-first: nothing leaves your machine except to the Jira site, tracker or webhook you configure.">
+<title>QA Wrap: local-first bug reports from your browser test session</title>
+<meta name="description" content="QA Wrap records a manual test session in your browser, links every failure to the click behind it and files the bug report. Arabic and English. Free, MIT.">
+<link rel="canonical" href="https://nj-burrito.github.io/QA-Wrap/">
+<meta name="theme-color" content="#1D2024">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="QA Wrap">
+<meta property="og:title" content="QA Wrap: local-first bug reports from your browser test session">
+<meta property="og:description" content="QA Wrap records a manual test session in your browser, links every failure to the click behind it and files the bug report. Arabic and English. Free, MIT.">
+<meta property="og:url" content="https://nj-burrito.github.io/QA-Wrap/">
+<meta property="og:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="QA Wrap: every failure, traced">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QA Wrap: local-first bug reports from your browser test session">
+<meta name="twitter:description" content="QA Wrap records a manual test session in your browser, links every failure to the click behind it and files the bug report. Arabic and English. Free, MIT.">
+<meta name="twitter:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "QA Wrap", "description": "QA Wrap records a manual test session in your browser, links every failure to the click behind it and files the bug report. Arabic and English. Free, MIT.", "applicationCategory": "DeveloperApplication", "operatingSystem": "Chrome 116+", "softwareVersion": "3.8.0", "downloadUrl": "https://github.com/NJ-Burrito/QA-Wrap/releases/latest", "codeRepository": "https://github.com/NJ-Burrito/QA-Wrap", "license": "https://opensource.org/licenses/MIT", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "inLanguage": ["en", "ar"], "url": "https://nj-burrito.github.io/QA-Wrap/", "image": "https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png", "author": {"@id": "https://nj-burrito.github.io/#nader"}}, {"@type": "Person", "name": "Nader Alzghoul", "url": "https://nj-burrito.github.io/", "sameAs": ["https://nj-burrito.github.io/", "https://github.com/NJ-Burrito", "https://www.linkedin.com/in/nader-alzghoul"], "@id": "https://nj-burrito.github.io/#nader"}]}</script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/thmanyah.css">
 <link rel="stylesheet" href="assets/site.css">
@@ -51,7 +69,7 @@
     <div data-lang-block="en" lang="en" dir="ltr">
 
     <section class="hero">
-      <h1>QA Wrap</h1>
+      <h1>QA Wrap: record a test session, get the bug report</h1>
       <p class="tagline">Every failure, traced.</p>
       <p class="lead prose">Free and local. Record a test session, see the click behind each
         failure, and hand over a record of the session: filed to Jira, a tracker or a chat, or
@@ -60,18 +78,25 @@
         <a class="cta" href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest">Download the latest release</a>
         <span class="note">Free, MIT licence. See <a href="#store">Installing it</a>.</span>
       </p>
+      <ul class="quick">
+        <li><a href="#store">3-minute install</a></li>
+        <li><a href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest">Latest release</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+      </ul>
     </section>
+      <ul class="toc"><li><a href="#index-en-2">Three things, in this order</a></li><li><a href="#index-en-3">Nineteen tools, in four groups</a></li><li><a href="#index-en-4">What you are looking at</a></li><li><a href="#index-en-5">Nothing leaves your machine</a></li><li><a href="#index-en-6">Two packages, one codebase</a></li><li><a href="#index-en-7">Download and install</a></li></ul>
+
 
     <section class="film">
       <p class="eyebrow">See it</p>
-      <h2>Watch the 40-second film</h2>
-      <video controls preload="none" width="100%" poster="media/qa-wrap-commercial-40s.jpg" src="media/qa-wrap-commercial-40s.mp4">Your browser cannot play this video.</video>
+      <h2 id="index-en-1">Watch the 40-second film</h2>
+      <video controls preload="none" width="100%" poster="media/qa-wrap-commercial-40s-1280.jpg" src="media/qa-wrap-commercial-40s.mp4">Your browser cannot play this video.</video>
       <p class="note"><a href="media/qa-wrap-commercial-40s-9x16.mp4">Vertical version</a></p>
     </section>
 
     <section>
       <p class="eyebrow">What it does</p>
-      <h2>Three things, in this order</h2>
+      <h2 id="index-en-2">Three things, in this order</h2>
 
       <div class="prose">
         <h3>Record a session</h3>
@@ -98,12 +123,13 @@
 
     <section>
       <p class="eyebrow">The toolkit</p>
-      <h2>Nineteen tools, in four groups</h2>
+      <h2 id="index-en-3">Nineteen tools, in four groups</h2>
       <p class="prose">Laid out as the test activities: capture the evidence, let the machine
         check what it can, design the values worth trying, then break things on purpose. One line
         each, no more, because the button beside it says the rest.</p>
 
-      <div class="table-scroll">
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <caption>Every tool the popup offers, grouped the way it groups them.</caption>
           <thead><tr><th scope="col">Group</th><th scope="col">Tool</th><th scope="col">What it does</th></tr></thead>
@@ -129,37 +155,37 @@
             <tr><td>Stress the layout</td><td>Flip the page right-to-left and lengthen every label, the way a translation would.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section>
       <p class="eyebrow">Screens</p>
-      <h2>What you are looking at</h2>
+      <h2 id="index-en-4">What you are looking at</h2>
       <div class="shots">
         <figure>
-          <img src="assets/shots/1-report-broke-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/1-report-broke-3.8.0.png" width="1280" height="800"
                alt="The QA Wrap report for a session titled Application submit returns 500. A red Failed badge sits above the headline POST /api/applications 500, right after: Clicked Submit application, with the three steps to reproduce listed beside it and the third highlighted. Chips read 1 traced failure, 1 related error and 7 accessibility issues, and the What broke tab shows the click and the failed request side by side.">
           <figcaption>The failure and the click before it: the headline names the request, the steps to reproduce end on the click that caused it, and nothing says Passed.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/2-popup-recording-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/2-popup-recording-3.8.0.png" width="1280" height="800"
                alt="The QA Wrap popup during a session. A card reads Awake, allowed on every site, with a Sleep button. A progress line reads 4 of 7 activities, next Design. The session Application submit returns 500 shows 10 events and 9 problems, above a note field, a Screenshot and note button and a Stop and review button.">
           <figcaption>The popup mid-session. The card at the top always says whether the window is
             awake, because that is the switch behind every greyed-out tool.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/3-inpage-bar-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/3-inpage-bar-3.8.0.png" width="1280" height="800"
                alt="The QA Wrap bar docked at the bottom of a plain application form during a session. It shows a recording timer, a red problems chip reading 4, a Stop and review button and the four purpose tabs.">
           <figcaption>The bar keeps a live count of problems, 4 here, so you know a failure happened before you open the report.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/4-inpage-palette-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/4-inpage-palette-3.8.0.png" width="1280" height="800"
                alt="A plain application form with the QA Wrap value palette open over the Applicant name field. It lists boundary values including empty, single space, leading and trailing spaces, exactly max 40 characters and max plus one, then a section of Arabic and right-to-left values.">
           <figcaption>The value palette reads what the field declares, then offers the partitions
             and boundaries for it. Arabic and right-to-left cases sit in the same list.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/5-report-filing-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/5-report-filing-3.8.0.png" width="1280" height="800"
                alt="The File to Jira dialog open over the report. It shows the project APP, issue type Bug, a drafted summary, how severity maps to a Jira priority, and a list of what will be sent and what will not.">
           <figcaption>File to Jira in one dialog that lists what is sent and what is not: cookies, passwords and other tabs never leave the browser.</figcaption>
         </figure>
@@ -170,7 +196,7 @@
 
     <section>
       <p class="eyebrow">Local-first</p>
-      <h2>Nothing leaves your machine</h2>
+      <h2 id="index-en-5">Nothing leaves your machine</h2>
       <div class="prose">
         <p>There is no QA Wrap server, and the only destinations are the Jira site, tracker or webhook you configure. Sessions, screenshots and recordings are written to
           IndexedDB inside your own browser profile. The extension makes no request of its own,
@@ -188,10 +214,11 @@
 
     <section>
       <p class="eyebrow">Browsers</p>
-      <h2>Two packages, one codebase</h2>
+      <h2 id="index-en-6">Two packages, one codebase</h2>
       <p class="prose">The content scripts, the interface, the exporters and the ISTQB model are
         identical in both. Only the manifest differs, and only where an engine forces it.</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <caption>What each package can do, and where it is honest about not being able to.</caption>
           <thead>
@@ -202,12 +229,12 @@
             <tr><th scope="row">Edge</th><td>Chromium</td><td>Identical to the Chrome build. Listed separately because the store is.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section id="store">
       <p class="eyebrow">Installing it</p>
-      <h2>Download and install</h2>
+      <h2 id="index-en-7">Download and install</h2>
       <div class="prose">
         <ol>
           <li>Open the <a href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest">latest release</a> and download the zip for your browser. Unzip it to a folder you will keep.</li>
@@ -233,7 +260,8 @@
     <div data-lang-block="ar" lang="ar" dir="rtl">
 
     <section class="hero">
-      <h1>QA Wrap</h1>
+      <p class="hero-banner"><a href="./"><img src="assets/banner.gif" alt="بانر QA Wrap المتحرك" width="1280" height="640" onerror="this.parentNode.parentNode.hidden=true"></a></p>
+      <p class="h1" role="heading" aria-level="1">QA Wrap: سجّل جلسة الاختبار، واحصل على تقرير الخلل</p>
       <p class="tagline">كل عطل، متتبع.</p>
       <p class="lead prose">مجانية ومحلية. سجل جلسة اختبار، وانظر النقرة التي تقف وراء كل عطل،
         وسلم سجلا للجلسة: يرفع إلى Jira أو أداة تتبع أو محادثة، أو يحفظ ملفات في مجلد تختاره.</p>
@@ -241,18 +269,26 @@
         <a class="cta" href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest">نزّل آخر إصدار</a>
         <span class="note">مجاني، برخصة MIT. راجع <a href="#store">كيفية التثبيت</a>.</span>
       </p>
+      <ul class="quick">
+        <li><a href="#store">تثبيت في 3 دقائق</a></li>
+        <li><a href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest">آخر إصدار</a></li>
+        <li><a href="privacy.html">الخصوصية</a></li>
+      </ul>
+      <p class="hero-banner"><a href="./"><img loading="lazy" decoding="async" loading="lazy" decoding="async" src="assets/banner.gif" alt="QA Wrap, animated banner" width="1280" height="640" onerror="this.parentNode.parentNode.hidden=true"></a></p>
     </section>
+      <ul class="toc"><li><a href="#index-ar-2">ثلاثة أمور، بهذا الترتيب</a></li><li><a href="#index-ar-3">تسع عشرة أداة، في أربع مجموعات</a></li><li><a href="#index-ar-4">ما الذي تراه</a></li><li><a href="#index-ar-5">لا شيء يغادر جهازك</a></li><li><a href="#index-ar-6">حزمتان، قاعدة شيفرة واحدة</a></li><li><a href="#index-ar-7">التنزيل والتثبيت</a></li></ul>
+
 
     <section class="film">
       <p class="eyebrow">شاهدها</p>
-      <h2>شاهد الفيلم في 40 ثانية</h2>
-      <video controls preload="none" width="100%" poster="media/qa-wrap-commercial-40s.jpg" src="media/qa-wrap-commercial-40s-ar.mp4">متصفحك لا يشغّل هذا الفيديو.</video>
+      <h2 id="index-ar-1">شاهد الفيلم في 40 ثانية</h2>
+      <video controls preload="none" width="100%" poster="media/qa-wrap-commercial-40s-1280.jpg" src="media/qa-wrap-commercial-40s-ar.mp4">متصفحك لا يشغّل هذا الفيديو.</video>
       <p class="note"><a href="media/qa-wrap-commercial-40s-9x16.mp4">النسخة العمودية</a></p>
     </section>
 
     <section>
       <p class="eyebrow">ما الذي تفعله الأداة</p>
-      <h2>ثلاثة أمور، بهذا الترتيب</h2>
+      <h2 id="index-ar-2">ثلاثة أمور، بهذا الترتيب</h2>
 
       <div class="prose">
         <h3>سجل جلسة</h3>
@@ -277,12 +313,13 @@
 
     <section>
       <p class="eyebrow">مجموعة الأدوات</p>
-      <h2>تسع عشرة أداة، في أربع مجموعات</h2>
+      <h2 id="index-ar-3">تسع عشرة أداة، في أربع مجموعات</h2>
       <p class="prose">مرتبة على شكل أنشطة الاختبار: التقط الدليل، دع الآلة تفحص ما تستطيعه،
         صمم القيم الجديرة بالتجربة، ثم أخل بالأمور عمدا. سطر واحد لكل أداة، لا أكثر، لأن الزر
         المجاور لها يقول الباقي.</p>
 
-      <div class="table-scroll">
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <caption>كل أداة تعرضها القائمة المنبثقة، مجمعة كما تجمعها هي.</caption>
           <thead><tr><th scope="col">المجموعة</th><th scope="col">الأداة</th><th scope="col">ما تفعله</th></tr></thead>
@@ -308,37 +345,37 @@
             <tr><td>اختبر التخطيط تحت الضغط</td><td>اقلب اتجاه الصفحة إلى اليمين، وأطل كل تسمية كما تفعل الترجمة.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section>
       <p class="eyebrow">الشاشات</p>
-      <h2>ما الذي تراه</h2>
+      <h2 id="index-ar-4">ما الذي تراه</h2>
       <div class="shots">
         <figure>
-          <img src="assets/shots/ar/1-report-broke-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/ar/1-report-broke-3.8.0.png" width="1280" height="800"
                alt="تقرير QA Wrap لجلسة عنوانها: إرسال الطلب يعيد الخطأ 500. شارة حمراء تقرأ فشل فوق العنوان: طلب POST إلى api/applications يعيد 500 مباشرة بعد: ضغط إرسال الطلب، وبجانبه خطوات إعادة الإنتاج الثلاث والثالثة مميزة. تقرأ الشارات: عطل واحد متتبع، وخطأ واحد مرتبط، و7 مشكلات وصول، وتبويب ما الذي تعطل يعرض الضغطة والطلب الفاشل جنبا إلى جنب.">
           <figcaption>العطل والضغطة التي سبقته: العنوان يسمي الطلب، وخطوات إعادة الإنتاج تنتهي عند الضغطة التي سببته، ولا شيء فيه يقول نجح.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/ar/2-popup-recording-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/ar/2-popup-recording-3.8.0.png" width="1280" height="800"
                alt="القائمة المنبثقة لـ QA Wrap أثناء جلسة. بطاقة تقرأ: مستيقظة، مسموح على كل موقع، مع زر نوم. سطر تقدم يقرأ: 4 من 7 أنشطة، والتالي التصميم. تظهر الجلسة إرسال الطلب يعيد الخطأ 500 عشرة أحداث و9 مشكلات، فوق حقل ملاحظة وزر لقطة وملاحظة وزر أوقف وراجع.">
           <figcaption>القائمة المنبثقة في منتصف الجلسة. البطاقة أعلاها تقول دائما إن كانت النافذة
             مستيقظة، لأن ذلك هو المفتاح خلف كل أداة رمادية اللون.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/ar/3-inpage-bar-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/ar/3-inpage-bar-3.8.0.png" width="1280" height="800"
                alt="شريط QA Wrap مثبتا أسفل نموذج طلب بسيط أثناء جلسة. يظهر فيه مؤقت التسجيل، وشارة حمراء للمشكلات تقرأ 4، وزر أوقف وراجع، وتبويبات الأغراض الأربعة.">
           <figcaption>الشريط يعد المشكلات أثناء الاختبار، وهي 4 هنا، فتعرف أن عطلا وقع قبل أن تفتح التقرير.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/ar/4-inpage-palette-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/ar/4-inpage-palette-3.8.0.png" width="1280" height="800"
                alt="نموذج طلب بسيط ولوحة قيم QA Wrap مفتوحة فوق حقل اسم مقدم الطلب. تسرد قيما حدية منها: فارغ، مسافة واحدة، مسافات بادئة ولاحقة، الحد الأقصى بالضبط 40 حرفا، والحد الأقصى زائد واحد، ثم قسم لقيم عربية واتجاه من اليمين لليسار.">
           <figcaption>لوحة القيم تقرأ ما تعلنه الخانة، ثم تعرض التجزئات والقيم الحدية المناسبة
             لها. الحالات العربية واتجاه اليمين لليسار في القائمة نفسها.</figcaption>
         </figure>
         <figure>
-          <img src="assets/shots/ar/5-report-filing-3.8.0.png" width="1280" height="800"
+          <img loading="lazy" decoding="async" src="assets/shots/ar/5-report-filing-3.8.0.png" width="1280" height="800"
                alt="نافذة رفع إلى Jira مفتوحة فوق التقرير. تعرض المشروع APP ونوع المهمة Bug وملخصا مسودة وكيف تتحول الشدة إلى أولوية في Jira وقائمة بما سيرسل وما لن يرسل.">
           <figcaption>رفع إلى Jira في نافذة واحدة تسرد ما يرسل وما لا يرسل: ملفات تعريف الارتباط وكلمات المرور والتبويبات الأخرى لا تغادر المتصفح.</figcaption>
         </figure>
@@ -349,7 +386,7 @@
 
     <section>
       <p class="eyebrow">محلي أولا</p>
-      <h2>لا شيء يغادر جهازك</h2>
+      <h2 id="index-ar-5">لا شيء يغادر جهازك</h2>
       <div class="prose">
         <p>لا يوجد خادم لـ QA Wrap، ولا وجهة سوى موقع Jira أو أداة تتبع أو ويب هوك تعدها أنت. تكتب الجلسات ولقطات الشاشة والتسجيلات في قاعدة بيانات
           IndexedDB داخل ملف متصفحك الشخصي. لا ترسل الأداة أي طلب من عندها، ولا تحمل أي تحليلات
@@ -364,11 +401,12 @@
 
     <section>
       <p class="eyebrow">المتصفحات</p>
-      <h2>حزمتان، قاعدة شيفرة واحدة</h2>
+      <h2 id="index-ar-6">حزمتان، قاعدة شيفرة واحدة</h2>
       <p class="prose">النصوص البرمجية المدرجة في الصفحة، والواجهة، ووحدات التصدير، ونموذج
         ISTQB متطابقة في الحزمتين. يختلف فقط ملف الإعلان (manifest)، وفقط حيث يفرض
         المحرك ذلك.</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <caption>ما تستطيع كل حزمة فعله، وأين تصرح بصدق بما لا تستطيعه.</caption>
           <thead>
@@ -379,12 +417,12 @@
             <tr><th scope="row">Edge</th><td>Chromium</td><td>مطابقة لنسخة Chrome. مدرجة على حدة لأن المتجر يفعل ذلك.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section id="store">
       <p class="eyebrow">التثبيت</p>
-      <h2>التنزيل والتثبيت</h2>
+      <h2 id="index-ar-7">التنزيل والتثبيت</h2>
       <div class="prose">
         <ol>
           <li>افتح <a href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest">آخر إصدار</a> ونزّل ملف zip الخاص بمتصفحك، ثم فك ضغطه في مجلد تحتفظ به.</li>
@@ -409,6 +447,31 @@
 
   </div>
 </main>
+
+<section class="more" aria-labelledby="more-en"><div class="wrap">
+  <div data-lang-block="en" lang="en" dir="ltr">
+    <h2 id="more-en">More from NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>Portfolio</strong><small>Nader's work and projects</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>Skills for Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>Your profile as a page</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>All the open repositories</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>Contact</strong><small>Say hello on the portfolio</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
+<section class="more" aria-labelledby="more-ar"><div class="wrap">
+  <div data-lang-block="ar" lang="ar" dir="rtl">
+    <h2 id="more-ar">المزيد من NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>المعرض</strong><small>أعمال نادر ومشاريعه</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>مهارات لـ Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>ملفك الشخصي كصفحة</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>كل المستودعات المفتوحة</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>تواصل</strong><small>راسله من المعرض</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
 
 <footer>
   <div class="wrap">

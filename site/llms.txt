@@ -1,0 +1,13 @@
+# QA Wrap
+
+> QA Wrap is a free, open-source (MIT) browser extension for manual testers. It records a test session, links every failure to the click that caused it, and files the bug report. Local-first: nothing leaves the computer until you press a button. English and Arabic.
+
+- [Home](https://nj-burrito.github.io/QA-Wrap/): what it does, the toolkit, install steps
+- [Latest release](https://github.com/NJ-Burrito/QA-Wrap/releases/latest): zip per browser (Chrome, Edge, Brave, Opera, Vivaldi, Arc, Yandex, Chromium, Firefox temporary)
+- [Source](https://github.com/NJ-Burrito/QA-Wrap): README in English and Arabic
+- [Privacy](https://nj-burrito.github.io/QA-Wrap/privacy.html)
+- [Trust](https://nj-burrito.github.io/QA-Wrap/trust.html): how to check that nothing is sent
+- [Support](https://nj-burrito.github.io/QA-Wrap/support.html)
+- [Terms](https://nj-burrito.github.io/QA-Wrap/terms.html)
+
+Maker: Nader Alzghoul, https://nj-burrito.github.io/
