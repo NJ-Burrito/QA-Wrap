@@ -6,6 +6,12 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.6.9, 2026-10-23
+
+### Changed
+
+- Maintenance release to try the one-press update from the previous version. Your sessions, notes and settings stay as they are.
+
 ## 3.6.8, 2026-10-23
 
 - Added: a banner for the 40-second film.
