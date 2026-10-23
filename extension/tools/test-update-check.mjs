@@ -126,6 +126,21 @@ await test('the release zip qa-wrap-<version>.zip is chosen over per-browser zip
   assert.equal(pickRelease(release({ assets: [a('qa-wrap-3.6.0.zip', 'https://evil.example/x')] }), 'o/r').zipApi, '');
 });
 
+await test('each build picks its own zip: qa-wrap-<ver>-<dist>.zip, else the chrome alias qa-wrap-<ver>.zip; managed has its own', () => {
+  const a = (name) => ({ name, browser_download_url: `https://github.com/o/r/releases/download/v3.8.0/${name}`, url: '' });
+  const all = ['qa-wrap-3.8.0.zip', 'qa-wrap-3.8.0-chrome.zip', 'qa-wrap-3.8.0-edge.zip', 'qa-wrap-3.8.0-firefox.zip', 'qa-wrap-3.8.0-chrome-managed.zip'].map(a);
+  const pick = (assets, dist) => pickRelease(release({ tag_name: 'v3.8.0', assets }), 'o/r', dist).zip.split('/').pop();
+  assert.equal(pick(all, 'edge'), 'qa-wrap-3.8.0-edge.zip');
+  assert.equal(pick(all, 'firefox'), 'qa-wrap-3.8.0-firefox.zip');
+  assert.equal(pick(all, 'chrome-managed'), 'qa-wrap-3.8.0-chrome-managed.zip');
+  assert.equal(pick(all, 'chrome'), 'qa-wrap-3.8.0-chrome.zip');
+  // an old release (3.7.x) has only the alias: every dist falls back to it
+  const old = [a('qa-wrap-3.8.0.zip'), a('qa-wrap-3.8.0.zip.sha256')];
+  for (const d of ['edge', 'brave', 'firefox', 'operagx']) assert.equal(pick(old, d), 'qa-wrap-3.8.0.zip', d);
+  // the default is this file's own BUILD_DIST (chrome in the source tree)
+  assert.equal(pickRelease(release({ tag_name: 'v3.8.0', assets: all }), 'o/r').zip.split('/').pop(), 'qa-wrap-3.8.0-chrome.zip');
+});
+
 await test('a release page or zip that is not on github.com is never trusted', () => {
   const r = pickRelease(release({ html_url: 'https://evil.example/x', assets: [{ browser_download_url: 'https://evil.example/a.zip' }] }), 'o/r');
   assert.equal(r.url, 'https://github.com/o/r/releases/latest');

@@ -54,7 +54,8 @@ mkdir "$WORK/new" && unzip -q "$ZIPF" -d "$WORK/new" || fail "could not unzip"
 if find "$WORK/new" | grep -q '\.\./'; then fail "unsafe path in zip"; fi
 NM="$WORK/new/manifest.json"
 [ -f "$NM" ] || fail "no manifest.json at the top of the zip"
-[ "$(jfield key "$NM")" = "$(jfield key "$FOLDER/manifest.json")" ] && [ "$(jfield name "$NM")" = "$(jfield name "$FOLDER/manifest.json")" ] || fail "not the same extension"
+# same extension AND same build family: Chromium builds carry "key", Gecko builds carry the gecko "id" instead
+for f in key name id; do [ "$(jfield $f "$NM")" = "$(jfield $f "$FOLDER/manifest.json")" ] || fail "not the same extension"; done
 [ "$(jfield version "$NM")" = "$VERSION" ] || fail "zip is $(jfield version "$NM"), expected $VERSION"
 OLD=$(jfield version "$FOLDER/manifest.json")
 [ "$(printf '%s\n%s\n' "$OLD" "$VERSION" | sort -V | tail -n1)" = "$VERSION" ] && [ "$OLD" != "$VERSION" ] || fail "not newer than the installed version"

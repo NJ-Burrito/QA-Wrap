@@ -6,6 +6,19 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.8.0, 2026-10-23
+
+### Changed
+
+- One-press update now works for every browser build. Each release carries a zip for Chrome, Edge, Brave, Opera, Opera GX, DuckDuckGo and Firefox, and a build updates to its own zip (the Chrome zip stays available under its old name). The updater refuses a zip that is not the same extension and the same kind of build, so an Edge install never gets the Firefox files.
+- The one-time updater step (install.cmd on Windows, install.sh on Mac and Linux) now finds the browsers on your computer and registers each one: Chrome (stable, Beta, Dev, Canary), Chromium, Edge (and its Beta, Dev, Canary), Brave (and Beta, Nightly), Vivaldi, Opera, Opera GX, Yandex and Arc, plus Firefox. It tells you which ones in English and Arabic.
+- The README has an install table per browser: which zip to download, where "Load unpacked" is, and the updater step. It says plainly that Firefox keeps an add-on permanently only when it is signed (not done yet), and that Safari needs a Mac with Xcode and has no one-press update.
+
+### Fixed
+
+- The test pipeline check no longer fails on the hand-run hung-frame test (it is now listed as a headed, hand-run e2e).
+- The lock file now shows the same version as the package.
+
 ## 3.7.1, 2026-10-23
 
 ### Changed

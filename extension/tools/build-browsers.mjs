@@ -313,7 +313,9 @@ for (const id of targets) {
   const rlSrc = fs.readFileSync(rl, 'utf8');
   const rlOut = rlSrc.replace(/^export const BUILD_DIST = '[a-z]+';/m, `export const BUILD_DIST = '${id}';`);
   if (rlOut === rlSrc && id !== 'chrome') throw new Error('core/rate-links.js: BUILD_DIST line not found');
-  fs.writeFileSync(rl, rlOut);
+  const rlFlav = rlOut.replace(/^export const BUILD_FLAVOUR = '[a-z]*';/m, `export const BUILD_FLAVOUR = '${FLAVOUR || ''}';`);
+  if (rlFlav === rlOut && FLAVOUR) throw new Error('core/rate-links.js: BUILD_FLAVOUR line not found');
+  fs.writeFileSync(rl, rlFlav);
   fs.writeFileSync(path.join(dir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   fs.writeFileSync(path.join(dir, 'BROWSER.md'), readmeFor(id, changes));
   files += 2; // the two written above rather than copied

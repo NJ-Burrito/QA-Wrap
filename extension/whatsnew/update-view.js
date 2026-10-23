@@ -114,7 +114,7 @@ export async function start({ doc = document, api = chrome, tr, nav = navigator,
   }
 
   function manual(rel) { // the only place the zip is downloaded
-    if (rel.zip) api.downloads.download({ url: rel.zip, filename: `qa-wrap-${rel.version}.zip`, conflictAction: 'uniquify' }).catch(() => {});
+    if (rel.zip) api.downloads.download({ url: rel.zip, filename: String(rel.zip).split('/').pop() || `qa-wrap-${rel.version}.zip`, conflictAction: 'uniquify' }).catch(() => {});
     const list = el('ol', null, 'wn-steps');
     [[ICON.download, 'update.step1'], [ICON.folder, 'update.upd2.manual2'], [ICON.change, 'update.step2']].forEach(([d, k]) => { const li = el('li'); li.append(ico(d), el('span', tr(k))); list.append(li); });
     const actions = el('div', null, 'wn-actions'); actions.append(btn(tr('update.upd2.back'), '', () => missing(rel)));
