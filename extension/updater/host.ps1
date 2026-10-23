@@ -25,6 +25,7 @@ function Write-Message($obj) {
   $out.Write($bytes, 0, $bytes.Length)
   $out.Flush()
 }
+function Stage($name) { if (-not $MessageFile) { Write-Message @{ stage = $name } } } # progress for the update page; the final answer still comes last
 function Clear-Folder($dir) { Get-ChildItem -LiteralPath $dir -Force | Remove-Item -Recurse -Force }
 function Fill-Folder($from, $dir) { Get-ChildItem -LiteralPath $from -Force | Copy-Item -Destination $dir -Recurse -Force }
 
@@ -52,6 +53,7 @@ function Invoke-Update($cfg, $m) {
   New-Item -ItemType Directory $work | Out-Null
   $zip = Join-Path $work 'release.zip'
   try {
+    Stage 'downloading'
     if ($m.localZip -and $MessageFile) { Copy-Item $m.localZip $zip } # test hook only
     else {
       $h = $UA.Clone()
@@ -63,6 +65,7 @@ function Invoke-Update($cfg, $m) {
         Invoke-WebRequest $m.zip -Headers $UA -OutFile $zip
       } else { throw 'the download address is not this repository' }
     }
+    Stage 'checking'
     if ($m.sha256 -and ((Get-FileHash $zip -Algorithm SHA256).Hash.ToLower() -ne "$($m.sha256)".ToLower())) { throw 'checksum mismatch' }
     $new = Join-Path $work 'new'
     Expand-Archive -LiteralPath $zip -DestinationPath $new -Force
@@ -75,6 +78,7 @@ function Invoke-Update($cfg, $m) {
     if ($nman.version -ne $m.version) { throw "zip is $($nman.version), expected $($m.version)" }
     if ([version]$nman.version -le [version]$installed.version) { throw 'not newer than the installed version' }
 
+    Stage 'installing'
     $backup = "$folder.backup-$($installed.version)"
     Get-ChildItem -LiteralPath (Split-Path $folder) -Directory -Filter ((Split-Path $folder -Leaf) + '.backup-*') | Remove-Item -Recurse -Force # keep only the newest backup
     Copy-Item -LiteralPath $folder -Destination $backup -Recurse
@@ -97,7 +101,8 @@ try {
   $cfg = Get-Content -LiteralPath $ConfigPath -Raw | ConvertFrom-Json
   $raw = if ($MessageFile) { Get-Content -LiteralPath $MessageFile -Raw } else { Read-Message }
   $m = $raw | ConvertFrom-Json
-  if ($m.op -ne 'update') { throw 'unknown op' }
-  $res = Invoke-Update $cfg $m
+  if ($m.op -eq 'ping') { $res = @{ ok = $true; ping = $true } }
+  elseif ($m.op -ne 'update') { throw 'unknown op' }
+  else { $res = Invoke-Update $cfg $m }
 } catch { $res = @{ ok = $false; error = "$($_.Exception.Message)" } }
 if ($MessageFile) { $res | ConvertTo-Json -Compress } else { Write-Message $res }
