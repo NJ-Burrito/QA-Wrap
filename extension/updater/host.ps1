@@ -74,7 +74,9 @@ function Invoke-Update($cfg, $m) {
     $nm = Join-Path $new 'manifest.json'
     if (-not (Test-Path $nm)) { throw 'no manifest.json at the top of the zip' }
     $nman = Get-Content -LiteralPath $nm -Raw | ConvertFrom-Json
-    if ($nman.name -ne $installed.name -or $nman.key -ne $installed.key) { throw 'not the same extension (name or key differs)' }
+    # Same extension AND same build family: an Edge install never takes the Firefox zip (Chromium builds carry the key, Gecko builds carry the gecko id instead).
+    $gid = { param($x) "$($x.browser_specific_settings.gecko.id)" }
+    if ($nman.name -ne $installed.name -or "$($nman.key)" -ne "$($installed.key)" -or (& $gid $nman) -ne (& $gid $installed)) { throw 'not the same extension (name, key or add-on id differs)' }
     if ($nman.version -ne $m.version) { throw "zip is $($nman.version), expected $($m.version)" }
     if ([version]$nman.version -le [version]$installed.version) { throw 'not newer than the installed version' }
 

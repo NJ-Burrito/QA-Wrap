@@ -7,6 +7,8 @@
  * Every failure (404 included: a private repo without a token) is silent: the answer is the old state, or null (nothing to write).
  */
 
+import { BUILD_DIST, BUILD_FLAVOUR } from './rate-links.js';
+
 const REPO_RE = /^\w[\w.-]*\/\w[\w.-]*$/;
 const BACKOFF_MS = 60 * 60 * 1000;
 const NOTES_MAX = 4000;
@@ -31,10 +33,14 @@ export const validRepo = (repo) => REPO_RE.test(String(repo ?? '')) && repo !== 
 const safeUrl = (u, fallback) => (/^https:\/\/github\.com\//.test(String(u)) ? String(u) : fallback);
 
 /** The release JSON -> what the card needs, or null for a draft, a pre-release or a tag that is not a clean version. */
-export function pickRelease(j, repo) {
+export function pickRelease(j, repo, dist = BUILD_DIST + (BUILD_FLAVOUR ? `-${BUILD_FLAVOUR}` : '')) {
   if (!j || j.draft || j.prerelease || !parseVersion(j.tag_name)) return null;
   const zips = (Array.isArray(j.assets) ? j.assets : []).filter((a) => /\.zip$/i.test(String(a?.browser_download_url)) && /^https:\/\/github\.com\//.test(String(a?.browser_download_url)));
-  const z = zips.find((a) => /^qa-wrap-\d+\.\d+\.\d+\.zip$/.test(String(a?.name))) || zips[0]; // the release zip, not a per-browser one
+  const ver = String(j.tag_name).replace(/^v/, '');
+  const named = (n) => zips.find((a) => String(a?.name) === n);
+  // This build's own asset (qa-wrap-<ver>-<dist>.zip), else the chrome alias qa-wrap-<ver>.zip that 3.6.x-3.7.x releases carry.
+  // The host still checks the zip's name and key before it swaps anything.
+  const z = named(`qa-wrap-${ver}-${dist}.zip`) || named(`qa-wrap-${ver}.zip`) || zips.find((a) => /^qa-wrap-\d+\.\d+\.\d+\.zip$/.test(String(a?.name))) || zips[0];
   const api = /^https:\/\/api\.github\.com\/repos\//.test(String(z?.url)) ? String(z.url) : ''; // the token-readable asset URL of a private repo
   const clean = (s) => String(s ?? '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').slice(0, NOTES_MAX);
   return {
