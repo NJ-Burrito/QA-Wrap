@@ -54,7 +54,7 @@ test('the package stays small: what shipping() copies is under 6.85 MB', () => {
 test('the page builds no remote address, and the extension-page CSP allows only own media and images', () => {
   const js = read(path.join(EXT, 'tutorials', 'tutorials.js'));
   assert.ok(!js.includes('PRODUCT.urls'), 'the tutorials page reads a web address again');
-  assert.ok(js.includes('const FILM_LIVE = false;') && js.includes("(f) => (FILM_LIVE && f === FILM_FILE ? FILM_URL : '')"), 'hostedUrl is not the gated stub');
+  assert.ok(js.includes('const FILM_LIVE = true;') && js.includes("(f) => (FILM_LIVE && f === FILM_FILE ? FILM_URL : '')"), 'hostedUrl is not the gated stub');
   const csp = JSON.parse(read(path.join(EXT, 'manifest.json'))).content_security_policy.extension_pages;
   for (const d of ["img-src 'self' data: blob:", "media-src 'self' blob:", "form-action 'none'"]) assert.ok(csp.includes(d), d);
   assert.ok(!/media\/\$\{/.test(js), 'a packaged media/ path is back');
