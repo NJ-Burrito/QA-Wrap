@@ -7,7 +7,7 @@
  * Every failure (404 included: a private repo without a token) is silent: the answer is the old state, or null (nothing to write).
  */
 
-import { BUILD_DIST, BUILD_FLAVOUR } from './rate-links.js';
+import { BUILD_DIST, BUILD_FLAVOUR, BUILD_STORE } from './rate-links.js';
 
 const REPO_RE = /^\w[\w.-]*\/\w[\w.-]*$/;
 const BACKOFF_MS = 60 * 60 * 1000;
@@ -79,6 +79,7 @@ export async function checkLatest({ repo, current, state = {}, token = '', fetch
 
 /** The offscreen door: `{ state, version }` from the worker -> the state to store, or null. */
 export async function run({ state, version, token }) {
+  if (BUILD_STORE) return null;
   const src = await (await fetch(new URL('./update-source.json', import.meta.url))).json();
   return checkLatest({ repo: src.repo, current: version, state, token });
 }

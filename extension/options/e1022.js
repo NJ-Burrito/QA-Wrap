@@ -30,6 +30,8 @@ async function mount(doc) {
   }
   if (!$('upd-check')) return;
   await globalThis.QAWi18n.ready?.();
+  const { BUILD_STORE } = await import('../core/rate-links.js');
+  if (BUILD_STORE) for (const id of ['upd-auto', 'upd-check', 'upd-now', 'upd-status', 'check-updates', 'update-token', 'sec-updates']) { const e = $(id); if (id === 'sec-updates') e?.querySelectorAll('h3.sub-head, [data-i18n="options.e1022.updIntro"]').forEach((n) => (n.hidden = true)); else if (e) (e.closest('.field, .auto-upd, label') || e).hidden = true; } // store build: the store updates it
   const { describe } = await import('../core/product.js');
   const d = describe();
   const version = chrome.runtime.getManifest().version;
@@ -45,6 +47,7 @@ async function mount(doc) {
     return found;
   };
   await paint();
+  if (BUILD_STORE) return;
   chrome.storage.onChanged.addListener((c, area) => { if (area === 'local' && ('qawUpdate' in c || 'qawUpdateTried' in c)) paint(); });
   $('upd-check').addEventListener('click', async () => {
     const btn = $('upd-check');
