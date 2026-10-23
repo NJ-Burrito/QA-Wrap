@@ -1,10 +1,10 @@
 <div align="center">
 
-# QA Wrap
+# 🧪 QA Wrap
 
-## Test the page. Get the bug report.
+### Test the page. Get the bug report.
 
-## Nothing leaves your computer until you press a button.
+### 🔒 Nothing leaves your computer until you press a button.
 
 [![License](https://img.shields.io/badge/licence-MIT-green.svg)](LICENSE)
 [![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white)](#install)
@@ -13,26 +13,37 @@
 
 **QA Wrap is a local-first QA toolkit that lives in your browser.** It records a test session, links every failure to the action that caused it, and writes the bug report for you. [العربية](README.ar.md)
 
-[![Watch the 40-second film](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-1280.jpg)](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
+[![QA Wrap animated banner](site/assets/banner.gif)](https://nj-burrito.github.io/QA-Wrap/)
 
-[Website](https://nj-burrito.github.io/QA-Wrap/) · [Download the latest release](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · [Install](#install) · [Updates](#updates) · [Privacy](#privacy)
+🌐 [Website](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [Download](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · 🚀 [Install](#install) · 🔄 [Updates](#updates) · 🔒 [Privacy](#privacy) · 🧰 [More from NJ](#more-from-nj)
 
 </div>
 
-## What it does
+## ⚡ In 10 seconds
 
-- **Records a session**: you press Start, test as usual, press Stop. Clicks, typing (sensitive values removed), page errors and network failures are kept in order.
-- **Links each failure to its cause**: the report shows the action just before every problem.
-- **Writes the report**: one press copies a ready bug report (title, steps, what happened, evidence). Sending to Jira and other trackers is one button away.
-- **Arabic and English**, right to left where it should be.
+- 🎯 **What:** a browser extension that records your test and writes the bug report.
+- 🙋 **Why you:** you test web pages and are tired of retyping steps and hunting for the click behind each failure.
+- 🚀 **How:** [download the zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest), extract it, **Load unpacked** in `chrome://extensions`. About 3 minutes, once. Full steps [below](#install).
+
+## 🛠️ What it does
+
+- 🎬 **Records a session**: you press Start, test as usual, press Stop. Clicks, typing (sensitive values removed), page errors and network failures are kept in order.
+- 🔗 **Links each failure to its cause**: the report shows the action just before every problem.
+- 📝 **Writes the report**: one press copies a ready bug report (title, steps, what happened, evidence). Sending to Jira and other trackers is one button away.
+- 🌍 **Arabic and English**, right to left where it should be.
+
+🎞️ [Watch the 40-second film](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
 
 <a id="install"></a>
 
-## Install (about 3 minutes, once)
+## 🚀 Install (about 3 minutes, once)
 
 QA Wrap is not in the Chrome Web Store, so you load it by hand. Chrome only allows that with **Developer mode** switched on. It is a normal Chrome switch and installs nothing by itself.
 
 You need a Chromium browser at version 116 or newer. Chrome and Edge are the tested browsers; the others below work the same way. Windows, Mac and Linux are supported.
+
+<details>
+<summary>🌐 Other browsers (Edge, Brave, Opera, Vivaldi, Arc, Yandex, Firefox, Safari)</summary>
 
 | Browser | Zip to download (under **Assets**) | Where "Load unpacked" is | One-time updater step |
 | --- | --- | --- | --- |
@@ -54,6 +65,8 @@ The updater step registers itself for every browser it finds on your computer an
 
 **Safari is not packaged.** It needs a Mac with Xcode to turn the build into an app (`xcrun safari-web-extension-converter`), and one-press update is not available there.
 
+</details>
+
 1. Open the [latest release](https://github.com/NJ-Burrito/QA-Wrap/releases/latest).
 2. Under **Assets**, click the zip for your browser from the table (the Chrome one is **qa-wrap-VERSION.zip**). It lands in your Downloads folder.
 3. Make a folder where it can stay, for example `C:\QA Wrap`. **Do not use Downloads**: if the folder is deleted, QA Wrap disappears from Chrome.
@@ -73,7 +86,7 @@ Chrome may show "Disable developer mode extensions" when it starts. Press the **
 
 <a id="updates"></a>
 
-## How updates work
+## 🔄 How updates work
 
 Each time Chrome starts (and then once a day), QA Wrap asks GitHub whether a newer release exists. It sends nothing about you or your tests. If there is one, a small **Update** card appears in the QA Wrap popup and in Settings. It never blocks you.
 
@@ -82,11 +95,16 @@ Each time Chrome starts (and then once a day), QA Wrap asks GitHub whether a new
 - Your sessions, recordings, notes and settings are stored in your Chrome profile, not in the extension folder, so an update never touches them.
 - Skipped step 8, or declined the permission? Update then downloads the zip and shows three steps: extract it over the same folder, open `chrome://extensions`, press **Reload** on QA Wrap.
 
+<details>
+<summary>🔑 Optional: forks and private mirrors</summary>
+
 *Optional, for forks and private mirrors.* If you run QA Wrap from a private fork, GitHub hides its releases from anyone not signed in, so the check stays silent unless you give it a key. In QA Wrap **Settings > Check for updates**, paste a read-only GitHub token (a fine-grained token with *Contents: read-only* on that repository). The public repository needs no token. It stays in your browser profile, is shown masked, and is sent only to GitHub. Remove it any time. The check can be switched off in the same place.
+
+</details>
 
 <a id="privacy"></a>
 
-## Privacy
+## 🔒 Privacy
 
 - Everything QA Wrap records stays in your browser on your computer.
 - Nothing is sent anywhere until you press a button that says so (for example Send to Jira).
@@ -95,11 +113,12 @@ Each time Chrome starts (and then once a day), QA Wrap asks GitHub whether a new
 
 Details: [PRIVACY.md](extension/PRIVACY.md) ([العربية](extension/PRIVACY.ar.md)).
 
-## Problems?
+## 🆘 Problems?
 
 Open an issue in this repository, or see the portfolio at https://nj-burrito.github.io.
 
-## For developers
+<details>
+<summary>👩‍💻 For developers</summary>
 
 Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pick `extension/`. Tests: `cd extension && npm test`. Release zip: `npm run release:zip` (writes `dist/qa-wrap-<version>.zip`). Pushing a tag `vX.Y.Z` that matches `extension/manifest.json` publishes the release through `.github/workflows/release.yml`. The release attaches `qa-wrap-<version>-<dist>.zip` plus `.sha256` for every browser build, and `qa-wrap-<version>.zip` (the Chrome build) as the alias older installs look for. The updater host is `extension/updater/` (PowerShell on Windows, bash on Mac and Linux; `install.cmd` and `install.sh` register it for each browser found).
 
@@ -110,6 +129,17 @@ Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pi
 | [research/](research/) | What was studied and found: the tool landscape, benchmarks, field tests. |
 | [skills/](skills/) | The lessons this project taught, written as a skill. |
 | [deliverables/](deliverables/) | The tutorial films, recorded from the product. |
+
+</details>
+
+<a id="more-from-nj"></a>
+
+## 🧰 More from NJ
+
+- 💼 [Portfolio](https://nj-burrito.github.io/): Nader's work and projects, with the contact section
+- 📦 [NJ-Kit](https://nj-burrito.github.io/NJ-Kit/): skills for Claude Code
+- 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): your profile as a page
+- 🐙 [GitHub: NJ-Burrito](https://github.com/NJ-Burrito): all the open repositories
 
 ---
 

@@ -62,9 +62,11 @@
         and Edge. The policy is the same on both, because the extension does the same thing on
         both.</p>
     </section>
+      <ul class="toc"><li><a href="#privacy-en-1">The one-sentence version</a></li><li><a href="#privacy-en-2">What it records, and where it goes</a></li><li><a href="#privacy-en-3">When data does leave your machine</a></li><li><a href="#privacy-en-4">Retention and deletion</a></li><li><a href="#privacy-en-5">The standards this is built against</a></li><li><a href="#privacy-en-6">Which sites it is allowed on</a></li><li><a href="#privacy-en-7">The notice you read first</a></li><li><a href="#privacy-en-8">Permissions, and why each one is there</a></li><li><a href="#privacy-en-9">Changes and contact</a></li></ul>
+
 
     <section>
-      <h2>The one-sentence version</h2>
+      <h2 id="privacy-en-1">The one-sentence version</h2>
       <p class="prose">QA Wrap is local-first: everything it records stays in your browser profile
         on your machine, and nothing leaves it except where you configure Jira, a tracker or a
         webhook, or where you send the one request you wrote in the API tool or run the link
@@ -72,7 +74,7 @@
     </section>
 
     <section>
-      <h2>What it records, and where it goes</h2>
+      <h2 id="privacy-en-2">What it records, and where it goes</h2>
       <div class="prose">
         <p>While a session is recording, and only in a window you have woken up, the extension
           keeps:</p>
@@ -141,10 +143,11 @@
     </section>
 
     <section>
-      <h2>When data does leave your machine</h2>
+      <h2 id="privacy-en-3">When data does leave your machine</h2>
       <p class="prose">Only when you set up one of the 18 services in Settings, then Integrations, and
         only when you press the corresponding button on a report:</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">Destination</th><th scope="col">What is sent</th><th scope="col">Where</th></tr>
@@ -159,7 +162,7 @@
             <tr><th scope="row">Email (.eml)</th><td>nothing is sent: a message file is written to your machine, for you to open and send yourself</td><td>your own disk</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <div class="prose">
         <p><strong>Evidence attachments.</strong> When you file to Jira you choose what travels with
           the report: screenshots, and the export formats you tick, such as the report file, a screen
@@ -217,7 +220,7 @@
     </section>
 
     <section>
-      <h2>Retention and deletion</h2>
+      <h2 id="privacy-en-4">Retention and deletion</h2>
       <div class="prose">
         <p><strong>Finished sessions are deleted after 30 days by default.</strong> The session
           record, its events, its screenshots, its recordings and its replay log go together, on a daily schedule
@@ -257,10 +260,11 @@
     </section>
 
     <section>
-      <h2>The standards this is built against</h2>
+      <h2 id="privacy-en-5">The standards this is built against</h2>
       <p class="prose">Nothing here is a certification. These are the controls a certification
         would ask to see, named so that a security review can check them off.</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">Measure</th><th scope="col">What it answers to</th></tr>
@@ -278,7 +282,7 @@
             <tr><th scope="row">Manifest V3, strict CSP, no remotely hosted code, no <code>eval</code></th><td><strong>OWASP</strong> secure extension practice; Web Store policy</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose">The extension has no server. There is no account, no identifier, no
         analytics and no crash reporting: nothing to breach, because nothing is collected. That is a
         design decision rather than a promise, and <code>tools/release-check.mjs</code> fails the
@@ -286,7 +290,7 @@
     </section>
 
     <section>
-      <h2>Which sites it is allowed on</h2>
+      <h2 id="privacy-en-6">Which sites it is allowed on</h2>
       <div class="prose">
         <p><strong>QA Wrap can read every website from the moment it is installed.</strong> The install
           dialog says so ("read and change all your data on all websites"). Being able to read a
@@ -308,7 +312,7 @@
     </section>
 
     <section>
-      <h2>The notice you read first</h2>
+      <h2 id="privacy-en-7">The notice you read first</h2>
       <div class="prose">
         <p>On installation QA Wrap opens one page, in Arabic and English, before any tool can be
           used: what it stores and where, what a recording captures, what masking does and does not
@@ -324,8 +328,9 @@
     </section>
 
     <section>
-      <h2>Permissions, and why each one is there</h2>
-      <div class="table-scroll">
+      <h2 id="privacy-en-8">Permissions, and why each one is there</h2>
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">Permission</th><th scope="col">Used for</th></tr>
@@ -352,11 +357,11 @@
             <tr><th scope="row">host permission <code>&lt;all_urls&gt;</code></th><td>held from install; the install dialog shows it as reading and changing your data on all websites. The page scripts record only once you wake that window</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section>
-      <h2>Changes and contact</h2>
+      <h2 id="privacy-en-9">Changes and contact</h2>
       <div class="prose">
         <p>Changes to this policy are recorded in the extension's release notes. This page and
           <code>PRIVACY.md</code> in the package carry the same text.</p>
@@ -376,15 +381,17 @@
         تسري على امتداد QA Wrap في Chrome وEdge. السياسة نفسها في كليهما، لأن
         الامتداد يفعل الشيء نفسه في كل منهما.</p>
     </section>
+      <ul class="toc"><li><a href="#privacy-ar-1">النسخة بجملة واحدة</a></li><li><a href="#privacy-ar-2">ما الذي يسجله، وإلى أين يذهب</a></li><li><a href="#privacy-ar-3">متى تغادر البيانات جهازك</a></li><li><a href="#privacy-ar-4">الاحتفاظ والحذف</a></li><li><a href="#privacy-ar-5">المعايير التي تبني عليها الأداة</a></li><li><a href="#privacy-ar-6">المواقع المسموح للامتداد بالعمل عليها</a></li><li><a href="#privacy-ar-7">الإشعار الذي تقرؤه أولا</a></li><li><a href="#privacy-ar-8">الأذونات، ولماذا يوجد كل واحد منها</a></li><li><a href="#privacy-ar-9">التغييرات والتواصل</a></li></ul>
+
 
     <section>
-      <h2>النسخة بجملة واحدة</h2>
+      <h2 id="privacy-ar-1">النسخة بجملة واحدة</h2>
       <p class="prose">QA Wrap محلي أولا: كل ما يسجله يبقى في ملف متصفحك على جهازك، ولا شيء
         يغادره إلا حيث تعد Jira أو أداة تتبع أو ويب هوك، أو ترسل الطلب الواحد الذي كتبته في أداة API أو تشغل فاحص الروابط، وتضغط زرا يسمي إلى أين تذهب البيانات.</p>
     </section>
 
     <section>
-      <h2>ما الذي يسجله، وإلى أين يذهب</h2>
+      <h2 id="privacy-ar-2">ما الذي يسجله، وإلى أين يذهب</h2>
       <div class="prose">
         <p>أثناء تسجيل جلسة، وفقط في نافذة أيقظتها، يحفظ الامتداد:</p>
         <ul>
@@ -446,10 +453,11 @@
     </section>
 
     <section>
-      <h2>متى تغادر البيانات جهازك</h2>
+      <h2 id="privacy-ar-3">متى تغادر البيانات جهازك</h2>
       <p class="prose">فقط حين تعد إحدى الخدمات الثماني عشرة في الإعدادات، ثم التكاملات، وفقط حين
         تضغط الزر المقابل على تقرير:</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">الوجهة</th><th scope="col">ما يرسل</th><th scope="col">إلى أين</th></tr>
@@ -464,7 +472,7 @@
             <tr><th scope="row">البريد الإلكتروني (.eml)</th><td>لا يرسل شيء: يكتب ملف رسالة على جهازك لتفتحه وترسله بنفسك</td><td>قرصك أنت</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <div class="prose">
         <p><strong>مرفقات الأدلة.</strong> عند الإيداع في Jira تختار ما يسافر مع التقرير: لقطات
           الشاشة وصيغ التصدير التي تحددها، مثل ملف التقرير أو تسجيل الشاشة أو التبويب أو سجل
@@ -517,7 +525,7 @@
     </section>
 
     <section>
-      <h2>الاحتفاظ والحذف</h2>
+      <h2 id="privacy-ar-4">الاحتفاظ والحذف</h2>
       <div class="prose">
         <p><strong>تحذف الجلسات المنتهية بعد 30 يوما افتراضيا.</strong> تحذف سجل الجلسة،
           وأحداثها، ولقطاتها، وتسجيلاتها، وسجل إعادة العرض الخاص بها معا، بجدول يومي ومرة واحدة عند بدء تشغيل المتصفح، حتى لا
@@ -552,10 +560,11 @@
     </section>
 
     <section>
-      <h2>المعايير التي تبني عليها الأداة</h2>
+      <h2 id="privacy-ar-5">المعايير التي تبني عليها الأداة</h2>
       <p class="prose">لا شيء هنا شهادة اعتماد. هذه هي الضوابط التي ستطلب شهادة اعتماد رؤيتها،
         مسماة حتى تستطيع مراجعة أمنية التحقق منها.</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">الإجراء</th><th scope="col">ما يستجيب له</th></tr>
@@ -573,7 +582,7 @@
             <tr><th scope="row">Manifest V3، سياسة أمان محتوى صارمة، لا شيفرة مستضافة عن بعد، لا <code>eval</code></th><td><strong>OWASP</strong> ممارسات الامتدادات الآمنة؛ سياسة المتجر</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose">لا يملك الامتداد خادما. لا يوجد حساب، ولا معرف، ولا تحليلات، ولا تقارير
         أعطال: لا شيء يخترق، لأنه لا شيء يجمع. هذا قرار تصميم لا وعد فحسب، ويفشل
         <code>tools/release-check.mjs</code> عملية البناء إن ظهرت نقطة نهاية تحليلات أو شيفرة
@@ -581,7 +590,7 @@
     </section>
 
     <section>
-      <h2>المواقع المسموح للامتداد بالعمل عليها</h2>
+      <h2 id="privacy-ar-6">المواقع المسموح للامتداد بالعمل عليها</h2>
       <div class="prose">
         <p><strong>يستطيع QA Wrap قراءة كل المواقع منذ لحظة التثبيت.</strong> تقول نافذة التثبيت ذلك
           ("قراءة بياناتك وتغييرها على جميع المواقع"). القدرة على القراءة ليست التقاط: لا يلتقط QA Wrap
@@ -603,7 +612,7 @@
     </section>
 
     <section>
-      <h2>الإشعار الذي تقرؤه أولا</h2>
+      <h2 id="privacy-ar-7">الإشعار الذي تقرؤه أولا</h2>
       <div class="prose">
         <p>عند التثبيت يفتح QA Wrap صفحة واحدة، بالعربية والإنجليزية، قبل أن تستخدم أي أداة: ما
           الذي يخزنه وأين، وما الذي يلتقطه التسجيل، وما الذي يفعله الإخفاء وما لا يفعله، وأنه يبدأ
@@ -617,8 +626,9 @@
     </section>
 
     <section>
-      <h2>الأذونات، ولماذا يوجد كل واحد منها</h2>
-      <div class="table-scroll">
+      <h2 id="privacy-ar-8">الأذونات، ولماذا يوجد كل واحد منها</h2>
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">الإذن</th><th scope="col">يستخدم من أجل</th></tr>
@@ -645,11 +655,11 @@
             <tr><th scope="row">إذن المضيف <code>&lt;all_urls&gt;</code></th><td>ممنوح منذ التثبيت؛ تعرضه نافذة التثبيت قراءةً لبياناتك وتغييرا لها على جميع المواقع. لا تسجل سكربتات الصفحة شيئا حتى توقظ تلك النافذة</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section>
-      <h2>التغييرات والتواصل</h2>
+      <h2 id="privacy-ar-9">التغييرات والتواصل</h2>
       <div class="prose">
         <p>تسجل التغييرات على هذه السياسة في ملاحظات إصدار الامتداد. هذه الصفحة و
           <code>PRIVACY.md</code> داخل الحزمة يحملان النص نفسه.</p>
@@ -663,6 +673,31 @@
 
   </div>
 </main>
+
+<section class="more" aria-labelledby="more-en"><div class="wrap">
+  <div data-lang-block="en" lang="en" dir="ltr">
+    <h2 id="more-en">More from NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>Portfolio</strong><small>Nader's work and projects</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>Skills for Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>Your profile as a page</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>All the open repositories</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>Contact</strong><small>Say hello on the portfolio</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
+<section class="more" aria-labelledby="more-ar"><div class="wrap">
+  <div data-lang-block="ar" lang="ar" dir="rtl">
+    <h2 id="more-ar">المزيد من NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>المعرض</strong><small>أعمال نادر ومشاريعه</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>مهارات لـ Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>ملفك الشخصي كصفحة</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>كل المستودعات المفتوحة</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>تواصل</strong><small>راسله من المعرض</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
 
 <footer>
   <div class="wrap">

@@ -88,7 +88,7 @@ body {
    visible control at the top left. */
 .skip {
   position: absolute;
-  left: -9999px;
+  inset-inline-start: -9999px;
   top: 0;
   z-index: 10;
   background: var(--accent);
@@ -97,7 +97,7 @@ body {
   font-weight: 600;
   border-radius: 0 0 var(--r-sm) 0;
 }
-.skip:focus { left: 0; }
+.skip:focus { inset-inline-start: 0; }
 
 :focus-visible {
   outline: 2px solid var(--accent-ink);
@@ -424,3 +424,24 @@ body[data-lang="ar"] [data-lang-block="en"] { display: none; }
 [dir="rtl"] .masthead nav a[aria-current="page"] { border-bottom: 2px solid var(--accent); }
 [dir="rtl"] dd { margin-right: 0; }
 [dir="rtl"] .brand { flex-direction: row; }
+
+/* ---- Quick links and the NJ family block -------------------------------- */
+.quick { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+.quick a, footer a { display: inline-flex; align-items: center; min-height: 44px; }
+.more { border-top: 1px solid var(--border); margin-top: clamp(2rem, 5vw, 3rem); padding-top: 1.5rem; }
+.more h2 { margin-top: 0; font-size: 1.2rem; }
+.more-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.more-grid li { margin: 0; }
+.more-grid a { display: flex; align-items: center; gap: 0.75rem; min-height: 44px; padding: 0.7rem 0.9rem; background: var(--surface-sunken); border: 1px solid var(--border); border-radius: var(--r-md); color: var(--text); text-decoration: none; }
+.more-grid a:hover { border-color: var(--accent); }
+.more-grid .fi { flex: none; color: var(--accent-ink); }
+.more-grid span { display: flex; flex-direction: column; }
+.more-grid small { color: var(--text-muted); font-size: 0.85rem; }
+
+.hero-banner { margin: 0 0 1.5rem; }
+.hero-banner img { display: block; width: 100%; height: auto; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface-sunken); }
+.toc { list-style: none; margin: 0 0 1.5rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+.toc a { display: inline-flex; align-items: center; min-height: 44px; }
+details.fold { margin: 0 0 1.1rem; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-sunken); }
+details.fold > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; padding: 0 1rem; font-weight: 700; }
+details.fold > :not(summary) { padding: 0 1rem; }
