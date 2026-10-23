@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.NJ-Burrito/qa-wrap-bridge",
+  "title": "QA Wrap bridge",
+  "description": "Read-only MCP server: a coding agent reads test sessions recorded in QA Wrap. Local only.",
+  "version": "0.1.0",
+  "websiteUrl": "https://nj-burrito.github.io/QA-Wrap/",
+  "repository": {
+    "url": "https://github.com/NJ-Burrito/QA-Wrap",
+    "source": "github",
+    "subfolder": "helper"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "qa-wrap-bridge",
+      "version": "0.1.0",
+      "runtimeHint": "npx",
+      "transport": { "type": "stdio" },
+      "packageArguments": [
+        { "type": "positional", "value": "mcp" }
+      ]
+    }
+  ]
+}
