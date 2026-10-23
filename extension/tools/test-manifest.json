@@ -8094,6 +8094,49 @@
    "assertMode": "counted"
   },
   {
+   "id": "test-update-page",
+   "path": "tools/test-update-page.mjs",
+   "kind": "test",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "features": [
+    "worker",
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-install-host",
+   "path": "tools/test-install-host.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "byHand": false,
+   "headlessOk": false
+  },
+  {
    "id": "test-update-1022",
    "path": "tools/test-update-1022.mjs",
    "kind": "test",

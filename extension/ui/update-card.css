@@ -1,4 +1,22 @@
-.update-card{margin:8px;gap:8px;flex-wrap:wrap}
-.update-notes{margin-block-start:4px}
-.update-notes[open]{max-height:9em;overflow:auto}
-.update-steps{margin:6px 0 0;padding-inline-start:1.2em}
+/* The "Version X is available" card (popup, Settings). Brand tokens only; logical properties so Arabic mirrors itself. */
+.update-card{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:10px 12px;margin:8px;padding:12px 14px;border:1px solid var(--accent);border-radius:var(--r-lg);background:linear-gradient(135deg,var(--accent-soft),var(--surface) 70%);box-shadow:var(--shadow-1)}
+.update-ico{display:grid;place-items:center;inline-size:32px;block-size:32px;border-radius:var(--r-pill);background:var(--accent);color:var(--accent-text)}
+.update-ico::before{content:'';inline-size:9px;block-size:9px;border-top:2.5px solid currentColor;border-left:2.5px solid currentColor;transform:translateY(2px) rotate(45deg)}
+.update-card .state-banner-text{min-inline-size:0}
+.update-card .state-banner-line{margin:0;font-weight:600;line-height:1.4}
+.update-actions{display:flex;flex-wrap:wrap;gap:8px;margin-block-start:10px}
+.update-notes{margin-block-start:6px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border)}
+.update-notes>summary{cursor:pointer;padding:6px 10px;font-weight:600;color:var(--accent-ink)}
+.update-notes[open]{max-height:11em;overflow:auto}
+.update-notes>*:not(summary){margin-inline:10px}
+.update-notes h4{margin:8px 10px 2px;font-size:.85em;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+.update-notes ul{margin-block:2px 8px;padding-inline-start:1.1em}
+.update-notes li{line-height:1.5}
+.auto-upd{margin-block:12px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--r-lg);background:var(--surface-sunken)}
+.auto-upd p{margin:0 0 6px}
+.auto-upd-head{display:flex;align-items:center;gap:8px}
+.auto-upd-dot{inline-size:10px;block-size:10px;border-radius:var(--r-pill);background:var(--border-strong)}
+.auto-upd[data-on="true"] .auto-upd-dot{background:var(--pass)}
+.auto-upd[data-on="false"] .auto-upd-dot{background:var(--warn)}
+.auto-upd code{font-weight:700;color:var(--accent-ink)}
+.auto-upd ol{margin:6px 0 10px;padding-inline-start:1.3em;line-height:1.5}

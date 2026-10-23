@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
-<!-- Two modes, one page: ?update=<version> runs the automatic update through the native host; no query shows "What's new in vX" after an update. Notes are remote text: textContent only (whatsnew.js). -->
+<!-- Two modes, one page: ?update=<version> runs the automatic update through the native host (whatsnew.js); no query shows "You are on vX" after an update. Notes are remote text: textContent only. -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -9,20 +9,17 @@
     <link rel="stylesheet" href="../ui/identity-tokens.css" />
     <link rel="stylesheet" href="../ui/scale.css" />
     <link rel="stylesheet" href="../ui/tokens.css" />
-    <link rel="stylesheet" href="../ui/update-card.css" />
+    <link rel="stylesheet" href="../ui/live.css" />
+    <link rel="stylesheet" href="whatsnew.css" />
     <script src="../ui/theme.js"></script>
     <script src="../platform/i18n.js"></script>
-    <script src="../ui/update-card.js"></script>
-    <script defer src="whatsnew.js"></script>
+    <script src="../ui/live.js"></script>
+    <script type="module" src="whatsnew.js"></script>
     <title data-i18n="update.upd1022.pageTitle">QA Wrap update</title>
   </head>
   <body>
-    <main style="max-width:44rem;margin:2rem auto;padding:0 1rem">
-      <h1 id="wn-title"></h1>
-      <p id="wn-status" role="status"></p>
-      <div id="wn-notes"></div>
-      <ol id="wn-steps" class="update-steps" hidden></ol>
-      <p><a id="wn-link" href="#" target="_blank" rel="noopener" hidden></a></p>
+    <main class="wn" id="wn">
+      <section class="wn-card" id="wn-view" aria-live="polite"></section>
     </main>
   </body>
 </html>

@@ -1,0 +1,61 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/* The update page. Brand tokens only (ui/identity-tokens.css), Thmanyah via ui/fonts.css, logical properties so RTL needs no overrides. */
+body { margin: 0; min-height: 100vh; background: var(--backdrop); color: var(--text); font-family: var(--font); }
+.wn { max-width: 42rem; margin: 0 auto; padding: clamp(1.25rem, 6vh, 3.5rem) 1rem 3rem; }
+.wn-card { background: var(--surface-glass-strong); border: 1px solid var(--glass-edge); border-radius: var(--r-xl); box-shadow: var(--shadow-2); padding: clamp(1.25rem, 4vw, 2.25rem); }
+.wn-hero { display: grid; justify-items: center; text-align: center; gap: .6rem; padding-block: .5rem 1.25rem; }
+.wn-badge { display: grid; place-items: center; inline-size: 4.25rem; block-size: 4.25rem; border-radius: var(--r-pill); background: var(--accent-soft); color: var(--accent-ink); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+.wn-badge.is-ok { background: var(--pass-soft); color: var(--pass-ink); box-shadow: 0 0 0 6px color-mix(in srgb, var(--pass-soft) 45%, transparent); }
+.wn-badge.is-calm { background: var(--warn-soft); color: var(--warn-ink); box-shadow: 0 0 0 6px color-mix(in srgb, var(--warn-soft) 45%, transparent); }
+.wn-badge svg { inline-size: 2rem; block-size: 2rem; }
+.wn svg path { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.wn h1 { margin: .25rem 0 0; font-family: var(--display); font-size: clamp(1.6rem, 4.5vw, 2.15rem); line-height: 1.2; font-weight: 600; text-wrap: balance; }
+.wn-lead { margin: 0; color: var(--text-muted); max-inline-size: 34rem; text-wrap: pretty; line-height: 1.6; }
+.wn-pill { display: inline-block; padding: .15rem .7rem; border-radius: var(--r-pill); background: var(--surface-sunken); border: 1px solid var(--border); font-size: .85rem; color: var(--text-muted); }
+
+.wn-stages { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .5rem; }
+.wn-stage { display: flex; align-items: center; gap: .75rem; padding: .65rem .85rem; border-radius: var(--r-lg); background: var(--surface-sunken); color: var(--text-muted); transition: background .2s var(--ease), color .2s var(--ease); }
+.wn-ico { display: grid; place-items: center; flex: none; }
+.wn-stage .wn-ico { inline-size: 1.6rem; block-size: 1.6rem; }
+.wn-stage svg { inline-size: 1.4rem; block-size: 1.4rem; }
+.wn-stage[data-s="active"] { background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
+.wn-stage[data-s="done"] { color: var(--pass-ink); }
+.wn-stage[data-s="fail"] { background: var(--fail-soft); color: var(--fail-ink); font-weight: 600; }
+.wn-bar { block-size: .35rem; border-radius: var(--r-pill); background: var(--surface-sunken); overflow: hidden; margin-block-start: 1rem; }
+.wn-bar > i { display: block; block-size: 100%; inline-size: var(--p, 0%); background: var(--accent); border-radius: inherit; transition: inline-size .5s var(--ease); }
+
+.wn-notes { display: grid; gap: .75rem; margin-block-start: 1rem; }
+.wn-sec { border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); padding: .9rem 1rem 1rem; }
+.wn-sec h2 { display: flex; align-items: center; gap: .6rem; margin: 0 0 .5rem; font-size: 1.05rem; font-weight: 600; }
+.wn-sec h2 .wn-ico { inline-size: 1.9rem; block-size: 1.9rem; border-radius: var(--r-md); background: var(--accent-soft); color: var(--accent-ink); }
+.wn-sec[data-k="added"] h2 .wn-ico { background: var(--pass-soft); color: var(--pass-ink); }
+.wn-sec[data-k="fixed"] h2 .wn-ico { background: var(--warn-soft); color: var(--warn-ink); }
+.wn-sec[data-k="other"] h2 .wn-ico { background: var(--info-soft); color: var(--info); }
+.wn-sec h2 svg { inline-size: 1.1rem; block-size: 1.1rem; }
+.wn-sec ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.wn-sec li { position: relative; padding-inline-start: 1.1rem; line-height: 1.6; text-wrap: pretty; }
+.wn-sec li::before { content: ''; position: absolute; inset-inline-start: .15rem; inset-block-start: .7em; inline-size: .4rem; block-size: .4rem; border-radius: var(--r-pill); background: var(--border-strong); }
+code.wn-cmd { direction: ltr; unicode-bidi: isolate; text-align: left; font-family: var(--mono); font-weight: 700; padding: .55rem .8rem; border-radius: var(--r-md); background: var(--brand-basalt); color: var(--brand-limestone); overflow-x: auto; white-space: nowrap; }
+.wn-panel p.wn-or { font-size: .9rem; margin-block-end: -.4rem; }
+.wn-note:empty { display: none; }
+a.btn { text-decoration: none; }
+.wn-file .wn-ico { inline-size: 1.4rem; block-size: 1.4rem; color: var(--accent-ink); }
+.wn-file svg { inline-size: 1.2rem; block-size: 1.2rem; }
+.wn-actions { align-items: center; display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; margin-block-start: 1.25rem; }
+.wn-link { color: var(--accent-ink); font-weight: 600; text-underline-offset: 3px; }
+
+.wn-panel { border: 1.5px solid var(--accent); border-radius: var(--r-lg); background: var(--surface); padding: 1.1rem 1.15rem; display: grid; gap: .8rem; margin-block-start: .75rem; }
+.wn-panel h2 { margin: 0; font-size: 1.15rem; font-family: var(--display); font-weight: 600; }
+.wn-panel p { margin: 0; line-height: 1.6; color: var(--text-muted); }
+.wn-file { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; padding: .6rem .8rem; border-radius: var(--r-md); background: var(--surface-sunken); border: 1px dashed var(--border-strong); }
+.wn-file code { direction: ltr; unicode-bidi: isolate; font-family: var(--mono); font-weight: 700; font-size: 1rem; color: var(--accent-ink); }
+.wn-file span { color: var(--text-muted); font-size: .9rem; }
+.wn-panel ol { margin: 0; padding-inline-start: 1.3rem; display: grid; gap: .3rem; line-height: 1.55; }
+.wn-note { min-block-size: 1.2em; font-size: .9rem; color: var(--warn-ink); }
+.wn-alt { margin-block-start: .9rem; text-align: center; }
+.wn-steps { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .6rem; }
+.wn-steps li { display: flex; align-items: center; gap: .8rem; padding: .7rem .9rem; border-radius: var(--r-lg); background: var(--surface-sunken); line-height: 1.5; }
+.wn-steps .wn-ico { inline-size: 2.4rem; block-size: 2.4rem; border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--border); color: var(--accent-ink); }
+.wn-steps svg { inline-size: 1.3rem; block-size: 1.3rem; }
+.wn-backup { margin-block-start: 1rem; padding: .7rem .9rem; border-radius: var(--r-md); background: var(--warn-soft); color: var(--warn-ink); line-height: 1.55; text-align: start; }
+@media (prefers-reduced-motion: reduce) { .wn-stage, .wn-bar > i { transition: none; } }
