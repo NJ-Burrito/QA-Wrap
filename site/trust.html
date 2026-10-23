@@ -23,7 +23,9 @@
 <meta name="twitter:description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for and what it will not do.">
 <meta name="twitter:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/thmanyah.css">
+<script>(function(){try{var t=localStorage.getItem("qaw-site-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
+<link rel="stylesheet" href="assets/thmanyah.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="assets/thmanyah.css"></noscript>
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body data-lang="en">
@@ -53,6 +55,7 @@
           <li data-lang-block="ar" lang="ar" dir="rtl"><a href="trust.html" aria-current="page">الثقة</a></li>
         </ul>
       </nav>
+      <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Light or dark · الوضع الفاتح أو الداكن"><svg class="fi i-moon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="fi i-sun" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
       <button type="button" id="lang-toggle" class="lang-toggle">
         <span data-lang-block="en" lang="en" dir="ltr">العربية</span>
         <span data-lang-block="ar" lang="ar" dir="rtl">English</span>
