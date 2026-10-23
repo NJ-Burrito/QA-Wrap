@@ -257,8 +257,7 @@ export async function arm(windowId, { inherit = false } = {}) {
   // "awake" into the MAIN world, and a push that arrives before the hooks do
   // is a push nothing hears. Existing tabs are injected for the same reason —
   // registration only reaches the next navigation.
-  await registerHooks();
-  await injectInto(windowId);
+  await Promise.race([registerHooks().then(() => injectInto(windowId)).catch(() => {}), new Promise((r) => setTimeout(r, 3000))]); // bounded: a hung frame must not outlast the 10 s clock (awake-1023)
   return [...set];
 }
 
