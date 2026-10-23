@@ -3205,7 +3205,7 @@ async function paintSwitchNow(known, gen = armedTicket()) {
   // whichever window the *sender* is in — which in the floating surface is the
   // float itself, never armed, so every wake was repainted as "Asleep" a beat
   // later. `ctx.windowId` is the window under test in all three surfaces.
-  const res = known
+  const res = known && known.armed != null // null: ask again
     ? { ok: true, result: known }
     : await send({ type: 'UQA_ARMED', ...(ctx.windowId != null ? { windowId: ctx.windowId } : {}) });
   const on = !!(res.ok && res.result.armed);
@@ -3311,7 +3311,7 @@ document.getElementById('switch').addEventListener('click', async () => {
         refresh();
       },
     }
-  );
+  ).then((res) => res?.ok === false && paintSwitch()); // show the worker's truth
 });
 
 /**

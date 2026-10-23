@@ -462,7 +462,7 @@ test('r10-07-4: UQA_POPUP_STATE answers inside 500 ms when the armed-window part
   const at = src.indexOf('UQA_POPUP_STATE: async (msg, sender) => {');
   const open = src.indexOf('{', src.indexOf('=>', at));
   const body = src.slice(open, endOfBlock(src, open) + 1);
-  assert.match(body, /soft\(armed\.isArmedWindow\(windowId\), false, 400\)/, 'the armed part waits 400 ms like its neighbours');
+  assert.match(body, /soft\(armed\.isArmedWindow\(windowId\), null, 400\)/, 'the armed part waits 400 ms like its neighbours');
   const never = () => new Promise(() => {});
   const run = new Function('bounded', 'handlers', 'testableTabId', 'currentWindowId', 'chrome', 'sendToTab', 'getRules', 'recordingState', 'storageHeadroom', 'armed', 'activeSessionId', 'sessionState', `return async (msg, sender) => ${body};`)(
     withDeadline, { UQA_GET_STATE: async () => ({ recording: false }) }, async () => 1, async () => 1,
@@ -473,7 +473,7 @@ test('r10-07-4: UQA_POPUP_STATE answers inside 500 ms when the armed-window part
   let out;
   try { out = await run({}, {}); } finally { console.warn = warn; }
   assert.ok(Date.now() - t0 < 500, `took ${Date.now() - t0} ms`);
-  assert.deepEqual(out.armed, { windowId: 7, armed: false }, 'the part falls back, the paint goes on');
+  assert.deepEqual(out.armed, { windowId: 7, armed: null }, 'the part falls back to unknown (never asleep), the paint goes on');
 });
 
 test('H1: UQA_GET_RULES answers the rules to an extension page in a window that is not woken (the float), and still hides them from an unarmed page', async () => {
