@@ -43,4 +43,4 @@ jobs:
       - name: SHA-256 of every zip, published beside it (the updater and the installers verify against it)
         run: cd "$RUNNER_TEMP/dist" && for z in qa-wrap-${TAG#v}*.zip; do sha256sum "$z" > "$z.sha256"; done && ls -l qa-wrap-${TAG#v}*
       - name: Create the release
-        run: cd "$RUNNER_TEMP/dist" && gh release create "$TAG" qa-wrap-${TAG#v}*.zip qa-wrap-${TAG#v}*.zip.sha256 --title "QA Wrap ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
+        run: cd "$RUNNER_TEMP/dist" && gh release create "$TAG" qa-wrap-${TAG#v}*.zip qa-wrap-${TAG#v}*.zip.sha256 --title "QA Wrap ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag --repo "$GITHUB_REPOSITORY"
