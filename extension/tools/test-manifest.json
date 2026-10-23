@@ -6793,6 +6793,69 @@
    }
   },
   {
+   "id": "store-packs",
+   "path": "tools/store-packs.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "store-packs-text",
+   "path": "tools/store-packs-text.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
+   "id": "e2e-awake-hung-frame",
+   "path": "tools/e2e-awake-hung-frame.mjs",
+   "kind": "tool",
+   "lane": "headless",
+   "features": [],
+   "tags": [
+    "assertMode:exitcode",
+    "kind:tool"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "exitcode",
+   "exitcodeReason": "a script that prints a report, not assertion lines: the exit code is the verdict",
+   "overrides": {
+    "kind": "spec 2.1: kind:tool (a by-hand tool, generator, shot or release script), never reachable by a tier"
+   }
+  },
+  {
    "id": "store-status",
    "path": "tools/store-status.mjs",
    "kind": "tool",
