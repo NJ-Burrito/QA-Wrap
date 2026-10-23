@@ -505,6 +505,10 @@
    "reason": "the delivery-gate runner itself (kept in parallel with pipeline.mjs for one release, D-1010-67)"
   },
   {
+   "file": "e2e-awake-hung-frame.mjs",
+   "reason": "a headed, hand-run e2e (needs a visible browser and dist/chrome from the build): shows the Awake pill still works when a page frame hangs; run by hand with node tools/e2e-awake-hung-frame.mjs, not in any lane"
+  },
+  {
    "file": "sweep-e2e.mjs",
    "reason": "sdlc-1014b: walks every popup state in the built extension, EN and AR, and writes work/sdlc/pipeline-1014b/results/sweep-*.json; a fault-finding tool, the assertions are in test-e2e-practice"
   },

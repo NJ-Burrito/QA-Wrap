@@ -32,10 +32,30 @@
 
 QA Wrap is not in the Chrome Web Store, so you load it by hand. Chrome only allows that with **Developer mode** switched on. It is a normal Chrome switch and installs nothing by itself.
 
-You need Chrome 116 or newer. Chrome and Edge are the tested browsers; Brave and Chromium work the same way. Windows, Mac and Linux are supported.
+You need a Chromium browser at version 116 or newer. Chrome and Edge are the tested browsers; the others below work the same way. Windows, Mac and Linux are supported.
+
+| Browser | Zip to download (under **Assets**) | Where "Load unpacked" is | One-time updater step |
+| --- | --- | --- | --- |
+| Chrome | `qa-wrap-VERSION.zip` | `chrome://extensions`, **Developer mode**, **Load unpacked** | `updater` folder: `install.cmd` or `install.sh` |
+| Edge | `qa-wrap-VERSION-edge.zip` | `edge://extensions`, **Developer mode** (left menu), **Load unpacked** | same |
+| Brave | `qa-wrap-VERSION-brave.zip` | `brave://extensions`, **Developer mode**, **Load unpacked** | same |
+| Opera | `qa-wrap-VERSION-opera.zip` | `opera://extensions`, **Developer mode**, **Load unpacked** | same |
+| Opera GX | `qa-wrap-VERSION-operagx.zip` | `opera://extensions`, **Developer mode**, **Load unpacked** | same |
+| Vivaldi | `qa-wrap-VERSION.zip` | `vivaldi://extensions`, **Developer mode**, **Load unpacked** | same |
+| Arc | `qa-wrap-VERSION.zip` | `arc://extensions`, **Developer mode**, **Load unpacked** | same |
+| Yandex Browser | `qa-wrap-VERSION.zip` | `browser://extensions`, **Developer mode**, **Load unpacked** | same |
+| Chromium | `qa-wrap-VERSION.zip` | `chrome://extensions`, **Developer mode**, **Load unpacked** | same |
+| Firefox | `qa-wrap-VERSION-firefox.zip` | `about:debugging#/runtime/this-firefox`, **Load Temporary Add-on**, pick `manifest.json` | same, once the add-on runs (see below) |
+| Safari | none | needs a Mac with Xcode | not available |
+
+The updater step registers itself for every browser it finds on your computer and tells you which. Each browser updates to its own zip, so an Edge install never receives the Firefox build.
+
+**Firefox is not ready for permanent use.** Release Firefox does not keep an unsigned add-on after a restart (it is temporary), and signing on addons.mozilla.org (AMO) is not done yet. The updater step already writes the Firefox host file (`allowed_extensions` with the add-on id), so one-press update is not blocked on our side once a signed add-on exists.
+
+**Safari is not packaged.** It needs a Mac with Xcode to turn the build into an app (`xcrun safari-web-extension-converter`), and one-press update is not available there.
 
 1. Open the [latest release](https://github.com/NJ-Burrito/QA-Wrap/releases/latest).
-2. Under **Assets**, click **qa-wrap-VERSION.zip**. It lands in your Downloads folder.
+2. Under **Assets**, click the zip for your browser from the table (the Chrome one is **qa-wrap-VERSION.zip**). It lands in your Downloads folder.
 3. Make a folder where it can stay, for example `C:\QA Wrap`. **Do not use Downloads**: if the folder is deleted, QA Wrap disappears from Chrome.
 4. Right-click the zip, choose **Extract All...**, pick that folder, press **Extract**. Open the folder and check that `manifest.json` is directly inside it.
 5. In Chrome, type `chrome://extensions` in the address bar and press Enter.
@@ -81,7 +101,7 @@ Open an issue in this repository, or see the portfolio at https://nj-burrito.git
 
 ## For developers
 
-Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pick `extension/`. Tests: `cd extension && npm test`. Release zip: `npm run release:zip` (writes `dist/qa-wrap-<version>.zip`). Pushing a tag `vX.Y.Z` that matches `extension/manifest.json` publishes the release through `.github/workflows/release.yml`. The updater host is `extension/updater/` (PowerShell, registered under HKCU by `install.cmd`).
+Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pick `extension/`. Tests: `cd extension && npm test`. Release zip: `npm run release:zip` (writes `dist/qa-wrap-<version>.zip`). Pushing a tag `vX.Y.Z` that matches `extension/manifest.json` publishes the release through `.github/workflows/release.yml`. The release attaches `qa-wrap-<version>-<dist>.zip` plus `.sha256` for every browser build, and `qa-wrap-<version>.zip` (the Chrome build) as the alias older installs look for. The updater host is `extension/updater/` (PowerShell on Windows, bash on Mac and Linux; `install.cmd` and `install.sh` register it for each browser found).
 
 | Folder | What is in it |
 | --- | --- |

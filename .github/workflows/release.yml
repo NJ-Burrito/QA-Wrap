@@ -1,5 +1,5 @@
 # Pushing a tag v<major.minor.patch> publishes the GitHub release the in-extension update check looks for (core/update-source.json).
-# Notes come from CHANGELOG.md by script (extension/tools/release-notes.mjs, no model); the one release zip qa-wrap-<version>.zip (npm run release:zip) is attached. The repo is private for now; the in-extension check works with an optional read-only token (Settings).
+# Notes come from CHANGELOG.md by script (extension/tools/release-notes.mjs, no model); every browser build qa-wrap-<version>-<dist>.zip plus .sha256 is attached, and qa-wrap-<version>.zip (the chrome build, npm run release:zip) stays as the alias installed copies look for. The repo is private for now; the in-extension check works with an optional read-only token (Settings).
 # A tag whose version differs from manifest.json, or with no CHANGELOG section, stops the run before anything is published.
 # No model writes anything here: notes are cut from CHANGELOG.md by script and the checksum is sha256sum. GitHub Releases over HTTPS is the only host.
 # Actions are pinned by commit SHA like ci.yml.
@@ -36,9 +36,11 @@ jobs:
         run: test "v$(node -p "require('./manifest.json').version")" = "$TAG"
       - name: Release notes from CHANGELOG.md
         run: node tools/release-notes.mjs "$TAG" > "$RUNNER_TEMP/notes.md"
-      - name: Build dist/chrome and zip it as qa-wrap-<version>.zip
+      - name: Build dist/chrome and zip it as qa-wrap-<version>.zip (the chrome alias that installed 3.6.x-3.7.x copies look for)
         run: QAW_DIST="$RUNNER_TEMP/dist" npm run release:zip
-      - name: SHA-256 of the zip, published beside it (the updater and the installers verify against it)
-        run: cd "$RUNNER_TEMP/dist" && sha256sum "qa-wrap-${TAG#v}.zip" > "qa-wrap-${TAG#v}.zip.sha256"
+      - name: Build every browser and zip each as qa-wrap-<version>-<dist>.zip (chrome, edge, brave, opera, operagx, duckduckgo, firefox) plus the managed Chrome flavour
+        run: QAW_DIST="$RUNNER_TEMP/dist" node tools/build-browsers.mjs all && QAW_DIST="$RUNNER_TEMP/dist" node tools/build-browsers.mjs --flavour managed
+      - name: SHA-256 of every zip, published beside it (the updater and the installers verify against it)
+        run: cd "$RUNNER_TEMP/dist" && for z in qa-wrap-${TAG#v}*.zip; do sha256sum "$z" > "$z.sha256"; done && ls -l qa-wrap-${TAG#v}*
       - name: Create the release
-        run: gh release create "$TAG" "$RUNNER_TEMP/dist/qa-wrap-${TAG#v}.zip" "$RUNNER_TEMP/dist/qa-wrap-${TAG#v}.zip.sha256" --title "QA Wrap ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
+        run: cd "$RUNNER_TEMP/dist" && gh release create "$TAG" qa-wrap-${TAG#v}*.zip qa-wrap-${TAG#v}*.zip.sha256 --title "QA Wrap ${TAG#v}" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag

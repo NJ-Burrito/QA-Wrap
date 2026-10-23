@@ -23,8 +23,28 @@
 
 QA Wrap ليست في متجر Chrome، فتُحمَّل يدويًّا، ويشترط Chrome لذلك تشغيل **وضع المطوّر (Developer mode)**. هو مفتاح عادي في Chrome ولا يثبّت شيئًا بنفسه. يلزمك Chrome بإصدار 116 أو أحدث (ويعمل Edge وBrave وChromium بالطريقة نفسها). تعمل على Windows وMac وLinux. المدة نحو ثلاث دقائق، ومرة واحدة فقط.
 
+| المتصفح | الملف المضغوط (تحت **Assets**) | مكان "Load unpacked" | خطوة أداة التحديث (مرة واحدة) |
+| --- | --- | --- | --- |
+| Chrome | `qa-wrap-VERSION.zip` | `chrome://extensions` ثم **Developer mode** ثم **Load unpacked** | مجلد `updater`: `install.cmd` أو `install.sh` |
+| Edge | `qa-wrap-VERSION-edge.zip` | `edge://extensions` ثم **Developer mode** (القائمة اليسرى) ثم **Load unpacked** | نفسها |
+| Brave | `qa-wrap-VERSION-brave.zip` | `brave://extensions` ثم **Developer mode** ثم **Load unpacked** | نفسها |
+| Opera | `qa-wrap-VERSION-opera.zip` | `opera://extensions` ثم **Developer mode** ثم **Load unpacked** | نفسها |
+| Opera GX | `qa-wrap-VERSION-operagx.zip` | `opera://extensions` ثم **Developer mode** ثم **Load unpacked** | نفسها |
+| Vivaldi | `qa-wrap-VERSION.zip` | `vivaldi://extensions` ثم **Developer mode** ثم **Load unpacked** | نفسها |
+| Arc | `qa-wrap-VERSION.zip` | `arc://extensions` ثم **Developer mode** ثم **Load unpacked** | نفسها |
+| Yandex Browser | `qa-wrap-VERSION.zip` | `browser://extensions` ثم **Developer mode** ثم **Load unpacked** | نفسها |
+| Chromium | `qa-wrap-VERSION.zip` | `chrome://extensions` ثم **Developer mode** ثم **Load unpacked** | نفسها |
+| Firefox | `qa-wrap-VERSION-firefox.zip` | `about:debugging#/runtime/this-firefox` ثم **Load Temporary Add-on** واختر `manifest.json` | نفسها، عندما تعمل الإضافة موقَّعة (انظر أدناه) |
+| Safari | لا يوجد | يلزم جهاز Mac فيه Xcode | غير متاح |
+
+تسجّل خطوة أداة التحديث نفسها لكل متصفح تجده على جهازك وتخبرك بأسمائها. كل متصفح يتحدّث إلى ملفه الخاص، فلا يصل إصدار Firefox أبدًا إلى Edge.
+
+**Firefox.** النسخة الرسمية من Firefox لا تُبقي إلا الإضافة **الموقَّعة** بشكل دائم؛ غير الموقَّعة مؤقتة وتزول عند إعادة تشغيل Firefox. الاستخدام الدائم يحتاج توقيعًا من addons.mozilla.org (AMO) وهذا لم يتم بعد. الأداة تكتب أصلًا ملف Firefox (`allowed_extensions` بمعرّف الإضافة)، فيعمل التحديث بضغطة واحدة مع نسخة موقَّعة.
+
+**Safari.** يحتاج Safari إلى جهاز Mac مع Xcode لتحويل النسخة إلى تطبيق (`xcrun safari-web-extension-converter`)، والتحديث بضغطة واحدة غير متاح هناك.
+
 1. افتح [آخر إصدار](https://github.com/NJ-Burrito/QA-Wrap/releases/latest).
-2. تحت **Assets** اضغط على **qa-wrap-VERSION.zip**. يُحفظ في مجلد التنزيلات.
+2. تحت **Assets** اضغط على الملف المضغوط لمتصفحك من الجدول (ملف Chrome هو **qa-wrap-VERSION.zip**). يُحفظ في مجلد التنزيلات.
 3. أنشئ مجلدًا دائمًا، مثل `C:\QA Wrap`. **لا تستخدم مجلد التنزيلات**: إن حُذف المجلد اختفت QA Wrap من Chrome.
 4. اضغط بزر الفأرة الأيمن على الملف المضغوط، واختر **Extract All**، واختر ذلك المجلد، واضغط **Extract**. تأكد أن `manifest.json` ظاهر مباشرة داخل المجلد.
 5. في Chrome اكتب `chrome://extensions` في شريط العنوان واضغط Enter.

@@ -22,6 +22,7 @@ export const RATE_TARGETS = Object.freeze({
 });
 
 export const BUILD_DIST = 'chrome'; // build-browsers rewrites this line per dist
+export const BUILD_FLAVOUR = ''; // build-browsers sets 'managed' for the managed Chrome build, which updates to its own zip
 
 /** The rating URL for a dist; an unknown dist or an empty placeholder gives the GitHub repo. */
 export function rateUrl(dist = BUILD_DIST, targets = RATE_TARGETS) {
