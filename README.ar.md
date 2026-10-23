@@ -108,17 +108,23 @@ QA Wrap ليست في متجر Chrome، فتُحمَّل يدويًّا، ويش
 
 افتح بلاغًا (issue) في هذا المستودع، أو راجع المعرض https://nj-burrito.github.io.
 
-<a id="المزيد-من-nj"></a>
+<a id="عن-المشروع"></a>
 
-## 🧰 المزيد من NJ
+## 👤 عن المشروع
+
+- 🎯 **ما هي:** إضافة متصفح مجانية لمن يختبر يدويًا. تسجل جلسة الاختبار وتكتب تقرير الخلل.
+- 🙋 **من صنعها:** نادر الزغول، مهندس أتمتة جودة في عمّان، الأردن.
+- 📜 **الرخصة:** MIT. الشيفرة معلنة، وتحتفظ المكونات الخارجية برخصها.
+- ✉️ **التواصل:** naderalzghoulbusiness@gmail.com
 
 - 💼 [المعرض](https://nj-burrito.github.io/): أعمال نادر ومشاريعه، وفيه قسم التواصل
 - 📦 [NJ-Kit](https://nj-burrito.github.io/NJ-Kit/): مهارات لـ Claude Code
 - 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): ملفك الشخصي كصفحة
-- 🐙 [GitHub: NJ-Burrito](https://github.com/NJ-Burrito): كل المستودعات المفتوحة
+- 🐙 [GitHub](https://github.com/NJ-Burrito): الشيفرة وكل المستودعات المفتوحة
+- 🔗 [LinkedIn](https://www.linkedin.com/in/nader-alzghoul): ملف نادر
 
 ---
 
-حقوق النشر (c) 2026 نادر الزغول (NJ-Burrito). مرخَّص بموجب [رخصة MIT](LICENSE). تحتفظ المكوّنات الخارجية برخصها: انظر [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+حقوق النشر (c) 2026 نادر الزغول. مرخَّص بموجب [رخصة MIT](LICENSE). تحتفظ المكوّنات الخارجية برخصها: انظر [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 </div>

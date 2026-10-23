@@ -11,3 +11,14 @@
 - [Terms](https://nj-burrito.github.io/QA-Wrap/terms.html)
 
 Maker: Nader Alzghoul, https://nj-burrito.github.io/
+
+## About the maker
+
+Nader Alzghoul is a QA automation engineer in Amman, Jordan. Portfolio https://nj-burrito.github.io/ , GitHub https://github.com/NJ-Burrito , LinkedIn https://www.linkedin.com/in/nader-alzghoul . Licence: MIT. Contact: naderalzghoulbusiness@gmail.com
+
+## Short answers
+
+- Free? Yes, MIT.
+- Browsers? Chrome and Edge are tested (Chrome 116 or newer).
+- Data? Nothing leaves the computer until the user sends a report to Jira or a tracker.
+- Languages? English and Arabic.
