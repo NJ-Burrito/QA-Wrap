@@ -4,7 +4,7 @@
  * (background/worker-lifecycle.js checkUpdates, core/update-check.js). A classic script, loaded after i18n on both pages.
  *
  * Rules: updating is never forced. "Not now" hides that version until the browser next starts (key qawUpdateDismissed in storage.session); the card shows again for the next version or the next start.
- * "Update" asks the optional nativeMessaging permission (inside the press), then opens whatsnew/whatsnew.html?update=<version>, which runs the native host; without the host it downloads the zip and shows three steps.
+ * "Update" opens whatsnew/whatsnew.html?update=<version>, which runs the native host (and asks for the nativeMessaging permission inside its own press); without the host the page offers "Turn on automatic updates" or a manual zip. Nothing downloads from this card.
  * The release notes are remote text: they reach the page only through textContent, one element per line. Never innerHTML.
  * Also wires the Settings switch #check-updates (key checkUpdates, absent = on), when the page has it.
  */
@@ -49,14 +49,6 @@
 
   const tr = (k, v) => (globalThis.QAWi18n ? QAWi18n.t(k, v) : k);
   const open = (url) => { try { chrome.tabs.create({ url }); } catch { window.open(url, '_blank', 'noopener'); } };
-  /** Save the zip into Downloads (chrome.downloads). A private repo needs the pasted token and the API asset URL; any failure falls back to the release page. */
-  async function download(rel) {
-    try {
-      const tok = (await chrome.storage.local.get(TOKEN))[TOKEN];
-      const priv = tok && rel.zipApi;
-      await chrome.downloads.download({ url: priv ? rel.zipApi : rel.zip, filename: `qa-wrap-${rel.version}.zip`, conflictAction: 'uniquify', ...(priv ? { headers: [{ name: 'Accept', value: 'application/octet-stream' }, { name: 'Authorization', value: `Bearer ${tok}` }] } : {}) });
-    } catch { open(rel.url); }
-  }
   const isStore = () => !!chrome.runtime.getManifest().update_url;
 
   function el(tag, text, cls) {
@@ -83,10 +75,6 @@
       ul.append(el('li', b.text));
     }
     body.append(more);
-    const steps = el('ol', null, 'update-steps');
-    steps.hidden = true;
-    for (const k of ['update.step1', 'update.step2', 'update.step3']) steps.append(el('li', tr(k)));
-    body.append(steps);
     const go = el('button', tr(ready ? 'update.restart' : 'update.update'), 'btn btn-sm');
     go.type = 'button';
     go.id = 'update-go'; // e1022: the ⋯ menu and the Updates tab press this same button
@@ -100,11 +88,9 @@
         if ((r && r.status || (Array.isArray(r) ? r[0] : r)) === 'update_available') { restart = true; go.textContent = tr('update.restart'); return; }
       }
       if (isStore()) return void open(rel.url);
-      const granted = rel.zip ? await Promise.resolve(chrome.permissions.request({ permissions: ['nativeMessaging'] })).catch(() => false) : false; // first await: still inside the press
-      await chrome.storage.local.set({ qawPendingNotes: { version: rel.version, url: rel.url, zip: rel.zip, zipApi: rel.zipApi || '', sha256: rel.sha256 || '', notes: rel.notes } }); // the What's new page reads it
-      if (granted) return void open(chrome.runtime.getURL(`whatsnew/whatsnew.html?update=${encodeURIComponent(rel.version)}`));
-      steps.hidden = false;
-      if (rel.zip) download(rel); else open(rel.url);
+      if (!rel.zip) return void open(rel.url);
+      await chrome.storage.local.set({ qawPendingNotes: { version: rel.version, url: rel.url, zip: rel.zip, zipApi: rel.zipApi || '', sha256: rel.sha256 || '', notes: rel.notes } }); // the update page reads it
+      open(chrome.runtime.getURL(`whatsnew/whatsnew.html?update=${encodeURIComponent(rel.version)}`)); // it asks for the updater permission itself, inside its own press; no zip downloads from here
     });
     later.addEventListener('click', async () => {
       await chrome.storage.session.set({ [DISMISSED]: rel.version });
@@ -112,7 +98,11 @@
       card.remove();
       if ((await chrome.action.getBadgeText({}).catch(() => '')) === BADGE) chrome.action.setBadgeText({ text: '' });
     });
-    card.append(body, go, later);
+    const icon = el('span', null, 'update-ico'); // the arrow is drawn by CSS
+    const row = el('div', null, 'update-actions');
+    row.append(go, later);
+    body.append(row);
+    card.append(icon, body);
     host.prepend(card);
     return card;
   }

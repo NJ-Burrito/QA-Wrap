@@ -218,32 +218,23 @@ await test('"Not now" clears the badge dot; a stale dot for an already-installed
   assert.equal(q.badge.text, '');
 });
 
-await test('Update: unpacked opens the zip and shows 3 steps; store asks the browser, then "Restart to update" reloads only on press', async () => {
+await test('Update: unpacked opens the update page and downloads nothing', async () => {
   const p = page();
   await shown(p, STATE);
   await byText(p, 'Update').fire('click');
   await settle();
-  assert.deepEqual(p.opened, []);
-  assert.equal(JSON.stringify(p.downloads.map((d) => [d.url, d.filename, d.headers])), JSON.stringify([[STATE.latest.zip, 'qa-wrap-3.6.0.zip', null]]));
-  assert.equal(p.st.data.qawPendingNotes.version, '3.6.0', 'the whats-new page finds the notes');
-  const g = page(); // permission granted: the automatic path opens the update page, no download
-  g.grant.v = true;
-  await shown(g, STATE);
-  await byText(g, 'Update').fire('click');
-  await settle();
-  assert.deepEqual(g.opened, ['chrome-extension://abc/whatsnew/whatsnew.html?update=3.6.0']);
-  assert.deepEqual(g.downloads, []);
-  const q = page(); // private repo + saved token: the API asset URL with the Bearer header
+  assert.deepEqual(p.opened, ['chrome-extension://abc/whatsnew/whatsnew.html?update=3.6.0'], 'Update opens the update page, with or without the permission');
+  assert.deepEqual(p.downloads, [], 'the card never downloads a zip: the page does, and only on "Update manually instead"');
+  assert.equal(p.st.data.qawPendingNotes.version, '3.6.0', 'the update page finds the notes');
+  const q = page(); // private repo + saved token: the page needs the API asset URL, so it rides in the pending record
   await q.st.local.set({ qawUpdateToken: 'ghp_x' });
   await shown(q, { latest: { ...STATE.latest, zipApi: 'https://api.github.com/repos/o/r/releases/assets/7' } });
   await byText(q, 'Update').fire('click');
   await settle();
-  assert.equal(q.downloads[0].url, 'https://api.github.com/repos/o/r/releases/assets/7');
-  assert.equal(q.downloads[0].headers.map((h) => h.value).join('|'), 'application/octet-stream|Bearer ghp_x');
-  const steps = find(p.doc.body, (e) => e.className === 'update-steps')[0];
-  assert.equal(steps.hidden, false);
-  assert.equal(steps.children.length, 3);
+  assert.equal(q.st.data.qawPendingNotes.zipApi, 'https://api.github.com/repos/o/r/releases/assets/7');
+});
 
+await test('Update: the store build asks the browser, then "Restart to update" reloads only on press', async () => {
   const s = page();
   s.chrome.runtime.getManifest = () => ({ version: '3.5.3', update_url: 'https://clients2.google.com/service/update2/crx' });
   s.chrome.runtime.requestUpdateCheck = async () => ({ status: 'update_available' });

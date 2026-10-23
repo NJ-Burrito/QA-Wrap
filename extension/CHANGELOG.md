@@ -6,6 +6,20 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.7.0, 2026-10-23
+
+### Added
+
+- The update page is redesigned. It shows real stages (downloading, checking, installing, reloading), then "You're on" with the release notes as cards: Added, Changed, Fixed. English and Arabic, light and dark.
+- When automatic updates are not turned on yet, the page asks you to run one file once (updater\install.cmd, or install.sh on Mac and Linux), with a Copy steps button and a Check again button that updates by itself as soon as the file has run. Nothing downloads until you press "Update manually instead".
+- Settings > Updates shows whether automatic updates are on, with the same one-time guidance.
+
+### Changed
+
+- The "Version X is available" card is restyled and keeps the release notes tucked in a short disclosure. Pressing Update opens the update page instead of downloading a zip.
+- A failed update now says calmly that nothing changed, where the backup is, and offers Try again.
+- The install steps in the README put the one-time updater file right after Load unpacked.
+
 ## 3.6.9, 2026-10-23
 
 ### Changed
