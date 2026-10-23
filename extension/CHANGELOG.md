@@ -6,6 +6,10 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.6.6, 2026-10-23
+
+- Fixed: Awake no longer falls back to Asleep on its own. After the background worker had been idle, the panel's own state read could be answered "asleep" because a slow first read of the awake window was given up after 0.4 s; and waking a window with a page that has a frame that never finishes loading (a slow dashboard gadget) could outlast the 10 s limit and show "QA Wrap is taking longer than usual". The wake now answers within 3 s, the awake state is never guessed, and a timed-out press leaves the switch showing what the worker actually did.
+
 ## 3.6.5, 2026-10-23
 
 - Fixed: filing to Jira no longer shows `[object Object]` as the "Expected vs actual" table header (Cloud and Data Center), and the "Include notes" option now appears whenever the session has your own notes; they are filed as a numbered list, Arabic notes reading right-to-left.
