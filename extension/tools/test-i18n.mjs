@@ -171,7 +171,7 @@ function walk(dir, rel = '') {
       if (entry.name.startsWith('.') || entry.name === 'media') continue;
       out.push(...walk(path.join(dir, entry.name), at));
     } else if (at === GAME_PAGE) continue; // the game has its own tables (game/strings, held by test-game-i18n)
-    else if (entry.name.endsWith('.js') || entry.name.endsWith('.html') || entry.name.endsWith('.html-fragment')) out.push(at);
+    else if (entry.name.endsWith('.js') || entry.name.endsWith('.html')) out.push(at);
   }
   return out;
 }
@@ -1053,7 +1053,7 @@ function staticLabels(html) {
   const falsifier = staticLabels('<p>\n<button aria-label="Shapes: Rectangle" title="Shapes">x</button>\n<i aria-label="" title="ok" data-i18n-title="a.b"></i>\n</p>');
   if (falsifier.length !== 2) bad('tools/test-i18n.mjs', `the static-label scan found ${falsifier.length} of its 2 planted faults: the scan is broken`);
   let pages = 0;
-  const htmlOf = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? htmlOf(path.join(dir, e.name)) : e.name.endsWith('.html') ? [path.join(dir, e.name)] : []));
+  const htmlOf = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? htmlOf(path.join(dir, e.name)) : e.name.endsWith('.html') && !e.name.endsWith('.fragment.html') ? [path.join(dir, e.name)] : []));
   for (const s of SURFACES) {
     if (!fs.existsSync(path.join(EXT, s))) continue;
     for (const f of htmlOf(path.join(EXT, s)).filter((x) => path.relative(EXT, x).replace(/\\/g, '/') !== GAME_PAGE)) {
@@ -1150,7 +1150,7 @@ ok();
   for (const dir of HTML_DIRS) {
     const js = jsOf(dir);
     const painted = (id) => id && new RegExp(`\\(\\s*['"]${id}['"]\\s*\\)\\??\\.(?:textContent|innerHTML|placeholder|title|replaceChildren)\\b`).test(js);
-    for (const file of fs.readdirSync(path.join(EXT, dir)).filter((f) => f.endsWith('.html'))) {
+    for (const file of fs.readdirSync(path.join(EXT, dir)).filter((f) => f.endsWith('.html') && !f.endsWith('.fragment.html'))) {
       const rel = `${dir}/${file}`;
       const src = fs.readFileSync(path.join(EXT, dir, file), 'utf8').replace(/<!--[\s\S]*?-->/g, (c) => c.replace(/[^\n]/g, ' '));
       const stack = [];

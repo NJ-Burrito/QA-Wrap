@@ -1,6 +1,6 @@
 /* QA Wrap — local-first QA toolkit in the ISTQB shape. */
 /*
- * Settings > Integrations > «AI writing» (off by default). The markup lives in ai-writing.html-fragment and is added at run time,
+ * Settings > Integrations > «AI writing» (off by default). The markup lives in ai-writing.fragment.html and is added at run time,
  * so options.html carries one script line for it. The key is written to chrome.storage.local only (never `settings`, which syncs).
  */
 import { PROVIDERS, AI_SETTINGS_KEY, AI_KEY_KEY, loadConfig, saveConfig, removeKey, maskKey } from '../core/ai-write.js';
@@ -11,7 +11,7 @@ import { readKey, saveKey } from '../platform/ai-key.js';
   if (!host) return;
   const t = (key, params) => globalThis.QAWi18n.t(key, params);
   try {
-    const res = await fetch(new URL('ai-writing.html-fragment', import.meta.url));
+    const res = await fetch(new URL('ai-writing.fragment.html', import.meta.url));
     if (!res.ok) return;
     const box = document.createElement('div');
     box.innerHTML = await res.text();

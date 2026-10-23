@@ -162,7 +162,7 @@ await test('wiring: worker hook is tiny, the notifier is not in the boot graph, 
 });
 
 await test('options: the Jira section has the three switches, project filter and every notify-on toggle', () => {
-  const frag = read('options/jira-helper.html-fragment');
+  const frag = read('options/jira-helper.fragment.html');
   for (const id of ['jh-dropdown', 'jh-rtl', 'jh-notify', 'jh-projects', 'jh-on-assigned', 'jh-on-watched', 'jh-on-mentions', 'jh-on-labels', 'jh-labels', 'jh-on-related', 'jh-host']) {
     assert.ok(frag.includes(`id="${id}"`), id);
   }
