@@ -9,8 +9,8 @@
       "en": "qa-wrap-commercial-40s.mp4"
     },
     "poster": "qa-wrap.webp",
-    "secs": 40,
-    "pending": true
+    "thumb": "qa-wrap-film.webp",
+    "secs": 40
   },
   {
     "id": "record-a-session",

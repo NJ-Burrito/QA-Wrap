@@ -115,6 +115,12 @@ for (const lesson of lessons) {
  */
 for (const lesson of lessons) {
   if (lesson.pending) continue;
+  // 3.6.8: the one film hosted with the website (site/media), opened in a new tab; its banner is packaged beside the page.
+  if (lesson.files?.en === 'qa-wrap-commercial-40s.mp4') {
+    if (!fs.existsSync(path.join(EXT, '..', 'site', 'media', lesson.files.en))) bad(`tutorials/lessons.json:${lesson.id}`, 'the hosted film is not in site/media');
+    if (!lesson.thumb || !fs.existsSync(path.join(EXT, 'tutorials', lesson.thumb))) bad(`tutorials/lessons.json:${lesson.id}`, 'the hosted film has no packaged thumbnail');
+    continue;
+  }
   if (!lesson.online) { bad(`tutorials/lessons.json:${lesson.id}`, 'a recorded film that is not marked online: it would have to be packaged'); continue; }
   const here = [lesson.files?.en, lesson.poster].filter(Boolean);
   const absent = here.filter((f) => !fs.existsSync(path.join(MEDIA, f)));

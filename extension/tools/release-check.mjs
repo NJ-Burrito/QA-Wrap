@@ -526,14 +526,15 @@ if (vendored.length) {
  * state and the written tutorials stand in. This gate asserts the new shape:
  * the opposite of what it asserted when all twenty-two were packaged.
  */
-const media = names.filter((n) => /^tutorials\/.*\.(mp4|webm|webp|png|jpe?g|srt)$/i.test(n) || /^tutorials\/media\//.test(n));
-check(!media.length, 'no film, poster or caption file is in the package',
-  media.length ? `packaged: ${media.slice(0, 5).join(', ')}` : '0 media files under tutorials/');
+// 3.6.8: the hosted film's banner (tutorials/qa-wrap-film.webp) is the one packaged image: a local thumbnail, not a film.
+const media = names.filter((n) => (/^tutorials\/.*\.(mp4|webm|webp|png|jpe?g|srt)$/i.test(n) || /^tutorials\/media\//.test(n)) && n !== 'tutorials/qa-wrap-film.webp');
+check(!media.length, 'no film, poster or caption file is in the package (the film banner aside)',
+  media.length ? `packaged: ${media.slice(0, 5).join(', ')}` : '0 media files under tutorials/ besides the film banner');
 {
   let lessons = null;
   try { lessons = JSON.parse(text('tutorials/lessons.json') || 'null'); } catch { /* reported below */ }
   check(Array.isArray(lessons), 'tutorials/lessons.json parses as a list of lessons');
-  const live = (lessons || []).filter((l) => !l.pending);
+  const live = (lessons || []).filter((l) => !l.pending && l.files?.en !== 'qa-wrap-commercial-40s.mp4'); // the hosted film lives in site/media
   const notOnline = live.filter((l) => !l.online);
   check(!notOnline.length, 'every recorded lesson is marked online: true (hosted, not packaged)',
     notOnline.length ? `not online: ${notOnline.map((l) => l.id).join(', ')}` : `${live.length} lessons, all online`);

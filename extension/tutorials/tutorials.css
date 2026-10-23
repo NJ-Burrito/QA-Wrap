@@ -112,6 +112,13 @@ main { animation: qaw-in-up var(--motion-base) var(--motion-ease) both; }
 /* `object-position: top left` stays physical: it crops the recorded video frame
    itself (where the panel sits in that frame), not a layout direction. */
 .card .poster img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+/* The hosted film's banner, packaged beside the page: shown whole (16:9, centred), with a ring over its drawn play button. */
+.cards > .card:first-child .poster.has-thumb, .card .poster.has-thumb { aspect-ratio: 16 / 9; }
+.card .poster.has-thumb img { object-position: center; }
+.card .play-ring { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; width: 15%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 70%, transparent); pointer-events: none; transition: scale var(--dur-tap) var(--ease); }
+[dir="rtl"] .card .play-ring { translate: 50% -50%; }
+.card:hover .play-ring, .card:focus-visible .play-ring { scale: 1.12; }
+@media (prefers-reduced-motion: reduce) { .card .play-ring { transition: none; } }
 .card .play { position: absolute; inset-block-end: 12px; inset-inline-start: 12px; display: inline-flex; align-items: center; gap: 6px; padding-block: 6px; padding-inline: 9px 11px; border-radius: var(--r-pill); background: var(--accent); color: var(--accent-text); font-size: 12px; font-weight: 700; }
 .card .dur { position: absolute; inset-block-end: 12px; inset-inline-end: 12px; padding: 4px 9px; border-radius: var(--r-pill); background: rgba(29,32,36,.82); color: #F1EFE9; font-size: 11.5px; font-weight: 600; } /* literal: the chip sits on a video poster, not on a themed surface */
 .card .body { padding: 13px 15px 15px; display: grid; gap: 5px; }

@@ -13,7 +13,7 @@
 
 **QA Wrap is a local-first QA toolkit that lives in your browser.** It records a test session, links every failure to the action that caused it, and writes the bug report for you. [العربية](README.ar.md)
 
-[![Watch the 40-second film](site/media/qa-wrap-commercial-40s.jpg)](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
+[![Watch the 40-second film](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-1280.jpg)](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
 
 [Website](https://nj-burrito.github.io/QA-Wrap/) · [Download the latest release](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · [Install](#install) · [Updates](#updates) · [Privacy](#privacy)
 

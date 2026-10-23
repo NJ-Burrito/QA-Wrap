@@ -6,6 +6,10 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.6.8, 2026-10-23
+
+- Added: a banner for the 40-second film.
+
 ## 3.6.7, 2026-10-23
 
 - Added: the 40-second QA Wrap film on the website and in the video area.

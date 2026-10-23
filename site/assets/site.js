@@ -33,11 +33,11 @@
   }
 })();
 
-/* The 40-second film sections stay hidden until the file is published (a HEAD check, no body is fetched). */
+/* The 40-second film sections show at once with their poster; a HEAD check (no body is fetched) hides them only if the file is missing. */
 (function () {
   var films = document.querySelectorAll('.film');
   if (!films.length || !window.fetch) return;
   fetch('media/qa-wrap-commercial-40s.mp4', { method: 'HEAD' }).then(function (r) {
-    if (r.ok) films.forEach(function (f) { f.hidden = false; });
-  }).catch(function () { /* offline or missing: stay hidden */ });
+    if (!r.ok) films.forEach(function (f) { f.hidden = true; });
+  }).catch(function () { /* a network error says nothing about the file: keep the poster */ });
 })();
