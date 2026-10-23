@@ -22,7 +22,7 @@ export async function checkNow({ state, version, token, run }) {
 async function mount(doc) {
   const $ = (id) => doc.getElementById(id);
   const tr = (k, v) => globalThis.QAWi18n.t(k, v);
-  for (const id of ['about-github', 'about-portfolio']) { const a = /** @type {HTMLAnchorElement|null} */ ($(id)); if (a) a.textContent = a.href.replace(/^https:\/\//, ''); } // Latin address, painted from the href
+  for (const id of ['about-github', 'about-portfolio', 'about-linkedin']) { const a = /** @type {HTMLAnchorElement|null} */ ($(id)); if (a) a.textContent = a.href.replace(/^https:\/\//, ''); } // Latin address, painted from the href
   if (WEBSITE_URL && $('about-website')) {
     const a = Object.assign(doc.createElement('a'), { href: WEBSITE_URL, target: '_blank', rel: 'noopener', textContent: WEBSITE_URL.replace(/^https?:\/\//, '') });
     $('about-website').removeAttribute('data-i18n');

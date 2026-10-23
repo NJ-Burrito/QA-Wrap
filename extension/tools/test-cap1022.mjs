@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
-import { WINDOW_MS, SLOTS, dueRestarts, pickSave } from '../core/rolling-buffer.js';
+import { WINDOW_MS, SLOTS, dueRestarts, pickSave, reconcileDuration } from '../core/rolling-buffer.js';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (...p) => fs.readFileSync(path.join(EXT, ...p), 'utf8');
@@ -130,6 +130,49 @@ await test('«Save last 1 minute» is a button, in a session only, with EN and A
   assert.equal(en['popup.cap1022.rollSave'], 'Save last 1 minute');
   assert.ok(!/bufferSites/.test(read('offscreen', 'rolling.js')));
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(read('offscreen', 'rolling.js')), 'the buffer makes no network request');
+});
+
+await test('«Save last 1 minute»: rollOp reaches the media worker as UQA_OFF_ROLL, the payload cannot replace the type', async () => {
+  const sent = [];
+  globalThis.chrome = {
+    runtime: { sendMessage: async (m) => { sent.push(m); return { ok: true, result: { rolling: true } }; }, getContexts: async () => [{}], onMessage: { addListener() {} }, getURL: (x) => x, id: 'x' },
+    offscreen: { createDocument: async () => {}, hasDocument: async () => true },
+    storage: { local: { get: async () => ({}), set: async () => {} }, session: { get: async () => ({}), set: async () => {} }, onChanged: { addListener() {} } }, tabs: {}, downloads: {},
+  };
+  const media = await import('../background/media.js');
+  await media.rollOp({ type: 'UQA_ROLL', op: 'save' });
+  assert.equal(sent.at(-1).type, 'UQA_OFF_ROLL');
+  assert.equal(sent.at(-1).op, 'save');
+});
+
+await test('the saved clip\'s duration metadata is what the media decodes to (within 1 s), never the wall time of a mostly still tab', () => {
+  assert.ok(Math.abs(reconcileDuration(56_500, 21_421) - 21_421) <= 1000, 'metadata must follow the decoded length');
+  assert.equal(reconcileDuration(56_500, null), 56_500, 'no decode: wall time');
+  assert.equal(reconcileDuration(90_000, 80_000), WINDOW_MS, 'never past the window');
+  const r = read('offscreen', 'rolling.js');
+  assert.match(r, /reconcileDuration\(Date\.now\(\) - slot\.startedAt, await decodedMs\(blob\)\)/, 'save() stores the decoded length');
+});
+
+await test('quiet detection: a 404 loop (beacon) yields 0 findings with no click, and still 0 after a click that did not cause it; a 404 right after a click is 1', async () => {
+  const beacon = async (env) => { env.win.next = () => Promise.resolve(new Response('', { status: 404 })); await env.win.fetch('/analytics/beacon', { method: 'POST' }); };
+  const loop = mkEnv();
+  for (let i = 0; i < 4; i++) await beacon(loop);
+  await new Promise((r) => setTimeout(r, 300));
+  assert.equal(loop.ev('net').length, 0, 'no click: nothing');
+  loop.act(1); // a tester click lands in the middle of the loop
+  for (let i = 0; i < 4; i++) await beacon(loop);
+  await new Promise((r) => setTimeout(r, 300));
+  assert.equal(loop.ev('net').length, 0, 'the loop was failing before the click: background');
+  const caused = mkEnv();
+  caused.act(1);
+  await answer(caused, 404);
+  assert.equal(caused.ev('net').length, 1);
+});
+
+await test('Settings > About links LinkedIn, EN and AR', () => {
+  assert.match(read('options', 'options.html'), /id="about-linkedin" href="https:\/\/www\.linkedin\.com\/in\/nader-alzghoul"/);
+  assert.match(read('options', 'e1022.js'), /'about-linkedin'/);
+  for (const l of ['en', 'ar']) assert.ok(JSON.parse(read('platform', 'i18n', `${l}.json`))['options.e1022.aboutLinkedin']);
 });
 
 await test('side panel: tools take 3 parts of 5, the rest 2 (60/40); the island toolbar is untouched', () => {

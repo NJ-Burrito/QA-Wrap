@@ -1,4 +1,4 @@
-# Opera add-ons: listing text (Arabic) for QA Wrap 3.7.1
+# Opera add-ons: listing text (Arabic) for QA Wrap 3.8.0
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 

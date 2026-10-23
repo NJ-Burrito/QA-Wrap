@@ -24,3 +24,9 @@ export function pickSave(slots) {
   slots.forEach((s, i) => { if (s && (best < 0 || s.startedAt < slots[best].startedAt)) best = i; });
   return best;
 }
+
+/** The duration to store for a saved clip: what the media decodes to when that is known (a MediaRecorder file can hold far less than the wall time, because a still tab emits few frames), else the wall time, never past the window. */
+export function reconcileDuration(wallMs, decodedMs, windowMs = WINDOW_MS) {
+  const ok = Number.isFinite(decodedMs) && decodedMs > 0;
+  return Math.min(windowMs, Math.round(ok ? decodedMs : wallMs));
+}

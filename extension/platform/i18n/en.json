@@ -644,6 +644,7 @@
   "options.dest.floorModerate": "Moderate and above",
   "options.download.folderHelp": "Choose a folder and QA Wrap writes into it directly, anywhere on your disk, with the category tree above laid out inside it. Files written that way do not appear in the browser’s download list, because the browser is not the one writing them: QA Wrap names the folder and the files in the message it shows you instead. Without a folder, files go through the browser itself and are listed in its downloads, where Chrome does not let an extension read the folder you pick in its Save dialog, or choose one for you: all it can do is name a subfolder inside Downloads, which is what \"Save into\" is. Leave that empty and files go to Downloads/QA Wrap.",
   "options.e1022.aboutGithub": "GitHub",
+  "options.e1022.aboutLinkedin": "LinkedIn",
   "options.e1022.aboutPortfolio": "Portfolio",
   "options.e1022.aboutSoon": "Coming soon",
   "options.e1022.aboutWebsite": "Website",

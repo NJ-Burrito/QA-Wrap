@@ -232,6 +232,24 @@
   }
 
   /**
+   * A 4xx belongs to a tester action only when it follows one within QUIET_MS AND is not a request that was already failing on a loop before that action
+   * (a 404 analytics beacon every half second is the page's own timer, whichever click it happens to land after). Two earlier failures of the same
+   * method+URL before the action make it background. Every 4xx is remembered here, dropped or not.
+   */
+  const seen4xx = new Map();
+  function causedByAction(ev) {
+    const key = `${ev.method} ${ev.url}`;
+    const times = seen4xx.get(key) || [];
+    const now = Date.now();
+    times.push(now);
+    if (times.length > 8) times.shift();
+    seen4xx.set(key, times);
+    if (seen4xx.size > 200) seen4xx.delete(seen4xx.keys().next().value);
+    if (!(act > 0 && now - lastActAt < QUIET_MS + (ev.durationMs || 0))) return false;
+    return times.filter((t) => t < lastActAt).length < 2;
+  }
+
+  /**
    * Every natural request/console/uncaught outcome goes through here. Successes
    * pass straight through; a failure is stored in full only the first
    * STORE_PER_FP_EPOCH times per (cheapKey, act); the rest are counted and go out
@@ -244,7 +262,7 @@
     if (isFailure(ev) && !ev.overridden && ev.via !== 'api') {
       // cap1022 quiet detection: a logged console.error is not an uncaught error (kept as a warning line), and a 4xx only counts when a tester action caused it; 5xx, transport errors, uncaught errors and GraphQL errors always count.
       if (ev.kind === 'console') ev.level = 'warn';
-      else if (ev.kind === 'net' && ev.ev !== 'gql' && ev.status >= 400 && ev.status < 500 && !(act > 0 && Date.now() - lastActAt < QUIET_MS + (ev.durationMs || 0))) return;
+      else if (ev.kind === 'net' && ev.ev !== 'gql' && ev.status >= 400 && ev.status < 500 && !causedByAction(ev)) return;
     }
     if (!isFailure(ev)) return emit(ev);
     const h = hintFor(ev, raw);

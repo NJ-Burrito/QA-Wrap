@@ -18,6 +18,9 @@ Not shown to users: a release copies its own `## <version>` section only. Rename
 
 - The test pipeline check no longer fails on the hand-run hung-frame test (it is now listed as a headed, hand-run e2e).
 - The lock file now shows the same version as the package.
+- Save last 1 minute works again: the button always said it could not save, because the request was sent under the wrong message name. The saved clip's length is now the length the video really plays, not the time on the clock.
+- Settings > About now links to the maker's LinkedIn page, in English and Arabic.
+- A failing request that repeats on its own (a background tracking call that keeps returning an error) is no longer counted as a finding just because you clicked something nearby. Errors from servers and uncaught page errors are still always counted.
 
 ## 3.7.1, 2026-10-23
 

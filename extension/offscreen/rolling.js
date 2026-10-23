@@ -8,7 +8,7 @@
 import { putMedia } from '../core/db.js';
 import { sha256Hex } from '../core/integrity.js';
 import { videoMime } from '../core/file-probe.js';
-import { SLOTS, WINDOW_MS, dueRestarts, pickSave } from '../core/rolling-buffer.js';
+import { SLOTS, dueRestarts, pickSave, reconcileDuration } from '../core/rolling-buffer.js';
 
 /** @type {null | { stream: MediaStream, sessionId: string, tabId: number, onState?: any, mime: string, t0: number, slots: any[], timer: number }} */
 let r = null;
@@ -47,6 +47,19 @@ export function stopRoll() {
   r = null;
 }
 
+/** What the blob really decodes to, in ms; null when it cannot be read. A MediaRecorder file has no duration header, so seek far past the end to make the element compute it. */
+async function decodedMs(blob) {
+  const v = document.createElement('video');
+  const url = URL.createObjectURL(blob);
+  const wait = (ev) => new Promise((ok, no) => { v.addEventListener(ev, ok, { once: true }); v.addEventListener('error', no, { once: true }); setTimeout(no, 8000); });
+  try {
+    v.muted = true; v.preload = 'auto'; v.src = url;
+    await wait('loadedmetadata');
+    if (!Number.isFinite(v.duration)) { const w = wait('durationchange'); v.currentTime = 1e9; await w; }
+    return Number.isFinite(v.duration) ? Math.round(v.duration * 1000) : null;
+  } catch { return null; } finally { URL.revokeObjectURL(url); }
+}
+
 /** @param {{ label?: string }} msg */
 async function save({ label }) {
   const i = r ? pickSave(r.slots) : -1;
@@ -62,7 +75,7 @@ async function save({ label }) {
   const type = mime.split(';')[0];
   const record = {
     id: crypto.randomUUID(), sessionId, kind: 'recording', label: label || 'Last minute', type, ext: type.includes('mp4') ? 'mp4' : 'webm',
-    durationMs: Math.min(WINDOW_MS, Date.now() - slot.startedAt), ts: slot.startedAt, sources: { tab: true }, incomplete: null, bytes: blob.size, blob,
+    durationMs: reconcileDuration(Date.now() - slot.startedAt, await decodedMs(blob)), ts: slot.startedAt, sources: { tab: true }, incomplete: null, bytes: blob.size, blob,
   };
   await putMedia({ ...record, sha256: await sha256Hex(blob) });
   const { blob: _b, ...meta } = record;
