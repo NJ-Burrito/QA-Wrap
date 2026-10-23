@@ -530,3 +530,15 @@ body[data-lang="ar"] [data-lang-block="en"] { display: none; }
 .about-facts li { margin: 0; padding-inline-start: 0.9rem; border-inline-start: 3px solid var(--accent); }
 .more-grid small { overflow-wrap: anywhere; }
 .more-grid a > span { min-width: 0; }
+
+/* Get block */
+.get-h { margin: 1.25rem 0 0.6rem; }
+.get-list { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 0.6rem; }
+.get-list li > a, .get-list li > .get-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem 0.9rem; border: 1px solid var(--border-strong); border-radius: 12px; text-decoration: none; color: inherit; min-height: 48px; }
+.get-list li > a:hover { border-color: var(--accent); }
+.get-list .fi { flex: none; }
+.get-name { flex: 1; font-weight: 600; overflow-wrap: anywhere; }
+.get-status { font-size: 0.85rem; padding: 0.1rem 0.55rem; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.get-status.ok { color: var(--accent); }
+.get-wait { opacity: 0.8; }
+.get-note { font-size: 0.9rem; margin: 0.25rem 0 1rem; }
