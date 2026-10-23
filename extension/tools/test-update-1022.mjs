@@ -70,7 +70,7 @@ await test('the page shows release notes as text only (no innerHTML, no eval), E
   assert.ok(!/innerHTML|outerHTML|insertAdjacentHTML|document\.write|eval\(/.test(js));
   for (const lang of ['en', 'ar']) {
     const t = JSON.parse(read('platform', 'i18n', `${lang}.json`));
-    for (const k of ['update.upd1022.pageTitle', 'update.upd1022.updating', 'update.upd1022.done', 'update.upd1022.failed', 'update.upd1022.manual', 'update.upd1022.whatsNewIn', 'update.upd1022.releasePage', 'update.upd1022.tokenLabel']) assert.ok(t[k], `${lang}:${k}`);
+    for (const k of ['update.upd1022.pageTitle', 'update.upd1022.updating', 'update.upd1022.failed', 'update.upd2.turnOn', 'update.upd2.youreOn', 'update.upd1022.tokenLabel']) assert.ok(t[k], `${lang}:${k}`);
   }
 });
 
