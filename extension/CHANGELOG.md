@@ -6,6 +6,12 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.6.10, 2026-10-23
+
+### Changed
+
+- Second maintenance release to try the one-press update again. Your sessions, notes and settings stay as they are.
+
 ## 3.6.9, 2026-10-23
 
 ### Changed
