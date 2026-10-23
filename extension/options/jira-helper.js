@@ -1,6 +1,6 @@
 /* QA Wrap - local-first QA toolkit in the ISTQB shape. */
 /*
- * Settings > Integrations > «Jira helper». The markup lives in jira-helper.html-fragment and is added at run time, like AI writing.
+ * Settings > Integrations > «Jira helper». The markup lives in jira-helper.fragment.html and is added at run time, like AI writing.
  * Everything is stored in chrome.storage.local under qawJira. Notifications stay off until the switch is turned on, and turning it on
  * is the press that asks for the address and starts the once-a-minute alarm; turning it off clears the alarm.
  */
@@ -11,7 +11,7 @@ import { KEY, ALARM, cleanHost, normalise } from '../core/jira-helper-core.js';
   if (!mount) return;
   const t = (key, params) => globalThis.QAWi18n.t(key, params);
   try {
-    const res = await fetch(new URL('jira-helper.html-fragment', import.meta.url));
+    const res = await fetch(new URL('jira-helper.fragment.html', import.meta.url));
     if (!res.ok) return;
     const box = document.createElement('div');
     box.innerHTML = await res.text();
