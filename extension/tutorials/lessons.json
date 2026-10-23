@@ -3,13 +3,13 @@
     "id": "qa-wrap",
     "kind": "trailer",
     "ar": "كيو إيه راب",
-    "en": "QA Wrap",
+    "en": "QA Wrap in 40 seconds",
     "blurb": "The whole product in under a minute: what it records, what it proves, and what you hand over.",
     "files": {
-      "en": "qa-wrap-en.mp4"
+      "en": "qa-wrap-commercial-40s.mp4"
     },
     "poster": "qa-wrap.webp",
-    "secs": 52,
+    "secs": 40,
     "pending": true
   },
   {

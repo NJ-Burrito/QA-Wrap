@@ -6,6 +6,11 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.6.5, 2026-10-23
+
+- Fixed: filing to Jira no longer shows `[object Object]` as the "Expected vs actual" table header (Cloud and Data Center), and the "Include notes" option now appears whenever the session has your own notes; they are filed as a numbered list, Arabic notes reading right-to-left.
+- Added: the Tutorials card "QA Wrap in 40 seconds" opens the film on the website in a new tab, and the website gets a "Watch the 40-second film" section; both stay hidden until the film is published.
+
 ## 3.6.4, 2026-10-23
 
 ### Added

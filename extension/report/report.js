@@ -997,7 +997,7 @@ async function renderVerdict() {
   const ctx = {
     sessionId, session, events, send, say, steps, line,
     // Filing reads the same function: only shown problems, Notes and Induced never filed unless asked.
-    signal: sgv && { problems: sgv.num, rows: sgv.rows.filter((r) => r.c === 'D'), notes: sgv.sig.rows.filter((r) => r.c === 'N') },
+    signal: sgv && { problems: sgv.num, rows: sgv.rows.filter((r) => r.c === 'D'), notes: [...sgv.sig.rows.filter((r) => r.c === 'N'), ...events.filter((e) => e.kind === 'note' && !['technique', 'capture-gap', 'split', 'dropped'].includes(e.tag))] },
     title: BF.heroTitle({ session, events, t, summarise }),
     screenshotCount: events.filter((e) => e.kind === 'screenshot').length,
     markdown: async () => { const r = await send({ type: 'UQA_EXPORT', sessionId, format: 'markdown' }); return r.ok ? r.result.content : ''; },
