@@ -23,6 +23,29 @@
   try { saved = window.localStorage.getItem(KEY); } catch (err) { /* private mode, or blocked */ }
   apply(saved);
 
+  var THEME_KEY = 'qaw-site-theme';
+  var root = document.documentElement;
+  var tbtn = document.getElementById('theme-toggle');
+  if (tbtn) {
+    tbtn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { window.localStorage.setItem(THEME_KEY, next); } catch (err) { /* private mode, or blocked */ }
+    });
+  }
+
+  /* The screens gallery: the arrow buttons scroll one slide, in reading direction. */
+  document.querySelectorAll('.gallery-ctl button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var wrap = b.parentNode.nextElementSibling;
+      if (!wrap) return;
+      var slide = wrap.querySelector('figure');
+      var step = (slide ? slide.getBoundingClientRect().width : 400) + 16;
+      var dir = window.getComputedStyle(wrap).direction === 'rtl' ? -1 : 1;
+      wrap.scrollBy({ left: Number(b.getAttribute('data-gal')) * step * dir, behavior: 'smooth' });
+    });
+  });
+
   var btn = document.getElementById('lang-toggle');
   if (btn) {
     btn.addEventListener('click', function () {
@@ -40,4 +63,15 @@
   fetch('media/qa-wrap-commercial-40s.mp4', { method: 'HEAD' }).then(function (r) {
     if (!r.ok) films.forEach(function (f) { f.hidden = true; });
   }).catch(function () { /* a network error says nothing about the file: keep the poster */ });
+})();
+
+/* The animated banner is 4 MB: it is fetched only when its slide is about to be seen. */
+(function () {
+  var imgs = document.querySelectorAll('img[data-src]');
+  function load(i) { i.src = i.getAttribute('data-src'); i.removeAttribute('data-src'); }
+  if (!('IntersectionObserver' in window)) { imgs.forEach(load); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
+  }, { rootMargin: '200px' });
+  imgs.forEach(function (i) { io.observe(i); });
 })();
