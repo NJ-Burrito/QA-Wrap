@@ -22,15 +22,23 @@ const walk = (dir, rel = '') => fs.readdirSync(dir, { withFileTypes: true }).fla
 
 const lessons = JSON.parse(read(path.join(EXT, 'tutorials', 'lessons.json')));
 const live = lessons.filter((l) => !l.pending);
+// 3.6.8 (Nader, 2026-10-23): the one hosted film (site/media) is live, and its banner is packaged as a local thumbnail.
+const FILM = 'qa-wrap-commercial-40s.mp4';
+const THUMB = 'qa-wrap-film.webp';
 
-test('no film, poster or caption sits under extension/tutorials', () => {
+test('no film, poster or caption sits under extension/tutorials; the only image is the hosted film banner, under 60 KB', () => {
   const media = walk(path.join(EXT, 'tutorials')).filter((f) => /\.(mp4|webm|webp|png|jpe?g|srt)$/i.test(f) || f.startsWith('media/'));
-  assert.deepEqual(media, []);
+  assert.deepEqual(media, [THUMB]);
+  assert.ok(fs.statSync(path.join(EXT, 'tutorials', THUMB)).size < 60 * 1024, `${THUMB} is 60 KB or more`);
 });
-test('S-07 (sdlc-1014): no film is hosted or packaged; every lesson is pending and none points at remote media', () => {
+test('S-07 (sdlc-1014): no film is packaged; every lesson but the hosted film is pending, and none is marked online', () => {
   assert.ok(lessons.length >= 20, `only ${lessons.length} lessons listed`);
   for (const l of lessons) {
-    assert.equal(l.pending, true, `${l.id} is not pending`);
+    if (l.files?.en === FILM) {
+      assert.ok(!l.pending, `${l.id} is the live hosted film`);
+      assert.equal(l.thumb, THUMB, `${l.id} has no packaged thumbnail`);
+      assert.ok(fs.existsSync(path.join(REPO, 'site', 'media', FILM)), `site/media/${FILM} is missing`);
+    } else assert.equal(l.pending, true, `${l.id} is not pending`);
     assert.ok(!('online' in l), `${l.id} is still marked online`);
   }
   assert.ok(!fs.existsSync(path.join(REPO, 'site', 'tutorials')), 'site/tutorials is back');
@@ -39,7 +47,7 @@ test('one tracked copy per film: each mp4 name is tracked exactly once in the re
   const tracked = execFileSync('git', ['ls-files', '*.mp4'], { cwd: REPO, encoding: 'utf8' }).split('\n').filter(Boolean);
   const names = tracked.map((f) => path.basename(f));
   assert.equal(new Set(names).size, names.length, `duplicate tracked films: ${names.filter((x, i) => names.indexOf(x) !== i).join(', ')}`);
-  assert.ok(tracked.every((f) => f.startsWith('site/tutorials/') || !live.some((l) => path.basename(f) === l.files.en)), 'a lesson film is tracked outside site/tutorials');
+  assert.ok(tracked.every((f) => f.startsWith('site/tutorials/') || f === `site/media/${FILM}` || !live.some((l) => path.basename(f) === l.files.en)), 'a lesson film is tracked outside site/tutorials (or site/media for the hosted film)');
 });
 // sdlc-1014b: 6 MB to 6.25 MB. The package stood only a few hundred bytes under 6 MB at 3.5.1; the dock guard, the done-card title and the error button add 9 KB of shipped code and strings.
 // 2026-10-22: 6.7 -> 6.85 MB, merged lanes: object picking + keyframes (~25 KB) and the updater installers + What's new page (~46 KB).
@@ -59,10 +67,13 @@ test('the page builds no remote address, and the extension-page CSP allows only 
   for (const d of ["img-src 'self' data: blob:", "media-src 'self' blob:", "form-action 'none'"]) assert.ok(csp.includes(d), d);
   assert.ok(!/media\/\$\{/.test(js), 'a packaged media/ path is back');
 });
-test('opening the page fetches nothing: no poster is set until a card is played', () => {
+test('opening the page fetches nothing remote: a card shows only its packaged thumbnail, no poster until it is played', () => {
   const js = read(path.join(EXT, 'tutorials', 'tutorials.js'));
-  const card = js.slice(js.indexOf('function cardFor'), js.indexOf('function cardFor') + 1600);
+  const card = js.slice(js.indexOf('function cardFor'), js.indexOf('function chapterList'));
   assert.ok(!/posterUrl\(/.test(card) && !/createElement\('img'\)/.test(card), 'cardFor loads a poster');
+  const srcs = card.match(/\.src = [^;]+;/g) || [];
+  assert.deepEqual(srcs, ['.src = lesson.thumb;'], 'cardFor sets an image source other than the packaged thumbnail');
+  for (const l of lessons) if (l.thumb) assert.ok(!/[:/]/.test(l.thumb) && fs.existsSync(path.join(EXT, 'tutorials', l.thumb)), `${l.id}: thumb is not a packaged file beside the page`);
   assert.equal((js.match(/posterUrl\(/g) || []).length, 1, 'posterUrl is used once, in the player');
 });
 test('the empty state exists, is wired to offline and to a failed load, and has en+ar words', () => {

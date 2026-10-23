@@ -174,7 +174,16 @@ function cardFor(lesson) {
     ? t('tutorials.card.comingAria', { title: lesson.en })
     : t('tutorials.card.playAria', { title: lesson.en }));
   const poster = el('div', 'poster');
-  // Nothing is fetched until a click: the tile is CSS and the lesson title, the poster arrives with the film (T-048).
+  // Nothing remote is fetched until a click: the tile is CSS and the lesson title (T-048). The one exception is a
+  // thumbnail packaged beside this page (`lesson.thumb`, the hosted film's banner): a local file, never a remote one.
+  if (lesson.thumb && !lesson.pending) {
+    const img = el('img', 'thumb');
+    img.src = lesson.thumb;
+    img.alt = '';
+    img.decoding = 'async';
+    poster.classList.add('has-thumb');
+    poster.append(img, el('span', 'play-ring'));
+  }
   poster.append(
     el('span', lesson.pending ? 'play soon' : 'play', lesson.pending ? t('tutorials.card.coming') : t('tutorials.card.play')),
     el('span', 'dur', dur(lesson.secs))
