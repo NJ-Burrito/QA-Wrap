@@ -3,8 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trust · QA Wrap</title>
-<meta name="description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for, and what it will not do.">
+<title>QA Wrap trust: check in five minutes that nothing is sent</title>
+<meta name="description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for and what it will not do.">
+<link rel="canonical" href="https://nj-burrito.github.io/QA-Wrap/trust.html">
+<meta name="theme-color" content="#1D2024">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="QA Wrap">
+<meta property="og:title" content="QA Wrap trust: check in five minutes that nothing is sent">
+<meta property="og:description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for and what it will not do.">
+<meta property="og:url" content="https://nj-burrito.github.io/QA-Wrap/trust.html">
+<meta property="og:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="QA Wrap: every failure, traced">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QA Wrap trust: check in five minutes that nothing is sent">
+<meta name="twitter:description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for and what it will not do.">
+<meta name="twitter:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/thmanyah.css">
 <link rel="stylesheet" href="assets/site.css">
@@ -57,9 +74,11 @@
         permission is for, and says what QA Wrap will not do. Each claim below names the test in the
         repository that guards it.</p>
     </section>
+      <ul class="toc"><li><a href="#trust-en-1">Check it yourself in five minutes</a></li><li><a href="#trust-en-2">What each permission is for, in plain words</a></li><li><a href="#trust-en-3">One dependency, pinned</a></li><li><a href="#trust-en-4">Your data and how long it stays</a></li><li><a href="#trust-en-5">Reporting a problem, and when to expect an answer</a></li><li><a href="#trust-en-6">What QA Wrap will not do</a></li></ul>
+
 
     <section>
-      <h2>Check it yourself in five minutes</h2>
+      <h2 id="trust-en-1">Check it yourself in five minutes</h2>
       <div class="prose">
         <ol>
           <li>Open the page you want to test. Press <kbd>F12</kbd> and open the <strong>Network</strong> tab on that page.</li>
@@ -77,8 +96,9 @@
     </section>
 
     <section>
-      <h2>What each permission is for, in plain words</h2>
-      <div class="table-scroll">
+      <h2 id="trust-en-2">What each permission is for, in plain words</h2>
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead><tr><th scope="col">Permission</th><th scope="col">What it is used for</th></tr></thead>
           <tbody>
@@ -87,27 +107,28 @@
             <tr><th scope="row">Screen, tab and microphone capture</th><td>Only when you press Record, and only what you pick in Chrome's own prompt. An administrator can switch the microphone off entirely.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose">The full list, with the justification given to the store for each, is in the privacy policy and the store listing.</p>
     </section>
 
     <section>
-      <h2>One dependency, pinned</h2>
+      <h2 id="trust-en-3">One dependency, pinned</h2>
       <p class="prose">At run time QA Wrap carries one third-party library, <code>axe-core</code> (an accessibility rule engine), at a pinned version.
         Its SHA-256 is recorded in <code>vendor/README.md</code> and recomputed by <code>tools/release-check.mjs</code>
         on every release; a changed byte stops the release. Everything else is the project's own code. Build tools are not shipped.</p>
     </section>
 
     <section>
-      <h2>Your data and how long it stays</h2>
+      <h2 id="trust-en-4">Your data and how long it stays</h2>
       <p class="prose">Sessions are stored in your browser only. Finished sessions are deleted after 30 days by default on a new install;
         an updated install keeps the value it already had, so an update never starts deleting what you recorded. You can
         delete any session, with its media, at any time. See the <a href="privacy.html">privacy policy</a> for the exact rules.</p>
     </section>
 
     <section>
-      <h2>Reporting a problem, and when to expect an answer</h2>
-      <div class="table-scroll">
+      <h2 id="trust-en-5">Reporting a problem, and when to expect an answer</h2>
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead><tr><th scope="col">What</th><th scope="col">Where</th><th scope="col">What to expect</th></tr></thead>
           <tbody>
@@ -115,15 +136,16 @@
             <tr><th scope="row">A security issue</th><td>naderalzghoulbusiness@gmail.com, privately</td><td>An acknowledgement within 3 working days, and a fix or a written explanation within 30 days.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose"><strong>Continuity.</strong> Nader Alzghoul is the publisher and the maintainer. Sessions live on your machine and
         export to open formats, so if the project stopped, nothing you recorded would be locked inside it. There is no hosted service that could
         go away. The terms are in <code>SLA.md</code>.</p>
     </section>
 
     <section>
-      <h2>What QA Wrap will not do</h2>
-      <div class="table-scroll">
+      <h2 id="trust-en-6">What QA Wrap will not do</h2>
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead><tr><th scope="col">Not planned</th><th scope="col">Use this instead, and why</th></tr></thead>
           <tbody>
@@ -135,7 +157,7 @@
             <tr><th scope="row">OAuth for the trackers</th><td>An extension cannot keep a client secret. Personal tokens are the honest mechanism.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose"><strong>Accessibility.</strong> Not independently audited; self-scan in progress.</p>
       <p class="prose">It also has no sign-in, no central audit log, and no single sign-on. A deployment guide for administrators is in <code>ADMIN.md</code>.</p>
     </section>
@@ -145,14 +167,16 @@
     <div data-lang-block="ar" lang="ar" dir="rtl">
 
     <section class="hero">
-      <h1>الثقة</h1>
+      <p class="h1" role="heading" aria-level="1">الثقة</p>
       <p class="lead prose">QA Wrap مغلق المصدر ويصونه فريق واحد، ولا يكفي وعد على صفحة ويب. تعطيك هذه الصفحة فحصا
         تجريه بنفسك في خمس دقائق، وتقول لماذا يطلب كل إذن، وما الذي لن يفعله QA Wrap. كل ادعاء أدناه يسمي
         الاختبار الذي يحرسه في المستودع.</p>
     </section>
+      <ul class="toc"><li><a href="#trust-ar-1">افحصها بنفسك في خمس دقائق</a></li><li><a href="#trust-ar-2">لماذا يطلب كل إذن، بكلمات بسيطة</a></li><li><a href="#trust-ar-3">اعتمادية واحدة، مثبتة</a></li><li><a href="#trust-ar-4">بياناتك ومدة بقائها</a></li><li><a href="#trust-ar-5">الإبلاغ عن مشكلة، ومتى تتوقع ردا</a></li><li><a href="#trust-ar-6">ما الذي لن يفعله QA Wrap</a></li></ul>
+
 
     <section>
-      <h2>افحصها بنفسك في خمس دقائق</h2>
+      <h2 id="trust-ar-1">افحصها بنفسك في خمس دقائق</h2>
       <div class="prose">
         <ol>
           <li>افتح الصفحة التي تريد اختبارها. اضغط <kbd>F12</kbd> وافتح تبويب <strong>Network</strong> فيها.</li>
@@ -170,8 +194,9 @@
     </section>
 
     <section>
-      <h2>لماذا يطلب كل إذن، بكلمات بسيطة</h2>
-      <div class="table-scroll">
+      <h2 id="trust-ar-2">لماذا يطلب كل إذن، بكلمات بسيطة</h2>
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead><tr><th scope="col">الإذن</th><th scope="col">فيما يستخدم</th></tr></thead>
           <tbody>
@@ -180,27 +205,28 @@
             <tr><th scope="row">التقاط الشاشة والتبويب والميكروفون</th><td>فقط حين تضغط تسجيل، ولا يلتقط إلا ما تختاره في نافذة Chrome نفسها. يستطيع المسؤول إيقاف الميكروفون كليا.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose">القائمة الكاملة، مع التبرير المقدم للمتجر لكل إذن، في سياسة الخصوصية وصفحة المتجر.</p>
     </section>
 
     <section>
-      <h2>اعتمادية واحدة، مثبتة</h2>
+      <h2 id="trust-ar-3">اعتمادية واحدة، مثبتة</h2>
       <p class="prose">يحمل QA Wrap وقت التشغيل مكتبة طرف ثالث واحدة هي <code>axe-core</code> (محرك قواعد لإمكانية الوصول) بنسخة مثبتة.
         بصمتها SHA-256 مسجلة في <code>vendor/README.md</code> ويعيد <code>tools/release-check.mjs</code> حسابها
         مع كل إصدار؛ وأي بايت متغير يوقف الإصدار. كل ما عدا ذلك شيفرة المشروع نفسه. أدوات البناء لا تشحن.</p>
     </section>
 
     <section>
-      <h2>بياناتك ومدة بقائها</h2>
+      <h2 id="trust-ar-4">بياناتك ومدة بقائها</h2>
       <p class="prose">تخزن الجلسات في متصفحك فقط. تحذف الجلسات المنتهية بعد 30 يوما افتراضيا في التثبيت الجديد؛
         والتثبيت المحدث يحتفظ بالقيمة التي كانت عنده، فلا يبدأ التحديث بحذف ما سجلته. تستطيع حذف أي جلسة مع وسائطها في أي وقت.
         انظر <a href="privacy.html">سياسة الخصوصية</a> للقواعد الدقيقة.</p>
     </section>
 
     <section>
-      <h2>الإبلاغ عن مشكلة، ومتى تتوقع ردا</h2>
-      <div class="table-scroll">
+      <h2 id="trust-ar-5">الإبلاغ عن مشكلة، ومتى تتوقع ردا</h2>
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead><tr><th scope="col">ماذا</th><th scope="col">أين</th><th scope="col">ما تتوقعه</th></tr></thead>
           <tbody>
@@ -208,14 +234,15 @@
             <tr><th scope="row">مشكلة أمنية</th><td>naderalzghoulbusiness@gmail.com، بسرية</td><td>إقرار بالاستلام خلال 3 أيام عمل، وإصلاح أو تفسير مكتوب خلال 30 يوما.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose"><strong>الاستمرارية.</strong> نادر الزغول هو الناشر والقائم على الصيانة. الجلسات على جهازك وتصدر بصيغ مفتوحة،
         فلو توقف المشروع لما بقي شيء مما سجلته محبوسا فيه. لا توجد خدمة مستضافة يمكن أن تزول. الشروط في <code>SLA.md</code>.</p>
     </section>
 
     <section>
-      <h2>ما الذي لن يفعله QA Wrap</h2>
-      <div class="table-scroll">
+      <h2 id="trust-ar-6">ما الذي لن يفعله QA Wrap</h2>
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead><tr><th scope="col">غير مخطط له</th><th scope="col">استخدم هذا بدلا منه، ولماذا</th></tr></thead>
           <tbody>
@@ -227,7 +254,7 @@
             <tr><th scope="row">OAuth لأدوات التتبع</th><td>لا يستطيع الامتداد حفظ سر عميل. الرموز الشخصية هي الآلية الصادقة.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
       <p class="prose"><strong>إمكانية الوصول.</strong> لم يخضع لتدقيق مستقل؛ الفحص الذاتي جارٍ.</p>
       <p class="prose">ليس فيه أيضا تسجيل دخول ولا سجل تدقيق مركزي ولا دخول موحد. دليل النشر للمسؤولين في <code>ADMIN.md</code>.</p>
     </section>
@@ -235,6 +262,31 @@
     </div>
   </div>
 </main>
+
+<section class="more" aria-labelledby="more-en"><div class="wrap">
+  <div data-lang-block="en" lang="en" dir="ltr">
+    <h2 id="more-en">More from NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>Portfolio</strong><small>Nader's work and projects</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>Skills for Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>Your profile as a page</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>All the open repositories</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>Contact</strong><small>Say hello on the portfolio</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
+<section class="more" aria-labelledby="more-ar"><div class="wrap">
+  <div data-lang-block="ar" lang="ar" dir="rtl">
+    <h2 id="more-ar">المزيد من NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>المعرض</strong><small>أعمال نادر ومشاريعه</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>مهارات لـ Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>ملفك الشخصي كصفحة</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>كل المستودعات المفتوحة</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>تواصل</strong><small>راسله من المعرض</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
 
 <footer>
   <div class="wrap">

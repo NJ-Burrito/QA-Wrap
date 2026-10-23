@@ -3,8 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Support · QA Wrap</title>
-<meta name="description" content="How to get help with QA Wrap: the four things that fix most of it, the Report a problem flow, what to attach, and what you can expect back.">
+<title>QA Wrap support: fix a problem and report it</title>
+<meta name="description" content="How to get help with QA Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
+<link rel="canonical" href="https://nj-burrito.github.io/QA-Wrap/support.html">
+<meta name="theme-color" content="#1D2024">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="QA Wrap">
+<meta property="og:title" content="QA Wrap support: fix a problem and report it">
+<meta property="og:description" content="How to get help with QA Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
+<meta property="og:url" content="https://nj-burrito.github.io/QA-Wrap/support.html">
+<meta property="og:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="QA Wrap: every failure, traced">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QA Wrap support: fix a problem and report it">
+<meta name="twitter:description" content="How to get help with QA Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
+<meta name="twitter:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/thmanyah.css">
 <link rel="stylesheet" href="assets/site.css">
@@ -56,9 +73,11 @@
         a fix quickly, and what you can expect back. It does not promise anything that cannot be
         delivered by one person.</p>
     </section>
+      <ul class="toc"><li><a href="#support-en-1">Fix it yourself first, in about a minute</a></li><li><a href="#support-en-2">Report a problem, from inside the product</a></li><li><a href="#support-en-3">What the product will tell you about itself</a></li><li><a href="#support-en-4">Things that are decisions, not bugs</a></li><li><a href="#support-en-5">What you can expect back</a></li></ul>
+
 
     <section>
-      <h2>Fix it yourself first, in about a minute</h2>
+      <h2 id="support-en-1">Fix it yourself first, in about a minute</h2>
       <p class="prose">Four things account for most of what gets reported, and all four are faster
         to try than to describe.</p>
       <div class="prose">
@@ -97,7 +116,7 @@ qaw.wake()       // arm the current window without the popup</code></pre>
 
     <section>
       <p class="eyebrow">Reporting</p>
-      <h2>Report a problem, from inside the product</h2>
+      <h2 id="support-en-2">Report a problem, from inside the product</h2>
       <div class="prose">
         <p>The popup carries a plain <strong>Report a problem</strong> button, for the person who
           found the issue rather than the person who tests for a living: a colleague, a client, or
@@ -164,10 +183,11 @@ qaw.wake()       // arm the current window without the popup</code></pre>
 
     <section>
       <p class="eyebrow">Diagnostics</p>
-      <h2>What the product will tell you about itself</h2>
+      <h2 id="support-en-3">What the product will tell you about itself</h2>
       <p class="prose">Nothing is uploaded, so nobody can look up what happened on your machine.
         These are the ways to find out locally. From the repository, if you have it:</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">Command</th><th scope="col">What it does</th></tr>
@@ -178,13 +198,14 @@ qaw.wake()       // arm the current window without the popup</code></pre>
             <tr><th scope="row"><code>node tools/diagnose.mjs</code></th><td>Runs against the real database and the running worker.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section>
       <p class="eyebrow">Known limits</p>
-      <h2>Things that are decisions, not bugs</h2>
-      <div class="table-scroll">
+      <h2 id="support-en-4">Things that are decisions, not bugs</h2>
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">Limit</th><th scope="col">Why</th></tr>
@@ -212,19 +233,20 @@ qaw.wake()       // arm the current window without the popup</code></pre>
             </tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <hr class="hr">
 
     <section>
       <p class="eyebrow">Response</p>
-      <h2>What you can expect back</h2>
+      <h2 id="support-en-5">What you can expect back</h2>
       <p class="prose">QA Wrap is a single-maintainer tool with no paid support contract as
         standard. The table below is stated as intentions, because that is what they are. If your
         organisation needs a contractual service level, this is not it on its own, and that is a
         real reason to ask.</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>Show the table</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">Kind of report</th><th scope="col">Intention</th><th scope="col">The honest caveat</th></tr>
@@ -238,7 +260,7 @@ qaw.wake()       // arm the current window without the popup</code></pre>
             <tr><th scope="row">Availability</th><td>None promised</td><td>There is no on-call and no rota</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
 
       <div class="prose">
         <h3>Not offered, said plainly</h3>
@@ -264,13 +286,15 @@ qaw.wake()       // arm the current window without the popup</code></pre>
     <div data-lang-block="ar" lang="ar" dir="rtl">
 
     <section class="hero">
-      <h1>الدعم</h1>
+      <p class="h1" role="heading" aria-level="1">الدعم</p>
       <p class="lead prose">من نشر وصيانة نادر الزغول. تقول هذه الصفحة كيف تحصل على إصلاح
         بسرعة، وما يمكنك توقعه ردا. لا تعد بشيء لا يستطيع شخص واحد إنجازه.</p>
     </section>
+      <ul class="toc"><li><a href="#support-ar-1">أصلحها بنفسك أولا، خلال دقيقة تقريبا</a></li><li><a href="#support-ar-2">أبلغ عن مشكلة، من داخل المنتج</a></li><li><a href="#support-ar-3">ما الذي سيخبرك به المنتج عن نفسه</a></li><li><a href="#support-ar-4">أمور هي قرارات، لا أعطال</a></li><li><a href="#support-ar-5">ما يمكنك توقعه ردا</a></li></ul>
+
 
     <section>
-      <h2>أصلحها بنفسك أولا، خلال دقيقة تقريبا</h2>
+      <h2 id="support-ar-1">أصلحها بنفسك أولا، خلال دقيقة تقريبا</h2>
       <p class="prose">أربعة أمور تفسر معظم ما يبلغ عنه، وتجربة كل واحد منها أسرع من وصفه.</p>
       <div class="prose">
         <h3>1. أعد تحميل الامتداد</h3>
@@ -307,7 +331,7 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
 
     <section>
       <p class="eyebrow">الإبلاغ</p>
-      <h2>أبلغ عن مشكلة، من داخل المنتج</h2>
+      <h2 id="support-ar-2">أبلغ عن مشكلة، من داخل المنتج</h2>
       <div class="prose">
         <p>تحمل القائمة المنبثقة زر <strong>أبلغ عن مشكلة</strong> بسيطا، لمن وجد المشكلة لا لمن
           يختبر لكسب عيشه: زميل، أو عميل، أو مختبر على نسخة بلا المستودع بجانبه. يفتح صفحة واحدة:
@@ -366,10 +390,11 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
 
     <section>
       <p class="eyebrow">التشخيص</p>
-      <h2>ما الذي سيخبرك به المنتج عن نفسه</h2>
+      <h2 id="support-ar-3">ما الذي سيخبرك به المنتج عن نفسه</h2>
       <p class="prose">لا شيء يرفع، فلا أحد يستطيع البحث عما حدث على جهازك. هذه طرق معرفة ذلك
         محليا. من المستودع، إن كان بحوزتك:</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">الأمر</th><th scope="col">ما يفعله</th></tr>
@@ -380,13 +405,14 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
             <tr><th scope="row"><code>node tools/diagnose.mjs</code></th><td>يعمل على قاعدة البيانات الحقيقية والعامل قيد التشغيل.</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <section>
       <p class="eyebrow">قيود معروفة</p>
-      <h2>أمور هي قرارات، لا أعطال</h2>
-      <div class="table-scroll">
+      <h2 id="support-ar-4">أمور هي قرارات، لا أعطال</h2>
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">القيد</th><th scope="col">السبب</th></tr>
@@ -414,18 +440,19 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
             </tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
     </section>
 
     <hr class="hr">
 
     <section>
       <p class="eyebrow">الاستجابة</p>
-      <h2>ما يمكنك توقعه ردا</h2>
+      <h2 id="support-ar-5">ما يمكنك توقعه ردا</h2>
       <p class="prose">QA Wrap أداة يقوم عليها شخص واحد بلا عقد دعم مدفوع كإعداد افتراضي. الجدول
         أدناه مذكور كنوايا، لأن ذلك ما هو عليه. إن احتاجت مؤسستك مستوى خدمة تعاقديا، فهذا وحده ليس
         ذلك، وهذا سبب حقيقي للسؤال.</p>
-      <div class="table-scroll">
+      <details class="fold"><summary>اعرض الجدول</summary>
+<div class="table-scroll">
         <table>
           <thead>
             <tr><th scope="col">نوع البلاغ</th><th scope="col">النية</th><th scope="col">التحفظ الصادق</th></tr>
@@ -439,7 +466,7 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
             <tr><th scope="row">التوفر</th><td>لا وعد بشيء</td><td>لا مناوبة ولا جدول تناوب</td></tr>
           </tbody>
         </table>
-      </div>
+      </div></details>
 
       <div class="prose">
         <h3>غير مقدم، بوضوح</h3>
@@ -464,6 +491,31 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
 
   </div>
 </main>
+
+<section class="more" aria-labelledby="more-en"><div class="wrap">
+  <div data-lang-block="en" lang="en" dir="ltr">
+    <h2 id="more-en">More from NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>Portfolio</strong><small>Nader's work and projects</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>Skills for Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>Your profile as a page</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>All the open repositories</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>Contact</strong><small>Say hello on the portfolio</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
+<section class="more" aria-labelledby="more-ar"><div class="wrap">
+  <div data-lang-block="ar" lang="ar" dir="rtl">
+    <h2 id="more-ar">المزيد من NJ</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>المعرض</strong><small>أعمال نادر ومشاريعه</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>مهارات لـ Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>ملفك الشخصي كصفحة</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>كل المستودعات المفتوحة</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>تواصل</strong><small>راسله من المعرض</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
 
 <footer>
   <div class="wrap">
