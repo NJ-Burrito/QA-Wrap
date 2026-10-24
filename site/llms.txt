@@ -4,7 +4,7 @@
 
 - [Home](https://nj-burrito.github.io/QA-Wrap/): what it does, the 19 tools, install steps, FAQ
 - [Alternatives](https://nj-burrito.github.io/QA-Wrap/alternatives.html): QA-Wrap compared with Jam, Marker.io, BugHerd and Bird Eats Bug
-- [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/): the signed Firefox add-on
+- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha): install in Edge from the store (Firefox and Opera listings are in review)
 - [Latest release](https://github.com/NJ-Burrito/QA-Wrap/releases/latest): zip per browser (Chrome, Edge, Brave, Opera, Vivaldi, Arc, Yandex, Chromium)
 - [Source](https://github.com/NJ-Burrito/QA-Wrap): README in English and Arabic
 - [qa-wrap-bridge on npm](https://www.npmjs.com/package/qa-wrap-bridge): read-only MCP bridge so a coding agent can read recorded sessions; also in the Official MCP Registry as io.github.NJ-Burrito/qa-wrap-bridge
