@@ -6,7 +6,7 @@
 
 ### 🔒 لا شيء يغادر حاسوبك حتى ترسله إلى Jira أو أداة تتبع أو ويب هوك.
 
-[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/qa-wrap/)
+[![Edge Add-ons](https://img.shields.io/badge/Edge-Add--ons-0078D7?logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha)
 
 **QA-Wrap إضافة متصفح مجانية ومفتوحة المصدر لكتابة تقارير الأخطاء، صُنعت لمختبري الجودة.** تسجّل جلسة الاختبار اليدوي، وتربط كل خلل بالإجراء الذي سبّبه، وتكتب لك تقرير الخلل. بلا حساب وبلا خادم. [English](README.md)
 
@@ -26,9 +26,9 @@
 
 | | أين | الحالة |
 | --- | --- | --- |
-| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة |
+| 🦊 **Firefox** | إضافات Firefox | ⏳ قيد المراجعة (قُدّمت في 2026-10-23) |
 | 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (ليست في متجر Chrome) |
-| 🔷 **Edge** | إضافات Microsoft Edge | ⏳ قيد المراجعة (قُدّمت في 2026-10-23) |
+| 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة |
 | 🎭 **Opera** | إضافات Opera | ⏳ قيد المراجعة (قُدّمت في 2026-10-23) |
 | 🤖 **جسر MCP** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) الإصدار 0.1.0 | ✅ متاح |
 | 📚 **سجل MCP** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ متاح |
@@ -72,7 +72,7 @@
 - 💸 **هل QA-Wrap مجانية؟** نعم. لا خطة مدفوعة ولا حساب، برخصة MIT.
 - ⚖️ **هل هي بديل مجاني عن Jam أو Marker.io أو BugHerd؟** نعم، حين يجب أن يبقى التسجيل على جهازك. تلك خدمات مستضافة تشارك التقارير عبر سحابتها، أما QA-Wrap فلا خادم لها.
 - 🎫 **هل ترسل الخلل إلى Jira؟** نعم. زر الإرسال إلى Jira يصوغ الملخص، ويحوّل الخطورة إلى أولوية في Jira، ويعرض ما سيُرسل وما لن يُرسل. تُضبط أدوات التتبع الأخرى والويب هوك من الإعدادات.
-- 🌐 **أي متصفحات؟** Chrome وEdge هما المتصفحان المختبَران (Chrome 116 أو أحدث). ومستخدمو Firefox يثبتونها من [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/).
+- 🌐 **أي متصفحات؟** Chrome وEdge هما المتصفحان المختبَران (Chrome 116 أو أحدث). ومستخدمو Edge يثبتونها من [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha). وصفحة Firefox قيد المراجعة.
 - 🤖 **هل يقرأ وكيل برمجة التقارير؟** نعم، عبر [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge)، جسر MCP للقراءة فقط. يبقى متوقفا حتى تشغّل جسر الوكيل من الإعدادات.
 - 🌍 **بالعربية؟** نعم. الواجهة والتقارير بالعربية والإنجليزية.
 
@@ -101,7 +101,7 @@
 
 تسجّل خطوة أداة التحديث نفسها لكل متصفح تجده على جهازك وتخبرك بأسمائها. كل متصفح يتحدّث إلى ملفه الخاص، فلا يصل إصدار Firefox أبدًا إلى Edge.
 
-**Firefox:** ثبّت الإضافة الموقَّعة من [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/). صف الملف المضغوط أعلاه للتحميل المؤقت أثناء التطوير فقط.
+**Firefox:** صفحة الإضافة في إضافات Firefox قيد المراجعة (قُدّمت في 2026-10-23)، فينتظر مستخدمو Firefox ظهورها. الملف المضغوط في الجدول يعمل، لكنه يُحمَّل حتى إعادة تشغيل Firefox فقط.
 
 **Safari.** يحتاج Safari إلى جهاز Mac مع Xcode لتحويل النسخة إلى تطبيق (`xcrun safari-web-extension-converter`)، والتحديث بضغطة واحدة غير متاح هناك.
 

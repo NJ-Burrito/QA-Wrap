@@ -8,7 +8,7 @@
 
 [![License](https://img.shields.io/badge/licence-MIT-green.svg)](LICENSE)
 [![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white)](#install)
-[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/qa-wrap/)
+[![Edge Add-ons](https://img.shields.io/badge/Edge-Add--ons-0078D7?logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha)
 [![npm](https://img.shields.io/badge/npm-qa--wrap--bridge-CB3837?logo=npm&logoColor=white)](https://www.npmjs.com/package/qa-wrap-bridge)
 [![MCP Registry](https://img.shields.io/badge/MCP-Registry-0d9488)](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge)
 [![Arabic and English](https://img.shields.io/badge/Arabic%20%2B%20English-first--class-0d9488.svg)](README.ar.md)
@@ -34,9 +34,9 @@
 
 | | Where | Status |
 | --- | --- | --- |
-| 🦊 **Firefox** | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ Live |
+| 🦊 **Firefox** | Firefox Add-ons | ⏳ In review (submitted 2026-10-23) |
 | 🟢 **Chrome** | [GitHub release zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([steps](#install)) | ✅ Live (not in the Chrome Web Store) |
-| 🔷 **Edge** | Microsoft Edge Add-ons | ⏳ In review (submitted 2026-10-23) |
+| 🔷 **Edge** | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ Live |
 | 🎭 **Opera** | Opera add-ons | ⏳ In review (submitted 2026-10-23) |
 | 🤖 **MCP bridge** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) 0.1.0 | ✅ Live |
 | 📚 **MCP Registry** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ Live |
@@ -80,7 +80,7 @@ From each tool's own home and pricing pages, read on 24 October 2026. Plans chan
 - 💸 **Is QA-Wrap free?** Yes. No paid plan, no account, MIT licence.
 - ⚖️ **Is it a free alternative to Jam, Marker.io or BugHerd?** Yes, when the recording has to stay on your machine. Those are hosted services that share reports through their cloud. QA-Wrap has no server.
 - 🎫 **Does it file bugs to Jira?** Yes. File to Jira drafts the summary, maps severity to a Jira priority and lists what is sent and what is not. Other trackers and webhooks are set up in Settings.
-- 🌐 **Which browsers?** Chrome and Edge are the tested browsers (Chrome 116 or newer). Firefox users install it from [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/).
+- 🌐 **Which browsers?** Chrome and Edge are the tested browsers (Chrome 116 or newer). Edge users install it from [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha). The Firefox listing is in review.
 - 🤖 **Can a coding agent read the reports?** Yes, through [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge), a read-only MCP bridge. It stays off until you turn on Agent bridge in Settings.
 - 🌍 **Arabic?** Yes. The interface and the reports come in English and Arabic.
 
@@ -111,7 +111,7 @@ You need a Chromium browser at version 116 or newer. Chrome and Edge are the tes
 
 The updater step registers itself for every browser it finds on your computer and tells you which. Each browser updates to its own zip, so an Edge install never receives the Firefox build.
 
-**Firefox:** do not use the table zip for daily work, because it loads only until Firefox restarts; install the signed add-on from [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) instead.
+**Firefox:** the Firefox Add-ons listing is in review (submitted 2026-10-23), so Firefox users wait for it. The table zip still works, but it loads only until Firefox restarts.
 
 **Safari is not packaged.** It needs a Mac with Xcode to turn the build into an app (`xcrun safari-web-extension-converter`), and one-press update is not available there.
 
