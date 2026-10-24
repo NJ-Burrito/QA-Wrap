@@ -4,20 +4,21 @@
 
 ### Test the page. Get the bug report.
 
-### 🔒 Nothing leaves your computer until you press a button.
+### 🔒 Nothing leaves your computer until you send it to Jira, a tracker or a webhook.
 
 [![License](https://img.shields.io/badge/licence-MIT-green.svg)](LICENSE)
 [![Chrome 116+](https://img.shields.io/badge/Chrome-116%2B-4285F4?logo=googlechrome&logoColor=white)](#install)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/qa-wrap/)
 [![npm](https://img.shields.io/badge/npm-qa--wrap--bridge-CB3837?logo=npm&logoColor=white)](https://www.npmjs.com/package/qa-wrap-bridge)
 [![MCP Registry](https://img.shields.io/badge/MCP-Registry-0d9488)](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge)
 [![Arabic and English](https://img.shields.io/badge/Arabic%20%2B%20English-first--class-0d9488.svg)](README.ar.md)
 [![GitHub](https://img.shields.io/badge/GitHub-source-181717?logo=github&logoColor=white)](https://github.com/NJ-Burrito)
 
-**QA-Wrap is a local-first QA toolkit that lives in your browser.** It records a test session, links every failure to the action that caused it, and writes the bug report for you. [العربية](README.ar.md)
+**QA-Wrap is a free, open-source bug report extension for QA testers.** It records a manual test session, links every failure to the action that caused it, and writes the bug report for you. No account, no server. [العربية](README.ar.md)
 
 [![QA-Wrap animated banner](site/assets/banner.gif)](https://nj-burrito.github.io/QA-Wrap/)
 
-🌐 [Website](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [Download](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · 📥 [Get it](#get) · 🚀 [Install](#install) · 🔄 [Updates](#updates) · 🔒 [Privacy](#privacy) · 🧰 [More tools](#about)
+🌐 [Website](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [Download](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · 📥 [Get it](#get) · ⚖️ [Compare](#compare) · ❓ [FAQ](#faq) · 🚀 [Install](#install) · 🔄 [Updates](#updates) · 🔒 [Privacy](#privacy) · 🧰 [More tools](#about)
 
 </div>
 
@@ -25,7 +26,7 @@
 
 - 🎯 **What:** a browser extension that records your test and writes the bug report.
 - 🙋 **Why you:** you test web pages and are tired of retyping steps and hunting for the click behind each failure.
-- 🔒 **Safe:** everything stays on your computer until you press a button.
+- 🔒 **Safe:** everything stays on your computer until you send it to Jira, a tracker or a webhook.
 
 <a id="get"></a>
 
@@ -50,6 +51,38 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 - 🌍 **Arabic and English**, right to left where it should be.
 
 🎞️ [Watch the 40-second film](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
+
+<a id="compare"></a>
+
+## ⚖️ QA-Wrap vs Jam, Marker.io, BugHerd and Bird Eats Bug
+
+All five report a bug from the browser. They differ in what it costs to start, whether you can read the code, and where the recording lives.
+
+| Tool | 💸 Cost to start | 📖 Source code | 📍 Where the recording lives |
+| --- | --- | --- | --- |
+| **QA-Wrap** | Free, no account | Open (MIT) | Your browser, until you send it to Jira, a tracker or a webhook |
+| Jam | Free plan, paid plans | Not open source | Jam's cloud |
+| Marker.io | Trial, then paid | Not open source | Marker.io's cloud |
+| BugHerd | Trial, then paid | Not open source | BugHerd's cloud |
+| Bird Eats Bug | Free plan for 3 users, paid plans | Not open source | Bird Eats Bug's cloud |
+
+From each tool's own home and pricing pages, read on 24 October 2026. Plans change, so check their pages.
+
+- 🏠 Pick a hosted tool when your team wants share links anyone can open.
+- 🔒 Pick QA-Wrap when the recording has to stay on the tester's machine, or when you want to read and change the code.
+
+📄 [The full comparison](https://nj-burrito.github.io/QA-Wrap/alternatives.html)
+
+<a id="faq"></a>
+
+## ❓ Questions
+
+- 💸 **Is QA-Wrap free?** Yes. No paid plan, no account, MIT licence.
+- ⚖️ **Is it a free alternative to Jam, Marker.io or BugHerd?** Yes, when the recording has to stay on your machine. Those are hosted services that share reports through their cloud. QA-Wrap has no server.
+- 🎫 **Does it file bugs to Jira?** Yes. File to Jira drafts the summary, maps severity to a Jira priority and lists what is sent and what is not. Other trackers and webhooks are set up in Settings.
+- 🌐 **Which browsers?** Chrome and Edge are the tested browsers (Chrome 116 or newer). Firefox users install it from [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/).
+- 🤖 **Can a coding agent read the reports?** Yes, through [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge), a read-only MCP bridge. It stays off until you turn on Agent bridge in Settings.
+- 🌍 **Arabic?** Yes. The interface and the reports come in English and Arabic.
 
 <a id="install"></a>
 
@@ -143,8 +176,6 @@ Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pi
 | --- | --- |
 | [extension/](extension/) | The product (Chrome MV3; Edge takes the same package). |
 | [identity/](identity/) | The mark, palette, tokens and lockups, all generated from `tools/`. |
-| [research/](research/) | What was studied and found: the tool landscape, benchmarks, field tests. |
-| [skills/](skills/) | The lessons this project taught, written as a skill. |
 | [deliverables/](deliverables/) | The tutorial films, recorded from the product. |
 
 </details>

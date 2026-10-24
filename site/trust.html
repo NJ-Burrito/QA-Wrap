@@ -3,29 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QA Wrap trust: check in five minutes that nothing is sent</title>
-<meta name="description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for and what it will not do.">
+<title>QA-Wrap trust: check in five minutes that nothing is sent</title>
+<meta name="description" content="How to check in five minutes that QA-Wrap sends nothing to anyone, what each permission is for and what it will not do.">
 <link rel="canonical" href="https://nj-burrito.github.io/QA-Wrap/trust.html">
 <meta name="theme-color" content="#1D2024">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="QA Wrap">
-<meta property="og:title" content="QA Wrap trust: check in five minutes that nothing is sent">
-<meta property="og:description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for and what it will not do.">
+<meta property="og:site_name" content="QA-Wrap">
+<meta property="og:title" content="QA-Wrap trust: check in five minutes that nothing is sent">
+<meta property="og:description" content="How to check in five minutes that QA-Wrap sends nothing to anyone, what each permission is for and what it will not do.">
 <meta property="og:url" content="https://nj-burrito.github.io/QA-Wrap/trust.html">
 <meta property="og:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
-<meta property="og:image:alt" content="QA Wrap: every failure, traced">
+<meta property="og:image:alt" content="QA-Wrap: every failure, traced">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ar_AR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="QA Wrap trust: check in five minutes that nothing is sent">
-<meta name="twitter:description" content="How to check in five minutes that QA Wrap sends nothing to anyone, what each permission is for and what it will not do.">
+<meta name="twitter:title" content="QA-Wrap trust: check in five minutes that nothing is sent">
+<meta name="twitter:description" content="How to check in five minutes that QA-Wrap sends nothing to anyone, what each permission is for and what it will not do.">
 <meta name="twitter:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <script>(function(){try{var t=localStorage.getItem("qaw-site-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
-<link rel="stylesheet" href="assets/thmanyah.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/thmanyah.css"></noscript>
+<link rel="preload" href="assets/fonts/thmanyah-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/thmanyah-serif-display-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/thmanyah.css">
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body data-lang="en">
@@ -34,13 +35,13 @@
 <header class="masthead">
   <div class="wrap">
     <a class="brand" href="./">
-      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA Wrap">
+      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA-Wrap">
         <g transform="translate(-2 3.5)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
           <path class="mark-ring" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
           <path class="mark-check" d="M36 36L42.5 44L55 20"/>
         </g>
       </svg>
-      QA Wrap
+      QA-Wrap
     </a>
     <div class="masthead-right">
       <nav aria-label="Site">
@@ -72,12 +73,12 @@
 
     <section class="hero">
       <h1>Trust</h1>
-      <p class="lead prose">QA Wrap is closed-source and maintained by one team, so a promise on a web page is
-        not enough. This page gives you a check you can run yourself in five minutes, says what each
-        permission is for, and says what QA Wrap will not do. Each claim below names the test in the
+      <p class="lead prose">QA-Wrap is open source under the MIT licence, so you can read every line of it, and a
+        promise on a web page is still not enough. This page gives you a check you can run yourself in five minutes, says what each
+        permission is for, and says what QA-Wrap will not do. Each claim below names the test in the
         repository that guards it.</p>
     </section>
-      <ul class="toc"><li><a href="#trust-en-1">Check it yourself in five minutes</a></li><li><a href="#trust-en-2">What each permission is for, in plain words</a></li><li><a href="#trust-en-3">One dependency, pinned</a></li><li><a href="#trust-en-4">Your data and how long it stays</a></li><li><a href="#trust-en-5">Reporting a problem, and when to expect an answer</a></li><li><a href="#trust-en-6">What QA Wrap will not do</a></li></ul>
+      <ul class="toc"><li><a href="#trust-en-1">Check it yourself in five minutes</a></li><li><a href="#trust-en-2">What each permission is for, in plain words</a></li><li><a href="#trust-en-3">One dependency, pinned</a></li><li><a href="#trust-en-4">Your data and how long it stays</a></li><li><a href="#trust-en-5">Reporting a problem, and when to expect an answer</a></li><li><a href="#trust-en-6">What QA-Wrap will not do</a></li></ul>
 
 
     <section>
@@ -85,8 +86,8 @@
       <div class="prose">
         <ol>
           <li>Open the page you want to test. Press <kbd>F12</kbd> and open the <strong>Network</strong> tab on that page.</li>
-          <li>Click the QA Wrap icon, read the notice, wake the extension on the site, press <strong>Start</strong>, click around, press <strong>Stop</strong> and open the review.</li>
-          <li>In the Network tab, every request is to the site you are testing. QA Wrap adds none of its own.</li>
+          <li>Click the QA-Wrap icon, read the notice, wake the extension on the site, press <strong>Start</strong>, click around, press <strong>Stop</strong> and open the review.</li>
+          <li>In the Network tab, every request is to the site you are testing. QA-Wrap adds none of its own.</li>
           <li>For the extension's own pages, open <code>chrome://extensions</code>, choose <strong>Inspect views: service worker</strong>, and watch its Network tab during the same session. It stays empty.</li>
           <li>The extension's own pages fetch nothing from the internet: every font and image they show is inside the package.</li>
         </ol>
@@ -116,7 +117,7 @@
 
     <section>
       <h2 id="trust-en-3">One dependency, pinned</h2>
-      <p class="prose">At run time QA Wrap carries one third-party library, <code>axe-core</code> (an accessibility rule engine), at a pinned version.
+      <p class="prose">At run time QA-Wrap carries one third-party library, <code>axe-core</code> (an accessibility rule engine), at a pinned version.
         Its SHA-256 is recorded in <code>vendor/README.md</code> and recomputed by <code>tools/release-check.mjs</code>
         on every release; a changed byte stops the release. Everything else is the project's own code. Build tools are not shipped.</p>
     </section>
@@ -146,7 +147,7 @@
     </section>
 
     <section>
-      <h2 id="trust-en-6">What QA Wrap will not do</h2>
+      <h2 id="trust-en-6">What QA-Wrap will not do</h2>
       <details class="fold"><summary>Show the table</summary>
 <div class="table-scroll">
         <table>
@@ -171,11 +172,11 @@
 
     <section class="hero">
       <p class="h1" role="heading" aria-level="1">الثقة</p>
-      <p class="lead prose">QA Wrap مغلق المصدر ويصونه فريق واحد، ولا يكفي وعد على صفحة ويب. تعطيك هذه الصفحة فحصا
-        تجريه بنفسك في خمس دقائق، وتقول لماذا يطلب كل إذن، وما الذي لن يفعله QA Wrap. كل ادعاء أدناه يسمي
+      <p class="lead prose">QA-Wrap مفتوحة المصدر برخصة MIT، فتستطيع قراءة كل سطر فيها، ومع ذلك لا يكفي وعد على صفحة ويب. تعطيك هذه الصفحة فحصا
+        تجريه بنفسك في خمس دقائق، وتقول لماذا يطلب كل إذن، وما الذي لن يفعله QA-Wrap. كل ادعاء أدناه يسمي
         الاختبار الذي يحرسه في المستودع.</p>
     </section>
-      <ul class="toc"><li><a href="#trust-ar-1">افحصها بنفسك في خمس دقائق</a></li><li><a href="#trust-ar-2">لماذا يطلب كل إذن، بكلمات بسيطة</a></li><li><a href="#trust-ar-3">اعتمادية واحدة، مثبتة</a></li><li><a href="#trust-ar-4">بياناتك ومدة بقائها</a></li><li><a href="#trust-ar-5">الإبلاغ عن مشكلة، ومتى تتوقع ردا</a></li><li><a href="#trust-ar-6">ما الذي لن يفعله QA Wrap</a></li></ul>
+      <ul class="toc"><li><a href="#trust-ar-1">افحصها بنفسك في خمس دقائق</a></li><li><a href="#trust-ar-2">لماذا يطلب كل إذن، بكلمات بسيطة</a></li><li><a href="#trust-ar-3">اعتمادية واحدة، مثبتة</a></li><li><a href="#trust-ar-4">بياناتك ومدة بقائها</a></li><li><a href="#trust-ar-5">الإبلاغ عن مشكلة، ومتى تتوقع ردا</a></li><li><a href="#trust-ar-6">ما الذي لن يفعله QA-Wrap</a></li></ul>
 
 
     <section>
@@ -183,8 +184,8 @@
       <div class="prose">
         <ol>
           <li>افتح الصفحة التي تريد اختبارها. اضغط <kbd>F12</kbd> وافتح تبويب <strong>Network</strong> فيها.</li>
-          <li>اضغط أيقونة QA Wrap، واقرأ الإشعار، وأيقظ الامتداد على الموقع، واضغط <strong>ابدأ</strong>، وتجول في الصفحة، ثم اضغط <strong>أوقف</strong> وافتح المراجعة.</li>
-          <li>في تبويب الشبكة، كل طلب موجه إلى الموقع الذي تختبره. لا يضيف QA Wrap أي طلب من عنده.</li>
+          <li>اضغط أيقونة QA-Wrap، واقرأ الإشعار، وأيقظ الامتداد على الموقع، واضغط <strong>ابدأ</strong>، وتجول في الصفحة، ثم اضغط <strong>أوقف</strong> وافتح المراجعة.</li>
+          <li>في تبويب الشبكة، كل طلب موجه إلى الموقع الذي تختبره. لا يضيف QA-Wrap أي طلب من عنده.</li>
           <li>لصفحات الامتداد نفسها، افتح <code>chrome://extensions</code>، واختر <strong>Inspect views: service worker</strong>، وراقب تبويب الشبكة فيه أثناء الجلسة نفسها. سيبقى فارغا.</li>
           <li>صفحات الامتداد نفسها لا تجلب شيئا من الإنترنت: كل خط وصورة تعرضها موجودة داخل الحزمة.</li>
         </ol>
@@ -214,7 +215,7 @@
 
     <section>
       <h2 id="trust-ar-3">اعتمادية واحدة، مثبتة</h2>
-      <p class="prose">يحمل QA Wrap وقت التشغيل مكتبة طرف ثالث واحدة هي <code>axe-core</code> (محرك قواعد لإمكانية الوصول) بنسخة مثبتة.
+      <p class="prose">يحمل QA-Wrap وقت التشغيل مكتبة طرف ثالث واحدة هي <code>axe-core</code> (محرك قواعد لإمكانية الوصول) بنسخة مثبتة.
         بصمتها SHA-256 مسجلة في <code>vendor/README.md</code> ويعيد <code>tools/release-check.mjs</code> حسابها
         مع كل إصدار؛ وأي بايت متغير يوقف الإصدار. كل ما عدا ذلك شيفرة المشروع نفسه. أدوات البناء لا تشحن.</p>
     </section>
@@ -243,7 +244,7 @@
     </section>
 
     <section>
-      <h2 id="trust-ar-6">ما الذي لن يفعله QA Wrap</h2>
+      <h2 id="trust-ar-6">ما الذي لن يفعله QA-Wrap</h2>
       <details class="fold"><summary>اعرض الجدول</summary>
 <div class="table-scroll">
         <table>
@@ -293,8 +294,8 @@
 
 <footer>
   <div class="wrap">
-    <p data-lang-block="en" lang="en" dir="ltr">QA Wrap &middot; Made by Nader Alzghoul</p>
-    <p data-lang-block="ar" lang="ar" dir="rtl">QA Wrap &middot; من تطوير نادر الزغول</p>
+    <p data-lang-block="en" lang="en" dir="ltr">QA-Wrap &middot; Made by Nader Alzghoul</p>
+    <p data-lang-block="ar" lang="ar" dir="rtl">QA-Wrap &middot; من تطوير نادر الزغول</p>
     <ul data-lang-block="en" lang="en" dir="ltr">
       <li><a href="./">Home</a></li>
       <li><a href="privacy.html">Privacy</a></li>
