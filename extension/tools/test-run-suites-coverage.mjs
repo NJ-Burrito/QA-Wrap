@@ -64,7 +64,7 @@ writeSuite(KR, KR_RED);
 chain(['test-a', 'test-x', KR]);
 // r10-12-5: the real KNOWN_RED list is empty (T-031 removed); the fixture entry below stands in for it, through the --ext-only test hook.
 const T031 = JSON.stringify({ 'test-listing-assets': { id: 'T-031', until: '2026-10-23', match: 'the listing images are stale', reason: 'fixture' } });
-const ci = (env = {}, ...a) => spawnSync(process.execPath, [RUNNER, '--ext', dir, '--node-only', '--ci', ...a], { encoding: 'utf8', env: { ...process.env, QAW_KNOWN_RED_FIXTURE: T031, ...env } });
+const ci = (env = {}, ...a) => spawnSync(process.execPath, [RUNNER, '--ext', dir, '--node-only', '--ci', ...a], { encoding: 'utf8', env: { ...process.env, QAW_KNOWN_RED_FIXTURE: T031, QAW_TODAY: '2026-10-01', ...env } });
 assert.ok(!/'test-listing-assets':\s*\{/.test(fs.readFileSync(RUNNER, 'utf8')), 'r10-12-5: no T-031 entry in the real KNOWN_RED');
 assert.equal(spawnSync(process.execPath, [RUNNER, '--coverage'], { encoding: 'utf8', env: { ...process.env, QAW_KNOWN_RED_FIXTURE: T031 } }).status, 0, 'the fixture hook is ignored without --ext');
 const known = ci();
