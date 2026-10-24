@@ -16,6 +16,7 @@ const ALLOWED = [
   'https://img.shields.io/badge/',
   // QA Wrap's own store and registry listings (published 2026-10-23) and its two directory submissions
   'https://addons.mozilla.org/firefox/addon/qa-wrap/',
+  'https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha', // Edge Add-ons listing, live 2026-10-24
   'https://www.npmjs.com/package/qa-wrap-bridge',
   'https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge',
   'https://github.com/punkpeye/awesome-mcp-servers/pull/17378',
