@@ -3,29 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QA Wrap support: fix a problem and report it</title>
-<meta name="description" content="How to get help with QA Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
+<title>QA-Wrap support: fix a problem and report it</title>
+<meta name="description" content="How to get help with QA-Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
 <link rel="canonical" href="https://nj-burrito.github.io/QA-Wrap/support.html">
 <meta name="theme-color" content="#1D2024">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="QA Wrap">
-<meta property="og:title" content="QA Wrap support: fix a problem and report it">
-<meta property="og:description" content="How to get help with QA Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
+<meta property="og:site_name" content="QA-Wrap">
+<meta property="og:title" content="QA-Wrap support: fix a problem and report it">
+<meta property="og:description" content="How to get help with QA-Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
 <meta property="og:url" content="https://nj-burrito.github.io/QA-Wrap/support.html">
 <meta property="og:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
-<meta property="og:image:alt" content="QA Wrap: every failure, traced">
+<meta property="og:image:alt" content="QA-Wrap: every failure, traced">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ar_AR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="QA Wrap support: fix a problem and report it">
-<meta name="twitter:description" content="How to get help with QA Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
+<meta name="twitter:title" content="QA-Wrap support: fix a problem and report it">
+<meta name="twitter:description" content="How to get help with QA-Wrap: the four things that fix most problems, the Report a problem flow and what to attach.">
 <meta name="twitter:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <script>(function(){try{var t=localStorage.getItem("qaw-site-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
-<link rel="stylesheet" href="assets/thmanyah.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="assets/thmanyah.css"></noscript>
+<link rel="preload" href="assets/fonts/thmanyah-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/thmanyah-serif-display-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/thmanyah.css">
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body data-lang="en">
@@ -34,13 +35,13 @@
 <header class="masthead">
   <div class="wrap">
     <a class="brand" href="./">
-      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA Wrap">
+      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA-Wrap">
         <g transform="translate(-2 3.5)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
           <path class="mark-ring" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
           <path class="mark-check" d="M36 36L42.5 44L55 20"/>
         </g>
       </svg>
-      QA Wrap
+      QA-Wrap
     </a>
     <div class="masthead-right">
       <nav aria-label="Site">
@@ -85,7 +86,7 @@
         to try than to describe.</p>
       <div class="prose">
         <h3>1. Reload the extension</h3>
-        <p><code>chrome://extensions</code>, then the reload arrow on the QA Wrap card.</p>
+        <p><code>chrome://extensions</code>, then the reload arrow on the QA-Wrap card.</p>
         <p>Chrome caches the service worker inside the browser profile and will keep running the
           old one after an update. The symptom is specific and misleading: <em>some</em> things
           work and others answer nothing at all, usually with <em>"the message port closed before
@@ -125,7 +126,7 @@ qaw.wake()       // arm the current window without the popup</code></pre>
           found the issue rather than the person who tests for a living: a colleague, a client, or
           a tester on a build without the repository beside them. It opens a single page: one box
           to describe what went wrong in a sentence or two, one button to send it.</p>
-        <p>You do not have to gather evidence by hand. The moment that page opens, QA Wrap attaches,
+        <p>You do not have to gather evidence by hand. The moment that page opens, QA-Wrap attaches,
           without asking:</p>
         <ul>
           <li>a screenshot of the page in front of you;</li>
@@ -159,7 +160,7 @@ qaw.wake()       // arm the current window without the popup</code></pre>
           <strong>not</strong> a scrubbed document, though: it does contain the URLs you visited and
           the values you typed into ordinary, non-password fields on the page you were testing.
           <strong>Read it before you send it.</strong> If the page under test carried a real
-          customer's data and you were not using QA Wrap's masking, that data is in the export, the
+          customer's data and you were not using QA-Wrap's masking, that data is in the export, the
           same way it would be in a screen recording or a bug report written by hand. Mask what
           matters before you record, or redact the export file afterwards; this support flow cannot
           do either for you.</p>
@@ -224,10 +225,10 @@ qaw.wake()       // arm the current window without the popup</code></pre>
             </tr>
             <tr>
               <th scope="row">A recording will not start on a tab you have not just used the extension on</th>
-              <td>Chrome's protection, not ours. Click the QA Wrap icon while that tab is in front, then press Record.</td>
+              <td>Chrome's protection, not ours. Click the QA-Wrap icon while that tab is in front, then press Record.</td>
             </tr>
             <tr>
-              <th scope="row">The QA Wrap bar is hidden while a bare video is fullscreen</th>
+              <th scope="row">The QA-Wrap bar is hidden while a bare video is fullscreen</th>
               <td>A fullscreen video, audio or image element has no room for children, so the bar cannot sit inside it. Leave fullscreen and it is back.</td>
             </tr>
             <tr>
@@ -244,7 +245,7 @@ qaw.wake()       // arm the current window without the popup</code></pre>
     <section>
       <p class="eyebrow">Response</p>
       <h2 id="support-en-5">What you can expect back</h2>
-      <p class="prose">QA Wrap is a single-maintainer tool with no paid support contract as
+      <p class="prose">QA-Wrap is a single-maintainer tool with no paid support contract as
         standard. The table below is stated as intentions, because that is what they are. If your
         organisation needs a contractual service level, this is not it on its own, and that is a
         real reason to ask.</p>
@@ -301,7 +302,7 @@ qaw.wake()       // arm the current window without the popup</code></pre>
       <p class="prose">أربعة أمور تفسر معظم ما يبلغ عنه، وتجربة كل واحد منها أسرع من وصفه.</p>
       <div class="prose">
         <h3>1. أعد تحميل الامتداد</h3>
-        <p><code>chrome://extensions</code>، ثم سهم إعادة التحميل على بطاقة QA Wrap.</p>
+        <p><code>chrome://extensions</code>، ثم سهم إعادة التحميل على بطاقة QA-Wrap.</p>
         <p>يخزن Chrome العامل الخدمي مؤقتا داخل ملف المتصفح، ويستمر في تشغيل النسخة القديمة بعد
           التحديث. العرض محدد ومضلل: تعمل <em>بعض</em> الأشياء ولا تجيب أخرى إطلاقا، غالبا
           مع عبارة <em>"أغلقت منفذ الرسالة قبل استلام رد"</em> في وحدة التحكم. ليس عطلا وليس ملفك.
@@ -339,7 +340,7 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
         <p>تحمل القائمة المنبثقة زر <strong>أبلغ عن مشكلة</strong> بسيطا، لمن وجد المشكلة لا لمن
           يختبر لكسب عيشه: زميل، أو عميل، أو مختبر على نسخة بلا المستودع بجانبه. يفتح صفحة واحدة:
           مربع واحد لوصف ما حدث خطأ في جملة أو جملتين، وزر واحد لإرسالها.</p>
-        <p>لست مضطرا لجمع الأدلة يدويا. بمجرد فتح تلك الصفحة، يرفق QA Wrap، من دون أن يسألك:</p>
+        <p>لست مضطرا لجمع الأدلة يدويا. بمجرد فتح تلك الصفحة، يرفق QA-Wrap، من دون أن يسألك:</p>
         <ul>
           <li>لقطة شاشة للصفحة أمامك؛</li>
           <li>عنوانها، وأي أخطاء أبلغت عنها وحدة التحكم الخاصة بها؛</li>
@@ -364,12 +365,12 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
 
       <div class="prose">
         <p><strong>ما يحتويه التصدير وما لا يحتويه، بوضوح:</strong> يحمل تصدير جلسة بصيغة Markdown
-          ما فعلته على الصفحة قيد الاختبار، بكلماتك أنت، والدليل الذي جمعه QA Wrap تلقائيا. لا
+          ما فعلته على الصفحة قيد الاختبار، بكلماتك أنت، والدليل الذي جمعه QA-Wrap تلقائيا. لا
           يحتوي على قيم كعكات (cookies) ولا قيم حقول كلمات المرور، بحكم البنية (سياسة
           <a href="privacy.html">الخصوصية</a> هي الآلية). لكنه <strong>ليس</strong> مستندا منقحا
           مع ذلك: يحتوي على العناوين التي زرتها والقيم التي كتبتها في حقول عادية غير حقول كلمات
           المرور في الصفحة التي كنت تختبرها. <strong>اقرأه قبل أن ترسله.</strong> إن حملت الصفحة
-          قيد الاختبار بيانات عميل حقيقي ولم تكن تستخدم إخفاء QA Wrap، فتلك البيانات موجودة في
+          قيد الاختبار بيانات عميل حقيقي ولم تكن تستخدم إخفاء QA-Wrap، فتلك البيانات موجودة في
           التصدير، تماما كما لو كانت في تسجيل شاشة أو تقرير عطل مكتوب يدويا. أخف ما يهم قبل
           التسجيل، أو نقح ملف التصدير بعده؛ لا يستطيع مسار الدعم هذا فعل أي منهما نيابة عنك.</p>
         <p><strong>من فضلك لا ترسل رمزا، أو رابط ويب هوك، أو قيمة كعكة.</strong> لا شيء هنا يحتاج
@@ -431,7 +432,7 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
             </tr>
             <tr>
               <th scope="row">لن يبدأ تسجيل على تبويب لم تستخدم الامتداد عليه للتو</th>
-              <td>حماية من Chrome، لا منا. انقر أيقونة QA Wrap وذلك التبويب في المقدمة، ثم اضغط تسجيل.</td>
+              <td>حماية من Chrome، لا منا. انقر أيقونة QA-Wrap وذلك التبويب في المقدمة، ثم اضغط تسجيل.</td>
             </tr>
             <tr>
               <th scope="row">أدوار مساحة العمل ليست أمانا</th>
@@ -451,7 +452,7 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
     <section>
       <p class="eyebrow">الاستجابة</p>
       <h2 id="support-ar-5">ما يمكنك توقعه ردا</h2>
-      <p class="prose">QA Wrap أداة يقوم عليها شخص واحد بلا عقد دعم مدفوع كإعداد افتراضي. الجدول
+      <p class="prose">QA-Wrap أداة يقوم عليها شخص واحد بلا عقد دعم مدفوع كإعداد افتراضي. الجدول
         أدناه مذكور كنوايا، لأن ذلك ما هو عليه. إن احتاجت مؤسستك مستوى خدمة تعاقديا، فهذا وحده ليس
         ذلك، وهذا سبب حقيقي للسؤال.</p>
       <details class="fold"><summary>اعرض الجدول</summary>
@@ -522,8 +523,8 @@ qaw.wake()       // سلح النافذة الحالية من دون القائ�
 
 <footer>
   <div class="wrap">
-    <p data-lang-block="en" lang="en" dir="ltr">QA Wrap &middot; Made by Nader Alzghoul</p>
-    <p data-lang-block="ar" lang="ar" dir="rtl">QA Wrap &middot; من تطوير نادر الزغول</p>
+    <p data-lang-block="en" lang="en" dir="ltr">QA-Wrap &middot; Made by Nader Alzghoul</p>
+    <p data-lang-block="ar" lang="ar" dir="rtl">QA-Wrap &middot; من تطوير نادر الزغول</p>
     <ul data-lang-block="en" lang="en" dir="ltr">
       <li><a href="./">Home</a></li>
       <li><a href="privacy.html">Privacy</a></li>

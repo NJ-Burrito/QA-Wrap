@@ -268,12 +268,12 @@ dd { margin: 0.15rem 0 0; color: var(--text-mid); }
 
 .panel {
   background: var(--surface-sunken); border: 1px solid var(--border);
-  border-left: 3px solid var(--tortilla); border-radius: 0 var(--r-md) var(--r-md) 0;
+  border-radius: var(--r-md);
   padding: 1.1rem 1.25rem; margin: 0 0 1.25rem;
 }
 .panel > :last-child { margin-bottom: 0; }
 .panel h2, .panel h3 { margin-top: 0; margin-bottom: 0.5rem; }
-blockquote { margin: 0 0 1.1rem; padding-left: 1rem; border-left: 3px solid var(--border-strong); color: var(--text-mid); }
+blockquote { margin: 0 0 1.1rem; padding: 0.75rem 1rem; background: var(--surface-sunken); border-radius: var(--r-md); color: var(--text-mid); }
 
 /* Folded detail: one control, 44 px, the whole bar is the target. */
 details.fold { margin: 0 0 1.1rem; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface-sunken); }
@@ -517,8 +517,6 @@ body[data-lang="ar"] [data-lang-block="en"] { display: none; }
 [dir="rtl"] th, [dir="rtl"] td { text-align: right; padding: 0.6rem 0 0.6rem 1.25rem; }
 [dir="rtl"] table td:last-child, [dir="rtl"] table th:last-child { padding-left: 0; padding-right: 1.25rem; }
 [dir="rtl"] caption { text-align: right; }
-[dir="rtl"] .panel { border-left: 1px solid var(--border); border-right: 3px solid var(--tortilla); border-radius: var(--r-md) 0 0 var(--r-md); }
-[dir="rtl"] blockquote { padding-left: 0; padding-right: 1rem; border-left: 0; border-right: 3px solid var(--border-strong); }
 [dir="rtl"] dd { margin-right: 0; }
 [dir="rtl"] .brand { flex-direction: row; }
 [dir="rtl"] .gallery { direction: rtl; }
@@ -527,7 +525,7 @@ body[data-lang="ar"] [data-lang-block="en"] { display: none; }
 .film .note a { display: inline-flex; align-items: center; min-height: 44px; }
 
 .about-facts { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 0.6rem; max-width: 44rem; }
-.about-facts li { margin: 0; padding-inline-start: 0.9rem; border-inline-start: 3px solid var(--accent); }
+.about-facts li { margin: 0; }
 .more-grid small { overflow-wrap: anywhere; }
 .more-grid a > span { min-width: 0; }
 
@@ -542,3 +540,70 @@ body[data-lang="ar"] [data-lang-block="en"] { display: none; }
 .get-status.ok { color: var(--accent); }
 .get-wait { opacity: 0.8; }
 .get-note { font-size: 0.9rem; margin: 0.25rem 0 1rem; }
+
+/* ---- 2026-10-24 overhaul ------------------------------------------------
+   Hero lede, the compare table, the motion hooks for
+   assets/motion.js, and the browser surfaces (selection, scrollbar, caret). */
+.hero-home .lede { color: var(--on-band-mid); font-size: 1.08rem; line-height: 1.5; margin: -0.5rem 0 1.4rem; max-width: 30rem; }
+.film-link { margin: 0.9rem 0 0; }
+.film-link a { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.5rem; color: var(--on-band); font-weight: 700; text-decoration: underline; text-decoration-color: var(--band-accent); text-underline-offset: 0.3em; }
+.film-link a:hover { color: var(--band-accent); }
+.film-link .fi { width: 18px; height: 18px; color: var(--band-accent); }
+.hero-home .film-link + .note { margin-top: 0.4rem; }
+.section-lede { font-size: 1.08rem; color: var(--text-mid); max-width: var(--measure); }
+.pick { max-width: var(--measure); }
+.compare-table { margin: 1.25rem 0 1rem; }
+@media (min-width: 40.01rem) { .compare-table table { min-width: 40rem; } }
+@media (max-width: 40rem) {
+  .compare-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .compare-table table, .compare-table tbody, .compare-table tr, .compare-table th, .compare-table td { display: block; }
+  .compare-table caption { display: block; }
+  .compare-table tr { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+  .compare-table th[scope="row"], .compare-table td { border: 0; padding: 0.15rem 0.75rem; }
+  .compare-table th[scope="row"] { font-size: 1.08rem; padding-bottom: 0.35rem; }
+  .compare-table td::before { content: attr(data-label) ": "; color: var(--text-muted); font-weight: 600; }
+}
+.compare-table th[scope="row"] { white-space: nowrap; font-weight: 700; }
+[dir="rtl"] .compare-table th, [dir="rtl"] .compare-table td, [dir="rtl"] caption { text-align: right; }
+[dir="rtl"] .compare-table th[scope="row"] { text-align: right; }
+[dir="rtl"] table td:last-child, [dir="rtl"] table th:last-child { padding-right: 1.25rem; padding-left: 0; }
+.compare-table tr.us th, .compare-table tr.us td { background: rgba(181, 67, 43, 0.07); color: var(--text); }
+.compare-table th[scope="row"] { padding-inline-start: 0.75rem; }
+.compare-table tr.us th { color: var(--accent-ink); }
+[data-theme="dark"] .compare-table tr.us th, [data-theme="dark"] .compare-table tr.us td { background: rgba(255, 138, 110, 0.10); }
+picture { display: contents; }
+
+/* Browser surfaces carry the palette too. */
+::selection { background: rgba(181, 67, 43, 0.24); color: inherit; }
+.hero-home ::selection, .band-dark ::selection, .masthead ::selection { background: rgba(255, 138, 110, 0.34); }
+html { scrollbar-color: var(--border-strong) transparent; accent-color: var(--accent); caret-color: var(--accent); }
+a { text-underline-offset: 0.18em; }
+a.cta:hover, a.cta:focus-visible { color: var(--accent-text); }
+.band-dark a.cta:hover, .hero-home a.cta:hover { color: var(--band-accent-text); }
+h1, h2, h3, .h1 { text-wrap: balance; }
+p, li, figcaption { text-wrap: pretty; }
+.rw-fail strong, .rw-steps b, .rw-conf, .rw-badge { font-variant-numeric: tabular-nums; }
+.cta:active, .btn:active { transform: scale(0.97); }
+
+/* Motion hooks. html.motion is set in <head> only when reduced motion is not asked for.
+   Without assets/motion.js the hero reveals itself at 2.6 s (the fallback below);
+   with it, .rw-live hands the window to GSAP. */
+.motion .rw .rw-steps li, .motion .rw .rw-line, .motion .rw .rw-fail, .motion .rw .rw-badge, .motion .rw .rw-conf { animation: rw-fallback .3s var(--ease) 2.6s both; }
+.motion .rw.rw-live .rw-steps li, .motion .rw.rw-live .rw-line, .motion .rw.rw-live .rw-fail, .motion .rw.rw-live .rw-badge, .motion .rw.rw-live .rw-conf { animation: none; }
+@keyframes rw-fallback { from { opacity: 0; } to { opacity: 1; } }
+.rw-badge, .rw-conf { display: inline-block; }
+.rw-steps li { transform-origin: center; }
+
+/* How it works: the accent trace over the grey connector (motion.js tweens --trace 0 to 1). */
+.steps > li { --trace: 1; }
+.motion .steps > li { --trace: 0; }
+.steps > li::after {
+  content: ""; position: absolute; inset-inline-start: 1.6rem; top: 3.4rem; bottom: -2.2rem;
+  width: 2px; background: var(--accent); transform-origin: top; transform: scaleY(var(--trace));
+}
+.steps > li:last-child::after { display: none; }
+@media (min-width: 52rem) {
+  .steps > li::after { inset-inline-start: 3.4rem; inset-inline-end: -2.5rem; top: 1.7rem; bottom: auto; width: auto; height: 2px; transform-origin: left; transform: scaleX(var(--trace)); }
+  [dir="rtl"] .steps > li::after { transform-origin: right; }
+}
+@media (prefers-reduced-motion: reduce) { .steps > li { --trace: 1; } .cta:active, .btn:active { transform: none; } }

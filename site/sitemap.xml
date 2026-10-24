@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://nj-burrito.github.io/QA-Wrap/</loc></url>
-  <url><loc>https://nj-burrito.github.io/QA-Wrap/trust.html</loc></url>
-  <url><loc>https://nj-burrito.github.io/QA-Wrap/support.html</loc></url>
-  <url><loc>https://nj-burrito.github.io/QA-Wrap/privacy.html</loc></url>
-  <url><loc>https://nj-burrito.github.io/QA-Wrap/terms.html</loc></url>
+  <url><loc>https://nj-burrito.github.io/QA-Wrap/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://nj-burrito.github.io/QA-Wrap/alternatives.html</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://nj-burrito.github.io/QA-Wrap/trust.html</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://nj-burrito.github.io/QA-Wrap/support.html</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://nj-burrito.github.io/QA-Wrap/privacy.html</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://nj-burrito.github.io/QA-Wrap/terms.html</loc><lastmod>2026-10-24</lastmod></url>
   <url><loc>https://nj-burrito.github.io/QA-Wrap/try/</loc></url>
 </urlset>

@@ -4,7 +4,8 @@
    name). This file flips that one attribute, keeps <html lang>/<dir> in
    step so the browser and any assistive tech agree with what is on screen,
    and remembers the choice in localStorage for the next page. No network
-   request, no analytics, nothing else on the page depends on this running:
+   request, no analytics, nothing else on the page depends on this running
+   (the home page's motion, below, loads two local files and nothing remote):
    with JavaScript off, `data-lang="en"` from the markup below still shows
    the English block. */
 (function () {
@@ -74,4 +75,15 @@
     es.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
   }, { rootMargin: '200px' });
   imgs.forEach(function (i) { io.observe(i); });
+})();
+
+/* Motion (home page only): GSAP from assets/vendor and assets/motion.js, fetched after the page
+   has loaded and when the browser is idle, never when the reader asked for reduced motion
+   (the inline head script sets html.motion only then). Every element is visible without it. */
+(function () {
+  if (!document.documentElement.classList.contains('motion') || !document.querySelector('.rw')) return;
+  function add(src, done) { var s = document.createElement('script'); s.src = src; if (done) s.onload = done; document.head.appendChild(s); }
+  function go() { add('assets/vendor/gsap.min.js', function () { add('assets/vendor/ScrollTrigger.min.js', function () { add('assets/motion.js'); }); }); }
+  function idle() { (window.requestIdleCallback || function (f) { setTimeout(f, 1); })(go, { timeout: 700 }); }
+  if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
 })();

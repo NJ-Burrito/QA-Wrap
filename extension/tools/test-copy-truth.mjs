@@ -267,14 +267,17 @@ test('the scan can fail: a scratch "nothing leaves" sentence is a gap, one with 
 const BROWSER_DOCS = ['README.md', 'extension/README.md', 'extension/store/LISTING.md', 'extension/PRIVACY.md', 'extension/TERMS.md', 'extension/SECURITY.md',
   'extension/SUPPORT.md', 'extension/SLA.md', 'extension/ADMIN.md', 'site/index.html', 'site/privacy.html', 'site/terms.html', 'site/support.html', 'site/trust.html'];
 const NAMES_OTHER = /Firefox|Safari|فايرفوكس|سفاري/i;
+// T-047 (updated 2026-10-24): Firefox is a supported browser now that the signed add-on is live on Firefox Add-ons
+// (https://addons.mozilla.org/firefox/addon/qa-wrap/), so only Safari is still guarded: no page may call it working.
+const NAMES_UNSUPPORTED = /Safari|سفاري/i;
 const LIMITED = /\b(?:not|cannot|can't|never|no|none|nor|without|isn't|doesn't|untested)\b|(?<![؀-ۿ])(?:لا|ليس|لن|غير|بدون)(?![؀-ۿ])/i;
 const browserClaims = () => {
   const out = [];
-  for (const f of BROWSER_DOCS) if (fs.existsSync(path.join(REPO, f))) for (const s of sentencesOf(docText(f))) if (NAMES_OTHER.test(s) && !LIMITED.test(s)) out.push({ where: f, s });
+  for (const f of BROWSER_DOCS) if (fs.existsSync(path.join(REPO, f))) for (const s of sentencesOf(docText(f))) if (NAMES_UNSUPPORTED.test(s) && !LIMITED.test(s)) out.push({ where: f, s });
   return out;
 };
 // ROADMAP.md is left out on purpose: it lists the Safari package and Firefox signing as work not done.
-test('no public page, README or LISTING names Firefox or Safari as working (T-047)', () => {
+test('no public page, README or LISTING names Safari as working (T-047; Firefox is live on Firefox Add-ons)', () => {
   const hits = browserClaims().filter((c) => !table.browsers.open.some((o) => c.where === o.file && c.s.includes(o.anchor)));
   assert.deepEqual(hits.map((c) => `${c.where}: ${c.s.slice(0, 100)}`), []);
   assert.ok(sentencesOf(docText('site/support.html')).some((s) => NAMES_OTHER.test(s)), 'R15: the scan saw support.html\'s "not launched" row, which is allowed');
@@ -286,6 +289,7 @@ test('a "browsers" row marked open is still a claim (a fixed line leaves the tab
 });
 test('the browser scan can fail: a scratch claim is flagged, "cannot" and "no" sentences are not', () => {
   assert.ok(NAMES_OTHER.test('Works in Firefox.') && !LIMITED.test('Works in Firefox.'));
+  assert.ok(NAMES_UNSUPPORTED.test('Works in Safari.') && !NAMES_UNSUPPORTED.test('Works in Firefox.'), 'Firefox may be named as supported, Safari may not');
   assert.ok(LIMITED.test('Firefox and Safari cannot record.') && LIMITED.test('No WebKit or Firefox is launched.') && LIMITED.test('لا يشغل WebKit ولا Firefox'));
 });
 
