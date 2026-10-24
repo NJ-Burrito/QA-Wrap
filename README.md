@@ -64,7 +64,7 @@ All five report a bug from the browser. They differ in what it costs to start, w
 | Jam | Free plan, paid plans | Not open source | Jam's cloud |
 | Marker.io | Trial, then paid | Not open source | Marker.io's cloud |
 | BugHerd | Trial, then paid | Not open source | BugHerd's cloud |
-| Bird Eats Bug | Free plan for 3 users, paid plans | Not open source | Bird Eats Bug's cloud |
+| Bird Eats Bug | Free plan (15 uploads a month), paid plans | Not open source | Bird Eats Bug's cloud |
 
 From each tool's own home and pricing pages, read on 24 October 2026. Plans change, so check their pages.
 
