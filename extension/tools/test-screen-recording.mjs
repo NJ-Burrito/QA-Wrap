@@ -44,6 +44,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lift } from './lib-lift.mjs';
 import { workerSrc } from './lib-worker-src.mjs';
+import { tabVideo, videoBitrate, CAPTURE_EDGE } from '../core/file-probe.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXT = path.resolve(HERE, '..');
@@ -248,6 +249,42 @@ test('what the clip claims about its cursor is what the clip contains', () => {
     /cursor:\s*drawnCursor \|\| \(desktop && !!cursor\)/,
     'the recorded sources no longer say whether the pointer is really in the picture'
   );
+});
+
+/* ── rec-quality-1025: native size, no letterbox, a bitrate that fits the frame ── */
+
+test('a tab capture asks for "any size within limit", not a letterboxed fixed box', () => {
+  // Max-only gave a 1920x1080 frame with black bars around a 1200x760 tab; a same-shape min box gave a square
+  // letterbox. Measured headed on 2026-10-25: min 4x2 against a square max gives the tab's own shape, no bars.
+  for (const q of ['low', 'medium', 'high']) {
+    const m = tabVideo('id', q, 15).mandatory;
+    assert.equal(m.chromeMediaSource, 'tab');
+    assert.equal(m.maxWidth, CAPTURE_EDGE[q], `${q}: max width`);
+    assert.equal(m.maxHeight, m.maxWidth, `${q}: only the long edge is capped, never a 16:9 box`);
+    assert.ok(m.minWidth > 0 && m.minHeight > 0, `${q}: no min box means Chrome letterboxes`);
+    assert.notEqual(m.minWidth / m.minHeight, m.maxWidth / m.maxHeight, `${q}: same-shape min and max boxes letterbox to that shape`);
+  }
+  assert.ok(CAPTURE_EDGE.medium >= 1920, 'medium is at least 1080p-class on the long edge');
+  assert.match(OFF, /video: tabVideo\(streamId, quality, fps\)/, 'the tab recorder no longer uses tabVideo()');
+  const ROLL = read('offscreen/rolling.js');
+  assert.match(ROLL, /tabVideo\(msg\.streamId/, 'Save last 1 minute no longer uses tabVideo()');
+  assert.ok(!/maxWidth: 1920, maxHeight: 1080/.test(ROLL), 'the rolling buffer is back on the letterboxing max-only box');
+});
+
+test('the encoder bitrate is sized to the captured frame', () => {
+  assert.ok(videoBitrate('medium', 1920, 1080) >= 8_000_000, 'medium at 1080p is under 8 Mbps');
+  assert.ok(videoBitrate('high', 2560, 1440) > videoBitrate('medium', 2560, 1440), 'high is not above medium');
+  assert.ok(videoBitrate('low', 1280, 720) >= 750_000, 'low at 720p starved');
+  assert.ok(videoBitrate('medium', 3840, 2160) <= 16_000_000, 'the 2x ceiling is gone');
+  assert.equal(videoBitrate('medium', 0, 0), 8_000_000, 'an unknown frame size falls back to the 1080p rate');
+  assert.match(OFF, /videoBitsPerSecond: videoBitrate\(quality, sourceTrack\.getSettings/, 'the recorder is back on a flat bitrate');
+});
+
+test('a double-click on a save button saves once', () => {
+  const REPORT = read('report/report.js');
+  assert.match(REPORT, /\$\('save-go'\)\.addEventListener\('click', async \(e\) => \{ if \(e\.detail > 1\) return;/, 'Save selected runs twice on a double-click');
+  assert.match(REPORT, /\$\('media-save'\)\.addEventListener\('click', async \(e\) => \{ if \(e\.detail > 1\) return;/, 'Save all media runs twice on a double-click');
+  assert.match(REPORT, /save\.addEventListener\('click', \(e\) => e\.detail > 1 \|\| saveOne\(item, save\)\)/, 'a clip Save button runs twice on a double-click');
 });
 
 console.log(`\n${passed} passed, ${failures.length} failed`);

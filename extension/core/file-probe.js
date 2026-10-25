@@ -41,3 +41,17 @@ export function videoMime(id) {
   if (!type || type.alwaysAvailable) return null;
   return type.candidates.find((c) => MediaRecorder.isTypeSupported(c)) || null;
 }
+
+/** Tab capture at the tab's own size (rec-quality-1025): max-only letterboxed into the box; a min box of another shape (2:1 vs 1:1) is "any size within limit". Long edge capped. */
+export const CAPTURE_EDGE = { low: 1280, medium: 1920, high: 2560 };
+export function tabVideo(streamId, quality, fps) {
+  const edge = CAPTURE_EDGE[quality] || CAPTURE_EDGE.medium;
+  return { mandatory: { chromeMediaSource: 'tab', chromeMediaSourceId: streamId, minWidth: 4, minHeight: 2, maxWidth: edge, maxHeight: edge, maxFrameRate: fps || 15 } };
+}
+
+/** 3 / 8 / 16 Mbps at 1080p for low / medium / high, scaled by pixels (0.25x-2x). */
+export function videoBitrate(quality, width, height) {
+  const base = { low: 3_000_000, medium: 8_000_000, high: 16_000_000 }[quality] || 8_000_000;
+  const scale = (width > 0 && height > 0) ? (width * height) / (1920 * 1080) : 1;
+  return Math.round(base * Math.min(2, Math.max(0.25, scale)));
+}

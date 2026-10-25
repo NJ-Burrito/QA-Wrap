@@ -6,6 +6,17 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.8.1, 2026-10-25
+
+### Changed
+
+- The toolbar icon shows a dot while QA Wrap is awake, and nothing while it sleeps.
+
+### Fixed
+
+- Tab recordings are sharp: the video is the tab at its own size, with no black bars, and Medium records 1080p at 8 Mbps.
+- A double-click on Save in the report saves each file once.
+
 ## 3.8.0, 2026-10-23
 
 ### Changed

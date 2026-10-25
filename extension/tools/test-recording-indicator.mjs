@@ -13,7 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
-import { badgeFor, BADGE_DOT } from '../background/action-icon.js';
+import { badgeFor, BADGE_DOT, BADGE } from '../background/action-icon.js';
 import * as remember from '../background/remember.js';
 import { workerSrc } from './lib-worker-src.mjs';
 
@@ -37,7 +37,7 @@ await test('badgeFor: low disk first (amber "!"), then the count, then the recor
 });
 
 /** The shipped paintBadge, run against a stubbed browser. */
-function badgeRig({ id = null, problems = 0, errors = 0, disk = false, done = false, title = '' } = {}) {
+function badgeRig({ id = null, problems = 0, errors = 0, disk = false, done = false, title = '', awake = false } = {}) {
   const start = sw.indexOf('async function paintBadge(hint) {');
   const end = sw.indexOf('\n}\n', start);
   assert.ok(start > 0 && end > start, 'paintBadge moved');
@@ -52,10 +52,10 @@ function badgeRig({ id = null, problems = 0, errors = 0, disk = false, done = fa
       setTitle: async ({ title: t }) => { written.title = t; },
     },
   };
-  const names = ['activeSessionId', 'DONE_KEY', 'DISK_WARN', 'chrome', 'tw', 'flushEvents', 'noteChain', 'findingTotals', 'sessionState', 'badgeFor'];
+  const names = ['activeSessionId', 'DONE_KEY', 'DISK_WARN', 'chrome', 'tw', 'flushEvents', 'noteChain', 'findingTotals', 'sessionState', 'badgeFor', 'armed'];
   const fn = new AsyncFunction(...names, `${sw.slice(start, end + 2)}\nreturn paintBadge;`);
   return fn(async () => id, 'uqa.doneJob', 'uqa.diskWarn', chrome, async (_k, en) => en, async () => {}, Promise.resolve(),
-    () => ({ problems, errors }), { getState: async () => ({ findings: {} }) }, badgeFor).then((paint) => ({ paint: () => paint(), written }));
+    () => ({ problems, errors }), { getState: async () => ({ findings: {} }) }, badgeFor, { armedWindows: async () => (awake ? [1] : []) }).then((paint) => ({ paint: () => paint(), written }));
 }
 
 await test('a running session with nothing found shows the dot (never empty while it runs)', async () => {
@@ -80,6 +80,22 @@ await test('Stop clears it: no session, no flag, no text', async () => {
   await r.paint();
   assert.equal(r.written.text, '');
   assert.equal(r.written.color, null, 'the colour is left alone when there is nothing to say');
+});
+await test('awake shows the accent dot, asleep shows nothing, and a session or the disk flag outrank it', async () => {
+  let r = await badgeRig({ awake: true });
+  await r.paint();
+  assert.deepEqual([r.written.text, r.written.color], [BADGE_DOT, BADGE], 'awake and idle: the accent dot');
+  r = await badgeRig({ awake: false });
+  await r.paint();
+  assert.equal(r.written.text, '', 'asleep: empty badge');
+  r = await badgeRig({ awake: true, id: 'S1', problems: 2, errors: 0 });
+  await r.paint();
+  assert.equal(r.written.text, '2', 'recording with problems: the count, not the awake dot');
+  r = await badgeRig({ awake: true, id: 'S1', disk: true });
+  await r.paint();
+  assert.equal(r.written.text, '!', 'low disk still first');
+  assert.deepEqual(badgeFor({ awake: true, live: true }), { text: BADGE_DOT, color: '#6B7280' }, 'a running session keeps its own dot');
+  assert.match(sw, /'armedWindows' in c\) paintBadge\(\)/, 'wake/sleep no longer repaints the badge');
 });
 await test('the disk flag is dropped when the clip ends, and the badge repaints', () => {
   assert.match(sw, /if \(!st\.recording\) await stopRecordingIcon\(\);\s*if \(!st\.recording\) await chrome\.storage\.session\.remove\(DISK_WARN\)[^\n]*\n\s*if \(!st\.recording\) paintBadge\(\)/);

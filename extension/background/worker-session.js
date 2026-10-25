@@ -227,14 +227,7 @@ export async function setActiveSessionId(id, windowId = null) {
   }
 }
 
-/**
- * The badge counts the session in the window the tester is looking at.
- *
- * With two sessions running there is still one toolbar, and a sum across both
- * would be a number that matches no report. `hint` is passed where the caller
- * knows; without one it falls back to the single session, which is what it
- * counted before any of this existed.
- */
+/** The badge counts the session in the window being looked at (`hint`; else the single session): a sum across two would match no report. */
 export async function paintBadge(hint) {
   const id = await activeSessionId(hint);
   const got = await chrome.storage.session.get([DONE_KEY, DISK_WARN, 'uqa.updateNew']).catch(() => ({}));
@@ -247,7 +240,7 @@ export async function paintBadge(hint) {
     t = findingTotals((await sessionState.getState(id)).findings);
     if (t.problems) words += `${words && ' · '}${await tw('common.worker.badge.errors', 'Errors')}: ${t.errors}, ${await tw('common.worker.badge.warnings', 'Warnings')}: ${t.problems - t.errors}`;
   }
-  const b = badgeFor({ disk: !!got[DISK_WARN], live: !!id, problems: t.problems, errors: t.errors, mark: done ? '✓' : '', update: !!got['uqa.updateNew'] }); // glyph-ok
+  const b = badgeFor({ disk: !!got[DISK_WARN], live: !!id, problems: t.problems, errors: t.errors, mark: done ? '✓' : '', update: !!got['uqa.updateNew'], awake: (await armed.armedWindows()).length > 0 }); // glyph-ok
   if (b.color) await chrome.action.setBadgeBackgroundColor({ color: b.color });
   await chrome.action.setBadgeText({ text: b.text });
   if (!/MICROPHONE/.test(await chrome.action.getTitle({}).catch(() => ''))) await chrome.action.setTitle({ title: `QA Wrap ${words}`.trim() }).catch(() => {});
