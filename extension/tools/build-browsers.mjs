@@ -2,7 +2,16 @@
 /**
  * One source, eight targets.
  *
- *   node tools/build-browsers.mjs [chrome|edge|brave|opera|operagx|duckduckgo|firefox|safari|all]
+ *   node tools/build-browsers.mjs [--store] [chrome|edge|brave|opera|operagx|duckduckgo|firefox|safari|all]
+ *
+ * `--store` drops the manifest `key` field from every target. Edge Partner
+ * Center ("The manifest shouldn't contain the key field") and the Opera
+ * add-ons store refuse a package that carries it; the store assigns its own
+ * id. Without the flag the key stays, so unpacked installs and the one-press
+ * update path keep the stable id. `--store` also leaves out updater/ and types/ (Opera refuses
+ * updater/host.cmd) and stamps BUILD_STORE in core/rate-links.js, which turns off the GitHub
+ * update check and hides the Updates controls. Build store packages with `--store` only; the
+ * GitHub-release zips are built without it and are unchanged.
  *
  * Seven of them come out as a zip; Safari comes out as a prepared folder, for
  * the reason under "Safari is prepared, not built" below. The list is
@@ -58,12 +67,16 @@ syncPrivacyNames();
 /* T-069: `--flavour managed` is the Chrome build minus `debugger` (no code coverage), for a named organisation
    whose policy lists `blocked_permissions: ["debugger"]`. Same tree, one flag, never a store listing. */
 const args = process.argv.slice(2);
+const si = args.indexOf('--store');
+const STORE = si >= 0;
+if (STORE) args.splice(si, 1);
 const fi = args.indexOf('--flavour');
 const FLAVOUR = fi >= 0 ? args.splice(fi, 2)[1] : null;
 if (FLAVOUR && FLAVOUR !== 'managed') { console.error(`Unknown flavour "${FLAVOUR}". Only: managed`); process.exit(1); }
 const wanted = FLAVOUR ? 'chrome' : (args[0] || 'all').toLowerCase();
 const targets = wanted === 'all' ? Object.keys(TARGETS) : [wanted];
 const MANAGED_DROP = ['debugger'];
+const STORE_SKIP = new Set(['updater', 'types']);
 for (const t of targets) {
   if (!TARGETS[t]) {
     console.error(`Unknown target "${t}". One of: ${Object.keys(TARGETS).join(', ')}, all`);
@@ -119,6 +132,11 @@ function manifestFor(id) {
     out.action = { ...out.action, default_area: 'navbar' };
     changes.push('action.default_area "navbar" — the button is on the toolbar from install');
     changes.push(`added a gecko id (${spec.gecko.id}) — Firefox refuses to install without one`);
+  }
+
+  if (STORE && out.key) {
+    delete out.key;
+    changes.push('store build: dropped the manifest key — Edge and Opera stores refuse it and assign their own id');
   }
 
   if (spec.engine !== 'chromium') {
@@ -301,6 +319,8 @@ for (const id of targets) {
     const from = path.join(EXT, entry);
     if (!fs.existsSync(from)) continue;
     if (entry === 'manifest.json') continue;
+    // Store packages carry neither the native updater (stores refuse updater/host.cmd and a store updates the add-on itself) nor the dev type stubs.
+    if (STORE && STORE_SKIP.has(entry)) { console.log(`  - ${entry}/  (store build, not shipped)`); continue; }
     // Nested working notes are dropped here rather than only at the top level:
     // `popup/REFACTOR.md` shipped in all eight packages because the old filter
     // read the extension folder's own entries and nothing below them. Named on
@@ -315,7 +335,9 @@ for (const id of targets) {
   if (rlOut === rlSrc && id !== 'chrome') throw new Error('core/rate-links.js: BUILD_DIST line not found');
   const rlFlav = rlOut.replace(/^export const BUILD_FLAVOUR = '[a-z]*';/m, `export const BUILD_FLAVOUR = '${FLAVOUR || ''}';`);
   if (rlFlav === rlOut && FLAVOUR) throw new Error('core/rate-links.js: BUILD_FLAVOUR line not found');
-  fs.writeFileSync(rl, rlFlav);
+  const rlStore = rlFlav.replace(/^export const BUILD_STORE = (?:false|true);/m, `export const BUILD_STORE = ${STORE};`);
+  if (rlStore === rlFlav && STORE) throw new Error('core/rate-links.js: BUILD_STORE line not found');
+  fs.writeFileSync(rl, rlStore);
   fs.writeFileSync(path.join(dir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   fs.writeFileSync(path.join(dir, 'BROWSER.md'), readmeFor(id, changes));
   files += 2; // the two written above rather than copied

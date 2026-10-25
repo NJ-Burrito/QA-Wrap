@@ -81,3 +81,9 @@ recordings/
 /extension/tools/accept-devil.mjs
 /extension/tools/design-review-*.mjs
 /skills/
+
+# Banner (1023): fonts are never committed; render scratch stays local
+identity/banner/assets/fonts/
+identity/banner/renders/
+identity/banner/.hyperframes/
+identity/banner/node_modules/

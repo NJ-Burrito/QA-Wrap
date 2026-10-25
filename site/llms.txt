@@ -1,0 +1,30 @@
+# QA-Wrap
+
+> QA-Wrap is a free, open-source (MIT) bug report extension for QA testers. It records a manual test session in the browser, links every failure to the click that caused it, and writes the bug report. Local-first: nothing leaves the computer until the user sends it to Jira, a tracker or a webhook. No account, no server. English and Arabic.
+
+- [Home](https://nj-burrito.github.io/QA-Wrap/): what it does, the 19 tools, install steps, FAQ
+- [Alternatives](https://nj-burrito.github.io/QA-Wrap/alternatives.html): QA-Wrap compared with Jam, Marker.io, BugHerd and Bird Eats Bug
+- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha): install in Edge from the store (Firefox and Opera listings are in review)
+- [Latest release](https://github.com/NJ-Burrito/QA-Wrap/releases/latest): zip per browser (Chrome, Edge, Brave, Opera, Vivaldi, Arc, Yandex, Chromium)
+- [Source](https://github.com/NJ-Burrito/QA-Wrap): README in English and Arabic
+- [qa-wrap-bridge on npm](https://www.npmjs.com/package/qa-wrap-bridge): read-only MCP bridge so a coding agent can read recorded sessions; also in the Official MCP Registry as io.github.NJ-Burrito/qa-wrap-bridge
+- [Trust](https://nj-burrito.github.io/QA-Wrap/trust.html): how to check that nothing is sent
+- [Privacy](https://nj-burrito.github.io/QA-Wrap/privacy.html)
+- [Support](https://nj-burrito.github.io/QA-Wrap/support.html)
+- [Terms](https://nj-burrito.github.io/QA-Wrap/terms.html)
+
+## Short answers
+
+- What is it? A browser extension that records a manual test and writes the bug report, with each failure linked to the action before it.
+- Free? Yes. No paid plan, no account. MIT licence.
+- Open source? Yes, https://github.com/NJ-Burrito/QA-Wrap
+- Browsers? Chrome and Edge are the tested browsers (Chrome 116 or newer), from the release zip. Firefox: the signed add-on on Firefox Add-ons. Edge and Opera store listings are in review.
+- Data? Nothing leaves the computer until the user sends it to Jira, a tracker or a webhook. The one automatic request is a check of the GitHub release list for updates.
+- Jira? Yes. File to Jira drafts the summary, maps severity to a Jira priority and lists what is sent and what is not.
+- Alternative to Jam, Marker.io, BugHerd, Bird Eats Bug? Yes, when the recording must stay on the tester's machine; those are hosted services that share reports through their cloud.
+- Coding agents? qa-wrap-bridge is a read-only MCP bridge (npm, Official MCP Registry), off until Agent bridge is turned on in Settings.
+- Languages? English and Arabic, right to left for Arabic.
+
+## About the maker
+
+Nader Alzghoul is a QA automation engineer in Amman, Jordan. Portfolio https://nj-burrito.github.io/ , GitHub https://github.com/NJ-Burrito , LinkedIn https://www.linkedin.com/in/nader-alzghoul . Contact: naderalzghoulbusiness@gmail.com

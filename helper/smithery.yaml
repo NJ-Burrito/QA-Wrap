@@ -1,0 +1,12 @@
+# Smithery metadata for qa-wrap-bridge (stdio, read-only, local). Independent tool.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: "npx",
+      args: ["-y", "qa-wrap-bridge@0.1.0", "mcp"]
+    })

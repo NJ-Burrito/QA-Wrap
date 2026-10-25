@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Jam.dev alternative: QA-Wrap vs Marker.io, BugHerd, Bird Eats Bug</title>
+<meta name="description" content="QA-Wrap is a free, open-source bug report extension. A fair comparison with Jam, Marker.io, BugHerd and Bird Eats Bug: cost, source code, where the recording lives.">
+<link rel="canonical" href="https://nj-burrito.github.io/QA-Wrap/alternatives.html">
+<meta name="theme-color" content="#1D2024">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="QA-Wrap">
+<meta property="og:title" content="Free Jam.dev alternative: QA-Wrap vs Marker.io, BugHerd, Bird Eats Bug">
+<meta property="og:description" content="QA-Wrap is a free, open-source bug report extension. A fair comparison with Jam, Marker.io, BugHerd and Bird Eats Bug: cost, source code, where the recording lives.">
+<meta property="og:url" content="https://nj-burrito.github.io/QA-Wrap/alternatives.html">
+<meta property="og:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="QA-Wrap: every failure, traced">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Jam.dev alternative: QA-Wrap vs Marker.io, BugHerd, Bird Eats Bug">
+<meta name="twitter:description" content="QA-Wrap is a free, open-source bug report extension. A fair comparison with Jam, Marker.io, BugHerd and Bird Eats Bug: cost, source code, where the recording lives.">
+<meta name="twitter:image" content="https://nj-burrito.github.io/QA-Wrap/assets/social-preview.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "@id": "https://nj-burrito.github.io/QA-Wrap/alternatives.html", "url": "https://nj-burrito.github.io/QA-Wrap/alternatives.html", "name": "Free Jam.dev alternative: QA-Wrap vs Marker.io, BugHerd, Bird Eats Bug", "description": "QA-Wrap is a free, open-source bug report extension. A fair comparison with Jam, Marker.io, BugHerd and Bird Eats Bug: cost, source code, where the recording lives.", "inLanguage": ["en", "ar"], "isPartOf": {"@id": "https://nj-burrito.github.io/QA-Wrap/#website"}, "about": {"@id": "https://nj-burrito.github.io/QA-Wrap/#app"}, "dateModified": "2026-10-24"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "QA-Wrap", "item": "https://nj-burrito.github.io/QA-Wrap/"}, {"@type": "ListItem", "position": 2, "name": "Alternatives", "item": "https://nj-burrito.github.io/QA-Wrap/alternatives.html"}]}]}</script>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>(function(){try{var t=localStorage.getItem("qaw-site-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>
+<link rel="preload" href="assets/fonts/thmanyah-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/thmanyah-serif-display-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/thmanyah.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-lang="en">
+<a class="skip" href="#main">Skip to content · انتقل إلى المحتوى</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+<symbol id="i-record" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-drive" viewBox="0 0 24 24"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></symbol>
+<symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+<symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol>
+<symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></symbol>
+<symbol id="i-bug" viewBox="0 0 24 24"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
+<symbol id="i-prev" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+</defs></svg>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="QA-Wrap">
+        <g transform="translate(-2 3.5)" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path class="mark-ring" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/>
+          <path class="mark-check" d="M36 36L42.5 44L55 20"/>
+        </g>
+      </svg>
+      QA-Wrap
+    </a>
+    <div class="masthead-right">
+      <nav aria-label="Site">
+        <ul>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="support.html">Support</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="privacy.html">Privacy</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="terms.html">Terms</a></li>
+          <li data-lang-block="en" lang="en" dir="ltr"><a href="trust.html" aria-current="page">Trust</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="support.html">الدعم</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="privacy.html">الخصوصية</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="terms.html">الشروط</a></li>
+          <li data-lang-block="ar" lang="ar" dir="rtl"><a href="trust.html" aria-current="page">الثقة</a></li>
+        </ul>
+      </nav>
+      <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Light or dark · الوضع الفاتح أو الداكن"><svg class="fi i-moon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><svg class="fi i-sun" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <button type="button" id="lang-toggle" class="lang-toggle">
+        <span data-lang-block="en" lang="en" dir="ltr">العربية</span>
+        <span data-lang-block="ar" lang="ar" dir="rtl">English</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <div data-lang-block="en" lang="en" dir="ltr">
+    <section class="hero">
+      <h1>A free, open-source alternative to Jam, Marker.io, BugHerd and Bird Eats Bug</h1>
+      <p class="lead prose">QA-Wrap is a free bug report extension for QA testers. Here is how it compares with four hosted bug reporting tools, so you can pick the one that fits your team.</p>
+    </section>
+
+    <section>
+      <h2>The short answer</h2>
+      <ul class="prose">
+        <li><strong>Pick QA-Wrap</strong> when the recording has to stay on the tester’s machine, when you want no account, or when you want to read and change the code.</li>
+        <li><strong>Pick Jam or Bird Eats Bug</strong> when your team wants hosted share links anyone can open.</li>
+        <li><strong>Pick Marker.io or BugHerd</strong> when you collect website feedback from clients.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Side by side</h2>
+      <div class="table-scroll compare-table" role="region" tabindex="0" aria-label="From each tool’s own home and pricing pages, read on 24 October 2026. Plans change, so check their pages."><table><caption>From each tool’s own home and pricing pages, read on 24 October 2026. Plans change, so check their pages.</caption><thead><tr><th scope="col">Tool</th><th scope="col">Cost to start</th><th scope="col">Source code</th><th scope="col">Where the recording lives</th></tr></thead><tbody>
+<tr class="us"><th scope="row" dir="ltr">QA-Wrap</th><td data-label="Cost to start">Free, no account</td><td data-label="Source code">Open (MIT)</td><td data-label="Where the recording lives">Your browser, until you send it to Jira, a tracker or a webhook</td></tr>
+<tr><th scope="row" dir="ltr">Jam</th><td data-label="Cost to start">Free plan, paid plans</td><td data-label="Source code">Not open source</td><td data-label="Where the recording lives">Jam’s cloud</td></tr>
+<tr><th scope="row" dir="ltr">Marker.io</th><td data-label="Cost to start">Trial, then paid</td><td data-label="Source code">Not open source</td><td data-label="Where the recording lives">Marker.io’s cloud</td></tr>
+<tr><th scope="row" dir="ltr">BugHerd</th><td data-label="Cost to start">Trial, then paid</td><td data-label="Source code">Not open source</td><td data-label="Where the recording lives">BugHerd’s cloud</td></tr>
+<tr><th scope="row" dir="ltr">Bird Eats Bug</th><td data-label="Cost to start">Free plan (15 uploads a month), paid plans</td><td data-label="Source code">Not open source</td><td data-label="Where the recording lives">Bird Eats Bug’s cloud</td></tr>
+</tbody></table></div>
+      <p class="prose">Their own pages, to check the current plans: jam.dev/pricing, marker.io/pricing, bugherd.com/pricing and birdeatsbug.com/pricing.</p>
+    </section>
+
+    <section>
+      <h2>What the table cannot show</h2>
+      <ul class="prose">
+        <li>Every failure is linked to the action just before it, so the report says which click broke the page.</li>
+        <li>The report is written for you: title, steps to reproduce, what happened and the evidence.</li>
+        <li>File to Jira opens one dialog that lists what is sent and what is not.</li>
+        <li>The interface and the reports come in English and Arabic, right to left where Arabic needs it.</li>
+        <li>qa-wrap-bridge, a read-only MCP bridge, lets a coding agent read the sessions you recorded.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Where QA-Wrap is weaker</h2>
+      <ul class="prose">
+        <li>There are no hosted share links. You hand the report over, or send it to Jira, a tracker or a webhook.</li>
+        <li>It is not in the Chrome Web Store. Chrome installs from the release zip with Developer mode, about 3 minutes, once. Edge installs from Microsoft Edge Add-ons. The Firefox listing is in review.</li>
+        <li>One person makes it: Nader Alzghoul, a QA automation engineer in Amman, Jordan.</li>
+      </ul>
+      <p class="actions"><a class="cta" href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>Download</a><a class="btn" href="https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>Edge Add-ons</a><a class="btn" href="./">Back to QA-Wrap</a></p>
+    </section>
+    </div>
+    <div data-lang-block="ar" lang="ar" dir="rtl">
+    <section class="hero">
+      <p class="h1" role="heading" aria-level="1">بديل مجاني ومفتوح المصدر عن Jam وMarker.io وBugHerd وBird Eats Bug</p>
+      <p class="lead prose">QA-Wrap إضافة متصفح مجانية لكتابة تقارير الأخطاء، صُنعت لمختبري الجودة. هنا مقارنتها بأربع أدوات مستضافة للإبلاغ عن الأخطاء، لتختار ما يناسب فريقك.</p>
+    </section>
+
+    <section>
+      <h2>الجواب المختصر</h2>
+      <ul class="prose">
+        <li><strong>اختر QA-Wrap</strong> حين يجب أن يبقى التسجيل على جهاز المختبِر، أو حين لا تريد حسابا، أو حين تريد قراءة الشيفرة وتعديلها.</li>
+        <li><strong>اختر Jam أو Bird Eats Bug</strong> حين يريد فريقك روابط مشاركة مستضافة يفتحها أي شخص.</li>
+        <li><strong>اختر Marker.io أو BugHerd</strong> حين تجمع ملاحظات العملاء على المواقع.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>جنبا إلى جنب</h2>
+      <div class="table-scroll compare-table" role="region" tabindex="0" aria-label="من الصفحة الرئيسية وصفحة الأسعار لكل أداة، قُرئت في 24 أكتوبر 2026. الخطط تتغير، فراجع صفحاتهم."><table><caption>من الصفحة الرئيسية وصفحة الأسعار لكل أداة، قُرئت في 24 أكتوبر 2026. الخطط تتغير، فراجع صفحاتهم.</caption><thead><tr><th scope="col">الأداة</th><th scope="col">كلفة البدء</th><th scope="col">الشيفرة المصدرية</th><th scope="col">أين يُحفظ التسجيل</th></tr></thead><tbody>
+<tr class="us"><th scope="row" dir="ltr">QA-Wrap</th><td data-label="كلفة البدء">مجانية، بلا حساب</td><td data-label="الشيفرة المصدرية">مفتوحة (MIT)</td><td data-label="أين يُحفظ التسجيل">في متصفحك، حتى ترسله إلى Jira أو أداة تتبع أو ويب هوك</td></tr>
+<tr><th scope="row" dir="ltr">Jam</th><td data-label="كلفة البدء">خطة مجانية وخطط مدفوعة</td><td data-label="الشيفرة المصدرية">مغلقة المصدر</td><td data-label="أين يُحفظ التسجيل">سحابة Jam</td></tr>
+<tr><th scope="row" dir="ltr">Marker.io</th><td data-label="كلفة البدء">فترة تجربة ثم اشتراك مدفوع</td><td data-label="الشيفرة المصدرية">مغلقة المصدر</td><td data-label="أين يُحفظ التسجيل">سحابة Marker.io</td></tr>
+<tr><th scope="row" dir="ltr">BugHerd</th><td data-label="كلفة البدء">فترة تجربة ثم اشتراك مدفوع</td><td data-label="الشيفرة المصدرية">مغلقة المصدر</td><td data-label="أين يُحفظ التسجيل">سحابة BugHerd</td></tr>
+<tr><th scope="row" dir="ltr">Bird Eats Bug</th><td data-label="كلفة البدء">خطة مجانية (15 رفعًا في الشهر) وخطط مدفوعة</td><td data-label="الشيفرة المصدرية">مغلقة المصدر</td><td data-label="أين يُحفظ التسجيل">سحابة Bird Eats Bug</td></tr>
+</tbody></table></div>
+      <p class="prose">صفحاتهم للاطلاع على الخطط الحالية: jam.dev/pricing وmarker.io/pricing وbugherd.com/pricing وbirdeatsbug.com/pricing.</p>
+    </section>
+
+    <section>
+      <h2>ما لا يظهره الجدول</h2>
+      <ul class="prose">
+        <li>كل عطل مربوط بالإجراء الذي سبقه مباشرة، فيقول التقرير أي نقرة كسرت الصفحة.</li>
+        <li>يُكتب التقرير لك: العنوان، وخطوات إعادة الإنتاج، وما حدث، والدليل.</li>
+        <li>زر الإرسال إلى Jira يفتح نافذة واحدة تعرض ما سيُرسل وما لن يُرسل.</li>
+        <li>الواجهة والتقارير بالإنجليزية والعربية، ومن اليمين إلى اليسار حيث تحتاج العربية ذلك.</li>
+        <li>qa-wrap-bridge، جسر MCP للقراءة فقط، يتيح لوكيل برمجة قراءة الجلسات التي سجلتها.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>أين تقصر QA-Wrap</h2>
+      <ul class="prose">
+        <li>لا توجد روابط مشاركة مستضافة. تسلّم التقرير بنفسك، أو ترسله إلى Jira أو أداة تتبع أو ويب هوك.</li>
+        <li>ليست في متجر Chrome الإلكتروني. تُثبَّت في Chrome من ملف الإصدار المضغوط مع وضع المطور، في نحو 3 دقائق ولمرة واحدة. وتُثبَّت في Edge من متجر إضافات Microsoft Edge. وصفحة Firefox قيد المراجعة.</li>
+        <li>يصنعها شخص واحد: نادر الزغول، مهندس أتمتة جودة في عمّان، الأردن.</li>
+      </ul>
+      <p class="actions"><a class="cta" href="https://github.com/NJ-Burrito/QA-Wrap/releases/latest"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>نزّل الآن</a><a class="btn" href="https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha"><svg class="fi" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>إضافات Edge</a><a class="btn" href="./">العودة إلى QA-Wrap</a></p>
+    </section>
+    </div>
+  </div>
+</main>
+
+<section class="more" aria-labelledby="more-en"><div class="wrap">
+  <div data-lang-block="en" lang="en" dir="ltr">
+    <h2 id="more-en">More from Nader</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>Portfolio</strong><small>Nader's work and projects</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>Skills for Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>Your profile as a page</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>All the open repositories</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>Contact</strong><small>Say hello on the portfolio</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
+<section class="more" aria-labelledby="more-ar"><div class="wrap">
+  <div data-lang-block="ar" lang="ar" dir="rtl">
+    <h2 id="more-ar">المزيد من نادر</h2>
+    <ul class="more-grid">
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg><span><strong>المعرض</strong><small>أعمال نادر ومشاريعه</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/NJ-Kit/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="m7.5 4.27 9 5.15"/></svg><span><strong>NJ-Kit</strong><small>مهارات لـ Claude Code</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/Profile-Wrap/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span><strong>Profile-Wrap</strong><small>ملفك الشخصي كصفحة</small></span></a></li>
+      <li><a href="https://github.com/NJ-Burrito"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span><strong>GitHub</strong><small>كل المستودعات المفتوحة</small></span></a></li>
+      <li><a href="https://nj-burrito.github.io/"><svg class="fi" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span><strong>تواصل</strong><small>راسله من المعرض</small></span></a></li>
+    </ul>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <p data-lang-block="en" lang="en" dir="ltr">QA-Wrap &middot; Made by Nader Alzghoul</p>
+    <p data-lang-block="ar" lang="ar" dir="rtl">QA-Wrap &middot; من تطوير نادر الزغول</p>
+    <ul data-lang-block="en" lang="en" dir="ltr">
+      <li><a href="./">Home</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="trust.html">Trust</a></li>
+    </ul>
+    <ul data-lang-block="ar" lang="ar" dir="rtl">
+      <li><a href="./">الرئيسية</a></li>
+      <li><a href="privacy.html">الخصوصية</a></li>
+      <li><a href="terms.html">الشروط</a></li>
+      <li><a href="trust.html">الثقة</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>
