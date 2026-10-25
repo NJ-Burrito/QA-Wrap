@@ -20,7 +20,7 @@ import {
 } from '../core/db.js';
 import { encodeGifAsync, buildPalette } from '../core/gif.js';
 import { IMAGE_TYPES, VIDEO_TYPES, byId } from '../core/file-types.js';
-import { probeFormats, videoMime } from '../core/file-probe.js';
+import { probeFormats, videoMime, tabVideo, videoBitrate, CAPTURE_EDGE } from '../core/file-probe.js';
 import { stampPng, stampDocument, withSha256 } from '../core/provenance-stamp.js';
 import { sha256Hex, captureHashes } from '../core/integrity.js';
 
@@ -782,10 +782,8 @@ async function startRecording({
     // never this one. See `displayStream` above for the measurements.
     const wantsAudio = desktop ? systemAudio : tabAudio;
 
-    // The frame the encoder is asked for follows the quality the tester chose.
-    // "High" keeps the generous cap a wide portal needs; "medium" is 1080p,
-    // which is what every ticket system will show it at anyway; "low" is 720p.
-    const cap = { low: [1280, 720], medium: [1920, 1080], high: [2560, 1440] }[quality] || [1920, 1080];
+    const edge = CAPTURE_EDGE[quality] || CAPTURE_EDGE.medium;
+    const cap = [edge, edge];
     stream = desktop
       ? await displayStream({ wantsAudio, cap, fps, cursor: !!cursor })
       : await navigator.mediaDevices.getUserMedia({
@@ -795,15 +793,7 @@ async function startRecording({
           audio: wantsAudio
             ? { mandatory: { chromeMediaSource: 'tab', chromeMediaSourceId: streamId } }
             : false,
-          video: {
-            mandatory: {
-              chromeMediaSource: 'tab',
-              chromeMediaSourceId: streamId,
-              maxWidth: cap[0],
-              maxHeight: cap[1],
-              maxFrameRate: fps || 15,
-            },
-          },
+          video: tabVideo(streamId, quality, fps),
         });
 
     /*
@@ -981,7 +971,7 @@ async function startRecording({
 
     const recorder = new MediaRecorder(recorded, {
       mimeType: mime,
-      videoBitsPerSecond: { low: 800_000, medium: 2_500_000, high: 6_000_000 }[quality] ?? 2_500_000,
+      videoBitsPerSecond: videoBitrate(quality, sourceTrack.getSettings?.().width, sourceTrack.getSettings?.().height),
       audioBitsPerSecond: 128_000,
     });
 

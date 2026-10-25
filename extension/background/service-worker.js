@@ -57,7 +57,7 @@ watchPolicy();
 
 bindTxDeadline((p) => bounded(p, 'tx')); // r2-06-3
 
-chrome.storage.onChanged.addListener((c, a) => { if (a === 'session' && DONE_KEY in c && !c[DONE_KEY].newValue) paintBadge(); });
+chrome.storage.onChanged.addListener((c, a) => { if (a === 'session' && 'armedWindows' in c) paintBadge(); if (a === 'session' && DONE_KEY in c && !c[DONE_KEY].newValue) paintBadge(); });
 
 const SETTINGS_WRITERS = new Set(['UQA_SET_SETTINGS', 'UQA_RESET_SETTINGS', 'UQA_WORKSPACE_JOIN', 'UQA_WORKSPACE_LEAVE', 'UQA_VAULT_STATE', 'UQA_VAULT_PASS', 'UQA_VAULT_UNLOCK', 'UQA_VAULT_LOCK', 'UQA_VAULT_FORGET']);
 

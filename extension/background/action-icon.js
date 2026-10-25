@@ -42,11 +42,11 @@ export const STEP_MS = 220;
 export const BADGE_DOT = '●';
 
 /** What the toolbar badge says, one meaning at a time: low disk (amber "!"), then the problem count, then the recording dot, then `mark`, then "NEW" (an update is waiting); empty (color null) when none applies. */
-export function badgeFor({ disk = false, live = false, problems = 0, errors = 0, mark = '', update = false } = {}) {
+export function badgeFor({ disk = false, live = false, problems = 0, errors = 0, mark = '', update = false, awake = false } = {}) {
   if (disk) return { text: '!', color: '#B7791F' };
   if (problems) return { text: problems > 99 ? '99+' : String(problems), color: errors ? '#B5321F' : '#B7791F' };
   if (live) return { text: mark || BADGE_DOT, color: '#6B7280' };
-  return !mark && update ? { text: 'NEW', color: '#2F5D8A' } : { text: mark, color: null };
+  return !mark && update ? { text: 'NEW', color: '#2F5D8A' } : !mark && awake ? { text: BADGE_DOT, color: BADGE } : { text: mark, color: null };
 }
 
 const rad = (deg) => (deg * Math.PI) / 180;
@@ -257,9 +257,7 @@ export async function stopRecordingIcon() {
   const path = manifestIcon();
   if (path) await chrome.action.setIcon({ path }).catch(() => {});
 
-  // Give the badge back only if it is still ours. paintBadge() writes the
-  // event count there, and a stop that landed after it would otherwise erase a
-  // number the tester is reading.
+  // Give the badge back only if it is still ours (paintBadge() may have written a count since).
   const now = await chrome.action.getBadgeText({}).catch(() => '');
   if (now === BADGE_DOT) await chrome.action.setBadgeText({ text: borrowedBadge || '' }).catch(() => {});
   borrowedBadge = null;

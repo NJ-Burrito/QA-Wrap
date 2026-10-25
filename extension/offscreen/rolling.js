@@ -7,7 +7,7 @@
  */
 import { putMedia } from '../core/db.js';
 import { sha256Hex } from '../core/integrity.js';
-import { videoMime } from '../core/file-probe.js';
+import { videoMime, tabVideo } from '../core/file-probe.js';
 import { SLOTS, dueRestarts, pickSave, reconcileDuration } from '../core/rolling-buffer.js';
 
 /** @type {null | { stream: MediaStream, sessionId: string, tabId: number, onState?: any, mime: string, t0: number, slots: any[], timer: number }} */
@@ -93,7 +93,7 @@ export async function rollOp(msg) {
   if (!mime) throw new Error('This browser cannot record video at all: no supported encoder.');
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: /** @type {any} */ ({ mandatory: { chromeMediaSource: 'tab', chromeMediaSourceId: msg.streamId, maxWidth: 1920, maxHeight: 1080, maxFrameRate: 15 } }),
+    video: /** @type {any} */ (tabVideo(msg.streamId, 'medium', 15)),
   });
   r = { stream, sessionId: msg.sessionId, tabId: msg.tabId, mime, t0: Date.now(), slots: Array(SLOTS).fill(null), timer: 0 };
   r.timer = setInterval(tick, 1000);

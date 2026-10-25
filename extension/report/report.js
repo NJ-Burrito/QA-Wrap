@@ -1958,7 +1958,7 @@ function renderGallery() {
       actions.append(edit);
     }
     const save = el('button', 'btn btn-xs', t('report.media.save'));
-    save.addEventListener('click', () => saveOne(item, save));
+    save.addEventListener('click', (e) => e.detail > 1 || saveOne(item, save));
     const del = el('button', 'btn btn-xs btn-danger', t('report.media.delete'));
     del.addEventListener('click', async () => {
       if (!confirm(t('report.media.deleteConfirm', { label: iso(item.label) }))) return;
@@ -2400,7 +2400,7 @@ $('save').addEventListener('click', async () => {
   );
 });
 
-$('media-save').addEventListener('click', async () => {
+$('media-save').addEventListener('click', async (e) => { if (e.detail > 1) return;
   // What this tab shows is what this button saves. A clip belonging to a
   // window-size run has its own card under Window sizes, so it is not written
   // twice under two names.
@@ -2733,7 +2733,7 @@ $('save-use-downloads').addEventListener('click', async () => {
   paintSaveWhere();
 });
 
-$('save-go').addEventListener('click', async () => {
+$('save-go').addEventListener('click', async (e) => { if (e.detail > 1) return;
   const chosen = [...$('save-parts').querySelectorAll('input:checked')].map((i) => i.value);
   if (!chosen.length) return ($('save-status').textContent = t('report.save.nothingTicked'));
   const status = $('save-status');
