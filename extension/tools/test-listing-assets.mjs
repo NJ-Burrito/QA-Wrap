@@ -24,7 +24,7 @@ for (const f of shots) {
 }
 // T-058: the five shots tell the story in this order, the hero is a failure (never "Passed"), the bar shot carries the problems chip.
 assert.deepEqual(shots.map((f) => f.replace(`-${v}.png`, '').replace(/^\d-/, '')), ['report-broke', 'popup-recording', 'inpage-bar', 'inpage-palette', 'report-filing'], 'listing shots are not the T-058 five in order');
-const alts = [...html.matchAll(/<img src="assets\/shots\/[^"]+"[^>]*alt="([^"]*)"/g)].map((m) => m[1]);
+const alts = [...html.matchAll(/<img[^>]*src="assets\/shots\/[^"]+"[^>]*alt="([^"]*)"/g)].map((m) => m[1]);
 assert.ok(alts.length >= 10, 'site alt texts missing');
 assert.ok(!alts.some((a) => /passed/i.test(a.replace(/nothing says Passed/i, ''))), 'a site shot alt claims Passed');
 assert.ok(alts.some((a) => /Failed badge/.test(a)) && alts.some((a) => /problems chip reading 4/.test(a)), 'hero/bar alts lost the failure and the chip');
