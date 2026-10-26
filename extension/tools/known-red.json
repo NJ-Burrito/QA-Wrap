@@ -5,11 +5,5 @@
     "ciOnly": true,
     "match": "NOT VERIFIED",
     "reason": "red only on a CI clone: keys/README.md and work/decisions/ are git-ignored owner evidence, so the suite says NOT VERIFIED out loud; green on the owner's checkout (ciOnly: not stale when green)"
-  },
-  "test-listing-assets": {
-    "id": "T-031",
-    "until": "2026-11-30",
-    "match": "the listing images are stale",
-    "reason": "store images need re-shooting after 3.8.0 UI changes; store packs submitted 2026-10-23 used the old shots"
   }
 }

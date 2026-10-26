@@ -50,14 +50,15 @@ test('one tracked copy per film: each mp4 name is tracked exactly once in the re
   assert.ok(tracked.every((f) => f.startsWith('site/tutorials/') || f === `site/media/${FILM}` || !live.some((l) => path.basename(f) === l.files.en)), 'a lesson film is tracked outside site/tutorials (or site/media for the hosted film)');
 });
 // sdlc-1014b: 6 MB to 6.25 MB. The package stood only a few hundred bytes under 6 MB at 3.5.1; the dock guard, the done-card title and the error button add 9 KB of shipped code and strings.
+// 2026-10-26: 6.85 -> 6.9 MB: 3.8.1 (sharp recording, file probe, awake dot) lands 6.851 MB, +0.7 KB net of 3.8.0, which already sat on the line; no media or dev file joined.
 // 2026-10-22: 6.7 -> 6.85 MB, merged lanes: object picking + keyframes (~25 KB) and the updater installers + What's new page (~46 KB).
 // Nader 2026-10-15: Bug Hunt game ships as the practice page; 6.25 MB to 6.7 MB (measured 6.58 MB: game 560 KB, 15 Ogg Opus voices 224 KB of it).
-test('the package stays small: what shipping() copies is under 6.85 MB', () => {
+test('the package stays small: what shipping() copies is under 6.9 MB', () => {
   const size = (p, rel) => (fs.statSync(p).isDirectory()
     ? fs.readdirSync(p).reduce((s, c) => s + size(path.join(p, c), `${rel}/${c}`), 0)
     : (isWorkingNote(rel) ? 0 : fs.statSync(p).size));
   const total = shipping(fs.readdirSync(EXT)).reduce((s, name) => s + size(path.join(EXT, name), name), 0);
-  assert.ok(total < 6.85 * 1024 * 1024, `${(total / 1048576).toFixed(2)} MB`);
+  assert.ok(total < 6.9 * 1024 * 1024, `${(total / 1048576).toFixed(2)} MB`);
 });
 test('the page builds no remote address, and the extension-page CSP allows only own media and images', () => {
   const js = read(path.join(EXT, 'tutorials', 'tutorials.js'));
