@@ -431,6 +431,12 @@ export async function startRecording({
 
   // The rolling buffer lets go of the tab first (3.8.3, offscreen.js rollBusy).
   await rollOp({ op: 'stop' }).catch(() => {});
+  // 3.8.4: the document first, then the id. An id minted while a fresh document loaded (after sleep closed it) aged
+  // out before use: AbortError "Invalid state" (recording.mjs step 10, 1 in 15). One retry on a new id, then coded.
+  await ensureOffscreen().catch(mediaSlow);
+  const tab = await chrome.tabs.get(tabId).catch(() => null);
+  // Frame lock target: the tab's pixels at its monitor's DPR (3.8.3), 400 ms at most.
+  const [px] = await Promise.race([chrome.scripting.executeScript({ target: { tabId }, func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio] }), new Promise((r) => setTimeout(r, 400, []))]).catch(() => []);
   let streamId;
   try {
     streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
@@ -455,14 +461,17 @@ export async function startRecording({
     }
     throw err;
   }
-  const tab = await chrome.tabs.get(tabId).catch(() => null);
-  // Frame lock target: the tab's pixels at its monitor's DPR (3.8.3), 400 ms at most.
-  const [px] = await Promise.race([chrome.scripting.executeScript({ target: { tabId }, func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio] }), new Promise((r) => setTimeout(r, 400, []))]).catch(() => []);
-  const started = await offscreen('UQA_OFF_START', {
-    streamId, sessionId, format, fps, quality, label, view: tab && { w: tab.width, h: tab.height, px: px?.result },
+  const go = (id) => offscreen('UQA_OFF_START', {
+    streamId: id, sessionId, format, fps, quality, label, view: tab && { w: tab.width, h: tab.height, px: px?.result },
     mic, tabAudio, webcam, webcamPosition, webcamSize,
     // Tab capture has no pointer: the offscreen document draws one (content/recorder.js reportCursor).
     cursor,
+  });
+  const busy = (e) => /Invalid state|AbortError/i.test(e?.message) || e?.code === 20;
+  const started = await go(streamId).catch(async (e) => {
+    if (!busy(e)) throw e;
+    const again = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId }).catch(() => null);
+    return go(again).catch((e2) => { throw busy(e2) || !again ? Object.assign(new Error('Chrome is still letting go of this tab. Wait a moment, then press Record again.'), { code: 'REC_TAB_BUSY' }) : e2; });
   });
   // Which window this clip is filming, so putting *that* window to sleep can
   // stop it without touching a clip running in another one.

@@ -26,7 +26,7 @@ const fixesSrc = popup.slice(popup.indexOf('const FIXES = ['), popup.indexOf('/*
 const ctx = vm.createContext({ $: () => null, spotlight() {}, chrome: {}, ctx: {}, say() {}, t: (k) => k, send() {}, dismiss() {} });
 vm.runInContext(`${fixesSrc}\nthis.REFUSALS = REFUSALS; this.codeByText = codeByText; this.fixFor = fixFor; this.FIXES = FIXES;`, ctx);
 const { REFUSALS, codeByText, fixFor, FIXES } = ctx;
-const CODES = ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_CLICK', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'POLICY_HOSTS', 'POLICY_SCREENSHOT', 'POLICY_BLOCKED', 'NO_PICTURE', 'REC_CANCELLED', 'REC_NOT_STORED'];
+const CODES = ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_CLICK', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'POLICY_HOSTS', 'POLICY_SCREENSHOT', 'POLICY_BLOCKED', 'NO_PICTURE', 'REC_CANCELLED', 'REC_NOT_STORED', 'REC_TAB_BUSY'];
 
 console.log('refusals (code, English, Arabic, chip)');
 
@@ -60,7 +60,7 @@ test('MUTATION: reword the English or show the Arabic and the chip is unchanged'
 
 test('the worker sends the code, with the seven refusals each raised somewhere', () => {
   const src = workerSrc() + read('background/armed.js') + read('background/media.js');
-  for (const c of ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'REC_CANCELLED', 'REC_NOT_STORED']) {
+  for (const c of ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'REC_CANCELLED', 'REC_NOT_STORED', 'REC_TAB_BUSY']) {
     assert.ok(src.includes(`'${c}'`), `${c} is raised nowhere`);
   }
   assert.ok(/codeByText\.set\(res\.error, res\.code\)/.test(popup), 'popup send() maps the code');
@@ -69,6 +69,16 @@ test('the worker sends the code, with the seven refusals each raised somewhere',
   assert.ok(en['popup.refusal.needsClick'].split(' ').length <= 25, 'one short line');
 });
 
+
+test('a tab start Chrome refuses with Invalid state is retried once on a fresh id, then coded REC_TAB_BUSY (3.8.4)', () => {
+  const m = read('background/media.js');
+  const body = m.slice(m.indexOf('export async function startRecording'), m.indexOf('export const cancelStart'));
+  assert.ok(body.indexOf('await ensureOffscreen()') < body.indexOf('getMediaStreamId'), 'the stream id is minted before the document exists');
+  assert.match(body, /const busy = \(e\) => \/Invalid state\|AbortError\/i/, 'Invalid state is not recognised');
+  assert.equal((body.match(/getMediaStreamId\(/g) || []).length, 2, 'no single retry on a fresh id');
+  assert.match(body, /code: 'REC_TAB_BUSY'/, 'the second failure is not coded');
+  for (const l of [en, ar]) assert.ok(l['popup.refusal.recTabBusy'], 'recTabBusy missing in a language');
+});
 
 test('a clip the store refused answers REC_NOT_STORED, EN and AR, with no rescue button promised', () => {
   const stop = read('background/handlers-session.js');
