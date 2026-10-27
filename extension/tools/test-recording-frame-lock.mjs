@@ -197,9 +197,8 @@ const TAB = lockTargets({ w: 1100, h: 674, px: [1375, 842.5] }, 1920, 1);
 for (const ms of [700, 1500, 3000]) {
   await test(`a still page whose scale step lands at ${ms} ms locks at the full size, not the soft one`, async () => {
     const run = await runComposite(lateStep(ms), false, true, HINT);
-    // 3.8.3 round 5: a 1:1 frame locks at the edge-fit size (one window, one size), never on the soft frame before it.
     assert.ok(run.lockedAt >= Math.round(ms / 66), `locked at tick ${run.lockedAt}, before the scale step: the soft frame was locked`);
-    assert.deepEqual(run.canvas, { w: 1920, h: 636 }, `locked at ${run.canvas.w}x${run.canvas.h}: the whole clip is scaled down`);
+    assert.deepEqual(run.canvas, { w: 1798, h: 594 }, `locked at ${run.canvas.w}x${run.canvas.h}: the whole clip is scaled down`);
     assert.equal(run.resizes.length, run.startedResizes, 'the canvas changed size after the encoder started');
   });
   // B's live late-scale shape: the capture fitted to the 1920 edge in the passing shape, then in the tab's.
@@ -225,11 +224,11 @@ await test('DevTools device mode (390x844 @3 in a 1100x760 tab) locks at once at
   assert.equal((await run.ready).by, 'hint');
 });
 
-await test('one window locks one size whichever size Chrome picked for the capture (live: 1358x1008 one run, 1920x1424 the next)', async () => {
+await test('a capture locks at the size Chrome delivers, 1:1 or edge-fit, at once and never resampled (Lead, 2026-10-27)', async () => {
   const win = lockTargets({ w: 1086, h: 806, px: [1357.5, 1007.5] }, 1920, 1.25);
   const a = await runComposite(Array(4).fill([1358, 1008, false]), false, true, win);
   const b = await runComposite(Array(4).fill([1920, 1424, false]), false, true, win);
-  assert.deepEqual(a.canvas, b.canvas, `1:1 locked ${a.canvas.w}x${a.canvas.h}, edge-fit ${b.canvas.w}x${b.canvas.h}`);
+  assert.deepEqual([a.canvas, b.canvas], [{ w: 1358, h: 1008 }, { w: 1920, h: 1424 }]);
   assert.equal(a.lockedAt, 0); assert.equal(b.lockedAt, 0);
 });
 
@@ -237,18 +236,17 @@ await test('device mode as measured live (390x844 @3: frames 854x1846, computed 
   const device = lockTargets({ w: 1086, h: 806, px: [1170, 2532] }, 1920, 1.25);
   const run = await runComposite(Array(10).fill([854, 1846, false]), false, true, device);
   assert.equal(run.lockedAt, 0, `waited ${run.lockedMs} ms (was the 4 s bound live: 4196 ms Record to recording)`);
-  assert.deepEqual(run.canvas, { w: 886, h: 1920 });
+  assert.deepEqual(run.canvas, { w: 854, h: 1846 });
   // A soft frame of the tab's own shape is not taken for the phone.
   const tabShaped = await runComposite(Array(3).fill([1086, 806, false]), false, true, device);
   assert.equal(tabShaped.lockedAt, -1);
 });
 
 await test('the targets: the tab fitted to the edge and 1:1, and the page as it sees itself', () => {
-  const up = { w: 1920, h: 636 };
-  assert.deepEqual(HINT, [{ w: 1920, h: 636, lock: up }, { w: 1798, h: 595, lock: up }], 'the page has the tab shape: no device-mode target');
-  assert.deepEqual(lockTargets({ w: 1438, h: 476 }, 1920, 1.5), [{ w: 1920, h: 636, lock: up }, { w: 1920, h: 636, lock: up }], 'no in-tab measure: the offscreen ratio, capped');
+  assert.deepEqual(HINT, [{ w: 1920, h: 636 }, { w: 1798, h: 595 }], 'the page has the tab shape: no device-mode target');
+  assert.deepEqual(lockTargets({ w: 1438, h: 476 }, 1920, 1.5), [{ w: 1920, h: 636 }, { w: 1920, h: 636 }], 'no in-tab measure: the offscreen ratio, capped');
   const device = lockTargets({ w: 1086, h: 806, px: [1170, 2532] }, 1920, 1.25);
-  assert.deepEqual(device.at(-1), { w: 887, h: 1920, lock: { w: 887, h: 1920 }, shape: true });
+  assert.deepEqual(device.at(-1), { w: 887, h: 1920, shape: true });
   assert.equal(lockTargets(null, 1920, 1), null);
 });
 
@@ -400,7 +398,7 @@ await test('frames are requested one per draw and never closer than 0.9 of a tic
   const canvas = { width: 300, height: 150, getContext: () => ({ fillRect() {}, drawImage() {} }),
     captureStream: (r) => { rate = r; return { getTracks: () => [], getVideoTracks: () => [{ requestFrame: () => asked.push(clock) }] }; } };
   const composite = make({ createElement: () => canvas }, (fn) => { tick = fn; return 1; }, () => {}, lockFrame, fitRect, () => {}, { now: () => clock });
-  const mixer = composite({ feed: { videoWidth: 1920, videoHeight: 1120 }, fps: 15, hint: [{ w: 1920, h: 1120, lock: { w: 1920, h: 1120 } }] });
+  const mixer = composite({ feed: { videoWidth: 1920, videoHeight: 1120 }, fps: 15, hint: [{ w: 1920, h: 1120 }] });
   for (const at of [0, 67, 134, 170, 201, 268, 290, 335]) { clock = at; tick(); } // two late ticks bunch up
   mixer.stop();
   assert.equal(rate, 0, 'the canvas is captured on Chrome\'s own clock again (captureStream(fps))');
