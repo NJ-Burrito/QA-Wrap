@@ -76,7 +76,9 @@ test('a tab start Chrome refuses with Invalid state is retried once on a fresh i
   assert.ok(body.indexOf('await ensureOffscreen()') < body.indexOf('getMediaStreamId'), 'the stream id is minted before the document exists');
   assert.match(body, /const busy = \(e\) => \/Invalid state\|AbortError\/i/, 'Invalid state is not recognised');
   assert.equal((body.match(/getMediaStreamId\(/g) || []).length, 2, 'no single retry on a fresh id');
-  assert.match(body, /code: 'REC_TAB_BUSY'/, 'the second failure is not coded');
+  assert.match(m, /const tabBusy = \(\) => Object\.assign\(new Error\([^)]*\), \{ code: 'REC_TAB_BUSY' \}\)/, 'the busy refusal is not coded');
+  assert.match(body, /busy\(e2\) \|\| !again \? tabBusy\(\)/, 'the second failure is not coded');
+  assert.match(body, /\/active stream\/i\.test\(err\.message\)\) throw tabBusy\(\)/, 'a tab Chrome still holds is not coded');
   for (const l of [en, ar]) assert.ok(l['popup.refusal.recTabBusy'], 'recTabBusy missing in a language');
 });
 

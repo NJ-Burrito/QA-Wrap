@@ -2070,7 +2070,7 @@
   "popup.refusal.policyBlocked": "Turned off by your organisation: this control is blocked by policy. Ask your IT administrator to allow it.",
   "popup.refusal.recCancelled": "Stopped before the recording began. Nothing was recorded.",
   "popup.refusal.recNotStored": "The clip was recorded but could not be stored, usually because the disk is full. Free some space, then record again.",
-  "popup.refusal.recTabBusy": "Chrome is still letting go of this tab. Wait a moment, then press Record again.",
+  "popup.refusal.recTabBusy": "Chrome is still holding this tab from an earlier recording. Close the tab, open the page again, then press Record.",
   "popup.refusal.slow": "QA Wrap is taking longer than usual. Try again in a moment.",
   "popup.refusal.stale": "The background part of QA Wrap stopped answering, usually after an update. Reload the extension to start it again.",
   "popup.refusal.tabReload": "This tab was open before QA Wrap, so it cannot attach yet. Reload the tab and try again.",
