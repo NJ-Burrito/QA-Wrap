@@ -130,7 +130,9 @@ purgeWorkerCache(PROFILE);
 const base = launchOptions(EXT);
 const ctx = await chromium.launchPersistentContext(PROFILE, {
   ...base,
-  viewport: { width: 1000, height: 700 },
+  // 3.8.3: no viewport emulation. An emulated page is not the size its tab is, and the recorder now
+  // waits (up to 4 s) for the tab's real size; the window is resized for real below instead.
+  viewport: null,
   /*
    * A microphone that is granted and that makes a sound.
    *
@@ -357,7 +359,13 @@ try {
   // rec-resize-1027: the tab changes shape mid-clip, as DevTools or a window drag
   // does. The clip must still decode end to end (checked with ffmpeg below).
   await popup.waitForTimeout(1200);
-  await page.setViewportSize({ width: 760, height: 900 });
+  {
+    const cdp = await ctx.newCDPSession(page);
+    const { windowId } = await cdp.send('Browser.getWindowForTarget');
+    await cdp.send('Browser.setWindowBounds', { windowId, bounds: { windowState: 'normal' } });
+    await cdp.send('Browser.setWindowBounds', { windowId, bounds: { width: 780, height: 980 } });
+    await cdp.detach().catch(() => {});
+  }
   await popup.waitForTimeout(1800);
   const stillRunning = await state();
   is('three seconds later it is still recording', stillRunning?.recording, true);
@@ -411,6 +419,9 @@ try {
   is('and the mic is one of the sources the clip records', micStart?.result?.sources?.mic, true);
   is('and so is the camera', micStart?.result?.sources?.webcam, true);
   is('nothing about it was refused', micStart?.result?.refused ?? [], []);
+  // 3.8.3: how the frame locked, from the real offscreen document (rvfc = presented frames counted there).
+  console.log(`  note  frame lock ${JSON.stringify(micStart?.result?.lock)}`);
+  truthy('the start says how its frame locked', !!micStart?.result?.lock?.by, JSON.stringify(micStart?.result?.lock));
 
   await popup.waitForTimeout(3200);
   const micStop = await send({ type: 'UQA_RECORD_STOP' });
@@ -682,7 +693,8 @@ try {
   const last = await send({ type: 'UQA_RECORD_STOP' });
   is('the last clip stops', last?.ok, true);
   truthy('with bytes in it', (last?.result?.bytes ?? 0) > 0, `bytes were ${last?.result?.bytes}`);
-  const lastHead = await storedHead(last?.result?.id);
+  if (!last?.ok) console.log(`  note  step 10 state ${JSON.stringify(await state())}, stop said ${JSON.stringify(last)}`);
+  const lastHead = last?.result?.id ? await storedHead(last.result.id) : null;
   is('filed under the new session, not the old one', lastHead?.sessionId, sid2);
   /* 11. the screen, not the tab ------------------------------------------- */
 

@@ -355,13 +355,14 @@ function drawPointer(ctx, r) {
   ctx.restore();
 }
 
-function composite({ feed, fps, cursor = false }) {
+function composite({ feed, fps, cursor = false, hint = null }) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   let timer = null;
   let stopped = false;
   let locked = null;
   let seen = null;
+  const path = []; // the sizes the feed went through before the lock, with when (reported, never read)
   let first = 0;
   let ready;
   const settled = new Promise((res) => { ready = res; });
@@ -385,20 +386,34 @@ function composite({ feed, fps, cursor = false }) {
     // the first frames of a tab capture can be a passing size (CSS pixels
     // before the HiDPI step). Later shapes are fitted inside, centred.
     // `ready` gates recorder.start().
+    //
+    // `hint` (3.8.3) is the sizes a tab capture settles on, known before any
+    // frame from the tab's real current size: its pixels fitted to the capture
+    // edge (Chrome scales tab capture up to it) or 1:1. One of them locks at
+    // once; any other size (CSS pixels before the HiDPI step, the shape before
+    // a window drag) is stale and is waited out whatever the frame rule says,
+    // so a still page whose step comes late (700 ms, 3 s) never locks soft or
+    // misshapen. 4 s stays the bound. No hint (a screen, a tab that refused
+    // the measurement): the frame rule alone.
     if (!locked) {
       const now = Date.now();
       first ||= now;
       const n = counted();
       if (!seen || seen.w !== feed.videoWidth || seen.h !== feed.videoHeight) {
         seen = { w: feed.videoWidth, h: feed.videoHeight, n: 0, f: n, t: now };
+        if (path.length < 8) path.push(`${seen.w}x${seen.h}@${now - first}`);
       }
       seen.n++; // draw ticks: the count where the browser cannot report frames
       const held = n === null ? seen.n : n - seen.f + 1;
-      if (held < 3 && now - seen.t < 600 && now - first < 4000) return;
+      const at = !!hint?.some((b) => Math.abs(seen.w - b.w) <= 3 && Math.abs(seen.h - b.h) <= 3);
+      if (!at && now - first < 4000 && (hint || (held < 3 && now - seen.t < 600))) return;
       locked = lockFrame(feed.videoWidth, feed.videoHeight);
       canvas.width = locked.w;
       canvas.height = locked.h;
-      ready(locked);
+      // How it locked, reported on the start reply: `rvfc` is the count of
+      // presented frames (null where requestVideoFrameCallback is missing; 0
+      // where it exists but never fires, as in a never-rendered document).
+      ready({ ...locked, ms: now - first, by: at ? 'hint' : now - first >= 4000 ? 'bound' : held >= 3 ? 'frames' : 'still', rvfc: n, hint, path });
     }
     const r = fitRect(feed.videoWidth, feed.videoHeight, locked.w, locked.h);
     if (r.w < locked.w || r.h < locked.h) ctx.fillRect(0, 0, locked.w, locked.h);
@@ -521,7 +536,11 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
   if (!mime) throw new Error('this browser has no encoder that could write it');
 
   const camId = `${id}_cam`;
-  const open = (m) => { const r = new MediaRecorder(new MediaStream([track]), {
+  // Test-only fault seam (3.8.3): nothing in the extension sets `__qawFault`; a live harness sets it in this
+  // document over CDP to drive the fallback below ('cam-mp4-start': the MP4 start throws) or the onerror
+  // path ('cam-mp4-error': the started MP4 recorder fails). Unset, as in every real run, it does nothing.
+  const fault = (m) => /^video\/mp4/.test(m) && globalThis.__qawFault;
+  const open = (m) => { if (fault(m) === 'cam-mp4-start') throw new Error('forced cam MP4 start failure (__qawFault)'); const r = new MediaRecorder(new MediaStream([track]), {
     mimeType: m,
     /*
      * A 480p face, not a second screen capture.
@@ -533,7 +552,7 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
      * laptop with no room left.
      */
     videoBitsPerSecond: { low: 300_000, medium: 700_000, high: 1_200_000 }[quality] ?? 700_000,
-  }); r.start(2000); return r; };
+  }); r.start(2000); if (fault(m) === 'cam-mp4-error') setTimeout(() => r.dispatchEvent(new Event('error')), 1500); return r; };
   // Started here, handlers attached below in the same task (no chunk can arrive before them). A second
   // hardware H.264 encoder beside the picture's can fail to come up (Blink "There was an error starting
   // the MediaRecorder", 1 run in 5 of tools/recording.mjs): the face is then written as WebM instead.
@@ -761,7 +780,7 @@ async function displayStream({ wantsAudio, cap, fps, cursor = true }) {
 
 async function startRecording({
   streamId, sessionId, format, fps, quality, mic, tabAudio, webcam, webcamPosition, webcamSize,
-  desktop = false, systemAudio = false, cursor = false, label,
+  desktop = false, systemAudio = false, cursor = false, label, view = null,
 }) {
   if (active) throw new Error('Already recording. Stop the current clip first.');
 
@@ -998,7 +1017,17 @@ async function startRecording({
     // track changes size with the tab or window. Never hand the encoder
     // `sourceTrack` itself.
     await attachFeed();
-    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor });
+    // The frames a tab capture settles on, from the tab's real current size
+    // (view.w/h, DIPs from the tabs API: blind to a stale capture shape and to
+    // page emulation): that shape fitted up to the capture's edge, which is
+    // what Chrome sends, or 1:1 at the tab's monitor scale (view.px measured in
+    // the tab / DIPs; this document's own ratio is the primary monitor's).
+    const [pw] = view?.px || [];
+    const dsf = pw > 0 ? pw / view.w : devicePixelRatio || 1;
+    const hint = !desktop && view?.w > 0 && view?.h > 0
+      ? [edge / Math.max(view.w, view.h), Math.min(dsf, edge / view.w, edge / view.h)].map((k) => ({ w: Math.round(view.w * k), h: Math.round(view.h * k) }))
+      : null;
+    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor, hint });
     // The encoder starts only on a locked frame: a canvas sized after start is
     // the defect itself, so no picture in 5 s is a refusal, not a clip.
     const frame = await Promise.race([mixer.ready, new Promise((res) => setTimeout(res, 5000, null))]);
@@ -1222,7 +1251,7 @@ async function startRecording({
         return done;
       },
     };
-    return { id, format, mime, via: 'MediaRecorder', sources: active.sources, refused };
+    return { id, format, mime, via: 'MediaRecorder', sources: active.sources, refused, lock: frame };
   } catch (err) {
     abort();
     throw err;

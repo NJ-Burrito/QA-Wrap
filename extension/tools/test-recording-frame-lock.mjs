@@ -36,7 +36,7 @@ async function test(name, fn) {
  * With `frames`, the feed reports presented frames (requestVideoFrameCallback); an entry's third
  * item `false` means no new frame arrived that tick (a still page), else one did.
  */
-async function runComposite(sizes, cursor = false, frames = false) {
+async function runComposite(sizes, cursor = false, frames = false, hint = null) {
   const resizes = [];
   const draws = [];
   let fills = 0;
@@ -57,7 +57,7 @@ async function runComposite(sizes, cursor = false, frames = false) {
   const make = new Function('document', 'setInterval', 'clearInterval', 'lockFrame', 'fitRect', 'drawPointer', 'Date',
     `${lift(OFF, 'composite')}\nreturn composite;`);
   const composite = make(doc, (fn) => { tick = fn; return 1; }, () => {}, lockFrame, fitRect, (_c, r) => pointers.push(r), { now: () => clock });
-  const mixer = composite({ feed, fps: 15, cursor });
+  const mixer = composite({ feed, fps: 15, cursor, hint });
   let lockedAt = -1;
   let startedResizes = 0;
   for (let i = 0; i < sizes.length; i++) {
@@ -117,7 +117,7 @@ await test('every clip records the locked canvas, and only after it locked', () 
   const start = OFF.slice(OFF.indexOf('async function startRecording'));
   assert.ok(!/const videoTrack = mixer \? mixer\.stream\.getVideoTracks\(\)\[0\] : sourceTrack/.test(start),
     'a clip without the drawn cursor records the raw source track again, which changes size with the tab');
-  assert.match(start, /mixer = composite\(\{ feed, fps: fps \|\| 15, cursor: drawnCursor \}\)/, 'the compositor is optional again');
+  assert.match(start, /mixer = composite\(\{ feed, fps: fps \|\| 15, cursor: drawnCursor, hint \}\)/, 'the compositor is optional again');
   const ready = start.indexOf('await Promise.race([mixer.ready');
   assert.ok(ready > 0 && ready < start.indexOf('recorder.start('), 'the encoder can start before the frame size is locked');
   assert.match(start, /if \(!frame\) throw Object\.assign\(new Error\(/, 'no picture is filed as an empty clip instead of refused');
@@ -178,6 +178,81 @@ await test('«Save last 1 minute» records WebM only (it records the raw, resizi
   const ROLL = fs.readFileSync(path.join(HERE, '..', 'offscreen', 'rolling.js'), 'utf8');
   assert.match(ROLL, /const mime = videoMime\('webm'\);/);
   assert.ok(!/videoMime\('mp4'\)/.test(ROLL), 'the rolling buffer can fall back to MP4 again');
+});
+
+/* ── 3.8.3: the late HiDPI step on a still page (B's round-3 residual) ── */
+
+// 1438x476 CSS pixels at 125 %: the capture settles on 1798x595. One frame at the low size, nothing new
+// until the step at `ms`, one frame at the full size, then nothing (a still page sends frames only on change).
+const lateStep = (ms) => {
+  const before = Math.round(ms / 66);
+  return [[1438, 476, true], ...Array(before - 1).fill([1438, 476, false]), [1798, 595, true], ...Array(20).fill([1798, 595, false])];
+};
+// The targets the start computes from the tab's real size: fitted up to the edge, and 1:1.
+const HINT = [{ w: 1920, h: 635 }, { w: 1798, h: 595 }];
+for (const ms of [700, 1500, 3000]) {
+  await test(`a still page whose scale step lands at ${ms} ms locks at the full size, not the soft one`, async () => {
+    const run = await runComposite(lateStep(ms), false, true, HINT);
+    assert.deepEqual(run.canvas, { w: 1798, h: 594 }, `locked at ${run.canvas.w}x${run.canvas.h}: the whole clip is scaled down`);
+    assert.equal(run.resizes.length, run.startedResizes, 'the canvas changed size after the encoder started');
+  });
+  // B's live late-scale shape: the capture fitted to the 1920 edge in the passing shape, then in the tab's.
+  await test(`a stale shape at the capture edge, replaced at ${ms} ms, locks at the tab's shape`, async () => {
+    const before = Math.round(ms / 66);
+    const run = await runComposite([[1920, 896, true], ...Array(before - 1).fill([1920, 896, false]), [1920, 1176, true], ...Array(20).fill([1920, 1176, false])],
+      false, true, [{ w: 1920, h: 1176 }, { w: 1375, h: 843 }]);
+    assert.deepEqual(run.canvas, { w: 1920, h: 1176 }, `locked at ${run.canvas.w}x${run.canvas.h}`);
+  });
+}
+
+await test('a window drag stale shape on a still page is waited out (B: 1894x1194 locked instead of 1920x1176)', async () => {
+  const run = await runComposite([[1894, 1194, true], ...Array(25).fill([1894, 1194, false]), [1920, 1176, true], ...Array(10).fill([1920, 1176, false])],
+    false, true, [{ w: 1920, h: 1176 }, { w: 1375, h: 843 }]);
+  assert.deepEqual(run.canvas, { w: 1920, h: 1176 });
+});
+
+await test('a capture already at the known size locks on its first frame', async () => {
+  const run = await runComposite(Array(6).fill([1798, 595, false]), false, true, HINT);
+  assert.equal(run.lockedAt, 0, `waited ${run.lockedMs} ms for a size already known`);
+  assert.equal((await run.ready).by, 'hint');
+});
+
+await test('a known size that never arrives still locks within the 4 s bound', async () => {
+  const run = await runComposite(Array(80).fill([1438, 476, false]), false, true, HINT);
+  assert.ok(run.lockedAt >= 0 && run.lockedMs <= 4100, `locked at ${run.lockedMs} ms`);
+  assert.equal((await run.ready).by, 'bound');
+});
+
+await test('without a hint (a screen capture) the frame rule alone locks, within 0.6 s on a still page', async () => {
+  const run = await runComposite(Array(30).fill([1900, 700, false]), false, true, null);
+  assert.deepEqual(run.canvas, { w: 1900, h: 700 });
+  assert.ok(run.lockedMs <= 700, `locked at ${run.lockedMs} ms`);
+});
+
+await test('the tab start passes the viewport, and the offscreen start turns it into the hint', () => {
+  const MEDIA = fs.readFileSync(path.join(HERE, '..', 'background', 'media.js'), 'utf8');
+  assert.ok(MEDIA.includes('view: tab && { w: tab.width, h: tab.height, px: px?.result }'), 'the worker no longer sends the tab size');
+  assert.ok(MEDIA.includes('func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio]'), 'the pixel size is no longer measured in the tab');
+  const start = OFF.slice(OFF.indexOf('async function startRecording'));
+  assert.ok(start.includes('[edge / Math.max(view.w, view.h), Math.min(dsf, edge / view.w, edge / view.h)]'), 'the targets are not the tab shape at the edge and 1:1');
+  assert.ok(start.includes('const dsf = pw > 0 ? pw / view.w : devicePixelRatio || 1;'), 'the monitor scale is not measured in the tab first');
+  assert.ok(start.includes('lock: frame }'), 'the start reply no longer says how the frame locked');
+});
+
+await test('the lock reports the presented-frame count (null without requestVideoFrameCallback)', async () => {
+  const withRvfc = await (await runComposite(Array(5).fill([800, 600]), false, true)).ready;
+  assert.ok(withRvfc.rvfc >= 3, JSON.stringify(withRvfc));
+  const without = await (await runComposite(Array(12).fill([800, 600]), false, false)).ready;
+  assert.equal(without.rvfc, null);
+});
+
+await test('the webcam fault seam is inert unless a harness sets __qawFault', () => {
+  const root = path.join(HERE, '..');
+  const shipped = fs.readdirSync(root, { recursive: true })
+    .filter((f) => /\.(js|html)$/.test(f) && !/^(node_modules|dist|tools|store|site)[\\/]/.test(f));
+  const setters = shipped.filter((f) => /__qawFault\s*=/.test(fs.readFileSync(path.join(root, f), 'utf8')));
+  assert.deepEqual(setters, [], 'shipped code sets the test fault');
+  assert.ok(OFF.includes("const fault = (m) => /^video\\/mp4/.test(m) && globalThis.__qawFault;"), 'the seam is gone or no longer MP4-only');
 });
 
 console.log(`\n${passed} passed, ${failures.length} failed`);

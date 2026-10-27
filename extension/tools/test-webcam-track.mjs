@@ -185,7 +185,7 @@ test('the orphan sweep takes a companion whose parent is gone', () => {
 test('the compositor draws the picture and the cursor, never the camera', () => {
   assert.match(
     OFF,
-    /function composite\(\{ feed, fps, cursor = false \}\)/,
+    /function composite\(\{ feed, fps, cursor = false, hint = null \}\)/,
     'composite() has taken a camera back; a screen capture composited for a webcam is a frame ' +
       'the editor can never move the face out of'
   );
@@ -199,7 +199,7 @@ test('the compositor draws the picture and the cursor, never the camera', () => 
   // a tab capture. tools/test-recording-frame-lock.mjs holds the lock itself.
   assert.match(
     OFF,
-    /mixer = composite\(\{ feed, fps: fps \|\| 15, cursor: drawnCursor \}\)/,
+    /mixer = composite\(\{ feed, fps: fps \|\| 15, cursor: drawnCursor, hint \}\)/,
     'the cursor is drawn for something other than a tab capture, or the compositor is optional again'
   );
 });

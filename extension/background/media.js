@@ -15,8 +15,7 @@
 
 import { withDeadline } from '../platform/deadline.js';
 import { policy, MIC_BLOCKED } from '../platform/settings.js';
-import { assertPolicy } from '../platform/settings.js';
-import { getSettings } from '../platform/settings.js';
+import { assertPolicy, getSettings } from '../platform/settings.js';
 import { armedWindows } from './armed.js';
 import { trackerUrl } from '../core/tracker-specs.js';
 
@@ -62,13 +61,10 @@ async function offscreenExists() {
  * exists — including one Chrome kept alive from a previous worker lifetime, so
  * "I have not created it yet" is not the same as "it does not exist". Ask.
  *
- * Asking was not enough. `getContexts` is a round trip, and every `offscreen()`
- * call in this file starts with one: two messages arriving together — the popup
- * polling `UQA_RECORD_STATE` while the tester presses Record, which is the
- * ordinary case — both saw no document, both called `createDocument`, and the
- * second failed with "Only a single offscreen document may be created." That
- * error surfaced as the *recording* failing, because the create was on its
- * critical path.
+ * Asking was not enough: two messages arriving together (the popup polling
+ * `UQA_RECORD_STATE` while the tester presses Record) both saw no document, both
+ * called `createDocument`, and the second failed with "Only a single offscreen
+ * document may be created", surfacing as the *recording* failing.
  *
  * Two defences, and both are needed. The single-flight memo serialises the
  * callers this worker knows about. The benign-rejection fallback covers the one
@@ -440,11 +436,8 @@ export async function startRecording({
   try {
     streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
   } catch (err) {
-    // Chrome only lets an extension capture a tab the user has just invoked it
-    // on — clicking the toolbar icon, a context-menu entry, or a shortcut. That
-    // is a deliberate protection and not something to route around; the job here
-    // is to say what to do instead of surfacing Chrome's own wording, which
-    // mentions a permission name and no action.
+    // Chrome lets an extension capture only a tab it was just invoked on (icon,
+    // menu, shortcut). Not routed around: say what to do, not Chrome's wording.
     if (/activeTab|has not been invoked/i.test(err.message)) {
       // The old wording said "click the QA Wrap icon", which is what the tester
       // had just done — the grant had been dropped by a navigation since. Name
@@ -466,8 +459,11 @@ export async function startRecording({
     }
     throw err;
   }
+  const tab = await chrome.tabs.get(tabId).catch(() => null);
+  // Frame lock target: the tab's pixels at its monitor's DPR (3.8.3), 400 ms at most.
+  const [px] = await Promise.race([chrome.scripting.executeScript({ target: { tabId }, func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio] }), new Promise((r) => setTimeout(r, 400, []))]).catch(() => []);
   const started = await offscreen('UQA_OFF_START', {
-    streamId, sessionId, format, fps, quality, label,
+    streamId, sessionId, format, fps, quality, label, view: tab && { w: tab.width, h: tab.height, px: px?.result },
     mic, tabAudio, webcam, webcamPosition, webcamSize,
     // A tab capture has no cursor in it — Chrome composites the pointer above
     // everything tabCapture can see — so the offscreen document draws one from
@@ -476,7 +472,6 @@ export async function startRecording({
   });
   // Which window this clip is filming, so putting *that* window to sleep can
   // stop it without touching a clip running in another one.
-  const tab = await chrome.tabs.get(tabId).catch(() => null);
   await noteRecordingWindow(tab?.windowId);
   return {
     ...started,
