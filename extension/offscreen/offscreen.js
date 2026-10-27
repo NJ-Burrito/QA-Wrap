@@ -367,7 +367,7 @@ function drawPointer(ctx, r) {
  * picks one per capture and holds it from the first frame (3.8.3, live: the same 1100x900 window gave 1358x1008 in
  * one run and 1920x1424 in the next, never stepping). Both lock at the edge-fit size, so one window always records
  * one size. DevTools device mode (the page's shape is not the tab's): the capture is the page's shape at a scale
- * nobody can predict (390x844 @3 gave 854x1846 against 888x1920 computed), so it matches by shape (`shape`).
+ * nobody can predict (390x844 at DPR 3 gave 854x1846 against 888x1920 computed), so it matches by shape (`shape`).
  */
 function lockTargets(view, edge, ownDpr) {
   if (!(view?.w > 0 && view?.h > 0)) return null;
@@ -375,7 +375,7 @@ function lockTargets(view, edge, ownDpr) {
   const dsf = pw > 0 ? pw / view.w : ownDpr || 1;
   const fit = (w, h, k) => ({ w: Math.round(w * k), h: Math.round(h * k) });
   const up = fit(view.w, view.h, edge / Math.max(view.w, view.h));
-  const out = [up, fit(view.w, view.h, Math.min(dsf, edge / view.w, edge / view.h))].map((b) => ({ ...b, lock: up }));
+  const out = /** @type {any[]} */ ([up, fit(view.w, view.h, Math.min(dsf, edge / view.w, edge / view.h))].map((b) => ({ ...b, lock: up })));
   if (pw > 0 && ph > 0 && Math.abs((pw / ph) / (view.w / view.h) - 1) > 0.02) {
     const page = fit(pw, ph, edge / Math.max(pw, ph));
     out.push({ ...page, lock: page, shape: true });
@@ -846,8 +846,8 @@ async function startRecording({
   const id = `m_${startedAt.toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
   const claim = { kind: 'starting', id, sessionId, startedAt, stoppedAt: null, mime: null, sources: { tab: !desktop, screen: desktop }, stopAsked: false };
   // Settles when this start does, either way: a Stop pressed while the clip is starting waits on it (stopRecording).
-  let begun;
-  claim.begun = new Promise((res) => { begun = res; });
+  let begun = () => {};
+  claim.begun = new Promise((res) => { begun = () => res(undefined); });
   active = claim;
 
   // Declared out here so the catch below can reach them. A throw between
