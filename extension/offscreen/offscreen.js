@@ -1309,6 +1309,7 @@ async function startRecording({
     return { id, format, mime, via: 'MediaRecorder', sources: active.sources, refused, lock: frame };
   } catch (err) {
     abort();
+    claim.error = err; // a Stop waiting on this start answers with the start's own (coded, translated) refusal
     throw err;
   } finally {
     begun();
@@ -1497,7 +1498,7 @@ async function stopRecording({ label } = {}) {
     const claim = active;
     claim.stopAsked = true;
     await claim.begun;
-    if (active?.id !== claim.id) throw new Error('That clip did not start, so there was nothing to save.');
+    if (active?.id !== claim.id) throw claim.error || new Error('That clip did not start, so there was nothing to save.');
     if (active.kind !== 'finishing') {
       // ponytail: a fixed 300 ms so the encoder has frames to write (a stop on the same tick as start() files 0 bytes);
       // a frame counter on the composite would be exact, 300 ms at 15 fps is ~4 frames.
@@ -1619,7 +1620,8 @@ async function fileClip(session, { label, tail, outcome }) {
         cam
       );
       const camTail = new Blob(cam.tailChunks() || [], { type: companion.type });
-      const storedCam = await assembleMedia({ ...companion, blob: camTail.size ? camTail : null }, sha256Hex);
+      // A camera that failed mid-clip is kept up to the failure and says so on its own record (3.8.3).
+      const storedCam = await assembleMedia({ ...companion, ...(cam.failed ? { failed: cam.failed } : {}), blob: camTail.size ? camTail : null }, sha256Hex);
       if (storedCam.bytes) webcamTrackId = companion.id;
       else {
         await clearMediaParts(companionId).catch(() => {});

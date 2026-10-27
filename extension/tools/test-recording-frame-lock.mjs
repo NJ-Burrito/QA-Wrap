@@ -431,6 +431,7 @@ await test("the 'cam-mp4-error' seam fails the webcam the way Chrome does: error
   } finally { delete globalThis.__qawFault; }
   // The parent records the problem and the popup says it in both languages.
   assert.ok(OFF.includes('if (cam.failed) webcamProblem ||= cam.failed;'));
+  assert.ok(OFF.includes('...(cam.failed ? { failed: cam.failed } : {}), blob: camTail.size'), 'the companion record does not say its camera failed');
   const read = (p) => fs.readFileSync(path.join(HERE, '..', p), 'utf8');
   assert.ok(read('popup/tool-actions.js').includes("out.result.webcamProblem ? 'popup.record.savedCamShort'"), 'the popup does not say the webcam stopped early');
   for (const lang of ['en', 'ar']) assert.ok(JSON.parse(read(`platform/i18n/${lang}.json`))['popup.record.savedCamShort'], `${lang}: savedCamShort missing`);
