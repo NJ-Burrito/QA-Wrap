@@ -67,6 +67,8 @@ chmod 755 "$DEST/host.sh"
 # an earlier saved token is kept when none is given; never asked
 if [ -z "$TOKEN" ] && [ -f "$DEST/config.env" ]; then TOKEN=$(sed -n 's/^TOKEN="\(.*\)"$/\1/p' "$DEST/config.env"); fi
 umask 077
+# config.env is read by host.sh as plain KEY="value" lines (never sourced); a quote, backslash or newline in a value would break that, so refuse it.
+case "$EXT$TOKEN" in *'"'*|*\*|*$'\n'*) echo "The folder or token contains a quote, backslash or newline; not supported." >&2; exit 1 ;; esac
 printf 'FOLDER="%s"\nREPO="NJ-Burrito/QA-Wrap"\nTOKEN="%s"\n' "$EXT" "$TOKEN" > "$DEST/config.env"
 chmod 600 "$DEST/config.env"
 

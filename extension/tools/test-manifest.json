@@ -8200,6 +8200,50 @@
    "headlessOk": false
   },
   {
+   "id": "test-update-url",
+   "path": "tools/test-update-url.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "byHand": false,
+   "headlessOk": false
+  },
+  {
+   "id": "test-site-csp",
+   "path": "tools/test-site-csp.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "options-settings"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "byHand": false,
+   "headlessOk": false
+  },
+  {
    "id": "test-update-1022",
    "path": "tools/test-update-1022.mjs",
    "kind": "test",

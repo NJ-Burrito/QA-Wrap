@@ -120,12 +120,12 @@ no scanner looks inside an image or a video. The filing result lists the files
 that were not scanned, so check them by eye, and use *Mask real data* before
 capturing, because masked values are covered in the pixels themselves.
 
-**Per-service host grants.** QA Wrap holds no permission to any of these hosts at
-install. The first time you save or test a service, Chrome asks, in its own
-dialog, for that one address (for example `https://your-company.atlassian.net`,
-`https://api.telegram.org`, or the webhook's own host), and nothing wider. Refuse
-it and that service does not work; nothing is sent. Take it back in Chrome's
-extension settings under *Site access* and the service stops.
+**Per-service hosts.** The `<all_urls>` permission granted at install already
+covers these hosts (for example `https://your-company.atlassian.net`,
+`https://api.telegram.org`, or the webhook's own host), so Chrome does not ask
+again when you set up a service. Data goes to them when you press that service's own
+button and confirm. Take the access back in Chrome's extension
+settings under *Site access* and the services stop.
 
 Each of those buttons asks for confirmation and says that the data is leaving
 your machine. Leave the integration empty and the button never appears.
@@ -392,10 +392,10 @@ page again**.
 | `tabCapture` | recording the tab when you press Record |
 | `debugger` | measuring which of the page's JavaScript ran (code coverage) when you press Measure; Chrome shows it at install, and the debugger stays detached until you press Measure |
 | **optional** `nativeMessaging` | the agent bridge: talking to the helper program you installed, so your coding agent can read your sessions. Asked for when you switch **Agent bridge** on in Settings, and handed back when you switch it off |
-| **optional** the host of the AI provider you chose (`api.anthropic.com`, `api.openai.com`, `openrouter.ai`) | AI writing: sending the report text you asked to be suggested. Asked for the first time you press **Suggest title and steps** with a key set, and refusable |
+| the host of the AI provider you chose (`api.anthropic.com`, `api.openai.com`, `openrouter.ai`) | AI writing: sending the report text you asked to be suggested. Covered by the `<all_urls>` permission held from install; the text is sent only when you press **Suggest title and steps** with a key set |
 | **optional** `desktopCapture` | recording a window or the whole screen; asked for the first time you choose one of those, and refusable |
 | the site you are on | covered by the `<all_urls>` host permission below; it is captured only after you press *Wake up* or *Start*, and then only while its tab or window is the focused one |
-| **optional** the address of a service you set up | asked for by name the first time you save or test Jira, a tracker, a chat webhook or Telegram, and no wider; refusable, and revocable in Chrome's extension settings |
+| the address of a service you set up | covered by the `<all_urls>` permission held from install, so there is no extra prompt; data goes there only when you press that service's button and confirm |
 | host permission `<all_urls>` | held from install, and shown on Chrome's install dialog as reading and changing your data on all websites. It lets QA Wrap's page scripts be present on every site; they record only once you wake that window, and Chrome's own extension settings list it |
 
 ## Licence, changes and contact

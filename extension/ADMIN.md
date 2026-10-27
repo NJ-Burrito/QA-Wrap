@@ -13,8 +13,8 @@ unconfirmed line as a recipe to try on one machine first.
 - A local tool: sessions are stored in the tester's own browser. There is no server to
   allow-list; the only network traffic is to the site under test and to a tracker or webhook
   the tester configures (tested: `tools/test-independent.mjs`).
-- It installs with **no site access**. The tester presses "Wake up" and Chrome asks for the
-  one site they are on (tested: `tools/test-permissions.mjs`).
+- It installs with `<all_urls>` granted (Chrome's install dialog shows it). Nothing is captured until the tester
+  presses "Wake up" or "Start", and then only the focused tab or window (tested: `tools/test-permissions.mjs`).
 - `debugger` is a required permission, because Chrome does not allow it as optional. It is
   used only for code coverage, attaches when the tester presses Measure and detaches when the
   run ends. A policy that blocks `debugger` therefore blocks the install.

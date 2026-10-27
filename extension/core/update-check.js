@@ -30,12 +30,25 @@ export function isNewer(latest, current) {
 
 export const validRepo = (repo) => REPO_RE.test(String(repo ?? '')) && repo !== 'OWNER/REPO';
 
+/**
+ * True only for https://github.com/<repo>/releases/download/<tag>/<file>.zip, compared as a whole (no prefix test):
+ * no query, fragment, userinfo, port, backslash, percent-escape or `.`/`..` segment can get through, so a URL like
+ * .../releases/download/../../../../evil/repo/releases/download/v9/x.zip is refused. The Windows and macOS/Linux hosts apply the same rule.
+ */
+export function isReleaseZipUrl(url, repo) {
+  const s = String(url ?? '');
+  if (!validRepo(repo) || !/^[\w.-]+\/[\w.-]+$/.test(repo)) return false;
+  if (!/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/releases\/download\/[\w.+-]+\/[\w.+-]+\.zip$/.test(s)) return false;
+  if (s.slice('https://'.length).split('/').some((seg) => seg === '.' || seg === '..')) return false;
+  return s.startsWith(`https://github.com/${repo}/releases/download/`);
+}
+
 const safeUrl = (u, fallback) => (/^https:\/\/github\.com\//.test(String(u)) ? String(u) : fallback);
 
 /** The release JSON -> what the card needs, or null for a draft, a pre-release or a tag that is not a clean version. */
 export function pickRelease(j, repo, dist = BUILD_DIST + (BUILD_FLAVOUR ? `-${BUILD_FLAVOUR}` : '')) {
   if (!j || j.draft || j.prerelease || !parseVersion(j.tag_name)) return null;
-  const zips = (Array.isArray(j.assets) ? j.assets : []).filter((a) => /\.zip$/i.test(String(a?.browser_download_url)) && /^https:\/\/github\.com\//.test(String(a?.browser_download_url)));
+  const zips = (Array.isArray(j.assets) ? j.assets : []).filter((a) => isReleaseZipUrl(a?.browser_download_url, repo));
   const ver = String(j.tag_name).replace(/^v/, '');
   const named = (n) => zips.find((a) => String(a?.name) === n);
   // This build's own asset (qa-wrap-<ver>-<dist>.zip), else the chrome alias qa-wrap-<ver>.zip that 3.6.x-3.7.x releases carry.

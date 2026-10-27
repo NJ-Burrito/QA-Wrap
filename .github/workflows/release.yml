@@ -8,11 +8,12 @@ on:
   push:
     tags:
       - 'v*'
-permissions:
-  contents: write
+permissions: {}
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # creates the release; nothing else is granted
     timeout-minutes: 30
     defaults:
       run:

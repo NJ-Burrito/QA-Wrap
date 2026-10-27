@@ -29,7 +29,7 @@ jobs:
           cache: npm
           cache-dependency-path: extension/package-lock.json
       # test-glyphs reads the font cmaps through `uv run --with fonttools`; ubuntu-latest has pipx but no uv (completion review 8).
-      - run: pipx install uv
+      - run: pipx install uv==0.9.5
       - run: npm ci --ignore-scripts
       # Headless suites (game, nasty-palette, jira-helper) import playwright dynamically or via lib-game, so run-suites cannot tell them from node suites.
       - run: npx playwright install --with-deps chromium

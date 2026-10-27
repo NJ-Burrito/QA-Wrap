@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-zIcC3XlCzyCq01ZVqw6uBKCxHBReVLc7+Wc3S0manBg='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QA-Wrap trust: check in five minutes that nothing is sent</title>
 <meta name="description" content="How to check in five minutes that QA-Wrap sends nothing to anyone, what each permission is for and what it will not do.">
@@ -106,7 +108,7 @@
         <table>
           <thead><tr><th scope="col">Permission</th><th scope="col">What it is used for</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Access to sites</th><td>None at install. When you press <strong>Wake up</strong>, Chrome asks for the one site you are on. "All sites" is a second choice, and it stays granted until you remove it. Guarded by <code>tools/test-permissions.mjs</code>.</td></tr>
+            <tr><th scope="row">Access to sites</th><td><code>&lt;all_urls&gt;</code> is granted at install, and Chrome's install dialog shows it as reading and changing your data on all websites. Nothing is captured until you press <strong>Wake up</strong> or <strong>Start</strong>, and then only the focused tab or window. You can take the access back in Chrome's extension settings under <em>Site access</em>. Guarded by <code>tools/test-permissions.mjs</code>.</td></tr>
             <tr><th scope="row"><code>debugger</code></th><td>Code coverage only. Chrome requires this permission at install and shows it in its install dialog. It attaches to a tab when you press <strong>Measure</strong> and detaches when the run ends. Nothing attaches it on its own. Guarded by <code>tools/test-permissions.mjs</code>.</td></tr>
             <tr><th scope="row">Screen, tab and microphone capture</th><td>Only when you press Record, and only what you pick in Chrome's own prompt. An administrator can switch the microphone off entirely.</td></tr>
           </tbody>
@@ -204,7 +206,7 @@
         <table>
           <thead><tr><th scope="col">الإذن</th><th scope="col">فيما يستخدم</th></tr></thead>
           <tbody>
-            <tr><th scope="row">الوصول إلى المواقع</th><td>لا شيء عند التثبيت. حين تضغط <strong>أيقظ</strong> يسألك Chrome عن الموقع الواحد الذي أنت فيه. "كل المواقع" خيار ثان، ويبقى ممنوحا حتى تزيله. يحرسه <code>tools/test-permissions.mjs</code>.</td></tr>
+            <tr><th scope="row">الوصول إلى المواقع</th><td>يمنح الإذن <code>&lt;all_urls&gt;</code> عند التثبيت، ويعرضه Chrome في نافذة التثبيت على أنه قراءة بياناتك وتغييرها في كل المواقع. لا يلتقط شيء حتى تضغط <strong>أيقظ</strong> أو <strong>ابدأ</strong>، ثم النافذة أو التبويب الذي عليه التركيز فقط. يمكنك سحب الوصول من إعدادات الامتدادات في Chrome تحت <em>الوصول إلى المواقع</em>. يحرسه <code>tools/test-permissions.mjs</code>.</td></tr>
             <tr><th scope="row"><code>debugger</code></th><td>لتغطية الشيفرة فقط. يشترط Chrome هذا الإذن عند التثبيت ويعرضه في نافذة التثبيت. يرتبط بتبويب حين تضغط <strong>قس</strong> وينفصل حين ينتهي التشغيل. لا شيء يربطه من تلقاء نفسه. يحرسه <code>tools/test-permissions.mjs</code>.</td></tr>
             <tr><th scope="row">التقاط الشاشة والتبويب والميكروفون</th><td>فقط حين تضغط تسجيل، ولا يلتقط إلا ما تختاره في نافذة Chrome نفسها. يستطيع المسؤول إيقاف الميكروفون كليا.</td></tr>
           </tbody>

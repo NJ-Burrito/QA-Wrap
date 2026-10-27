@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-zIcC3XlCzyCq01ZVqw6uBKCxHBReVLc7+Wc3S0manBg='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QA Wrap privacy policy: what the extension records and where it goes</title>
 <meta name="description" content="The QA Wrap privacy policy: what the extension records, what it does not, when data leaves your machine, retention and permissions.">
@@ -196,12 +198,12 @@
           looks inside an image or a video. The filing result lists the files that were not scanned,
           so check them by eye, and use <em>Mask real data</em> before capturing, because masked
           values are covered in the pixels themselves.</p>
-        <p><strong>Per-service host grants.</strong> QA Wrap holds no permission to any of these hosts
-          at install. The first time you save or test a service, Chrome asks, in its own dialog, for
-          that one address (for example <code>https://your-company.atlassian.net</code>,
-          <code>https://api.telegram.org</code>, or the webhook's own host), and nothing wider. Refuse
-          it and that service does not work; nothing is sent. Take it back in Chrome's extension
-          settings under <em>Site access</em> and the service stops.</p>
+        <p><strong>Per-service hosts.</strong> The <code>&lt;all_urls&gt;</code> permission granted at
+          install already covers these hosts (for example <code>https://your-company.atlassian.net</code>,
+          <code>https://api.telegram.org</code>, or the webhook's own host), so Chrome does not ask
+          again when you set up a service. Data goes to them when you press that service's own
+          button and confirm. Take the access back in
+          Chrome's extension settings under <em>Site access</em> and the services stop.</p>
         <p>Each of those buttons asks for confirmation and says that the data is leaving your
           machine. Leave the integration empty and the button never appears.</p>
 
@@ -296,7 +298,7 @@
             <tr><th scope="row">Opaque blocks over values in captures</th><td><strong>ISO/IEC 27002:2022 control 8.11</strong> data masking</td></tr>
             <tr><th scope="row">30-day retention, deletion including media, and interrupted sessions closed so retention reaches them</th><td><strong>GDPR Art. 5(1)(e)</strong> storage limitation</td></tr>
             <tr><th scope="row">Everything local; no analytics, no telemetry, no remote code</th><td><strong>GDPR Art. 5(1)(f)</strong> integrity and confidentiality; Chrome Web Store <strong>Limited Use</strong></td></tr>
-            <tr><th scope="row">No site access at install; one origin asked for at the moment it is used</th><td><strong>GDPR Art. 5(1)(c)</strong> data minimisation; Chrome Web Store <strong>minimum permissions</strong></td></tr>
+            <tr><th scope="row">No capture before Wake up or Start, then only the focused tab or window</th><td><strong>GDPR Art. 5(1)(c)</strong> data minimisation; Chrome Web Store <strong>minimum permissions</strong></td></tr>
             <tr><th scope="row">A first-run notice the popup shows, and nothing else, until it is accepted</th><td><strong>GDPR Art. 13</strong> information at collection; Chrome Web Store <strong>prominent disclosure and consent</strong></td></tr>
             <tr><th scope="row">Egress only on an explicit press, to a destination you configured</th><td><strong>GDPR Art. 5(1)(b)</strong> purpose limitation</td></tr>
             <tr><th scope="row">Tokens in an AES-GCM vault in <code>storage.local</code>, never synced, never exported</th><td><strong>ISO/IEC 27002:2022 control 8.24</strong> use of cryptography and secrets</td></tr>
@@ -374,7 +376,7 @@
             <tr><th scope="row"><code>debugger</code></th><td>measuring which of the page's JavaScript ran (code coverage) when you press Measure; Chrome shows it at install, and the debugger stays detached until you press Measure</td></tr>
             <tr><th scope="row"><strong>optional</strong> <code>desktopCapture</code></th><td>recording a window or the whole screen; asked for the first time you choose one of those, and refusable</td></tr>
             <tr><th scope="row">the site you are on</th><td>covered by the <code>&lt;all_urls&gt;</code> host permission below; it is captured only after you press <em>Wake up</em> or <em>Start</em>, and then only while its tab or window is focused</td></tr>
-            <tr><th scope="row"><strong>optional</strong> the address of a service you set up</th><td>asked for by name the first time you save or test Jira, a tracker, a chat webhook or Telegram, and no wider; refusable, and revocable in Chrome's extension settings</td></tr>
+            <tr><th scope="row">the address of a service you set up</th><td>covered by the <code>&lt;all_urls&gt;</code> permission held from install, so there is no extra prompt; data goes there only when you press that service's button and confirm</td></tr>
             <tr><th scope="row">host permission <code>&lt;all_urls&gt;</code></th><td>held from install; the install dialog shows it as reading and changing your data on all websites. The page scripts record only once you wake that window</td></tr>
           </tbody>
         </table>
@@ -504,12 +506,11 @@
           الوسائط فهي <strong>غير مفحوصة بحثا عن الأسرار</strong>: لا ماسح ينظر داخل صورة أو
           مقطع فيديو. تسرد نتيجة الإيداع الملفات التي لم تفحص، فراجعها بعينك، واستخدم
           <em>إخفاء البيانات الحقيقية</em> قبل الالتقاط، لأن القيم المخفية تغطى في البكسلات نفسها.</p>
-        <p><strong>منح الوصول لكل خدمة.</strong> لا يملك QA Wrap عند التثبيت إذنا بأي من هذه
-          المضيفات. في أول مرة تحفظ فيها خدمة أو تختبرها يسألك Chrome، في نافذته الخاصة، عن ذلك
-          العنوان وحده (مثل <code>https://your-company.atlassian.net</code> أو
-          <code>https://api.telegram.org</code> أو مضيف الـ webhook نفسه) ولا شيء أوسع. إن رفضت
-          فلن تعمل الخدمة ولن يرسل شيء. استرجعه من إعدادات الامتدادات في Chrome تحت <em>الوصول إلى
-          المواقع</em> فتتوقف الخدمة.</p>
+        <p><strong>مضيفات الخدمات.</strong> الإذن <code>&lt;all_urls&gt;</code> الممنوح عند التثبيت
+          يغطي أصلا هذه المضيفات (مثل <code>https://your-company.atlassian.net</code> أو
+          <code>https://api.telegram.org</code> أو مضيف الـ webhook نفسه)، فلا يسألك Chrome مرة أخرى
+          حين تعد خدمة. لا يرسل شيء إليها حتى تضغط زر الخدمة نفسه وتؤكد؛ اترك التكامل فارغا فلا يرسل شيء.
+          استرجع الوصول من إعدادات الامتدادات في Chrome تحت <em>الوصول إلى المواقع</em> فتتوقف الخدمات.</p>
         <p>كل واحد من تلك الأزرار يطلب تأكيدا ويقول إن البيانات تغادر جهازك. اترك التكامل فارغا
           ولن يظهر الزر إطلاقا.</p>
 
@@ -672,7 +673,7 @@
             <tr><th scope="row"><code>debugger</code></th><td>قياس أي جزء من شيفرة الصفحة نفذ (تغطية الشيفرة) حين تضغط قس؛ يعرضه Chrome عند التثبيت، ويبقى المنقح غير موصول حتى تضغط قس</td></tr>
             <tr><th scope="row"><strong>اختياري</strong> <code>desktopCapture</code></th><td>تسجيل نافذة أو الشاشة كلها؛ يطلب أول مرة تختار فيها أحدهما، ويمكن رفضه</td></tr>
             <tr><th scope="row">الموقع الذي أنت عليه</th><td>يغطيه إذن المضيف <code>&lt;all_urls&gt;</code> أدناه؛ لا يلتقط شيء حتى تضغط <em>أيقظ</em> أو <em>ابدأ</em>، ثم ما دام تبويبه أو نافذته عليها التركيز</td></tr>
-            <tr><th scope="row"><strong>اختياري</strong> عنوان خدمة أعددتها</th><td>يطلب بالاسم أول مرة تحفظ أو تختبر Jira أو أداة تتبع أو webhook محادثة أو Telegram، ولا أوسع؛ يمكن رفضه وسحبه من إعدادات الامتدادات في Chrome</td></tr>
+            <tr><th scope="row">عنوان خدمة أعددتها</th><td>يغطيه الإذن <code>&lt;all_urls&gt;</code> الممنوح عند التثبيت، فلا طلب إضافي؛ تذهب البيانات إليه فقط حين تضغط زر الخدمة وتؤكد</td></tr>
             <tr><th scope="row">إذن المضيف <code>&lt;all_urls&gt;</code></th><td>ممنوح منذ التثبيت؛ تعرضه نافذة التثبيت قراءةً لبياناتك وتغييرا لها على جميع المواقع. لا تسجل سكربتات الصفحة شيئا حتى توقظ تلك النافذة</td></tr>
           </tbody>
         </table>

@@ -7,8 +7,13 @@
 set -u
 CONFIG="${QAW_CONFIG:-$(cd "$(dirname "$0")" && pwd)/config.env}"
 FOLDER=""; REPO="NJ-Burrito/QA-Wrap"; TOKEN=""
-# shellcheck disable=SC1090
-[ -f "$CONFIG" ] && . "$CONFIG"
+# config.env is read as plain KEY="value" lines and never sourced, so nothing in it can run as shell code.
+cfgval() { sed -n 's/^'"$1"'="\(.*\)"[[:space:]]*$/\1/p' "$CONFIG" 2>/dev/null | head -n1; }
+if [ -f "$CONFIG" ]; then
+  v=$(cfgval FOLDER); [ -n "$v" ] && FOLDER="$v"
+  v=$(cfgval REPO); [ -n "$v" ] && REPO="$v"
+  v=$(cfgval TOKEN); [ -n "$v" ] && TOKEN="$v"
+fi
 
 reply() { # reply <json>: 4-byte little-endian length, then the JSON
   local out="$1" n; n=${#out}
@@ -20,6 +25,38 @@ fail() { reply "{\"ok\":false,\"error\":\"$(printf '%s' "$1" | tr -d '"\\' | cut
 field() { printf '%s' "$MSG" | sed -n 's/.*"'"$1"'":"\([^"]*\)".*/\1/p'; }
 sha() { if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | cut -d' ' -f1; else shasum -a 256 "$1" | cut -d' ' -f1; fi; }
 jfield() { sed -n 's/.*"'"$1"'" *: *"\([^"]*\)".*/\1/p' "$2" | head -n1; }
+
+# The download address is compared as a whole, never by prefix: exactly https://github.com/<repo>/releases/download/<tag>/<file> with plain characters only.
+# No %-escape, query, userinfo, port, backslash or "." / ".." segment can pass, so .../download/../../../evil/repo/... is refused (curl would resolve it to another repository).
+release_url_ok() { # <url> <required suffix, may be empty>
+  case "$1" in *$'\n'*) return 1 ;; esac
+  printf '%s' "$1" | grep -Eq '^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/releases/download/[A-Za-z0-9_.+-]+/[A-Za-z0-9_.+-]+$' || return 1
+  case "/${1#https://}/" in */./*|*/../*) return 1 ;; esac
+  case "$1" in *"$2") ;; *) return 1 ;; esac
+  case "$1" in "https://github.com/$REPO/releases/download/"*) return 0 ;; esac
+  return 1
+}
+# A redirect may only go to this repository's release URL or to GitHub's own asset CDN (*.githubusercontent.com).
+redirect_ok() {
+  release_url_ok "$1" "" && return 0
+  printf '%s' "$1" | grep -Eq '^https://[a-z0-9-]+(\.[a-z0-9-]+)*\.githubusercontent\.com/[^[:space:]]*$'
+}
+fetch_public() { # <url> <out>: no token, redirects followed by hand (at most 5), each hop checked; returns 2 for a bad redirect
+  local url="$1" out="$2" hop code loc
+  for hop in 1 2 3 4 5; do
+    code=$(curl -sS --proto '=https' -o "$out" -D "$WORK/h$hop" -w '%{http_code}' -A qa-wrap-updater "$url") || return 1
+    case "$code" in
+      200) return 0 ;;
+      301|302|303|307|308)
+        loc=$(tr -d '\r' < "$WORK/h$hop" | sed -n 's/^[Ll]ocation: *//p' | tail -n1)
+        case "$loc" in /*) loc="https://github.com$loc" ;; esac
+        redirect_ok "$loc" || return 2
+        url="$loc" ;;
+      *) return 1 ;;
+    esac
+  done
+  return 1
+}
 
 if [ -n "${QAW_MESSAGE_FILE:-}" ]; then MSG=$(cat "$QAW_MESSAGE_FILE")
 else
@@ -33,23 +70,44 @@ fi
 VERSION=$(field version); ZIP=$(field zip); ZIPAPI=$(field zipApi); SUM=$(field sha256); MTOKEN=$(field token)
 [ -n "$MTOKEN" ] && TOKEN="$MTOKEN"
 printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || fail "bad version"
+printf '%s' "$REPO" | grep -Eq '^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$' || fail "bad repository in the config"
 [ -n "$FOLDER" ] && [ -f "$FOLDER/manifest.json" ] || fail "extension folder not found"
 FOLDER="${FOLDER%/}"
 
 WORK=$(mktemp -d) || fail "no temp folder"
 trap 'rm -rf "$WORK"' EXIT
 ZIPF="$WORK/release.zip"
+WANT=""; NEEDSIDE=0
+if [ -n "$SUM" ]; then printf '%s' "$SUM" | grep -Eq '^[0-9a-fA-F]{64}$' || fail "bad checksum in the update message"; WANT=$(printf '%s' "$SUM" | tr 'A-F' 'a-f'); fi
 if [ -n "${QAW_LOCAL_ZIP:-}" ]; then cp "$QAW_LOCAL_ZIP" "$ZIPF"
 elif [ -n "$TOKEN" ] && printf '%s' "$ZIPAPI" | grep -Eq "^https://api\.github\.com/repos/$REPO/releases/assets/[0-9]+\$"; then
-  # the token goes to api.github.com only: first hop without -L, then the signed redirect target is fetched without the header
-  curl -fsS -D "$WORK/hdr" -o "$ZIPF" -H "Authorization: Bearer $TOKEN" -H "Accept: application/octet-stream" -A qa-wrap-updater "$ZIPAPI" || fail "download failed"
+  # the token goes to api.github.com only: first hop without -L, then the redirect target (checked) is fetched without the header
+  curl -fsS --proto '=https' -D "$WORK/hdr" -o "$ZIPF" -H "Authorization: Bearer $TOKEN" -H "Accept: application/octet-stream" -A qa-wrap-updater "$ZIPAPI" || fail "download failed"
   LOC=$(tr -d '\r' < "$WORK/hdr" | sed -n 's/^[Ll]ocation: *//p' | tail -n1)
-  if [ -n "$LOC" ]; then curl -fsSL -A qa-wrap-updater -o "$ZIPF" "$LOC" || fail "download failed"; fi
-elif printf '%s' "$ZIP" | grep -Eq "^https://github\.com/$REPO/releases/download/"; then
-  curl -fsSL -A qa-wrap-updater -o "$ZIPF" "$ZIP" || fail "download failed"
+  if [ -n "$LOC" ]; then
+    redirect_ok "$LOC" || fail "the download was redirected away from this repository"
+    fetch_public "$LOC" "$ZIPF" || fail "download failed"
+  fi
+elif release_url_ok "$ZIP" ".zip"; then
+  fetch_public "$ZIP" "$ZIPF"; rc=$?
+  [ "$rc" = 2 ] && fail "the download was redirected away from this repository"
+  [ "$rc" = 0 ] || fail "download failed"
+  NEEDSIDE=1
 else fail "the download address is not this repository"; fi
 
-[ -z "$SUM" ] || [ "$(sha "$ZIPF")" = "$SUM" ] || fail "checksum mismatch"
+if [ "$NEEDSIDE" = 1 ]; then # the .sha256 file published beside the zip in the same release
+  release_url_ok "$ZIP.sha256" ".zip.sha256" || fail "the checksum address is not this repository"
+  fetch_public "$ZIP.sha256" "$WORK/side" || fail "could not download the release checksum"
+  LINE=$(head -n1 "$WORK/side" | tr -d '\r'); H=${LINE%% *}; F=${LINE#"$H"}; F=${F# }; F=${F# }; F=${F#\*}
+  printf '%s' "$H" | grep -Eq '^[0-9a-fA-F]{64}$' || fail "the release checksum file is not a SHA-256 line"
+  { [ -z "$F" ] || [ "$F" = "${ZIP##*/}" ]; } || fail "the release checksum file is for another file"
+  WANT="$WANT $(printf '%s' "$H" | tr 'A-F' 'a-f')"
+fi
+[ -n "${WANT# }" ] || fail "no checksum for this download: refusing to install"
+HAVE=$(sha "$ZIPF")
+for w in $WANT; do [ "$HAVE" = "$w" ] || fail "checksum mismatch"; done
+# refuse an unsafe entry name before anything is extracted
+if unzip -Z1 "$ZIPF" | grep -Eq '(^|/)\.\.(/|$)|^/|\|^[A-Za-z]:'; then fail "unsafe path in zip"; fi
 mkdir "$WORK/new" && unzip -q "$ZIPF" -d "$WORK/new" || fail "could not unzip"
 if find "$WORK/new" | grep -q '\.\./'; then fail "unsafe path in zip"; fi
 NM="$WORK/new/manifest.json"

@@ -9,7 +9,7 @@ const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: 
 
 /** @param {(tool: string, args: object) => Promise<string>} ask */
 export function buildServer(ask = askHost) {
-  const server = new McpServer({ name: 'qa-wrap', version: '0.1.0' });
+  const server = new McpServer({ name: 'qa-wrap', version: '0.1.1' });
   const run = (tool) => async (args) => {
     try { return { content: [{ type: 'text', text: await ask(tool, args || {}) }] }; }
     catch (e) { return { isError: true, content: [{ type: 'text', text: e.message }] }; }

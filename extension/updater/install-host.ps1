@@ -78,6 +78,7 @@ $cfgPath = Join-Path $dest 'config.json'
 if (-not $Token -and (Test-Path $cfgPath)) { try { $Token = (Get-Content -LiteralPath $cfgPath -Raw | ConvertFrom-Json).token } catch {} }
 $token = "$Token"
 @{ folder = $ext; repo = 'NJ-Burrito/QA-Wrap'; token = "$token" } | ConvertTo-Json | Set-Content -LiteralPath $cfgPath -Encoding UTF8
+if ($token) { try { & icacls.exe $cfgPath /inheritance:r /grant:r "$($env:USERNAME):F" | Out-Null } catch {} } # the token is readable by this user only
 
 Step 4 'Telling your browsers about it.' 'الخطوة 4: نعرّف المتصفحات بها.'
 $hostName = 'com.njburrito.qawrap.updater'

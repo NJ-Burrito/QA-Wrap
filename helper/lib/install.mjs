@@ -82,6 +82,7 @@ export function install({ platform = process.platform, home = os.homedir(), env 
   const launcher = path.join(hostDir, win ? 'qa-wrap-bridge-host.cmd' : 'qa-wrap-bridge-host.sh');
   fs.writeFileSync(launcher, win ? `@echo off\r\n"${nodePath}" "${main}" %*\r\n` : `#!/bin/sh\nexec "${nodePath}" "${main}" "$@"\n`, { mode: 0o755 });
 
+  for (const id of extraIds) if (!/^[a-p]{32}$/.test(String(id))) throw new Error('an extension id must be the 32-letter id from chrome://extensions');
   const manifest = hostManifest(launcher, [EXTENSION_ID, ...extraIds]);
   const written = [];
   if (win) {
@@ -102,6 +103,8 @@ export function install({ platform = process.platform, home = os.homedir(), env 
 export function uninstall({ platform = process.platform, home = os.homedir(), env = process.env, regDelete = defaultRegDelete } = {}) {
   const root = homeDir({ ...env, ...(env.QA_WRAP_BRIDGE_HOME ? {} : { QA_WRAP_BRIDGE_HOME: path.join(home, '.qa-wrap-bridge') }) });
   const removed = [];
+  // QA_WRAP_BRIDGE_HOME may point anywhere: only delete a folder that is recognisably ours (it holds the token or the host copy).
+  if (fs.existsSync(root) && !fs.existsSync(path.join(root, 'token')) && !fs.existsSync(path.join(root, 'host'))) throw new Error(`refusing to delete ${root}: it does not look like a QA Wrap bridge folder`);
   if (platform === 'win32') for (const key of Object.values(REG_KEYS)) { regDelete(key); removed.push(key); }
   else for (const [, dir] of manifestDirs(platform, home)) { const f = path.join(dir, `${HOST_NAME}.json`); if (fs.existsSync(f)) { fs.rmSync(f); removed.push(f); } }
   fs.rmSync(root, { recursive: true, force: true });

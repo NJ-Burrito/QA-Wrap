@@ -44,6 +44,43 @@ function Get-Asset($url, $h, $out) {
     } else { throw "download failed ($code)" }
   } finally { $resp.Close() }
 }
+# The download address is compared as a whole, never by prefix: exactly https://github.com/<repo>/releases/download/<tag>/<file> with plain characters only.
+# No %-escape, query, userinfo, port, backslash or "." / ".." segment can pass, so .../download/../../../evil/repo/... is refused (it would resolve to another repository).
+function Test-ReleaseUrl($url, $repo, $suffix) {
+  $s = "$url"
+  if ($repo -cnotmatch '^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$') { return $false }
+  if ($s -cnotmatch '^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/releases/download/[A-Za-z0-9_.+-]+/[A-Za-z0-9_.+-]+$') { return $false }
+  foreach ($seg in $s.Substring(8).Split('/')) { if ($seg -eq '.' -or $seg -eq '..') { return $false } }
+  if (-not $s.EndsWith($suffix, [StringComparison]::Ordinal)) { return $false }
+  return $s.StartsWith("https://github.com/$repo/releases/download/", [StringComparison]::Ordinal)
+}
+# A redirect may only go to the same repository's release URL or to GitHub's own asset CDN (*.githubusercontent.com); anything else stops the download.
+function Test-RedirectOk($loc, $repo) {
+  if (Test-ReleaseUrl $loc $repo '') { return $true }
+  try { $u = [Uri]$loc } catch { return $false }
+  return ($u.Scheme -eq 'https' -and -not $u.UserInfo -and $u.IsDefaultPort -and $u.Host -cmatch '^[a-z0-9-]+(\.[a-z0-9-]+)*\.githubusercontent\.com$')
+}
+# Public download: no token, redirects followed by hand (at most 5), each hop checked by Test-RedirectOk.
+function Get-Public($url, $repo, $out) {
+  for ($hop = 0; $hop -lt 5; $hop++) {
+    $r = [Net.HttpWebRequest]::Create($url)
+    $r.AllowAutoRedirect = $false; $r.UserAgent = $UA['User-Agent']
+    try { $resp = $r.GetResponse() } catch [Net.WebException] { $resp = $_.Exception.Response; if (-not $resp) { throw } }
+    try {
+      $code = [int]$resp.StatusCode
+      if ($code -ge 300 -and $code -lt 400) {
+        $loc = $resp.Headers['Location']; if (-not $loc) { throw "download failed ($code, no Location)" }
+        $next = ([Uri]::new($r.RequestUri, $loc)).AbsoluteUri
+        if (-not (Test-RedirectOk $next $repo)) { throw 'the download was redirected away from this repository' }
+        $url = $next
+      } elseif ($code -eq 200) {
+        $fs = [IO.File]::Create($out); try { $resp.GetResponseStream().CopyTo($fs) } finally { $fs.Dispose() }
+        return
+      } else { throw "download failed ($code)" }
+    } finally { $resp.Close() }
+  }
+  throw 'too many redirects'
+}
 function Invoke-Update($cfg, $m) {
   $folder = $cfg.folder.TrimEnd('\')
   $repo = if ($cfg.repo) { $cfg.repo } else { 'NJ-Burrito/QA-Wrap' }
@@ -54,6 +91,9 @@ function Invoke-Update($cfg, $m) {
   $zip = Join-Path $work 'release.zip'
   try {
     Stage 'downloading'
+    $want = @() # every checksum we hold for this zip; all must match, and at least one must exist
+    if ("$($m.sha256)") { if ("$($m.sha256)" -notmatch '^[0-9a-fA-F]{64}$') { throw 'bad checksum in the update message' }; $want += "$($m.sha256)".ToLower() }
+    $needSide = $false
     if ($m.localZip -and $MessageFile) { Copy-Item $m.localZip $zip } # test hook only
     else {
       $h = $UA.Clone()
@@ -61,12 +101,28 @@ function Invoke-Update($cfg, $m) {
       if ($tok -and $m.zipApi -and ($m.zipApi -match "^https://api\.github\.com/repos/$([regex]::Escape($repo))/releases/assets/\d+$" -or ($MessageFile -and $m.zipApi -match '^http://127\.0\.0\.1:\d+/'))) {
         $h.Authorization = "Bearer $tok"; $h.Accept = 'application/octet-stream'
         Get-Asset $m.zipApi $h $zip
-      } elseif ($m.zip -match "^https://github\.com/$([regex]::Escape($repo))/releases/download/") {
-        Invoke-WebRequest $m.zip -Headers $UA -OutFile $zip
+      } elseif (Test-ReleaseUrl $m.zip $repo '.zip') {
+        Get-Public $m.zip $repo $zip
+        $needSide = $true
       } else { throw 'the download address is not this repository' }
     }
     Stage 'checking'
-    if ($m.sha256 -and ((Get-FileHash $zip -Algorithm SHA256).Hash.ToLower() -ne "$($m.sha256)".ToLower())) { throw 'checksum mismatch' }
+    if ($needSide) { # the .sha256 file published beside the zip in the same release
+      $side = Join-Path $work 'zip.sha256'
+      $su = "$($m.zip).sha256"
+      if (-not (Test-ReleaseUrl $su $repo '.zip.sha256')) { throw 'the checksum address is not this repository' }
+      Get-Public $su $repo $side
+      $line = (Get-Content -LiteralPath $side -Raw).Trim()
+      if ($line -notmatch '^([0-9a-fA-F]{64})(\s+\*?(\S+))?$') { throw 'the release checksum file is not a SHA-256 line' }
+      if ($Matches[3] -and $Matches[3] -ne ($m.zip -split '/')[-1]) { throw 'the release checksum file is for another file' }
+      $want += $Matches[1].ToLower()
+    }
+    if ($want.Count -eq 0) { throw 'no checksum for this download: refusing to install' }
+    $have = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+    foreach ($w in $want) { if ($have -ne $w) { throw 'checksum mismatch' } }
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $za = [IO.Compression.ZipFile]::OpenRead($zip) # refuse an unsafe entry name before anything is extracted
+    try { foreach ($e in $za.Entries) { $en = $e.FullName; if ($en -match '^[/\\]' -or $en -match '^[A-Za-z]:' -or $en -match '(^|[/\\])\.\.([/\\]|$)') { throw 'unsafe path in zip' } } } finally { $za.Dispose() }
     $new = Join-Path $work 'new'
     Expand-Archive -LiteralPath $zip -DestinationPath $new -Force
     $root = [IO.Path]::GetFullPath($new) + '\'
@@ -94,7 +150,7 @@ function Invoke-Update($cfg, $m) {
       Fill-Folder $backup $folder # rollback
       throw "swap failed, rolled back: $why"
     }
-    try { foreach ($f in 'host.ps1', 'host.cmd', 'install-host.ps1') { Copy-Item -LiteralPath (Join-Path $folder "updater\$f") -Destination $PSScriptRoot -Force } } catch {} # the host updates itself too (best effort)
+    # The host never replaces its own scripts from the zip: a new host comes only from install.cmd run by the user.
     @{ ok = $true; from = $installed.version; to = $m.version; backup = $backup }
   } finally { Remove-Item -LiteralPath $work -Recurse -Force -ErrorAction SilentlyContinue }
 }

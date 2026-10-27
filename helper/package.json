@@ -1,6 +1,6 @@
 {
   "name": "qa-wrap-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read-only agent bridge for QA Wrap: an MCP server (stdio) that reads sessions through Chrome native messaging. Local only, no network.",
   "license": "MIT",
   "mcpName": "io.github.NJ-Burrito/qa-wrap-bridge",
@@ -12,7 +12,7 @@
   "engines": { "node": ">=20" },
   "scripts": { "test": "node test/helper.test.mjs" },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.0",
-    "zod": "^3.23.8"
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
   }
 }

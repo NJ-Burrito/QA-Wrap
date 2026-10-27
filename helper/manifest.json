@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "qa-wrap-bridge",
   "display_name": "QA Wrap bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read-only MCP server that lets a coding agent read the test sessions recorded in QA Wrap. Local only, no network.",
   "long_description": "QA Wrap bridge reads the sessions recorded by the QA Wrap browser extension through Chrome native messaging. It has four read-only tools, no write tool and opens no network connection. One-time setup: run `npx qa-wrap-bridge` in a terminal, then turn on Agent bridge in QA Wrap's Settings.",
   "author": { "name": "NJ-Burrito", "url": "https://github.com/NJ-Burrito" },

@@ -30,10 +30,10 @@ English; read it and accept it, because nothing else is offered until you have.
 
 Click the QA Wrap icon. The popup walks you through it:
 
-1. **Wake up on the page you are testing.** Chrome asks whether to allow QA Wrap
-   on that one site, `https://host/*` and no wider, and *All sites* is beside it
-   for a tester who works across many hosts. The grant persists; sleeping does
-   not revoke it, and Settings or Chrome's own extension settings take it back.
+1. **Wake up on the page you are testing.** Chrome does not ask again: the
+   `<all_urls>` access was granted at install, and nothing is captured until you
+   wake the window. Sleeping does not revoke it; Chrome's own extension settings
+   (*Site access*) take it back.
    Waking also puts the page scripts into the tabs already open in that window,
    so you do not have to reload; a tab in another window picks them up when it
    is allowed and next navigates.

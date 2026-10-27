@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { execFileSync, execFile } from 'node:child_process';
 import { EXT } from './test-site-powers.mjs';
 
@@ -26,6 +27,7 @@ const win = process.platform === 'win32';
 const ps = (file, args) => JSON.parse(execFileSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', file, ...args], { encoding: 'utf8' }).trim());
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'qaw-host-'));
 const mkext = (dir, version, key = 'KEY1') => { fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify({ name: 'QA Wrap', key, version })); fs.writeFileSync(path.join(dir, 'code.js'), `v${version}`); };
+const sum = (f) => crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex'); // the host refuses a download with no checksum
 const zipOf = (dir, out) => execFileSync('powershell.exe', ['-NoProfile', '-Command', `Compress-Archive -Path '${dir}\\*' -DestinationPath '${out}' -Force`]);
 const run = (name, version, zip, key) => {
   const base = path.join(tmp, name);
@@ -37,7 +39,7 @@ const run = (name, version, zip, key) => {
   mkext(src, version, key);
   zipOf(src, zip(base));
   fs.writeFileSync(path.join(base, 'config.json'), JSON.stringify({ folder: ext, repo: 'NJ-Burrito/QA-Wrap' }));
-  fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0', localZip: zip(base) }));
+  fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0', localZip: zip(base), sha256: sum(zip(base)) }));
   const r = ps(path.join(EXT, 'updater', 'host.ps1'), ['-ConfigPath', path.join(base, 'config.json'), '-MessageFile', path.join(base, 'msg.json')]);
   return { r, ext, base };
 };
@@ -96,7 +98,7 @@ await test('host (powershell.exe 5.1): token goes to the first hop only; the 302
   }).listen(0, '127.0.0.1');
   await new Promise((r) => srv.once('listening', r));
   fs.writeFileSync(path.join(base, 'config.json'), JSON.stringify({ folder: ext }));
-  fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0', zipApi: `http://127.0.0.1:${srv.address().port}/asset`, token: 'SECRET-TOKEN' }));
+  fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0', zipApi: `http://127.0.0.1:${srv.address().port}/asset`, token: 'SECRET-TOKEN', sha256: sum(path.join(base, 'rel.zip')) }));
   const out = await new Promise((res, rej) => execFile('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(EXT, 'updater', 'host.ps1'), '-ConfigPath', path.join(base, 'config.json'), '-MessageFile', path.join(base, 'msg.json')], { encoding: 'utf8' }, (e, o) => (e ? rej(e) : res(o))));
   srv.close();
   const r = JSON.parse(out.trim());
@@ -106,6 +108,26 @@ await test('host (powershell.exe 5.1): token goes to the first hop only; the 302
   assert.equal(seen[0][1], 'Bearer SECRET-TOKEN');
   assert.equal(seen[0][2], 'application/octet-stream');
   assert.equal(seen[1][1], '', 'the redirect target never sees the token');
+});
+
+await test('host (powershell.exe): the "../" bypass, other repos, encoded dots and similar addresses are refused; a download with no checksum is refused', async () => {
+  if (!win) return;
+  const base = path.join(tmp, 'urls');
+  const ext = path.join(base, 'QA Wrap');
+  mkext(ext, '1.0.0');
+  fs.writeFileSync(path.join(base, 'config.json'), JSON.stringify({ folder: ext, repo: 'NJ-Burrito/QA-Wrap' }));
+  const R = 'https://github.com/NJ-Burrito/QA-Wrap/releases/download';
+  for (const u of [`${R}/../../../../evil/repo/releases/download/v9.9.9/x.zip`, `${R}/%2e%2e/%2e%2e/evil/repo/releases/download/v9/x.zip`, 'https://github.com/NJ-Burrito/QA-Wrap-evil/releases/download/v9/x.zip', `${R}/v9/x.zip?a=1`, 'http://github.com/NJ-Burrito/QA-Wrap/releases/download/v9/x.zip']) {
+    fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0', zip: u }));
+    const r = ps(path.join(EXT, 'updater', 'host.ps1'), ['-ConfigPath', path.join(base, 'config.json'), '-MessageFile', path.join(base, 'msg.json')]);
+    assert.equal(r.ok, false, u);
+    assert.match(r.error, /not this repository/, u);
+  }
+  const src = path.join(base, 'src'); mkext(src, '1.1.0'); zipOf(src, path.join(base, 'rel.zip'));
+  fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0', localZip: path.join(base, 'rel.zip') }));
+  const r = ps(path.join(EXT, 'updater', 'host.ps1'), ['-ConfigPath', path.join(base, 'config.json'), '-MessageFile', path.join(base, 'msg.json')]);
+  assert.equal(r.ok, false); assert.match(r.error, /no checksum/);
+  assert.equal(fs.readFileSync(path.join(ext, 'code.js'), 'utf8'), 'v1.0.0');
 });
 
 // ---- the macOS/Linux host (bash), when bash, unzip and curl exist ----
@@ -120,7 +142,7 @@ const sh = (base, version, zipName) => {
   mkext(src, version);
   zipOf(src, path.join(base, zipName));
   fs.writeFileSync(path.join(base, 'config.env'), `FOLDER="${fwd(ext)}"\nREPO="NJ-Burrito/QA-Wrap"\n`);
-  fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0' }));
+  fs.writeFileSync(path.join(base, 'msg.json'), JSON.stringify({ op: 'update', version: '1.1.0', sha256: sum(path.join(base, zipName)) }));
   const out = execFileSync('bash', [fwd(path.join(EXT, 'updater', 'host.sh'))], { encoding: 'utf8', env: { ...process.env, QAW_CONFIG: fwd(path.join(base, 'config.env')), QAW_MESSAGE_FILE: fwd(path.join(base, 'msg.json')), QAW_LOCAL_ZIP: fwd(path.join(base, zipName)) } });
   return { r: JSON.parse(out.trim().split('\n').pop()), ext, base };
 };
