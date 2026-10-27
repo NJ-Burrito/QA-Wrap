@@ -410,14 +410,7 @@ export const recordingHandlers = {
         }
       }
 
-      /*
-       * The window-size run this clip belongs to, if any.
-       *
-       * One clip, one home: the contract's rule for the report is that a media
-       * record carrying `runId` appears under Window sizes and nowhere else,
-       * so the stamp has to be on the stored row and on the timeline event, not
-       * inferred later from a window id nothing kept.
-       */
+      // The window-size run this clip belongs to: one clip, one home (a `runId` row shows under Window sizes only), on row and event.
       const { [CLIP_RUN]: clipRun } = await chrome.storage.session.get(CLIP_RUN);
       await chrome.storage.session.remove(CLIP_RUN);
       if (clipRun?.runId) {
@@ -431,9 +424,7 @@ export const recordingHandlers = {
         }
       }
 
-      // Only a real session gets a timeline entry: 'unfiled' has no timeline to
-      // append to, and inventing one would put a session in the list that
-      // nobody started.
+      // Only a real session gets a timeline entry: inventing one for 'unfiled' lists a session nobody started.
       if (sessionId !== 'unfiled') {
         await appendEvent({
           sessionId,
@@ -447,23 +438,14 @@ export const recordingHandlers = {
           // Which sources went in, so a silent clip is explained in the report
           // rather than discovered on playback.
           sources: meta.sources || { tab: true },
-          // Where the face is, on the row itself. The report's card says the
-          // webcam is on its own track, and it should not have to open the
-          // media store to find out whether this clip is one of those.
+          // Where the face is, on the row itself, so the report's card need not open the media store.
           webcamTrackId: meta.webcamTrackId ?? null,
           ...(meta.runId ? { runId: meta.runId, viewport: meta.viewport } : {}),
         });
         paintBadge();
       }
 
-      /*
-       * The session may have been deleted while this clip was being written.
-       *
-       * Delete can land in the gap between the tester pressing Stop and the
-       * offscreen document finishing the encode, and a clip filed against a row
-       * that no longer exists is invisible to every listing. Re-file it under
-       * 'unfiled' and say so, rather than leaving it stranded silently.
-       */
+      // A Delete between Stop and the end of the encode leaves the clip on a row nothing lists: re-filed under 'unfiled', said.
       if (sessionId !== 'unfiled' && !(await getSession(sessionId))) {
         if (await restampMedia(meta.id, { sessionId: 'unfiled' })) {
           await restampCompanion(meta.webcamTrackId, { sessionId: 'unfiled' });
@@ -479,14 +461,7 @@ export const recordingHandlers = {
       }).catch(() => {});
       return meta;
     } finally {
-      /*
-       * Reconciled from real state, never asserted.
-       *
-       * `broadcast({recording:false})` used to be a claim: if the stop had in
-       * fact failed, every surface was told the recording had ended while it
-       * was still running, and the only control that could stop it now said
-       * "Record". Asking costs one message and can only be right.
-       */
+      // Reconciled from real state, never asserted: a failed stop must not tell every surface the recording ended.
       const st = await recordingState().catch(() => ({ recording: false }));
       await broadcast({ type: 'UQA_RECORDING_CHANGED', recording: !!st.recording });
       if (!st.recording) await stopRecordingIcon();
