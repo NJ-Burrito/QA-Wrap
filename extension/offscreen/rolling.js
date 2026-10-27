@@ -89,7 +89,9 @@ export async function rollOp(msg) {
   if (msg.op === 'save') return save(msg);
   if (msg.op !== 'start') throw new Error(`Unknown roll op: ${msg.op}`);
   if (r) return { rolling: true };
-  const mime = videoMime('webm') || videoMime('mp4');
+  // WebM only: this records the raw tab track, which changes size with the tab, and VP8 carries each size in its own keyframes;
+  // an MP4 keeps the first size only and turns the rest to smear (rec-resize-1027).
+  const mime = videoMime('webm');
   if (!mime) throw new Error('This browser cannot record video at all: no supported encoder.');
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: false,

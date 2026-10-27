@@ -26,7 +26,7 @@ const fixesSrc = popup.slice(popup.indexOf('const FIXES = ['), popup.indexOf('/*
 const ctx = vm.createContext({ $: () => null, spotlight() {}, chrome: {}, ctx: {}, say() {}, t: (k) => k, send() {}, dismiss() {} });
 vm.runInContext(`${fixesSrc}\nthis.REFUSALS = REFUSALS; this.codeByText = codeByText; this.fixFor = fixFor; this.FIXES = FIXES;`, ctx);
 const { REFUSALS, codeByText, fixFor, FIXES } = ctx;
-const CODES = ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_CLICK', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'POLICY_HOSTS', 'POLICY_SCREENSHOT', 'POLICY_BLOCKED'];
+const CODES = ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_CLICK', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'POLICY_HOSTS', 'POLICY_SCREENSHOT', 'POLICY_BLOCKED', 'NO_PICTURE'];
 
 console.log('refusals (code, English, Arabic, chip)');
 
@@ -44,7 +44,7 @@ test('every chip names a real fix button; policy refusals offer none', () => {
   const ids = FIXES.map((f) => f.id);
   for (const [code, row] of Object.entries(REFUSALS)) {
     if (row.chip) assert.ok(ids.includes(row.chip), `${code} -> ${row.chip}`);
-    else assert.match(code, /^(POLICY_|SLOW|MEDIA_SLOW|NEEDS_CLICK)/);
+    else assert.match(code, /^(POLICY_|SLOW|MEDIA_SLOW|NEEDS_CLICK|NO_PICTURE)/);
   }
 });
 

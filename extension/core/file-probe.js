@@ -58,6 +58,8 @@ export function lockFrame(w, h) {
   return { w: Math.max(2, Math.round(w) & ~1), h: Math.max(2, Math.round(h) & ~1) };
 }
 export function fitRect(sw, sh, dw, dh) {
+  // The lock rounds an odd size down by 1 px: draw that source 1:1 and crop the pixel, never resample every frame.
+  if (sw - dw >= 0 && sw - dw <= 1 && sh - dh >= 0 && sh - dh <= 1) return { x: 0, y: 0, w: sw, h: sh };
   const s = Math.min(dw / sw, dh / sh);
   const w = Math.round(sw * s), h = Math.round(sh * s);
   return { x: Math.round((dw - w) / 2), y: Math.round((dh - h) / 2), w, h };
