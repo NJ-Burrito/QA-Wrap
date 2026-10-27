@@ -2,7 +2,7 @@
 /** Message handlers for sessions, recording and the library: starting and stopping, state, media, screen recording, timeline and the session list. Moved out of service-worker.js (OF-18), unchanged. */
 
 import {
-  recordingState, storageHeadroom, startRecording, stopRecording, rescueRecording, startScreenRecording, videoFormats,
+  recordingState, storageHeadroom, startRecording, stopRecording, cancelStart, rescueRecording, startScreenRecording, videoFormats,
   mediaPermissions, exportAudio, markImage, exportOp, copyToClipboard, rollOp,
 } from './media.js';
 import {
@@ -53,7 +53,7 @@ async function refuseIfRecording() {
     await recordStartInFlight.catch(() => {});
   }
   const state = await recordingState().catch(() => null);
-  if (!state?.recording) return;
+  if (!state?.recording && !state?.starting) return;
   if (state.finishing) {
     throw new Error(
       'The last clip is still being saved. It will appear in the report on its own. ' +
@@ -337,10 +337,6 @@ export const recordingHandlers = {
     const settings = await getSettings();
     const tabId = msg.tabId ?? (await testableTabId());
     if (tabId == null) throw new Error('Open the page you want to record first.');
-    // The extra sources travel with the call. They used to stop here: the popup
-    // sent mic/tabAudio/webcam and this handler simply did not pass them on, so
-    // ticking "Mic" produced a silent video and the "recording without …"
-    // warning could never fire, because nothing was ever refused.
     const started = await claimRecordStart(startRecording({
       tabId,
       sessionId: await activeSessionId({ tabId }),
@@ -380,6 +376,14 @@ export const recordingHandlers = {
    */
   UQA_RECORD_STOP: async (msg, sender) => {
     try {
+      // A tab start still on its way (3.8.3): cancel it in the offscreen document, wait, and answer coded if it never recorded.
+      const pending = startGate;
+      if (pending) {
+        await cancelStart();
+        const began = await pending;
+        await cancelStart(true);
+        if (!began) throw Object.assign(new Error('Stopped before the recording began. Nothing was recorded.'), { code: 'REC_CANCELLED' });
+      }
       const meta = await stopRecording(msg);
 
       if (meta?.stored === false) {
@@ -845,6 +849,16 @@ async function timelineFor(msg) {
 }
 
 /** Saved sessions: the list, the timeline, deletion and every export. */
+// The tab start in flight from its first line (claimRecordStart begins after its awaits): true once it records.
+let startGate = null;
+const startTab = recordingHandlers.UQA_RECORD_START;
+recordingHandlers.UQA_RECORD_START = (msg, sender) => {
+  const run = startTab(msg, sender);
+  const gate = (startGate = run.then(() => true, () => false));
+  gate.then(() => { if (startGate === gate) startGate = null; });
+  return run;
+};
+
 export const libraryHandlers = {
   UQA_LIST_SESSIONS: () => listSessions(),
   UQA_GET_TIMELINE: (msg) => timelineFor(msg),

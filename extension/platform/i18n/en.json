@@ -2063,6 +2063,7 @@
   "popup.refusal.needsConsent": "Read and accept the QA Wrap notice first: open the welcome page from Settings, then wake it up.",
   "popup.refusal.needsGrant": "This needs access that has not been granted yet. Open Settings to allow it.",
   "popup.refusal.needsInvoke": "This tab changed page. Use the shortcut, or right-click it and choose Record a video.",
+  "popup.refusal.recCancelled": "Stopped before the recording began. Nothing was recorded.",
   "popup.refusal.noPicture": "The tab or screen sent nothing to record. Nothing was saved; press Record again.",
   "popup.refusal.noSession": "There is no session in this window, so there is nowhere to put this. Start a session first.",
   "popup.refusal.notAllowed": "QA Wrap is not allowed on this site yet. Wake up here to allow it.",

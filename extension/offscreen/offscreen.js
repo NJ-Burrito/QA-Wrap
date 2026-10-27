@@ -40,6 +40,12 @@ let rollMod = null; // offscreen/rolling.js, loaded on first use (cap1022)
 // buffer sees `active` and lets go), then stops it: before 3.8.3 the buffer won the tab and the Record failed (recording.mjs step 10).
 let rollBusy = null;
 let rollCancel = false;
+// One lifecycle, idle -> starting -> recording -> finishing -> idle (3.8.3). A worker Stop that lands before its start
+// reached this document sets `cancelNext` (UQA_OFF_CANCEL); one that lands during `starting` sets `claim.cancel`.
+// The start checks it after every wait and ends in a coded refusal, so a Stop never leaves a phantom recording.
+let cancelNext = false;
+const cancelled = () => Object.assign(new Error('Stopped before the recording began. Nothing was recorded.'), { code: 'REC_CANCELLED' });
+const within = (p, ms, v) => Promise.race([Promise.resolve(p), new Promise((res) => setTimeout(res, ms, v))]);
 
 /**
  * Which formats this browser can really write, image and video both.
@@ -831,6 +837,7 @@ async function startRecording({
   desktop = false, systemAudio = false, cursor = false, label, view = null,
 }) {
   if (active) throw new Error('Already recording. Stop the current clip first.');
+  if (cancelNext) { cancelNext = false; throw cancelled(); }
 
   /*
    * The claim, before the first await.
@@ -844,7 +851,8 @@ async function startRecording({
    */
   const startedAt = Date.now();
   const id = `m_${startedAt.toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
-  const claim = { kind: 'starting', id, sessionId, startedAt, stoppedAt: null, mime: null, sources: { tab: !desktop, screen: desktop }, stopAsked: false };
+  const claim = { kind: 'starting', id, sessionId, startedAt, stoppedAt: null, mime: null, sources: { tab: !desktop, screen: desktop }, cancel: false };
+  const live = () => { if (claim.cancel) throw cancelled(); };
   // Settles when this start does, either way: a Stop pressed while the clip is starting waits on it (stopRecording).
   let begun = () => {};
   claim.begun = new Promise((res) => { begun = () => res(undefined); });
@@ -891,6 +899,8 @@ async function startRecording({
     // id is bound to the frame that asked for it, and the frame that asked was
     // never this one. See `displayStream` above for the measurements.
     if (rollBusy) { await rollBusy; await rollMod?.stopRoll(); } // a buffer still opening the tab gives it up first
+    await rollMod?.stopRoll(); // cap1022: one tab, one capture; a normal Record takes over from the rolling buffer (its encoders released first)
+    live();
     const wantsAudio = desktop ? systemAudio : tabAudio;
 
     const edge = CAPTURE_EDGE[quality] || CAPTURE_EDGE.medium;
@@ -919,6 +929,7 @@ async function startRecording({
      * captured — a feedback loop that howls. Only a tab capture is muted by
      * Chrome while it is being captured, so only a tab capture needs the echo.
      */
+    live();
     const gotAudio = !!wantsAudio && stream.getAudioTracks().length > 0;
 
     // The preview element is a decode-and-paint of every frame, at full size.
@@ -945,6 +956,7 @@ async function startRecording({
     const { micStream: gotMic, camStream: gotCam, refused } = await extraSources({ mic, webcam });
     micStream = gotMic;
     camStream = gotCam;
+    live();
 
     /*
      * The `<video>` for the camera, only where something draws from it.
@@ -1079,11 +1091,12 @@ async function startRecording({
     // The lock takes whichever of these the capture actually delivers; a later
     // change (emulation turned off) is a mid-clip resize, fitted inside.
     const hint = desktop ? null : lockTargets(view, edge, devicePixelRatio);
-    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor, hint, urgent: () => claim.stopAsked });
+    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor, hint, urgent: () => claim.cancel });
     // The encoder starts only on a locked frame: a canvas sized after start is
     // the defect itself, so no picture in 5 s is a refusal, not a clip.
     const frame = await Promise.race([mixer.ready, new Promise((res) => setTimeout(res, 5000, null))]);
     if (!frame) throw Object.assign(new Error('The tab or screen sent nothing to record. Nothing was saved; press Record again.'), { code: 'NO_PICTURE' });
+    live(); // the last check: from recorder.start() on, a Stop files the clip
     const videoTrack = mixer.stream.getVideoTracks()[0];
 
     // One audio track, mixed if there are two. See mixAudio.
@@ -1495,15 +1508,12 @@ async function stopRecording({ label } = {}) {
    * and finish, and this Stop then stops and files it. A start that fails instead had recorded nothing, and says so.
    */
   if (active.kind === 'starting') {
+    // Cancels the start (it ends in REC_CANCELLED, nothing recorded); a start already past its last check records,
+    // and this Stop then files it like any other.
     const claim = active;
-    claim.stopAsked = true;
+    claim.cancel = true;
     await claim.begun;
-    if (active?.id !== claim.id) throw claim.error || new Error('That clip did not start, so there was nothing to save.');
-    if (active.kind !== 'finishing') {
-      // ponytail: a fixed 300 ms so the encoder has frames to write (a stop on the same tick as start() files 0 bytes);
-      // a frame counter on the composite would be exact, 300 ms at 15 fps is ~4 frames.
-      await new Promise((res) => setTimeout(res, 300));
-    }
+    if (active?.id !== claim.id) throw claim.error?.code ? claim.error : cancelled();
   }
   if (active.kind === 'finishing') {
     throw new Error('That clip is already being saved. It will appear in the report on its own.');
@@ -1511,6 +1521,10 @@ async function stopRecording({ label } = {}) {
 
   const session = active;
   active = { ...session, kind: 'finishing' };
+  // ponytail: a clip stopped the moment it began has no encoded frame yet (B: "Nothing of that recording was written
+  // to disk"); 600 ms lets the encoder write some. A frame counter would be exact.
+  const young = 600 - (Date.now() - (session.startedAt || 0));
+  if (session.kind === 'recorder' && young > 0) await new Promise((res) => setTimeout(res, young));
 
   // Now, not after the encoder has flushed — and not at all if the source
   // already ended or the recorder failed, because those moments are the honest
@@ -1522,7 +1536,8 @@ async function stopRecording({ label } = {}) {
   try {
     // A GIF's stop() answers with the finished Blob; a recorder's answers with
     // whether the encoder got to the end.
-    const result = await session.stop();
+    // Bounded (3.8.3, B: one Stop hung 270 s): an encoder that never answers files what reached the disk.
+    const result = await within(session.stop(), 15000, { ok: false, error: 'The encoder did not finish; the clip is saved up to its last written part.' });
     if (result instanceof Blob) tail = result;
     else outcome = result || { ok: true };
   } catch (err) {
@@ -1541,9 +1556,9 @@ async function stopRecording({ label } = {}) {
      * and a webcam recorder that throws on the way down would skip all of it.
      */
     try { session.camRecorder?.stop(); } catch { /* already inactive */ }
-    await Promise.resolve(session.camRecorder?.flushed?.()).catch(() => {});
+    await within(Promise.resolve(session.camRecorder?.flushed?.()).catch(() => {}), 10000);
 
-    await session.flushed?.().catch(() => {});
+    await within(session.flushed?.()?.catch(() => {}), 10000);
     const rest = session.tailChunks?.() || [];
     if (rest.length) tail = new Blob(rest, { type: (session.mime || '').split(';')[0] });
     // Always release every source, even if encoding failed. A capture indicator
@@ -1670,7 +1685,7 @@ async function fileClip(session, { label, tail, outcome }) {
       stored: false,
       bytes: rescue.size,
       error:
-        `The clip was recorded but could not be stored: ${String(err?.message || err)}. ` +
+        `The clip was recorded but could not be stored: ${String(err?.message || err).replace(/\.$/, '')}. ` +
         (rescue.size
           ? 'It is still in memory. Press "Rescue the clip" to write it to your downloads before closing the browser.'
           : 'Nothing of it survived.'),
@@ -2329,8 +2344,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           return op;
         }
       case 'UQA_OFF_START':
-        await rollMod?.stopRoll(); // cap1022: one tab, one capture; a normal Record takes over from the rolling buffer (its encoders released first)
-        return startRecording(msg);
+        return startRecording(msg); // claims synchronously: a Stop right behind it finds `starting`
+      case 'UQA_OFF_CANCEL':
+        if (msg.clear) cancelNext = false;
+        else if (!active) cancelNext = true;
+        else if (active.kind === 'starting') active.cancel = true;
+        return { ok: true };
       case 'UQA_OFF_STOP':
         return stopRecording(msg);
       /*
@@ -2345,7 +2364,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       case 'UQA_OFF_STATE':
         return active
           ? {
-              recording: true,
+              recording: active.kind !== 'starting', // shown as recording only once it is (3.8.3)
               starting: active.kind === 'starting',
               finishing: active.kind === 'finishing',
               id: active.id,

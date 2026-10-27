@@ -331,39 +331,107 @@ await test('a webcam that will not record is said in EN and AR, and the screen c
   }
 });
 
-/* ── 3.8.3 round 5 (A3): rule 4, a Stop during the start ── */
+/* ── 3.8.3 round 6 (A3): one lifecycle, idle -> starting -> recording -> finishing -> idle, every interleaving ── */
 
-/** The shipped stopRecording, with `active` in a closure the test can set, and fileClip answering what it was given. */
-function liftStop() {
-  const make = new Function('fileClip', 'releaseElements', 'setTimeout',
+const CANCEL = () => Object.assign(new Error('Stopped before the recording began. Nothing was recorded.'), { code: 'REC_CANCELLED' });
+/** The shipped stopRecording, `active` in a closure the test can set; fileClip answers what it was given; timers run at once. */
+function liftStop({ hang = false } = {}) {
+  const within = (p, ms, v) => (hang ? Promise.resolve(v) : Promise.resolve(p));
+  const make = new Function('fileClip', 'releaseElements', 'setTimeout', 'cancelled', 'within',
     `let active = null;\nasync ${lift(OFF, 'stopRecording')}\nreturn { stop: stopRecording, set: (a) => { active = a; }, get: () => active };`);
-  return make((session, extra) => ({ id: session.id, stored: true, ...extra }), () => {}, (fn) => fn());
+  return make((session, extra) => ({ id: session.id, stored: true, ...extra }), () => {}, (fn) => fn(), CANCEL, within);
 }
+const recorder = (id, extra = {}) => ({ kind: 'recorder', id, startedAt: 1, stop: async () => ({ ok: true }), flushed: async () => {}, tailChunks: () => [], ...extra });
+const starting = (id) => { let begin; const c = { kind: 'starting', id, cancel: false, begun: new Promise((r) => { begin = r; }) }; return [c, begin]; };
 
-await test('a Stop pressed while the clip is starting files the clip once the start finishes (was: "still starting", clip lost)', async () => {
+await test('Stop while idle: "Nothing is being recorded" (the worker turns a pending start into REC_CANCELLED first)', async () => {
+  await assert.rejects(liftStop().stop({}), /Nothing is being recorded/);
+});
+
+await test('Stop while starting, the start sees the cancel: coded REC_CANCELLED, nothing filed, nothing left recording', async () => {
   const off = liftStop();
-  let begin;
-  const claim = { kind: 'starting', id: 'm1', stopAsked: false, begun: new Promise((r) => { begin = r; }) };
+  const [claim, begin] = starting('m1');
   off.set(claim);
   const stopping = off.stop({});
   await null;
-  assert.equal(claim.stopAsked, true, 'the start is not told to lock now, so a slow lock keeps the Stop waiting up to 4 s');
-  // The start finishes: the recorder is running.
-  off.set({ kind: 'recorder', id: 'm1', startedAt: 1, stop: async () => ({ ok: true }), flushed: async () => {}, tailChunks: () => [] });
-  begin();
-  const meta = await stopping;
-  assert.equal(meta.id, 'm1', 'the clip Stop was pressed on was not filed');
-  assert.equal(off.get().kind, 'finishing');
+  assert.equal(claim.cancel, true, 'the start is not told to stop');
+  claim.error = CANCEL(); off.set(null); begin(); // what startRecording's live() + abort() do
+  await assert.rejects(stopping, (e) => e.code === 'REC_CANCELLED');
+  assert.equal(off.get(), null);
 });
 
-await test('a Stop during a start that then fails says nothing was saved (nothing was recorded)', async () => {
+await test('Stop while starting, the start was already past its last check: the clip is filed', async () => {
   const off = liftStop();
-  let begin;
-  off.set({ kind: 'starting', id: 'm2', stopAsked: false, begun: new Promise((r) => { begin = r; }) });
+  const [claim, begin] = starting('m2');
+  off.set(claim);
   const stopping = off.stop({});
-  off.set(null); // abort() released the claim
-  begin();
-  await assert.rejects(stopping, /did not start/);
+  off.set(recorder('m2')); begin();
+  assert.equal((await stopping).id, 'm2');
+});
+
+await test('Stop while starting, the start then fails on its own: its coded refusal, never an uncoded sentence', async () => {
+  const off = liftStop();
+  const [claim, begin] = starting('m3');
+  off.set(claim);
+  const stopping = off.stop({});
+  claim.error = Object.assign(new Error('The tab or screen sent nothing to record.'), { code: 'NO_PICTURE' }); off.set(null); begin();
+  await assert.rejects(stopping, (e) => e.code === 'NO_PICTURE');
+  const [c2, b2] = starting('m4'); off.set(c2); const s2 = off.stop({}); c2.error = new Error('raw'); off.set(null); b2();
+  await assert.rejects(s2, (e) => e.code === 'REC_CANCELLED');
+});
+
+await test('a double Stop: the second answers "already being saved", the first files once', async () => {
+  const off = liftStop();
+  let release;
+  off.set(recorder('m5', { stop: () => new Promise((r) => { release = r; }) }));
+  const first = off.stop({});
+  await null;
+  await assert.rejects(off.stop({}), /already being saved/);
+  release({ ok: true });
+  assert.equal((await first).id, 'm5');
+});
+
+await test('Record during finishing is refused (one clip at a time), and the start claims before any wait', () => {
+  const start = OFF.slice(OFF.indexOf('async function startRecording'));
+  assert.ok(start.indexOf("if (active) throw new Error('Already recording.") < start.indexOf('await '), 'a start can yield before checking the lifecycle');
+  assert.ok(start.indexOf('active = claim;') < start.indexOf('await '), 'the claim is made after a wait: a Stop right behind the start finds idle');
+  assert.ok(start.indexOf('if (cancelNext) { cancelNext = false; throw cancelled(); }') > 0, 'a worker cancel that arrived first is ignored');
+  for (const after of ['live();\n    const gotAudio', 'camStream = gotCam;\n    live();', "{ code: 'NO_PICTURE' });\n    live();"]) assert.ok(start.includes(after), `a check is missing: ${after.split('\n')[0]}`);
+  assert.ok(start.indexOf("{ code: 'NO_PICTURE' });\n    live();") < start.indexOf('recorder.start(2000);'), 'the last check is after recorder.start(): a cancelled start would record');
+  assert.ok(/case 'UQA_OFF_START':\s*return startRecording\(msg\);/.test(OFF), 'the offscreen start waits before claiming again');
+});
+
+await test('a stop whose encoder never answers is bounded and files what reached the disk (B: 270 s hang)', async () => {
+  const off = liftStop({ hang: true });
+  off.set(recorder('m6', { stop: () => new Promise(() => {}) }));
+  const meta = await off.stop({});
+  assert.equal(meta.id, 'm6');
+  assert.equal(meta.outcome.ok, false);
+});
+
+await test('SW restart during starting: a fresh worker\'s Stop still cancels in the document (no worker state needed)', async () => {
+  const off = liftStop();
+  const [claim, begin] = starting('m7');
+  off.set(claim);
+  const stopping = off.stop({});
+  claim.error = CANCEL(); off.set(null); begin();
+  await assert.rejects(stopping, (e) => e.code === 'REC_CANCELLED');
+});
+
+await test('the worker: a Stop with a start in flight cancels it, waits, answers REC_CANCELLED in EN and AR; starting is not "recording"', () => {
+  const H = fs.readFileSync(path.join(HERE, '..', 'background', 'handlers-session.js'), 'utf8');
+  const stop = H.slice(H.indexOf('UQA_RECORD_STOP: async'));
+  assert.ok(stop.indexOf('await cancelStart();') < stop.indexOf('const meta = await stopRecording(msg);'), 'the Stop reaches the document before the pending start is cancelled');
+  assert.ok(stop.includes("code: 'REC_CANCELLED'"));
+  assert.ok(H.includes('const gate = (startGate = run.then(() => true, () => false));'), 'the start is not tracked from its first line');
+  assert.ok(H.includes('if (!state?.recording && !state?.starting) return;'), 'a start during another start is let through after a worker restart');
+  assert.ok(OFF.includes("recording: active.kind !== 'starting'"), 'the UI is told "recording" before it is');
+  assert.ok(/case 'UQA_OFF_CANCEL':\s*if \(msg\.clear\) cancelNext = false;\s*else if \(!active\) cancelNext = true;\s*else if \(active\.kind === 'starting'\) active\.cancel = true;/.test(OFF));
+  const SW = fs.readFileSync(path.join(HERE, '..', 'background', 'service-worker.js'), 'utf8');
+  assert.ok(SW.includes('if (state.recording || state.starting) {'), 'the shortcut starts a second clip while one is starting');
+  for (const lang of ['en', 'ar']) assert.ok(JSON.parse(fs.readFileSync(path.join(HERE, '..', 'platform', 'i18n', `${lang}.json`), 'utf8'))['popup.refusal.recCancelled'], lang);
+  assert.ok(fs.readFileSync(path.join(HERE, '..', 'popup', 'popup.js'), 'utf8').includes("REC_CANCELLED: { key: 'popup.refusal.recCancelled'"));
+  assert.ok(OFF.includes(".replace(/\\.$/, '')}. ` +"), 'the store refusal doubles its full stop again');
 });
 
 await test('the start locks on the frame it has when Stop is asked (by: stop), so the encoder starts at once', async () => {
@@ -384,7 +452,7 @@ await test('the start locks on the frame it has when Stop is asked (by: stop), s
   assert.deepEqual([canvas.width, canvas.height], [1200, 700]);
   mixer.stop();
   const start = OFF.slice(OFF.indexOf('async function startRecording'));
-  assert.ok(start.includes('urgent: () => claim.stopAsked'), 'the start does not hand the compositor the Stop');
+  assert.ok(start.includes('urgent: () => claim.cancel'), 'the start does not hand the compositor the Stop');
   assert.ok(/\} finally \{\s*begun\(\);\s*\}/.test(start), 'the claim\'s `begun` is not settled on every exit of the start');
 });
 

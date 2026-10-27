@@ -560,7 +560,7 @@ on(chrome.commands?.onCommand, 'commands.onCommand', async (command, tab) => {
         return;
       }
       const state = await recordingState();
-      if (state.recording) {
+      if (state.recording || state.starting) {
         const meta = await handlers.UQA_RECORD_STOP({});
         await notify(invoked, (await tw('common.worker.toast.videoSaved', 'Video saved: {s}s.')).replace('{s}', Math.round((meta.durationMs || 0) / 1000)), 'ok');
       } else {

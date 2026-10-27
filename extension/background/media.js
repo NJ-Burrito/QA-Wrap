@@ -117,7 +117,7 @@ async function ensureOffscreenOnce() {
 export async function closeOffscreen() {
   if (!(await offscreenExists())) return { closed: false, reason: 'none' };
   const state = await offscreen('UQA_OFF_STATE').catch(() => null);
-  if (state?.recording || state?.rolling) return { closed: false, reason: 'recording' };
+  if (state?.recording || state?.starting || state?.rolling) return { closed: false, reason: 'recording' };
   if (state?.rescuable) return { closed: false, reason: 'unsaved-clip' };
   await chrome.offscreen.closeDocument().catch(() => {});
   await chrome.storage.session.remove(CLIP_WINDOW);
@@ -438,9 +438,6 @@ export async function startRecording({
     // Chrome lets an extension capture only a tab it was just invoked on (icon,
     // menu, shortcut). Not routed around: say what to do, not Chrome's wording.
     if (/activeTab|has not been invoked/i.test(err.message)) {
-      // The old wording said "click the QA Wrap icon", which is what the tester
-      // had just done — the grant had been dropped by a navigation since. Name
-      // the two routes that work from where they are standing instead.
       const commands = await chrome.commands?.getAll?.().catch(() => []);
       const shortcut =
         (commands || []).find((c) => c.name === 'record-tab')?.shortcut ||
@@ -464,9 +461,7 @@ export async function startRecording({
   const started = await offscreen('UQA_OFF_START', {
     streamId, sessionId, format, fps, quality, label, view: tab && { w: tab.width, h: tab.height, px: px?.result },
     mic, tabAudio, webcam, webcamPosition, webcamSize,
-    // A tab capture has no cursor in it — Chrome composites the pointer above
-    // everything tabCapture can see — so the offscreen document draws one from
-    // what the page reports. See content/recorder.js reportCursor().
+    // Tab capture has no pointer: the offscreen document draws one (content/recorder.js reportCursor).
     cursor,
   });
   // Which window this clip is filming, so putting *that* window to sleep can
@@ -479,6 +474,8 @@ export async function startRecording({
     refused: [...(started.refused || []), ...(blockedMic ? [MIC_BLOCKED] : [])],
   };
 }
+
+export const cancelStart = (clear = false) => offscreen('UQA_OFF_CANCEL', { clear }).catch(() => {});
 
 export async function stopRecording({ label } = {}) {
   const meta = await offscreen('UQA_OFF_STOP', { label });
@@ -503,16 +500,7 @@ export async function rescueRecording({ filename } = {}) {
   return { ...out, rescued: true, downloadId };
 }
 
-/**
- * Remember which window a clip belongs to.
- *
- * The master switch is per window, so "put this window to sleep" has to be able
- * to stop the clip filming *that* window and leave a clip filming another one
- * alone. Nothing carried the window before, so the only safe options were to
- * kill every recording or none. Session storage rather than a module variable,
- * for the reason everything else here uses it: the worker is torn down between
- * two events and a local would not survive it.
- */
+/** Which window a clip films, so sleeping that window stops it and no other (session storage: the worker is torn down between events). */
 export async function noteRecordingWindow(windowId) {
   if (windowId == null) return;
   await chrome.storage.session.set({ [CLIP_WINDOW]: windowId });
