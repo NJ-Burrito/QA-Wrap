@@ -20,7 +20,7 @@ import {
 } from '../core/db.js';
 import { encodeGifAsync, buildPalette } from '../core/gif.js';
 import { IMAGE_TYPES, VIDEO_TYPES, byId } from '../core/file-types.js';
-import { probeFormats, videoMime, tabVideo, videoBitrate, CAPTURE_EDGE } from '../core/file-probe.js';
+import { probeFormats, videoMime, tabVideo, videoBitrate, CAPTURE_EDGE, lockFrame, fitRect } from '../core/file-probe.js';
 import { stampPng, stampDocument, withSha256 } from '../core/provenance-stamp.js';
 import { sha256Hex, captureHashes } from '../core/integrity.js';
 
@@ -304,21 +304,21 @@ let pointer = null;
  * screen recording even when the pointer is drawn, so the moment a button is
  * pressed there is nothing on film that says it was pressed.
  */
-function drawPointer(ctx, w, h) {
+function drawPointer(ctx, r) {
   if (!pointer || !pointer.w || !pointer.h) return;
-  const x = (pointer.x / pointer.w) * w;
-  const y = (pointer.y / pointer.h) * h;
+  const x = (pointer.x / pointer.w) * r.w;
+  const y = (pointer.y / pointer.h) * r.h;
   // Off the top or the left is a stale report from a page that has scrolled
   // out from under the mouse; off the bottom or the right is the same. Drawing
   // it clamped would put a cursor in a corner nobody's mouse is in.
-  if (x < 0 || y < 0 || x > w || y > h) return;
+  if (x < 0 || y < 0 || x > r.w || y > r.h) return;
 
-  // Sized against the frame so the cursor is the same apparent size in a 720p
+  // Sized against the picture so the cursor is the same apparent size in a 720p
   // clip and a 1440p one.
-  const k = Math.max(1, h / 900);
+  const k = Math.max(1, r.h / 900);
 
   ctx.save();
-  ctx.translate(x, y);
+  ctx.translate(r.x + x, r.y + y);
 
   if (pointer.down) {
     ctx.beginPath();
@@ -360,23 +360,53 @@ function composite({ feed, fps, cursor = false }) {
   const ctx = canvas.getContext('2d');
   let timer = null;
   let stopped = false;
+  let locked = null;
+  let seen = null;
+  let first = 0;
+  let ready;
+  const settled = new Promise((res) => { ready = res; });
+  // Frames the feed really presented: a draw tick on a still page repeats the
+  // last frame and proves nothing about the size settling.
+  let frames = 0;
+  const onFrame = () => { frames++; if (!stopped) feed.requestVideoFrameCallback(onFrame); };
+  if (typeof feed.requestVideoFrameCallback === 'function') feed.requestVideoFrameCallback(onFrame);
+  const counted = () => (typeof feed.requestVideoFrameCallback === 'function' ? frames : null);
 
   const draw = () => {
     if (stopped) return;
     // Nothing to draw yet. Painting a 1280x720 grey rectangle here is what put
     // a guessed geometry into the recording before the real one arrived.
     if (!feed.videoWidth) return;
-    const w = feed.videoWidth;
-    const h = feed.videoHeight;
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w;
-      canvas.height = h;
+    // Sized ONCE and never again (rec-resize-1027): a canvas that followed the
+    // feed handed the encoder a new size whenever the tab changed shape, and
+    // the MP4 kept the first size's SPS, so every later frame was undecodable
+    // smear. The size is taken once it holds for 3 NEW frames, or 0.6 s on a
+    // still page that sends none, or 4 s after the first frame whatever it is:
+    // the first frames of a tab capture can be a passing size (CSS pixels
+    // before the HiDPI step). Later shapes are fitted inside, centred.
+    // `ready` gates recorder.start().
+    if (!locked) {
+      const now = Date.now();
+      first ||= now;
+      const n = counted();
+      if (!seen || seen.w !== feed.videoWidth || seen.h !== feed.videoHeight) {
+        seen = { w: feed.videoWidth, h: feed.videoHeight, n: 0, f: n, t: now };
+      }
+      seen.n++; // draw ticks: the count where the browser cannot report frames
+      const held = n === null ? seen.n : n - seen.f + 1;
+      if (held < 3 && now - seen.t < 600 && now - first < 4000) return;
+      locked = lockFrame(feed.videoWidth, feed.videoHeight);
+      canvas.width = locked.w;
+      canvas.height = locked.h;
+      ready(locked);
     }
-    ctx.drawImage(feed, 0, 0, w, h);
+    const r = fitRect(feed.videoWidth, feed.videoHeight, locked.w, locked.h);
+    if (r.w < locked.w || r.h < locked.h) ctx.fillRect(0, 0, locked.w, locked.h);
+    ctx.drawImage(feed, r.x, r.y, r.w, r.h);
 
     // The picture, and then the pointer over it. Nothing else is drawn: the
     // webcam is its own clip now, laid over this one at playback.
-    if (cursor) drawPointer(ctx, w, h);
+    if (cursor) drawPointer(ctx, r);
   };
 
   const stream = canvas.captureStream(fps);
@@ -384,8 +414,10 @@ function composite({ feed, fps, cursor = false }) {
 
   return {
     stream,
+    ready: settled,
     stop: () => {
       stopped = true;
+      ready(null);
       clearInterval(timer);
       // End the track, not just the paint loop. A stopped timer leaves the
       // canvas track live and showing whatever frame it stopped on, so a
@@ -485,13 +517,12 @@ function companionRecord(parent, cam) {
 function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, startedAt }) {
   const track = camStream.getVideoTracks()[0];
   if (!track) throw new Error('the camera stream carries no video track');
-  const mime = pickMime('mp4') || pickMime('webm');
+  let mime = pickMime('mp4') || pickMime('webm');
   if (!mime) throw new Error('this browser has no encoder that could write it');
 
   const camId = `${id}_cam`;
-  const ext = extForMime(mime, 'mp4');
-  const recorder = new MediaRecorder(new MediaStream([track]), {
-    mimeType: mime,
+  const open = (m) => { const r = new MediaRecorder(new MediaStream([track]), {
+    mimeType: m,
     /*
      * A 480p face, not a second screen capture.
      *
@@ -502,7 +533,17 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
      * laptop with no room left.
      */
     videoBitsPerSecond: { low: 300_000, medium: 700_000, high: 1_200_000 }[quality] ?? 700_000,
-  });
+  }); r.start(2000); return r; };
+  // Started here, handlers attached below in the same task (no chunk can arrive before them). A second
+  // hardware H.264 encoder beside the picture's can fail to come up (Blink "There was an error starting
+  // the MediaRecorder", 1 run in 5 of tools/recording.mjs): the face is then written as WebM instead.
+  let recorder;
+  try { recorder = open(mime); } catch (err) {
+    const alt = pickMime('webm');
+    if (!alt || alt === mime) throw err;
+    recorder = open((mime = alt));
+  }
+  const ext = extForMime(mime, 'mp4');
 
   let seq = 0;
   let firstChunkAt = null;
@@ -536,7 +577,6 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
   // The same timeslice as the picture, so the two are chunked on the same
   // rhythm and `offsetMs` is a real measurement rather than an artefact of one
   // encoder flushing on a different schedule from the other.
-  recorder.start(2000);
 
   putMediaPending({
     id: camId,
@@ -937,12 +977,10 @@ async function startRecording({
     /*
      * One video track, however many sources went into it.
      *
-     * The compositor is the expensive path — it decodes every frame into a
-     * canvas and captures the canvas — so it runs only when something has to be
-     * painted over the picture, and since §1 of `research/106` the only thing
-     * that does is the cursor. The webcam is recorded beside the picture instead
-     * of into it, so a clip with the camera on and the cursor off never touches
-     * a canvas at all.
+     * The compositor decodes every frame into a canvas and captures the
+     * canvas. Since rec-resize-1027 every clip takes it, because it is the only
+     * place the frame size is locked (see `composite`). The webcam is recorded
+     * beside the picture instead of into it.
      *
      * `drawnCursor` is deliberately not `cursor`. A screen or window capture
      * already contains the real pointer, drawn by the operating system, and
@@ -955,9 +993,17 @@ async function startRecording({
      * them draws a second mouse.
      */
     const drawnCursor = !!cursor && !desktop;
-    if (drawnCursor) await attachFeed();
-    mixer = drawnCursor ? composite({ feed, fps: fps || 15, cursor: true }) : null;
-    const videoTrack = mixer ? mixer.stream.getVideoTracks()[0] : sourceTrack;
+    // Every clip goes through the compositor, cursor or not (rec-resize-1027):
+    // it is the one place the frame size is locked, and a raw tab or window
+    // track changes size with the tab or window. Never hand the encoder
+    // `sourceTrack` itself.
+    await attachFeed();
+    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor });
+    // The encoder starts only on a locked frame: a canvas sized after start is
+    // the defect itself, so no picture in 5 s is a refusal, not a clip.
+    const frame = await Promise.race([mixer.ready, new Promise((res) => setTimeout(res, 5000, null))]);
+    if (!frame) throw Object.assign(new Error('The tab or screen sent nothing to record. Nothing was saved; press Record again.'), { code: 'NO_PICTURE' });
+    const videoTrack = mixer.stream.getVideoTracks()[0];
 
     // One audio track, mixed if there are two. See mixAudio.
     const audioSources = [
@@ -1059,6 +1105,9 @@ async function startRecording({
     // A timeslice means chunks arrive as we go. Without it the whole recording
     // sits in the encoder until stop(), and a crash loses all of it.
     recorder.start(2000);
+    // The clip runs from here, not from the press: the frame lock above can
+    // take up to 5 s, and a duration counted from the press would claim it.
+    const recordingFrom = Date.now();
 
     /*
      * The second recorder, started after the first and never before it.
@@ -1121,7 +1170,7 @@ async function startRecording({
       camStream,
       mixer,
       audioCtx,
-      startedAt,
+      startedAt: recordingFrom,
       // Same geometry, carried on the in-memory record too — `filing.js` and
       // anything else that reads `active` mid-recording sees the same shape
       // `putMediaPending` already wrote, rather than needing to re-derive it.
@@ -2254,6 +2303,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({
         ok: false,
         error: String(err?.message || err),
+        ...(err?.code ? { code: err.code } : {}),
         ...(err?.mediaId ? { mediaId: err.mediaId } : {}),
         ...(err?.stored === false ? { stored: false } : {}),
       })

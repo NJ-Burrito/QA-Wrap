@@ -35,6 +35,8 @@
  * them, and a real clip recorded from a real stream, checked byte by byte.
  */
 import fs from 'node:fs';
+import os from 'node:os';
+import { spawnSync } from 'node:child_process';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -238,8 +240,8 @@ async function pressRecordShortcut(target) {
 }
 
 /** The first bytes of a stored clip, as text, straight out of IndexedDB. */
-function storedHead(mediaId) {
-  return popup.evaluate(async (mid) => {
+function storedHead(mediaId, whole = false) {
+  return popup.evaluate(async ([mid, whole]) => {
     const db = await new Promise((res, rej) => {
       const q = indexedDB.open('uqa');
       q.onsuccess = () => res(q.result);
@@ -259,8 +261,9 @@ function storedHead(mediaId) {
       sessionId: rec.sessionId,
       label: rec.label,
       ascii: [...bytes].map((c) => (c > 31 && c < 127 ? String.fromCharCode(c) : '.')).join(''),
+      b64: whole ? await new Promise((res) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(rec.blob); }) : undefined,
     };
-  }, mediaId);
+  }, [mediaId, whole]);
 }
 
 /* ------------------------------------------------------- wake and charter */
@@ -351,7 +354,11 @@ try {
   const running = await state();
   is('and the shortcut started the clip itself', running?.recording, true);
 
-  await popup.waitForTimeout(3000);
+  // rec-resize-1027: the tab changes shape mid-clip, as DevTools or a window drag
+  // does. The clip must still decode end to end (checked with ffmpeg below).
+  await popup.waitForTimeout(1200);
+  await page.setViewportSize({ width: 760, height: 900 });
+  await popup.waitForTimeout(1800);
   const stillRunning = await state();
   is('three seconds later it is still recording', stillRunning?.recording, true);
 
@@ -364,7 +371,17 @@ try {
   const stored = await clips(sid);
   const clip = stored.find((m) => m.kind === 'recording');
   truthy('a clip is stored in the session', !!clip, 'no recording was stored');
-  const head = clip ? await storedHead(clip.id) : null;
+  const head = clip ? await storedHead(clip.id, true) : null;
+  check('the clip decodes with no error although the tab changed size mid-clip (rec-resize-1027)', () => {
+    if (!head?.b64) throw new Error('nothing was stored to decode');
+    const file = path.join(os.tmpdir(), `qaw-rec-resize-${process.pid}.mp4`);
+    fs.writeFileSync(file, Buffer.from(head.b64, 'base64'));
+    const ff = spawnSync('ffmpeg', ['-v', 'error', '-i', file, '-f', 'null', '-'], { encoding: 'utf8' });
+    fs.rmSync(file, { force: true });
+    if (ff.error) { console.log(`  note  ffmpeg not on PATH, decode not checked: ${ff.error.code}`); return; }
+    const errs = ff.stderr.trim().split(/\r?\n/).filter(Boolean);
+    if (errs.length) throw new Error(`${errs.length} decoder errors, first: ${errs[0]}`);
+  });
   truthy('the stored clip has bytes', (head?.bytes ?? 0) > 0, 'the stored clip is empty');
   check('the stored clip is an MP4 (ftypisom in its first bytes)', () => {
     if (!head) throw new Error('nothing was stored to look at');

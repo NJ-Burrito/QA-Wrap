@@ -160,7 +160,7 @@ async function offscreen(type, payload = {}) {
   // Only the quick calls get a deadline: start/stop/export wait on a person or on real encoding work.
   const res = await (QUICK_OFF.has(type) ? withDeadline(send, 'offscreen') : send).catch(mediaSlow);
   if (!res) throw Object.assign(new Error('The media worker did not answer. Reload the extension and try again.'), { code: 'STALE' });
-  if (!res.ok) throw new Error(res.error);
+  if (!res.ok) throw Object.assign(new Error(res.error), res.code ? { code: res.code } : {});
   return res.result;
 }
 

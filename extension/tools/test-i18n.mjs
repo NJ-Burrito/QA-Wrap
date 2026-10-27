@@ -808,7 +808,7 @@ let unkeyed = 0;
 // in a file raises its count and fails; fixing one lowers the count and the test demands the number come down. The sentences come
 // out in English for an Arabic tester until each is keyed in platform/worker-errors.js with an EN+AR pair.
 const UNKEYED_DEBT = {
-  'export-build.js': 3, 'fullpage.js': 4, 'jira.js': 7, 'media.js': 4, 'notify.js': 10, 'security-headers.js': 1,
+  'export-build.js': 3, 'fullpage.js': 4, 'jira.js': 7, 'media.js': 3, 'notify.js': 10, 'security-headers.js': 1,
   'service-worker.js': 3, 'handlers-app.js': 1, 'handlers-tools.js': 2, 'worker-scans.js': 5, 'worker-session.js': 2, 'storage-editor.js': 17, 'whitebox.js': 4,
 };
 const debtFound = {};
