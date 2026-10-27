@@ -444,7 +444,7 @@ const ACTIONS = {
     const refused = out.result?.refused || [];
     say(
       refused.length
-        ? t('popup.record.without', { list: refused.join(', ') })
+        ? t('popup.record.without', { list: refused.map((r) => (r === 'webcam-not-saved' ? t('popup.record.camNotSaved') : r)).join(', ') })
         : t('popup.record.started'),
       refused.length ? 'err' : 'ok'
     );

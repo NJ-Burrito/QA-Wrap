@@ -6,11 +6,8 @@
  * the offscreen document owns the *machinery*, because a service worker has no
  * DOM and therefore no MediaRecorder and no canvas. This file is the seam.
  *
- * On limits: there is deliberately no cap on how long a recording may run. The
- * only real limit is the disk, so that is what gets reported — before the
- * recording starts, and again while it is running. A tester who is told "you
- * have 40GB free, this is using about 6MB a minute" can make their own decision;
- * one who is cut off at ten minutes cannot.
+ * On limits: no cap on how long a recording runs. The disk is the real limit, so
+ * that is reported, before and during the recording.
  */
 
 import { withDeadline } from '../platform/deadline.js';
@@ -432,6 +429,8 @@ export async function startRecording({
   const blockedMic = mic && !(await micAllowed());
   if (blockedMic) mic = false;
 
+  // The rolling buffer lets go of the tab first (3.8.3, offscreen.js rollBusy).
+  await rollOp({ op: 'stop' }).catch(() => {});
   let streamId;
   try {
     streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
@@ -560,7 +559,7 @@ export async function exportAudio({ id, filename, saveAs = false }) {
   return { ...out, url: undefined, downloadId, path: filename || out.filename };
 }
 
-export const rollOp = async (p) => (p.op === 'state' && !(await offscreenExists()) ? { rolling: false } : offscreen('UQA_OFF_ROLL', p)); // cap1022
+export const rollOp = async (p) => (/^(state|stop)$/.test(p.op) && !(await offscreenExists()) ? { rolling: false } : offscreen('UQA_OFF_ROLL', p)); // cap1022
 
 /** Which video formats this browser can actually produce, asked at runtime. */
 export async function videoFormats() {

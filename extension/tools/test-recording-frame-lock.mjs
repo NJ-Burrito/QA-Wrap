@@ -188,8 +188,12 @@ const lateStep = (ms) => {
   const before = Math.round(ms / 66);
   return [[1438, 476, true], ...Array(before - 1).fill([1438, 476, false]), [1798, 595, true], ...Array(20).fill([1798, 595, false])];
 };
-// The targets the start computes from the tab's real size: fitted up to the edge, and 1:1.
-const HINT = [{ w: 1920, h: 635 }, { w: 1798, h: 595 }];
+// The real target computation, lifted from offscreen.js: Nader's tab, 1438x476 DIPs at 125 %.
+const lockTargets = new Function(`${lift(OFF, 'lockTargets')}
+return lockTargets;`)();
+const HINT = lockTargets({ w: 1438, h: 476, px: [1797.5, 595] }, 1920, 1);
+// A 1100x674 window at 125 % (B's window-drag tab), measured right after the drag back.
+const TAB = lockTargets({ w: 1100, h: 674, px: [1375, 842.5] }, 1920, 1);
 for (const ms of [700, 1500, 3000]) {
   await test(`a still page whose scale step lands at ${ms} ms locks at the full size, not the soft one`, async () => {
     const run = await runComposite(lateStep(ms), false, true, HINT);
@@ -200,15 +204,29 @@ for (const ms of [700, 1500, 3000]) {
   await test(`a stale shape at the capture edge, replaced at ${ms} ms, locks at the tab's shape`, async () => {
     const before = Math.round(ms / 66);
     const run = await runComposite([[1920, 896, true], ...Array(before - 1).fill([1920, 896, false]), [1920, 1176, true], ...Array(20).fill([1920, 1176, false])],
-      false, true, [{ w: 1920, h: 1176 }, { w: 1375, h: 843 }]);
+      false, true, TAB);
     assert.deepEqual(run.canvas, { w: 1920, h: 1176 }, `locked at ${run.canvas.w}x${run.canvas.h}`);
   });
 }
 
 await test('a window drag stale shape on a still page is waited out (B: 1894x1194 locked instead of 1920x1176)', async () => {
   const run = await runComposite([[1894, 1194, true], ...Array(25).fill([1894, 1194, false]), [1920, 1176, true], ...Array(10).fill([1920, 1176, false])],
-    false, true, [{ w: 1920, h: 1176 }, { w: 1375, h: 843 }]);
+    false, true, TAB);
   assert.deepEqual(run.canvas, { w: 1920, h: 1176 });
+});
+
+await test('DevTools device mode (390x844 @3 in a 1100x760 tab) locks at once at the emulated shape', async () => {
+  const device = lockTargets({ w: 1100, h: 760, px: [390 * 3, 844 * 3] }, 1920, 1.25);
+  const run = await runComposite(Array(10).fill([887, 1920, false]), false, true, device);
+  assert.deepEqual(run.canvas, { w: 886, h: 1920 }, `locked at ${run.canvas.w}x${run.canvas.h}`);
+  assert.ok(run.lockedMs < 300, `device mode waited ${run.lockedMs} ms before the encoder could start`);
+  assert.equal((await run.ready).by, 'hint');
+});
+
+await test('the targets: the tab fitted to the edge and 1:1, and the page as it sees itself', () => {
+  assert.deepEqual(HINT, [{ w: 1920, h: 636 }, { w: 1798, h: 595 }, { w: 1920, h: 636 }, { w: 1798, h: 595 }]);
+  assert.deepEqual(lockTargets({ w: 1438, h: 476 }, 1920, 1.5), [{ w: 1920, h: 636 }, { w: 1920, h: 636 }], 'no in-tab measure: the offscreen ratio, capped');
+  assert.equal(lockTargets(null, 1920, 1), null);
 });
 
 await test('a capture already at the known size locks on its first frame', async () => {
@@ -234,8 +252,7 @@ await test('the tab start passes the viewport, and the offscreen start turns it 
   assert.ok(MEDIA.includes('view: tab && { w: tab.width, h: tab.height, px: px?.result }'), 'the worker no longer sends the tab size');
   assert.ok(MEDIA.includes('func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio]'), 'the pixel size is no longer measured in the tab');
   const start = OFF.slice(OFF.indexOf('async function startRecording'));
-  assert.ok(start.includes('[edge / Math.max(view.w, view.h), Math.min(dsf, edge / view.w, edge / view.h)]'), 'the targets are not the tab shape at the edge and 1:1');
-  assert.ok(start.includes('const dsf = pw > 0 ? pw / view.w : devicePixelRatio || 1;'), 'the monitor scale is not measured in the tab first');
+  assert.ok(start.includes('const hint = desktop ? null : lockTargets(view, edge, devicePixelRatio);'), 'the start no longer derives the targets from the tab');
   assert.ok(start.includes('lock: frame }'), 'the start reply no longer says how the frame locked');
 });
 
@@ -253,6 +270,44 @@ await test('the webcam fault seam is inert unless a harness sets __qawFault', ()
   const setters = shipped.filter((f) => /__qawFault\s*=/.test(fs.readFileSync(path.join(root, f), 'utf8')));
   assert.deepEqual(setters, [], 'shipped code sets the test fault');
   assert.ok(OFF.includes("const fault = (m) => /^video\\/mp4/.test(m) && globalThis.__qawFault;"), 'the seam is gone or no longer MP4-only');
+});
+
+await test('a Record pressed while «Save last 1 minute» is opening the tab wins the tab (recording.mjs step 10)', async () => {
+  // The failing run's state: {"recording":false,"rolling":true}. The buffer's capture resolved after the Record
+  // had claimed the document, kept the tab, and the Record's own capture failed.
+  const stopped = [];
+  globalThis.navigator ??= {};
+  Object.defineProperty(globalThis.navigator, 'mediaDevices', { configurable: true, value: { getUserMedia: async () => ({ getTracks: () => [{ stop: () => stopped.push('v') }] }) } });
+  globalThis.chrome ??= { runtime: { id: 'x', onMessage: { addListener() {} } } };
+  globalThis.MediaRecorder ??= { isTypeSupported: () => true };
+  const roll = await import('../offscreen/rolling.js');
+  const out = await roll.rollOp({ op: 'start', streamId: 's', sessionId: 'x', tabId: 1 }, () => true);
+  assert.deepEqual(out, { rolling: false, why: 'recording' });
+  assert.deepEqual(stopped, ['v'], 'the buffer kept the tab capture it opened');
+  assert.equal(roll.rolling(), false);
+  const start = OFF.slice(OFF.indexOf('async function startRecording'));
+  const wait = start.indexOf('if (rollBusy) { await rollBusy; rollMod?.stopRoll(); }');
+  assert.ok(wait > 0 && wait < start.indexOf('navigator.mediaDevices.getUserMedia'), 'the Record opens the tab before an opening buffer let go');
+  assert.ok(OFF.includes("rollOp(msg, () => !!active || rollCancel)"), 'the buffer is not told a Record holds the document');
+  // The worker stops the buffer BEFORE it mints the Record's id: an id minted while the buffer's capture opens is
+  // invalidated when that capture starts (live: "Invalid state", every run with the stop after the mint).
+  const MEDIA = fs.readFileSync(path.join(HERE, '..', 'background', 'media.js'), 'utf8');
+  const rec = MEDIA.slice(MEDIA.indexOf('export async function startRecording'));
+  const stop = rec.indexOf("await rollOp({ op: 'stop' }).catch(() => {});");
+  assert.ok(stop > 0 && stop < rec.indexOf('chrome.tabCapture.getMediaStreamId'), 'the Record id is minted while the buffer may still be opening the tab');
+  assert.ok(OFF.includes("if (msg.op === 'stop') { rollCancel = true; await rollBusy; }"), 'a stop does not wait for a buffer still opening the tab');
+});
+
+await test('a webcam that will not record is said in EN and AR, and the screen clip goes on', () => {
+  const read = (p) => fs.readFileSync(path.join(HERE, '..', p), 'utf8');
+  const start = OFF.slice(OFF.indexOf('async function startRecording'));
+  assert.ok(start.includes("camRecorder = null;") && start.includes("refused.push('webcam-not-saved');"), 'the cam failure is no longer a coded refusal');
+  assert.ok(read('popup/tool-actions.js').includes("r === 'webcam-not-saved' ? t('popup.record.camNotSaved')"), 'the popup prints the code, not the sentence');
+  assert.ok(read('background/notify.js').includes("r === 'webcam-not-saved' ? f('camNotSaved'"), 'the notification prints the code, not the sentence');
+  for (const lang of ['en', 'ar']) {
+    const cat = JSON.parse(read(`platform/i18n/${lang}.json`));
+    assert.ok(cat['popup.record.camNotSaved'] && cat['common.worker.note.camNotSaved'], `${lang}: the webcam notice is missing`);
+  }
 });
 
 console.log(`\n${passed} passed, ${failures.length} failed`);

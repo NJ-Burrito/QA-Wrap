@@ -261,7 +261,7 @@ test('the cam recorder is video only — the audio mix stays on the main clip', 
 test('a webcam that cannot record does not cost the tester the clip', () => {
   assert.match(
     OFF,
-    /refused\.push\(`webcam track \(/,
+    /refused\.push\('webcam-not-saved'\)/,
     'starting the companion is no longer a reported refusal; either it throws into a start that ' +
       'has already opened a screen capture, or it fails silently'
   );

@@ -36,6 +36,10 @@ import { partWriter } from './part-writer.js';
 
 const pickMime = (format) => videoMime(format);
 let rollMod = null; // offscreen/rolling.js, loaded on first use (cap1022)
+// The rolling buffer's start while it is still opening its tab capture. A Record that lands in that window waits for it (the
+// buffer sees `active` and lets go), then stops it: before 3.8.3 the buffer won the tab and the Record failed (recording.mjs step 10).
+let rollBusy = null;
+let rollCancel = false;
 
 /**
  * Which formats this browser can really write, image and video both.
@@ -353,6 +357,15 @@ function drawPointer(ctx, r) {
   ctx.stroke();
 
   ctx.restore();
+}
+
+/** The frame sizes a tab capture may settle on (see startRecording). Pure: tools/test-recording-frame-lock.mjs lifts it. */
+function lockTargets(view, edge, ownDpr) {
+  if (!(view?.w > 0 && view?.h > 0)) return null;
+  const [pw, ph] = view.px || [];
+  const dsf = pw > 0 ? pw / view.w : ownDpr || 1;
+  return [[view.w, view.h, dsf], ...(pw > 0 && ph > 0 ? [[pw, ph, 1]] : [])].flatMap(([w, h, s]) =>
+    [edge / Math.max(w, h), Math.min(s, edge / w, edge / h)].map((k) => ({ w: Math.round(w * k), h: Math.round(h * k) })));
 }
 
 function composite({ feed, fps, cursor = false, hint = null }) {
@@ -839,6 +852,7 @@ async function startRecording({
     // the desktop media-source constraint, and that could never work: such an
     // id is bound to the frame that asked for it, and the frame that asked was
     // never this one. See `displayStream` above for the measurements.
+    if (rollBusy) { await rollBusy; rollMod?.stopRoll(); } // a buffer still opening the tab gives it up first
     const wantsAudio = desktop ? systemAudio : tabAudio;
 
     const edge = CAPTURE_EDGE[quality] || CAPTURE_EDGE.medium;
@@ -1022,11 +1036,11 @@ async function startRecording({
     // page emulation): that shape fitted up to the capture's edge, which is
     // what Chrome sends, or 1:1 at the tab's monitor scale (view.px measured in
     // the tab / DIPs; this document's own ratio is the primary monitor's).
-    const [pw] = view?.px || [];
-    const dsf = pw > 0 ? pw / view.w : devicePixelRatio || 1;
-    const hint = !desktop && view?.w > 0 && view?.h > 0
-      ? [edge / Math.max(view.w, view.h), Math.min(dsf, edge / view.w, edge / view.h)].map((k) => ({ w: Math.round(view.w * k), h: Math.round(view.h * k) }))
-      : null;
+    // And the page as it sees itself at Record (view.px, CSS size x its DPR):
+    // DevTools device mode, where the capture follows the emulated screen.
+    // The lock takes whichever of these the capture actually delivers; a later
+    // change (emulation turned off) is a mid-clip resize, fitted inside.
+    const hint = desktop ? null : lockTargets(view, edge, devicePixelRatio);
     mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor, hint });
     // The encoder starts only on a locked frame: a canvas sized after start is
     // the defect itself, so no picture in 5 s is a refusal, not a clip.
@@ -1158,7 +1172,9 @@ async function startRecording({
         });
       } catch (err) {
         camRecorder = null;
-        refused.push(`webcam track (${String(err?.message || err)}); the clip has no face on it`);
+        // A coded item the popup and the notification say in the tester's language (3.8.3); the screen clip goes on.
+        console.warn('[QA Wrap] webcam not saved:', String(err?.message || err), 'track', camStream.getVideoTracks()[0]?.readyState);
+        refused.push('webcam-not-saved');
       }
     }
 
@@ -2246,7 +2262,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return extractAudio(msg);
       case 'UQA_OFF_ROLL':
         if (active && msg.op === 'start') return { rolling: false, why: 'recording' }; // one tab, one capture
-        return (rollMod = await import('./rolling.js')).rollOp(msg);
+        // 'stop' from the worker comes BEFORE it mints the Record's stream id: an id minted while the buffer's own
+        // capture is still opening is invalidated when that capture starts ("Invalid state", recording.mjs step 10).
+        if (msg.op === 'stop') { rollCancel = true; await rollBusy; }
+        if (msg.op === 'start') rollCancel = false;
+        {
+          const op = import('./rolling.js').then((m) => (rollMod = m).rollOp(msg, () => !!active || rollCancel));
+          if (msg.op === 'start') rollBusy = op.catch(() => {}); // settled stays settled: awaiting it later costs a tick
+          return op;
+        }
       case 'UQA_OFF_START':
         rollMod?.stopRoll(); // cap1022: one tab, one capture; a normal Record takes over from the rolling buffer
         return startRecording(msg);

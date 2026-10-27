@@ -628,7 +628,7 @@ export async function noteL(tr, name, a = {}) {
   const f = async (k, en, v = {}) => (await tr(`common.worker.note.${k}`, en)).replace(/\{(\w+)\}/g, (m, x) => (x in v ? v[x] : m));
   if (name === 'recordingStarted') {
     return [await f(a.scope === 'screen' ? 'recScreen' : 'recTab', a.scope === 'screen' ? 'Recording the screen.' : 'Recording this tab.'),
-      (a.refused || []).length ? await f('without', 'Without: {list}.', { list: a.refused.join(', ') }) : await f('pressAgain', 'Press Record again to stop.')].join(' ');
+      (a.refused || []).length ? await f('without', 'Without: {list}.', { list: (await Promise.all(a.refused.map((r) => (r === 'webcam-not-saved' ? f('camNotSaved', 'the webcam') : r)))).join(', ') }) : await f('pressAgain', 'Press Record again to stop.')].join(' ');
   }
   if (name === 'recordingStopped') {
     const mb = a.bytes ? `${Math.round((a.bytes / 1024 / 1024) * 10) / 10} MB` : null;

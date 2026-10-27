@@ -83,7 +83,7 @@ async function save({ label }) {
 }
 
 /** @param {{op: string, streamId?: string, sessionId?: string, tabId?: number, label?: string}} msg */
-export async function rollOp(msg) {
+export async function rollOp(msg, blocked) {
   if (msg.op === 'state') return { rolling: isOn() };
   if (msg.op === 'stop') { stopRoll(); return { rolling: false }; }
   if (msg.op === 'save') return save(msg);
@@ -97,6 +97,8 @@ export async function rollOp(msg) {
     audio: false,
     video: /** @type {any} */ (tabVideo(msg.streamId, 'medium', 15)),
   });
+  // A Record pressed while this capture was opening (3.8.3): it wins, and this one lets the tab go before it ever holds it.
+  if (blocked?.()) { stream.getTracks().forEach((t) => t.stop()); return { rolling: false, why: 'recording' }; }
   r = { stream, sessionId: msg.sessionId, tabId: msg.tabId, mime, t0: Date.now(), slots: Array(SLOTS).fill(null), timer: 0 };
   r.timer = setInterval(tick, 1000);
   chrome.runtime.onMessage.addListener(r.onState = async (m, sender) => {
