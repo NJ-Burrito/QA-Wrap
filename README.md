@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧪 QA-Wrap
+# 🧪 QA-Wrap: free open-source bug report extension for QA testers
 
 ### Test the page. Get the bug report.
 
@@ -14,7 +14,7 @@
 [![Arabic and English](https://img.shields.io/badge/Arabic%20%2B%20English-first--class-0d9488.svg)](README.ar.md)
 [![GitHub](https://img.shields.io/badge/GitHub-source-181717?logo=github&logoColor=white)](https://github.com/NJ-Burrito)
 
-**QA-Wrap is a free, open-source bug report extension for QA testers.** It records a manual test session, links every failure to the action that caused it, and writes the bug report for you. No account, no server. [العربية](README.ar.md)
+**QA-Wrap is a free, open-source bug report extension for QA testers.** It records a manual test session in Chrome or Edge, links every failure to the action that caused it, and writes the bug report for you, ready for Jira. A local-first, open-source alternative to Jam, Marker.io and BugHerd for manual and exploratory testing. No account, no server. [العربية](README.ar.md)
 
 [![QA-Wrap animated banner](site/assets/banner.gif)](https://nj-burrito.github.io/QA-Wrap/)
 

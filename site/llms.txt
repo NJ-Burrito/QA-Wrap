@@ -18,7 +18,7 @@
 - What is it? A browser extension that records a manual test and writes the bug report, with each failure linked to the action before it.
 - Free? Yes. No paid plan, no account. MIT licence.
 - Open source? Yes, https://github.com/NJ-Burrito/QA-Wrap
-- Browsers? Chrome and Edge are the tested browsers (Chrome 116 or newer), from the release zip. Firefox: the signed add-on on Firefox Add-ons. Edge and Opera store listings are in review.
+- Browsers? Chrome and Edge are the tested browsers (Chrome 116 or newer). Chrome installs from the release zip, Edge from Microsoft Edge Add-ons. The Firefox and Opera store listings are in review.
 - Data? Nothing leaves the computer until the user sends it to Jira, a tracker or a webhook. The one automatic request is a check of the GitHub release list for updates.
 - Jira? Yes. File to Jira drafts the summary, maps severity to a Jira priority and lists what is sent and what is not.
 - Alternative to Jam, Marker.io, BugHerd, Bird Eats Bug? Yes, when the recording must stay on the tester's machine; those are hosted services that share reports through their cloud.
