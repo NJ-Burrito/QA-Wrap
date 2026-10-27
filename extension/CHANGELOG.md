@@ -6,6 +6,13 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.8.2, 2026-10-27
+
+### Fixed
+
+- Screen recordings no longer turn into grey smears when the tab changes size while recording (DevTools, a side panel, resizing the window). The video keeps the size it started at, and a tab that changes shape is fitted inside it.
+- If the tab sends no picture within 5 seconds, Record now says so instead of saving a clip that cannot be played.
+
 ## 3.8.1, 2026-10-25
 
 ### Changed

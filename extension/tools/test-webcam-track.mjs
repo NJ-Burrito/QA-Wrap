@@ -182,7 +182,7 @@ test('the orphan sweep takes a companion whose parent is gone', () => {
 
 /* ── the compositor, and the one thing left that needs it ────────────────── */
 
-test('the compositor runs for a drawn cursor and for nothing else', () => {
+test('the compositor draws the picture and the cursor, never the camera', () => {
   assert.match(
     OFF,
     /function composite\(\{ feed, fps, cursor = false \}\)/,
@@ -193,11 +193,14 @@ test('the compositor runs for a drawn cursor and for nothing else', () => {
     !/ctx\.drawImage\(cam,/.test(lift(OFF, 'composite')),
     'the webcam is being painted into the picture again'
   );
+  // rec-resize-1027: every clip now takes the compositor, because it is the one
+  // place the frame size is locked (a raw tab track changes size with the tab,
+  // and the MP4 keeps the first size only). The cursor is still drawn only for
+  // a tab capture. tools/test-recording-frame-lock.mjs holds the lock itself.
   assert.match(
     OFF,
-    /mixer = drawnCursor \? composite\(\{ feed, fps: fps \|\| 15, cursor: true \}\) : null/,
-    'the canvas path is being entered for something other than the cursor — that is a decode and ' +
-      'a re-encode of every frame, paid for nothing'
+    /mixer = composite\(\{ feed, fps: fps \|\| 15, cursor: drawnCursor \}\)/,
+    'the cursor is drawn for something other than a tab capture, or the compositor is optional again'
   );
 });
 

@@ -20,7 +20,7 @@ import {
 } from '../core/db.js';
 import { encodeGifAsync, buildPalette } from '../core/gif.js';
 import { IMAGE_TYPES, VIDEO_TYPES, byId } from '../core/file-types.js';
-import { probeFormats, videoMime, tabVideo, videoBitrate, CAPTURE_EDGE } from '../core/file-probe.js';
+import { probeFormats, videoMime, tabVideo, videoBitrate, CAPTURE_EDGE, lockFrame, fitRect } from '../core/file-probe.js';
 import { stampPng, stampDocument, withSha256 } from '../core/provenance-stamp.js';
 import { sha256Hex, captureHashes } from '../core/integrity.js';
 
@@ -304,21 +304,21 @@ let pointer = null;
  * screen recording even when the pointer is drawn, so the moment a button is
  * pressed there is nothing on film that says it was pressed.
  */
-function drawPointer(ctx, w, h) {
+function drawPointer(ctx, r) {
   if (!pointer || !pointer.w || !pointer.h) return;
-  const x = (pointer.x / pointer.w) * w;
-  const y = (pointer.y / pointer.h) * h;
+  const x = (pointer.x / pointer.w) * r.w;
+  const y = (pointer.y / pointer.h) * r.h;
   // Off the top or the left is a stale report from a page that has scrolled
   // out from under the mouse; off the bottom or the right is the same. Drawing
   // it clamped would put a cursor in a corner nobody's mouse is in.
-  if (x < 0 || y < 0 || x > w || y > h) return;
+  if (x < 0 || y < 0 || x > r.w || y > r.h) return;
 
-  // Sized against the frame so the cursor is the same apparent size in a 720p
+  // Sized against the picture so the cursor is the same apparent size in a 720p
   // clip and a 1440p one.
-  const k = Math.max(1, h / 900);
+  const k = Math.max(1, r.h / 900);
 
   ctx.save();
-  ctx.translate(x, y);
+  ctx.translate(r.x + x, r.y + y);
 
   if (pointer.down) {
     ctx.beginPath();
@@ -360,23 +360,40 @@ function composite({ feed, fps, cursor = false }) {
   const ctx = canvas.getContext('2d');
   let timer = null;
   let stopped = false;
+  let locked = null;
+  let seen = null;
+  let ready;
+  const settled = new Promise((res) => { ready = res; });
 
   const draw = () => {
     if (stopped) return;
     // Nothing to draw yet. Painting a 1280x720 grey rectangle here is what put
     // a guessed geometry into the recording before the real one arrived.
     if (!feed.videoWidth) return;
-    const w = feed.videoWidth;
-    const h = feed.videoHeight;
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w;
-      canvas.height = h;
+    // Sized ONCE and never again (rec-resize-1027): a canvas that followed the
+    // feed handed the encoder a new size whenever the tab changed shape, and
+    // the MP4 kept the first size's SPS, so every later frame was undecodable
+    // smear. The size is taken once it holds for 3 frames (1 s at most): the
+    // first frame of a tab capture can be a passing size. Later shapes are
+    // fitted inside, centred. `ready` gates recorder.start().
+    if (!locked) {
+      const now = Date.now();
+      if (!seen || seen.w !== feed.videoWidth || seen.h !== feed.videoHeight) {
+        seen = { w: feed.videoWidth, h: feed.videoHeight, n: 0, t0: seen ? seen.t0 : now };
+      }
+      if (++seen.n < 3 && now - seen.t0 < 1000) return;
+      locked = lockFrame(feed.videoWidth, feed.videoHeight);
+      canvas.width = locked.w;
+      canvas.height = locked.h;
+      ready(locked);
     }
-    ctx.drawImage(feed, 0, 0, w, h);
+    const r = fitRect(feed.videoWidth, feed.videoHeight, locked.w, locked.h);
+    if (r.w !== locked.w || r.h !== locked.h) ctx.fillRect(0, 0, locked.w, locked.h);
+    ctx.drawImage(feed, r.x, r.y, r.w, r.h);
 
     // The picture, and then the pointer over it. Nothing else is drawn: the
     // webcam is its own clip now, laid over this one at playback.
-    if (cursor) drawPointer(ctx, w, h);
+    if (cursor) drawPointer(ctx, r);
   };
 
   const stream = canvas.captureStream(fps);
@@ -384,8 +401,10 @@ function composite({ feed, fps, cursor = false }) {
 
   return {
     stream,
+    ready: settled,
     stop: () => {
       stopped = true;
+      ready(null);
       clearInterval(timer);
       // End the track, not just the paint loop. A stopped timer leaves the
       // canvas track live and showing whatever frame it stopped on, so a
@@ -937,12 +956,10 @@ async function startRecording({
     /*
      * One video track, however many sources went into it.
      *
-     * The compositor is the expensive path — it decodes every frame into a
-     * canvas and captures the canvas — so it runs only when something has to be
-     * painted over the picture, and since §1 of `research/106` the only thing
-     * that does is the cursor. The webcam is recorded beside the picture instead
-     * of into it, so a clip with the camera on and the cursor off never touches
-     * a canvas at all.
+     * The compositor decodes every frame into a canvas and captures the
+     * canvas. Since rec-resize-1027 every clip takes it, because it is the only
+     * place the frame size is locked (see `composite`). The webcam is recorded
+     * beside the picture instead of into it.
      *
      * `drawnCursor` is deliberately not `cursor`. A screen or window capture
      * already contains the real pointer, drawn by the operating system, and
@@ -955,9 +972,17 @@ async function startRecording({
      * them draws a second mouse.
      */
     const drawnCursor = !!cursor && !desktop;
-    if (drawnCursor) await attachFeed();
-    mixer = drawnCursor ? composite({ feed, fps: fps || 15, cursor: true }) : null;
-    const videoTrack = mixer ? mixer.stream.getVideoTracks()[0] : sourceTrack;
+    // Every clip goes through the compositor, cursor or not (rec-resize-1027):
+    // it is the one place the frame size is locked, and a raw tab or window
+    // track changes size with the tab or window. Never hand the encoder
+    // `sourceTrack` itself.
+    await attachFeed();
+    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor });
+    // The encoder starts only on a locked frame: a canvas sized after start is
+    // the defect itself, so no picture in 5 s is a refusal, not a clip.
+    const frame = await Promise.race([mixer.ready, new Promise((res) => setTimeout(res, 5000, null))]);
+    if (!frame) throw new Error('The tab sent no picture to record. Nothing was recorded; try Record again.');
+    const videoTrack = mixer.stream.getVideoTracks()[0];
 
     // One audio track, mixed if there are two. See mixAudio.
     const audioSources = [

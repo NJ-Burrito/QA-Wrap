@@ -4723,6 +4723,26 @@
    "assertMode": "counted"
   },
   {
+   "id": "test-recording-frame-lock",
+   "path": "tools/test-recording-frame-lock.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "media-replay-annotate"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
    "id": "test-secret-scan",
    "path": "tools/test-secret-scan.mjs",
    "kind": "test",

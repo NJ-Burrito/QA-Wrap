@@ -49,6 +49,20 @@ export function tabVideo(streamId, quality, fps) {
   return { mandatory: { chromeMediaSource: 'tab', chromeMediaSourceId: streamId, minWidth: 4, minHeight: 2, maxWidth: edge, maxHeight: edge, maxFrameRate: fps || 15 } };
 }
 
+/**
+ * The recorded frame is fixed at the first frame's size, even, for the whole clip (rec-resize-1027). Chrome's MP4 muxer keeps the
+ * first SPS only, so a picture that changes size mid-clip (DevTools, a side panel, a window resize: the tab capture follows the tab
+ * since 3.8.1) encodes frames no player can decode. Later frames are fitted inside, centred, by fitRect.
+ */
+export function lockFrame(w, h) {
+  return { w: Math.max(2, Math.round(w) & ~1), h: Math.max(2, Math.round(h) & ~1) };
+}
+export function fitRect(sw, sh, dw, dh) {
+  const s = Math.min(dw / sw, dh / sh);
+  const w = Math.round(sw * s), h = Math.round(sh * s);
+  return { x: Math.round((dw - w) / 2), y: Math.round((dh - h) / 2), w, h };
+}
+
 /** 3 / 8 / 16 Mbps at 1080p for low / medium / high, scaled by pixels (0.25x-2x). */
 export function videoBitrate(quality, width, height) {
   const base = { low: 3_000_000, medium: 8_000_000, high: 16_000_000 }[quality] || 8_000_000;
