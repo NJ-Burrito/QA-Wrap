@@ -130,7 +130,9 @@ purgeWorkerCache(PROFILE);
 const base = launchOptions(EXT);
 const ctx = await chromium.launchPersistentContext(PROFILE, {
   ...base,
-  viewport: { width: 1000, height: 700 },
+  // 3.8.3: no viewport emulation. An emulated page is not the size its tab is, and the recorder now
+  // waits (up to 4 s) for the tab's real size; the window is resized for real below instead.
+  viewport: null,
   /*
    * A microphone that is granted and that makes a sound.
    *
@@ -357,7 +359,13 @@ try {
   // rec-resize-1027: the tab changes shape mid-clip, as DevTools or a window drag
   // does. The clip must still decode end to end (checked with ffmpeg below).
   await popup.waitForTimeout(1200);
-  await page.setViewportSize({ width: 760, height: 900 });
+  {
+    const cdp = await ctx.newCDPSession(page);
+    const { windowId } = await cdp.send('Browser.getWindowForTarget');
+    await cdp.send('Browser.setWindowBounds', { windowId, bounds: { windowState: 'normal' } });
+    await cdp.send('Browser.setWindowBounds', { windowId, bounds: { width: 780, height: 980 } });
+    await cdp.detach().catch(() => {});
+  }
   await popup.waitForTimeout(1800);
   const stillRunning = await state();
   is('three seconds later it is still recording', stillRunning?.recording, true);
@@ -377,10 +385,10 @@ try {
     const file = path.join(os.tmpdir(), `qaw-rec-resize-${process.pid}.mp4`);
     fs.writeFileSync(file, Buffer.from(head.b64, 'base64'));
     const ff = spawnSync('ffmpeg', ['-v', 'error', '-i', file, '-f', 'null', '-'], { encoding: 'utf8' });
-    fs.rmSync(file, { force: true });
-    if (ff.error) { console.log(`  note  ffmpeg not on PATH, decode not checked: ${ff.error.code}`); return; }
+    if (ff.error) { fs.rmSync(file, { force: true }); console.log(`  note  ffmpeg not on PATH, decode not checked: ${ff.error.code}`); return; }
     const errs = ff.stderr.trim().split(/\r?\n/).filter(Boolean);
-    if (errs.length) throw new Error(`${errs.length} decoder errors, first: ${errs[0]}`);
+    if (!errs.length) fs.rmSync(file, { force: true }); // kept on a failure so it can be looked at
+    if (errs.length) throw new Error(`${errs.length} decoder errors, first: ${errs[0]} (kept: ${file})`);
   });
   truthy('the stored clip has bytes', (head?.bytes ?? 0) > 0, 'the stored clip is empty');
   check('the stored clip is an MP4 (ftypisom in its first bytes)', () => {
@@ -411,6 +419,9 @@ try {
   is('and the mic is one of the sources the clip records', micStart?.result?.sources?.mic, true);
   is('and so is the camera', micStart?.result?.sources?.webcam, true);
   is('nothing about it was refused', micStart?.result?.refused ?? [], []);
+  // 3.8.3: how the frame locked, from the real offscreen document (rvfc = presented frames counted there).
+  console.log(`  note  frame lock ${JSON.stringify(micStart?.result?.lock)}`);
+  truthy('the start says how its frame locked', !!micStart?.result?.lock?.by, JSON.stringify(micStart?.result?.lock));
 
   await popup.waitForTimeout(3200);
   const micStop = await send({ type: 'UQA_RECORD_STOP' });
@@ -575,6 +586,30 @@ try {
    * `localhost` and `127.0.0.1` are the same server and two different origins,
    * which is all that move has to be.
    */
+  /*
+   * Rule 4 (3.8.3): Stop pressed while the clip is still starting. Every surface shows "recording" from the press, so
+   * the Stop must either file what was recorded or the start must refuse; it used to answer "That clip is still
+   * starting", the start finished afterwards, and the clip the tester stopped was never filed.
+   */
+  console.log('\nStop pressed while the start is still running');
+  {
+    const startP = send({ type: 'UQA_RECORD_START', tabId, format: 'mp4' });
+    await popup.waitForTimeout(60);
+    const mid = await state();
+    const early = await send({ type: 'UQA_RECORD_STOP' });
+    const st = await startP;
+    console.log(`  note  state at the Stop ${JSON.stringify({ recording: mid?.recording, starting: mid?.starting })}; start ${JSON.stringify({ ok: st?.ok, lock: st?.result?.lock?.by })}; stop ${JSON.stringify({ ok: early?.ok, error: early?.error, ms: early?.result?.durationMs })}`);
+    check('a Stop during the start files the clip, or the start refused and nothing was shown', () => {
+      if (st?.ok && !early?.ok) throw new Error(`the start went on but the Stop was refused: ${early?.error}`);
+      if (!st?.ok && early?.ok) throw new Error('the start failed but the Stop claims a clip');
+    });
+    if (early?.ok) {
+      const h = await storedHead(early.result?.id, true);
+      truthy('and the early-stopped clip is stored with bytes', (h?.bytes ?? 0) > 0, `stored ${JSON.stringify(h && { bytes: h.bytes })}`);
+    }
+    is('nothing is left recording after it', (await state())?.recording, false);
+  }
+
   console.log('\nafter the page navigates');
   await page.goto(URL_ + '?again');
   await popup.waitForTimeout(900);
@@ -682,7 +717,8 @@ try {
   const last = await send({ type: 'UQA_RECORD_STOP' });
   is('the last clip stops', last?.ok, true);
   truthy('with bytes in it', (last?.result?.bytes ?? 0) > 0, `bytes were ${last?.result?.bytes}`);
-  const lastHead = await storedHead(last?.result?.id);
+  if (!last?.ok) console.log(`  note  step 10 state ${JSON.stringify(await state())}, stop said ${JSON.stringify(last)}`);
+  const lastHead = last?.result?.id ? await storedHead(last.result.id) : null;
   is('filed under the new session, not the old one', lastHead?.sessionId, sid2);
   /* 11. the screen, not the tab ------------------------------------------- */
 

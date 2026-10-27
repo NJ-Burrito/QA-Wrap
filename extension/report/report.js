@@ -3046,7 +3046,7 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
 });
 
 async function refreshMedia() {
-  const res = await send({ type: 'UQA_MEDIA_LIST', sessionId });
+  const res = await send({ type: 'UQA_MEDIA_LIST', sessionId, companions: true }); // setMedia splits off the webcam layers
   if (!res.ok) return;
   setMedia(res.result);
   // The bytes behind every cached URL may have been replaced and there is no
@@ -3599,7 +3599,7 @@ async function loadSession() {
   session = res.result.session;
   events = res.result.events || [];
 
-  const mediaRes = await send({ type: 'UQA_MEDIA_LIST', sessionId });
+  const mediaRes = await send({ type: 'UQA_MEDIA_LIST', sessionId, companions: true });
   setMedia(mediaRes.ok ? mediaRes.result || [] : []);
 
   /*

@@ -2,7 +2,7 @@
 /** Message handlers for sessions, recording and the library: starting and stopping, state, media, screen recording, timeline and the session list. Moved out of service-worker.js (OF-18), unchanged. */
 
 import {
-  recordingState, storageHeadroom, startRecording, stopRecording, rescueRecording, startScreenRecording, videoFormats,
+  recordingState, storageHeadroom, startRecording, stopRecording, cancelStart, rescueRecording, startScreenRecording, videoFormats,
   mediaPermissions, exportAudio, markImage, exportOp, copyToClipboard, rollOp,
 } from './media.js';
 import {
@@ -53,7 +53,7 @@ async function refuseIfRecording() {
     await recordStartInFlight.catch(() => {});
   }
   const state = await recordingState().catch(() => null);
-  if (!state?.recording) return;
+  if (!state?.recording && !state?.starting) return;
   if (state.finishing) {
     throw new Error(
       'The last clip is still being saved. It will appear in the report on its own. ' +
@@ -337,10 +337,6 @@ export const recordingHandlers = {
     const settings = await getSettings();
     const tabId = msg.tabId ?? (await testableTabId());
     if (tabId == null) throw new Error('Open the page you want to record first.');
-    // The extra sources travel with the call. They used to stop here: the popup
-    // sent mic/tabAudio/webcam and this handler simply did not pass them on, so
-    // ticking "Mic" produced a silent video and the "recording without …"
-    // warning could never fire, because nothing was ever refused.
     const started = await claimRecordStart(startRecording({
       tabId,
       sessionId: await activeSessionId({ tabId }),
@@ -380,10 +376,19 @@ export const recordingHandlers = {
    */
   UQA_RECORD_STOP: async (msg, sender) => {
     try {
+      // A tab start still on its way (3.8.3): cancel it in the offscreen document, wait, and answer coded if it never recorded.
+      const pending = startGate;
+      if (pending) {
+        await cancelStart();
+        const began = await pending;
+        await cancelStart(true);
+        if (!began) throw Object.assign(new Error('Stopped before the recording began. Nothing was recorded.'), { code: 'REC_CANCELLED' });
+      }
       const meta = await stopRecording(msg);
 
       if (meta?.stored === false) {
         throw Object.assign(new Error(meta.error || 'The clip could not be stored.'), {
+          code: 'REC_NOT_STORED',
           mediaId: meta.id,
           rescuable: meta.bytes > 0,
         });
@@ -405,14 +410,7 @@ export const recordingHandlers = {
         }
       }
 
-      /*
-       * The window-size run this clip belongs to, if any.
-       *
-       * One clip, one home: the contract's rule for the report is that a media
-       * record carrying `runId` appears under Window sizes and nowhere else,
-       * so the stamp has to be on the stored row and on the timeline event, not
-       * inferred later from a window id nothing kept.
-       */
+      // The window-size run this clip belongs to: one clip, one home (a `runId` row shows under Window sizes only), on row and event.
       const { [CLIP_RUN]: clipRun } = await chrome.storage.session.get(CLIP_RUN);
       await chrome.storage.session.remove(CLIP_RUN);
       if (clipRun?.runId) {
@@ -426,9 +424,7 @@ export const recordingHandlers = {
         }
       }
 
-      // Only a real session gets a timeline entry: 'unfiled' has no timeline to
-      // append to, and inventing one would put a session in the list that
-      // nobody started.
+      // Only a real session gets a timeline entry: inventing one for 'unfiled' lists a session nobody started.
       if (sessionId !== 'unfiled') {
         await appendEvent({
           sessionId,
@@ -442,23 +438,14 @@ export const recordingHandlers = {
           // Which sources went in, so a silent clip is explained in the report
           // rather than discovered on playback.
           sources: meta.sources || { tab: true },
-          // Where the face is, on the row itself. The report's card says the
-          // webcam is on its own track, and it should not have to open the
-          // media store to find out whether this clip is one of those.
+          // Where the face is, on the row itself, so the report's card need not open the media store.
           webcamTrackId: meta.webcamTrackId ?? null,
           ...(meta.runId ? { runId: meta.runId, viewport: meta.viewport } : {}),
         });
         paintBadge();
       }
 
-      /*
-       * The session may have been deleted while this clip was being written.
-       *
-       * Delete can land in the gap between the tester pressing Stop and the
-       * offscreen document finishing the encode, and a clip filed against a row
-       * that no longer exists is invisible to every listing. Re-file it under
-       * 'unfiled' and say so, rather than leaving it stranded silently.
-       */
+      // A Delete between Stop and the end of the encode leaves the clip on a row nothing lists: re-filed under 'unfiled', said.
       if (sessionId !== 'unfiled' && !(await getSession(sessionId))) {
         if (await restampMedia(meta.id, { sessionId: 'unfiled' })) {
           await restampCompanion(meta.webcamTrackId, { sessionId: 'unfiled' });
@@ -474,14 +461,7 @@ export const recordingHandlers = {
       }).catch(() => {});
       return meta;
     } finally {
-      /*
-       * Reconciled from real state, never asserted.
-       *
-       * `broadcast({recording:false})` used to be a claim: if the stop had in
-       * fact failed, every surface was told the recording had ended while it
-       * was still running, and the only control that could stop it now said
-       * "Record". Asking costs one message and can only be right.
-       */
+      // Reconciled from real state, never asserted: a failed stop must not tell every surface the recording ended.
       const st = await recordingState().catch(() => ({ recording: false }));
       await broadcast({ type: 'UQA_RECORDING_CHANGED', recording: !!st.recording });
       if (!st.recording) await stopRecordingIcon();
@@ -801,7 +781,7 @@ export const recordingHandlers = {
 const legacyMediaMemo = new Map();
 
 async function mediaListFor(msg) {
-  const current = await listMedia(msg.sessionId);
+  const current = await listMedia(msg.sessionId, { companions: !!msg.companions });
   let legacy = legacyMediaMemo.get(msg.sessionId);
   if (!legacy) {
     const known = new Set(current.map((m) => m.id));
@@ -845,6 +825,16 @@ async function timelineFor(msg) {
 }
 
 /** Saved sessions: the list, the timeline, deletion and every export. */
+// The tab start in flight from its first line (claimRecordStart begins after its awaits): true once it records.
+let startGate = null;
+const startTab = recordingHandlers.UQA_RECORD_START;
+recordingHandlers.UQA_RECORD_START = (msg, sender) => {
+  const run = startTab(msg, sender);
+  const gate = (startGate = run.then(() => true, () => false));
+  gate.then(() => { if (startGate === gate) startGate = null; });
+  return run;
+};
+
 export const libraryHandlers = {
   UQA_LIST_SESSIONS: () => listSessions(),
   UQA_GET_TIMELINE: (msg) => timelineFor(msg),

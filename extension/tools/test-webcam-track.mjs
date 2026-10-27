@@ -185,7 +185,7 @@ test('the orphan sweep takes a companion whose parent is gone', () => {
 test('the compositor draws the picture and the cursor, never the camera', () => {
   assert.match(
     OFF,
-    /function composite\(\{ feed, fps, cursor = false \}\)/,
+    /function composite\(\{ feed, fps, cursor = false, hint = null, urgent = \(\) => false \}\)/,
     'composite() has taken a camera back; a screen capture composited for a webcam is a frame ' +
       'the editor can never move the face out of'
   );
@@ -199,7 +199,7 @@ test('the compositor draws the picture and the cursor, never the camera', () => 
   // a tab capture. tools/test-recording-frame-lock.mjs holds the lock itself.
   assert.match(
     OFF,
-    /mixer = composite\(\{ feed, fps: fps \|\| 15, cursor: drawnCursor \}\)/,
+    /mixer = composite\(\{ feed, fps: fps \|\| 15, cursor: drawnCursor, hint, urgent: /,
     'the cursor is drawn for something other than a tab capture, or the compositor is optional again'
   );
 });
@@ -261,13 +261,14 @@ test('the cam recorder is video only — the audio mix stays on the main clip', 
 test('a webcam that cannot record does not cost the tester the clip', () => {
   assert.match(
     OFF,
-    /refused\.push\(`webcam track \(/,
+    /refused\.push\('webcam-not-saved'\)/,
     'starting the companion is no longer a reported refusal; either it throws into a start that ' +
       'has already opened a screen capture, or it fails silently'
   );
   assert.match(
     OFF,
-    /try \{ session\.camRecorder\?\.stop\(\); \} catch \{ \/\* already inactive \*\/ \}/,
+    // 3.8.3: awaited to its stop event, a throw caught by the promise, bounded.
+    /await within\(Promise\.resolve\(\)\.then\(\(\) => session\.camRecorder\?\.stop\(\)\)\.catch\(\(\) => \{\}\), 5000\)/,
     'the companion stop is unguarded in the teardown, so a webcam recorder that throws on the way ' +
       'down skips every release and every write below it'
   );
@@ -331,6 +332,28 @@ test('the offscreen document says what its cam element is now for', () => {
     'offscreen.html still tells the next reader the opposite of what the recorder now does'
   );
 });
+
+/* ── 3.8.3: the report lightbox gets the companion (B: never stacked since 3.6.4) ── */
+{
+  const asked = [];
+  const mediaListFor = new Function('listMedia', 'getEvents', 'getCaptures', 'legacyMediaMemo',
+    `${lift(read('background/handlers-session.js'), 'mediaListFor').replace(/^function/, 'async function')}\nreturn mediaListFor;`)(
+    async (sid, opts) => { asked.push(opts); return opts?.companions ? [{ id: 'm1', ts: 1 }, { id: 'm1_cam', role: 'webcam', parentId: 'm1', ts: 1 }] : [{ id: 'm1', ts: 1 }]; },
+    async () => [], async () => ({}), new Map());
+  const withCam = await mediaListFor({ sessionId: 's', companions: true });
+  const plain = await mediaListFor({ sessionId: 's2' });
+  test('the media list hands the webcam companion over when the report asks for it, and not by default', () => {
+    assert.ok(withCam.some((m) => m.role === 'webcam'), 'the companion is dropped, so webcamTrackOf finds nothing and the lightbox has no face');
+    assert.ok(!plain.some((m) => m.role === 'webcam'), 'the default list now counts the face as a second clip');
+    assert.deepEqual(asked.map((o) => !!o?.companions), [true, false]);
+  });
+  test('both report lists that feed setMedia (and so webcamTrackOf) ask for companions', () => {
+    const REPORT = read('report/report.js');
+    const feeds = REPORT.match(/send\(\{ type: 'UQA_MEDIA_LIST', sessionId(, companions: true)? \}\);\s*(\/\/[^\n]*\n\s*)?(if \(!res\.ok\) return;\s*)?setMedia\(/g) || [];
+    assert.equal(feeds.length, 2, 'a setMedia caller was added or moved');
+    for (const f of feeds) assert.ok(f.includes('companions: true'), `the report asks without companions: ${f.split('\n')[0]}`);
+  });
+}
 
 console.log(`\n${passed} passed, ${failures.length} failed`);
 if (failures.length) process.exit(1);

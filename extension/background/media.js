@@ -6,17 +6,13 @@
  * the offscreen document owns the *machinery*, because a service worker has no
  * DOM and therefore no MediaRecorder and no canvas. This file is the seam.
  *
- * On limits: there is deliberately no cap on how long a recording may run. The
- * only real limit is the disk, so that is what gets reported — before the
- * recording starts, and again while it is running. A tester who is told "you
- * have 40GB free, this is using about 6MB a minute" can make their own decision;
- * one who is cut off at ten minutes cannot.
+ * On limits: no cap on how long a recording runs. The disk is the real limit, so
+ * that is reported, before and during the recording.
  */
 
 import { withDeadline } from '../platform/deadline.js';
 import { policy, MIC_BLOCKED } from '../platform/settings.js';
-import { assertPolicy } from '../platform/settings.js';
-import { getSettings } from '../platform/settings.js';
+import { assertPolicy, getSettings } from '../platform/settings.js';
 import { armedWindows } from './armed.js';
 import { trackerUrl } from '../core/tracker-specs.js';
 
@@ -62,13 +58,10 @@ async function offscreenExists() {
  * exists — including one Chrome kept alive from a previous worker lifetime, so
  * "I have not created it yet" is not the same as "it does not exist". Ask.
  *
- * Asking was not enough. `getContexts` is a round trip, and every `offscreen()`
- * call in this file starts with one: two messages arriving together — the popup
- * polling `UQA_RECORD_STATE` while the tester presses Record, which is the
- * ordinary case — both saw no document, both called `createDocument`, and the
- * second failed with "Only a single offscreen document may be created." That
- * error surfaced as the *recording* failing, because the create was on its
- * critical path.
+ * Asking was not enough: two messages arriving together (the popup polling
+ * `UQA_RECORD_STATE` while the tester presses Record) both saw no document, both
+ * called `createDocument`, and the second failed with "Only a single offscreen
+ * document may be created", surfacing as the *recording* failing.
  *
  * Two defences, and both are needed. The single-flight memo serialises the
  * callers this worker knows about. The benign-rejection fallback covers the one
@@ -124,7 +117,7 @@ async function ensureOffscreenOnce() {
 export async function closeOffscreen() {
   if (!(await offscreenExists())) return { closed: false, reason: 'none' };
   const state = await offscreen('UQA_OFF_STATE').catch(() => null);
-  if (state?.recording || state?.rolling) return { closed: false, reason: 'recording' };
+  if (state?.recording || state?.starting || state?.rolling) return { closed: false, reason: 'recording' };
   if (state?.rescuable) return { closed: false, reason: 'unsaved-clip' };
   await chrome.offscreen.closeDocument().catch(() => {});
   await chrome.storage.session.remove(CLIP_WINDOW);
@@ -436,19 +429,15 @@ export async function startRecording({
   const blockedMic = mic && !(await micAllowed());
   if (blockedMic) mic = false;
 
+  // The rolling buffer lets go of the tab first (3.8.3, offscreen.js rollBusy).
+  await rollOp({ op: 'stop' }).catch(() => {});
   let streamId;
   try {
     streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
   } catch (err) {
-    // Chrome only lets an extension capture a tab the user has just invoked it
-    // on — clicking the toolbar icon, a context-menu entry, or a shortcut. That
-    // is a deliberate protection and not something to route around; the job here
-    // is to say what to do instead of surfacing Chrome's own wording, which
-    // mentions a permission name and no action.
+    // Chrome lets an extension capture only a tab it was just invoked on (icon,
+    // menu, shortcut). Not routed around: say what to do, not Chrome's wording.
     if (/activeTab|has not been invoked/i.test(err.message)) {
-      // The old wording said "click the QA Wrap icon", which is what the tester
-      // had just done — the grant had been dropped by a navigation since. Name
-      // the two routes that work from where they are standing instead.
       const commands = await chrome.commands?.getAll?.().catch(() => []);
       const shortcut =
         (commands || []).find((c) => c.name === 'record-tab')?.shortcut ||
@@ -466,17 +455,17 @@ export async function startRecording({
     }
     throw err;
   }
+  const tab = await chrome.tabs.get(tabId).catch(() => null);
+  // Frame lock target: the tab's pixels at its monitor's DPR (3.8.3), 400 ms at most.
+  const [px] = await Promise.race([chrome.scripting.executeScript({ target: { tabId }, func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio] }), new Promise((r) => setTimeout(r, 400, []))]).catch(() => []);
   const started = await offscreen('UQA_OFF_START', {
-    streamId, sessionId, format, fps, quality, label,
+    streamId, sessionId, format, fps, quality, label, view: tab && { w: tab.width, h: tab.height, px: px?.result },
     mic, tabAudio, webcam, webcamPosition, webcamSize,
-    // A tab capture has no cursor in it — Chrome composites the pointer above
-    // everything tabCapture can see — so the offscreen document draws one from
-    // what the page reports. See content/recorder.js reportCursor().
+    // Tab capture has no pointer: the offscreen document draws one (content/recorder.js reportCursor).
     cursor,
   });
   // Which window this clip is filming, so putting *that* window to sleep can
   // stop it without touching a clip running in another one.
-  const tab = await chrome.tabs.get(tabId).catch(() => null);
   await noteRecordingWindow(tab?.windowId);
   return {
     ...started,
@@ -485,6 +474,8 @@ export async function startRecording({
     refused: [...(started.refused || []), ...(blockedMic ? [MIC_BLOCKED] : [])],
   };
 }
+
+export const cancelStart = (clear = false) => offscreen('UQA_OFF_CANCEL', { clear }).catch(() => {});
 
 export async function stopRecording({ label } = {}) {
   const meta = await offscreen('UQA_OFF_STOP', { label });
@@ -509,16 +500,7 @@ export async function rescueRecording({ filename } = {}) {
   return { ...out, rescued: true, downloadId };
 }
 
-/**
- * Remember which window a clip belongs to.
- *
- * The master switch is per window, so "put this window to sleep" has to be able
- * to stop the clip filming *that* window and leave a clip filming another one
- * alone. Nothing carried the window before, so the only safe options were to
- * kill every recording or none. Session storage rather than a module variable,
- * for the reason everything else here uses it: the worker is torn down between
- * two events and a local would not survive it.
- */
+/** Which window a clip films, so sleeping that window stops it and no other (session storage: the worker is torn down between events). */
 export async function noteRecordingWindow(windowId) {
   if (windowId == null) return;
   await chrome.storage.session.set({ [CLIP_WINDOW]: windowId });
@@ -565,7 +547,7 @@ export async function exportAudio({ id, filename, saveAs = false }) {
   return { ...out, url: undefined, downloadId, path: filename || out.filename };
 }
 
-export const rollOp = async (p) => (p.op === 'state' && !(await offscreenExists()) ? { rolling: false } : offscreen('UQA_OFF_ROLL', p)); // cap1022
+export const rollOp = async (p) => (/^(state|stop)$/.test(p.op) && !(await offscreenExists()) ? { rolling: false } : offscreen('UQA_OFF_ROLL', p)); // cap1022
 
 /** Which video formats this browser can actually produce, asked at runtime. */
 export async function videoFormats() {

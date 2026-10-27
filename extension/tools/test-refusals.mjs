@@ -26,7 +26,7 @@ const fixesSrc = popup.slice(popup.indexOf('const FIXES = ['), popup.indexOf('/*
 const ctx = vm.createContext({ $: () => null, spotlight() {}, chrome: {}, ctx: {}, say() {}, t: (k) => k, send() {}, dismiss() {} });
 vm.runInContext(`${fixesSrc}\nthis.REFUSALS = REFUSALS; this.codeByText = codeByText; this.fixFor = fixFor; this.FIXES = FIXES;`, ctx);
 const { REFUSALS, codeByText, fixFor, FIXES } = ctx;
-const CODES = ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_CLICK', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'POLICY_HOSTS', 'POLICY_SCREENSHOT', 'POLICY_BLOCKED', 'NO_PICTURE'];
+const CODES = ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_CLICK', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'POLICY_HOSTS', 'POLICY_SCREENSHOT', 'POLICY_BLOCKED', 'NO_PICTURE', 'REC_CANCELLED', 'REC_NOT_STORED'];
 
 console.log('refusals (code, English, Arabic, chip)');
 
@@ -44,7 +44,7 @@ test('every chip names a real fix button; policy refusals offer none', () => {
   const ids = FIXES.map((f) => f.id);
   for (const [code, row] of Object.entries(REFUSALS)) {
     if (row.chip) assert.ok(ids.includes(row.chip), `${code} -> ${row.chip}`);
-    else assert.match(code, /^(POLICY_|SLOW|MEDIA_SLOW|NEEDS_CLICK|NO_PICTURE)/);
+    else assert.match(code, /^(POLICY_|SLOW|MEDIA_SLOW|NEEDS_CLICK|NO_PICTURE|REC_)/);
   }
 });
 
@@ -60,7 +60,7 @@ test('MUTATION: reword the English or show the Arabic and the chip is unchanged'
 
 test('the worker sends the code, with the seven refusals each raised somewhere', () => {
   const src = workerSrc() + read('background/armed.js') + read('background/media.js');
-  for (const c of ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT']) {
+  for (const c of ['ASLEEP', 'STALE', 'SLOW', 'MEDIA_SLOW', 'TAB_RELOAD', 'NEEDS_INVOKE', 'NEEDS_GRANT', 'NO_SESSION', 'NEEDS_CONSENT', 'REC_CANCELLED', 'REC_NOT_STORED']) {
     assert.ok(src.includes(`'${c}'`), `${c} is raised nowhere`);
   }
   assert.ok(/codeByText\.set\(res\.error, res\.code\)/.test(popup), 'popup send() maps the code');
@@ -69,6 +69,15 @@ test('the worker sends the code, with the seven refusals each raised somewhere',
   assert.ok(en['popup.refusal.needsClick'].split(' ').length <= 25, 'one short line');
 });
 
+
+test('a clip the store refused answers REC_NOT_STORED, EN and AR, with no rescue button promised', () => {
+  const stop = read('background/handlers-session.js');
+  assert.match(stop, /meta\?\.stored === false\) \{\s*throw Object\.assign\(new Error\([^)]*\), \{\s*code: 'REC_NOT_STORED'/, 'the store-failure throw carries no code');
+  codeByText.clear();
+  codeByText.set(ar['popup.refusal.recNotStored'], 'REC_NOT_STORED');
+  assert.equal(fixFor(ar['popup.refusal.recNotStored']), null);
+  for (const l of [en, ar]) assert.doesNotMatch(l['popup.refusal.recNotStored'], /Rescue|\.\./);
+});
 
 test('SLOW and MEDIA_SLOW are calm: no reload advice, no chip, STALE keeps its own', () => {
   for (const code of ['SLOW', 'MEDIA_SLOW']) {

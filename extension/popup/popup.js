@@ -275,7 +275,7 @@ const REFUSALS = {
   ASLEEP: { key: 'popup.refusal.asleep', chip: 'wake' },
   STALE: { key: 'popup.refusal.stale', chip: 'reloadExtension' },
   SLOW: { key: 'popup.refusal.slow', chip: null },
-  MEDIA_SLOW: { key: 'popup.refusal.mediaSlow', chip: null }, NO_PICTURE: { key: 'popup.refusal.noPicture', chip: null },
+  MEDIA_SLOW: { key: 'popup.refusal.mediaSlow', chip: null }, NO_PICTURE: { key: 'popup.refusal.noPicture', chip: null }, REC_CANCELLED: { key: 'popup.refusal.recCancelled', chip: null }, REC_NOT_STORED: { key: 'popup.refusal.recNotStored', chip: null },
   TAB_RELOAD: { key: 'popup.refusal.tabReload', chip: 'reloadTab' },
   NEEDS_INVOKE: { key: 'popup.refusal.needsInvoke', chip: 'showRow' }, NEEDS_CLICK: { key: 'popup.refusal.needsClick', chip: null },
   NEEDS_GRANT: { key: 'popup.refusal.needsGrant', chip: 'openSettings' },

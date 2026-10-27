@@ -385,7 +385,7 @@ const ACTIONS = {
         say(out.error, 'err');
         return paintRecording();
       }
-      say(t('popup.record.saved', { mb: Math.round(out.result.bytes / 1024 / 1024 * 10) / 10 }), 'ok');
+      say(t(out.result.webcamCode === 'WEBCAM_NOT_SAVED' ? 'popup.record.savedCamLost' : out.result.webcamProblem ? 'popup.record.savedCamShort' : 'popup.record.saved', { mb: Math.round(out.result.bytes / 1024 / 1024 * 10) / 10 }), 'ok');
       return paintRecording();
     }
     // Filming the screen means Chrome shows its own picker, so the popup
@@ -444,7 +444,7 @@ const ACTIONS = {
     const refused = out.result?.refused || [];
     say(
       refused.length
-        ? t('popup.record.without', { list: refused.join(', ') })
+        ? t('popup.record.without', { list: refused.map((r) => (r === 'webcam-not-saved' ? t('popup.record.camNotSaved') : r)).join(', ') })
         : t('popup.record.started'),
       refused.length ? 'err' : 'ok'
     );

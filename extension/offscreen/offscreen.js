@@ -36,6 +36,16 @@ import { partWriter } from './part-writer.js';
 
 const pickMime = (format) => videoMime(format);
 let rollMod = null; // offscreen/rolling.js, loaded on first use (cap1022)
+// The rolling buffer's start while it is still opening its tab capture. A Record that lands in that window waits for it (the
+// buffer sees `active` and lets go), then stops it: before 3.8.3 the buffer won the tab and the Record failed (recording.mjs step 10).
+let rollBusy = null;
+let rollCancel = false;
+// One lifecycle, idle -> starting -> recording -> finishing -> idle (3.8.3). A worker Stop that lands before its start
+// reached this document sets `cancelNext` (UQA_OFF_CANCEL); one that lands during `starting` sets `claim.cancel`.
+// The start checks it after every wait and ends in a coded refusal, so a Stop never leaves a phantom recording.
+let cancelNext = false;
+const cancelled = () => Object.assign(new Error('Stopped before the recording began. Nothing was recorded.'), { code: 'REC_CANCELLED' });
+const within = (p, ms, v) => Promise.race([Promise.resolve(p), new Promise((res) => setTimeout(res, ms, v))]);
 
 /**
  * Which formats this browser can really write, image and video both.
@@ -355,13 +365,38 @@ function drawPointer(ctx, r) {
   ctx.restore();
 }
 
-function composite({ feed, fps, cursor = false }) {
+/**
+ * The frame sizes a tab capture may settle on (see startRecording); the clip locks at the size delivered.
+ * Pure: tools/test-recording-frame-lock.mjs lifts it.
+ *
+ * A tab capture delivers the tab's shape either fitted up to the capture edge or 1:1 at its monitor scale, and Chrome
+ * picks one per capture and holds it from the first frame (3.8.3, live: the same 1100x900 window gave 1358x1008 in
+ * one run and 1920x1424 in the next, never stepping). Either locks as delivered (sharp; the size never changes
+ * within a clip). DevTools device mode (the page's shape is not the tab's): the capture is the page's shape at a scale
+ * nobody can predict (390x844 at DPR 3 gave 854x1846 against 888x1920 computed), so it matches by shape (`shape`), and locks as delivered.
+ */
+function lockTargets(view, edge, ownDpr) {
+  if (!(view?.w > 0 && view?.h > 0)) return null;
+  const [pw, ph] = view.px || [];
+  const dsf = pw > 0 ? pw / view.w : ownDpr || 1;
+  const fit = (w, h, k) => ({ w: Math.round(w * k), h: Math.round(h * k) });
+  const up = fit(view.w, view.h, edge / Math.max(view.w, view.h));
+  const out = /** @type {any[]} */ ([up, fit(view.w, view.h, Math.min(dsf, edge / view.w, edge / view.h))]);
+  if (pw > 0 && ph > 0 && Math.abs((pw / ph) / (view.w / view.h) - 1) > 0.02) {
+    const page = fit(pw, ph, edge / Math.max(pw, ph));
+    out.push({ ...page, shape: true });
+  }
+  return out;
+}
+
+function composite({ feed, fps, cursor = false, hint = null, urgent = () => false }) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   let timer = null;
   let stopped = false;
   let locked = null;
   let seen = null;
+  const path = []; // the sizes the feed went through before the lock, with when (reported, never read)
   let first = 0;
   let ready;
   const settled = new Promise((res) => { ready = res; });
@@ -385,20 +420,45 @@ function composite({ feed, fps, cursor = false }) {
     // the first frames of a tab capture can be a passing size (CSS pixels
     // before the HiDPI step). Later shapes are fitted inside, centred.
     // `ready` gates recorder.start().
+    //
+    // `hint` (3.8.3) is the sizes a tab capture settles on, known before any
+    // frame from the tab's real current size: its pixels fitted to the capture
+    // edge (Chrome scales tab capture up to it) or 1:1. One of them locks at
+    // once; any other size (CSS pixels before the HiDPI step, the shape before
+    // a window drag) is stale and is waited out whatever the frame rule says,
+    // so a still page whose step comes late (700 ms, 3 s) never locks soft or
+    // misshapen. 4 s stays the bound. No hint (a screen, a tab that refused
+    // the measurement): the frame rule alone.
     if (!locked) {
       const now = Date.now();
       first ||= now;
       const n = counted();
       if (!seen || seen.w !== feed.videoWidth || seen.h !== feed.videoHeight) {
         seen = { w: feed.videoWidth, h: feed.videoHeight, n: 0, f: n, t: now };
+        if (path.length < 8) path.push(`${seen.w}x${seen.h}@${now - first}`);
       }
       seen.n++; // draw ticks: the count where the browser cannot report frames
       const held = n === null ? seen.n : n - seen.f + 1;
-      if (held < 3 && now - seen.t < 600 && now - first < 4000) return;
-      locked = lockFrame(feed.videoWidth, feed.videoHeight);
+      const hit = hint?.find((b) => (b.shape
+        ? Math.abs((seen.w / seen.h) / (b.w / b.h) - 1) <= 0.01
+        : Math.abs(seen.w - b.w) <= 3 && Math.abs(seen.h - b.h) <= 3));
+      const at = !!hit;
+      // `urgent`: Stop was pressed while this clip was still starting. Lock on what is here now, so the encoder runs
+      // and the clip is filed (rule 4): a fitted, slightly soft clip beats a recording that disappears.
+      const hurry = urgent();
+      if (!at && !hurry && now - first < 4000 && (hint || (held < 3 && now - seen.t < 600))) return;
+      locked = lockFrame(feed.videoWidth, feed.videoHeight); // the size Chrome delivers, 1:1, never resampled up
       canvas.width = locked.w;
       canvas.height = locked.h;
-      ready(locked);
+      // How it locked, reported on the start reply: `rvfc` is the count of
+      // presented frames (null where requestVideoFrameCallback is missing; 0
+      // where it exists but never fires, as in a never-rendered document).
+      ready({ ...locked, ms: now - first, by: at ? 'hint' : hurry ? 'stop' : now - first >= 4000 ? 'bound' : held >= 3 ? 'frames' : 'still', rvfc: n, hint, path });
+    }
+    // The sizes after the lock too (reported on the state, never read): a capture that steps later is fitted inside.
+    if (path.length < 8 && (seen.w !== feed.videoWidth || seen.h !== feed.videoHeight)) {
+      seen = { w: feed.videoWidth, h: feed.videoHeight };
+      path.push(`${seen.w}x${seen.h}@${Date.now() - first}`);
     }
     const r = fitRect(feed.videoWidth, feed.videoHeight, locked.w, locked.h);
     if (r.w < locked.w || r.h < locked.h) ctx.fillRect(0, 0, locked.w, locked.h);
@@ -407,10 +467,19 @@ function composite({ feed, fps, cursor = false }) {
     // The picture, and then the pointer over it. Nothing else is drawn: the
     // webcam is its own clip now, laid over this one at playback.
     if (cursor) drawPointer(ctx, r);
+    // One frame per draw, never two closer than 0.9 of a tick (3.8.3): with `captureStream(fps)` Chrome chose when to
+    // take a frame, and some clips held two frames closer than one frame period, which a decoder at the clip's rate
+    // reads as one timestamp twice (ffmpeg: "non monotonically increasing dts to muxer in stream 0: 128 >= 128").
+    const now = Date.now();
+    if (now - lastFrame >= gap) { lastFrame = now; track?.requestFrame?.(); }
   };
 
-  const stream = canvas.captureStream(fps);
-  timer = setInterval(draw, Math.max(1, Math.round(1000 / (fps || 15))));
+  const stream = canvas.captureStream(0); // frames only when requested, above
+  const track = stream.getVideoTracks()[0];
+  const tickMs = Math.max(1, Math.round(1000 / (fps || 15)));
+  const gap = tickMs * 0.9;
+  let lastFrame = -Infinity;
+  timer = setInterval(draw, tickMs);
 
   return {
     stream,
@@ -521,7 +590,12 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
   if (!mime) throw new Error('this browser has no encoder that could write it');
 
   const camId = `${id}_cam`;
-  const open = (m) => { const r = new MediaRecorder(new MediaStream([track]), {
+  // Test-only fault seam (3.8.3): nothing in the extension sets `__qawFault`; a live harness sets it in this
+  // document over CDP to drive the fallback below ('cam-mp4-start': the MP4 start throws) or the onerror
+  // path ('cam-mp4-error': the started MP4 recorder fails at 3 s, after its first chunk; 'cam-mp4-error-early': at
+  // 1.5 s, before it wrote a byte, so nothing is kept and the stop result says so). Unset, as in every real run, it does nothing.
+  const fault = (m) => /^video\/mp4/.test(m) && globalThis.__qawFault;
+  const open = (m) => { if (fault(m) === 'cam-mp4-start') throw new Error('forced cam MP4 start failure (__qawFault)'); const r = new MediaRecorder(new MediaStream([track]), {
     mimeType: m,
     /*
      * A 480p face, not a second screen capture.
@@ -533,7 +607,7 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
      * laptop with no room left.
      */
     videoBitsPerSecond: { low: 300_000, medium: 700_000, high: 1_200_000 }[quality] ?? 700_000,
-  }); r.start(2000); return r; };
+  }); r.start(2000); const f = fault(m); if (/^cam-mp4-error/.test(f || '')) setTimeout(() => { r.dispatchEvent(new Event('error')); r.stop(); }, f === 'cam-mp4-error' ? 3000 : 1500); return r; }; // as Chrome does: error, then the recorder stops
   // Started here, handlers attached below in the same task (no chunk can arrive before them). A second
   // hardware H.264 encoder beside the picture's can fail to come up (Blink "There was an error starting
   // the MediaRecorder", 1 run in 5 of tools/recording.mjs): the face is then written as WebM instead.
@@ -566,13 +640,13 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
       resolve(value);
     };
   });
-  recorder.onstop = () => settle({ ok: true });
+  recorder.onstop = () => settle(failed ? { ok: false, error: failed } : { ok: true });
   recorder.onerror = (e) => {
     failed = String(e?.error?.message || e?.error || 'The webcam recorder stopped with an error.');
     stoppedAt ??= Date.now();
-    // Nothing is broadcast. The worker's `UQA_SOURCE_ENDED` stops the whole
-    // clip, and a dead camera is not a reason to end a recording of the defect.
-    settle({ ok: false, error: failed });
+    // Keep what it wrote (3.8.3): ask for the frames held before the first 2 s chunk, and settle on `stop`, which
+    // follows the error and its last `dataavailable`. Nothing is broadcast: a dead camera does not end the clip.
+    try { if (recorder.state === 'recording' && firstChunkAt == null) recorder.requestData(); } catch { /* already inactive */ }
   };
   // The same timeslice as the picture, so the two are chunked on the same
   // rhythm and `offsetMs` is a real measurement rather than an artefact of one
@@ -608,8 +682,11 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
     stop: () => {
       stoppedAt ??= Date.now();
       if (recorder.state !== 'inactive') {
+        // requestData first while nothing has arrived [V, live probe]: Chrome's MP4 recorder stopped before its first
+        // chunk writes 0 bytes, with it 45 KB. Once a chunk exists a plain stop() writes the rest.
+        if (firstChunkAt == null) try { recorder.requestData(); } catch { /* inactive */ }
         try { recorder.stop(); } catch { settle({ ok: false, error: 'already inactive' }); }
-      } else settle({ ok: true });
+      } else settle(failed ? { ok: false, error: failed } : { ok: true });
       return done;
     },
   };
@@ -761,9 +838,10 @@ async function displayStream({ wantsAudio, cap, fps, cursor = true }) {
 
 async function startRecording({
   streamId, sessionId, format, fps, quality, mic, tabAudio, webcam, webcamPosition, webcamSize,
-  desktop = false, systemAudio = false, cursor = false, label,
+  desktop = false, systemAudio = false, cursor = false, label, view = null,
 }) {
   if (active) throw new Error('Already recording. Stop the current clip first.');
+  if (cancelNext) { cancelNext = false; throw cancelled(); }
 
   /*
    * The claim, before the first await.
@@ -777,7 +855,11 @@ async function startRecording({
    */
   const startedAt = Date.now();
   const id = `m_${startedAt.toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
-  const claim = { kind: 'starting', id, sessionId, startedAt, stoppedAt: null, mime: null, sources: { tab: !desktop, screen: desktop } };
+  const claim = { kind: 'starting', id, sessionId, startedAt, stoppedAt: null, mime: null, sources: { tab: !desktop, screen: desktop }, cancel: false };
+  const live = () => { if (claim.cancel) throw cancelled(); };
+  // Settles when this start does, either way: a Stop pressed while the clip is starting waits on it (stopRecording).
+  let begun = () => {};
+  claim.begun = new Promise((res) => { begun = () => res(undefined); });
   active = claim;
 
   // Declared out here so the catch below can reach them. A throw between
@@ -820,6 +902,9 @@ async function startRecording({
     // the desktop media-source constraint, and that could never work: such an
     // id is bound to the frame that asked for it, and the frame that asked was
     // never this one. See `displayStream` above for the measurements.
+    if (rollBusy) { await rollBusy; await rollMod?.stopRoll(); } // a buffer still opening the tab gives it up first
+    await rollMod?.stopRoll(); // cap1022: one tab, one capture; a normal Record takes over from the rolling buffer (its encoders released first)
+    live();
     const wantsAudio = desktop ? systemAudio : tabAudio;
 
     const edge = CAPTURE_EDGE[quality] || CAPTURE_EDGE.medium;
@@ -848,6 +933,7 @@ async function startRecording({
      * captured — a feedback loop that howls. Only a tab capture is muted by
      * Chrome while it is being captured, so only a tab capture needs the echo.
      */
+    live();
     const gotAudio = !!wantsAudio && stream.getAudioTracks().length > 0;
 
     // The preview element is a decode-and-paint of every frame, at full size.
@@ -874,6 +960,7 @@ async function startRecording({
     const { micStream: gotMic, camStream: gotCam, refused } = await extraSources({ mic, webcam });
     micStream = gotMic;
     camStream = gotCam;
+    live();
 
     /*
      * The `<video>` for the camera, only where something draws from it.
@@ -998,11 +1085,22 @@ async function startRecording({
     // track changes size with the tab or window. Never hand the encoder
     // `sourceTrack` itself.
     await attachFeed();
-    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor });
+    // The frames a tab capture settles on, from the tab's real current size
+    // (view.w/h, DIPs from the tabs API: blind to a stale capture shape and to
+    // page emulation): that shape fitted up to the capture's edge, which is
+    // what Chrome sends, or 1:1 at the tab's monitor scale (view.px measured in
+    // the tab / DIPs; this document's own ratio is the primary monitor's).
+    // And the page as it sees itself at Record (view.px, CSS size x its DPR):
+    // DevTools device mode, where the capture follows the emulated screen.
+    // The lock takes whichever of these the capture actually delivers; a later
+    // change (emulation turned off) is a mid-clip resize, fitted inside.
+    const hint = desktop ? null : lockTargets(view, edge, devicePixelRatio);
+    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor, hint, urgent: () => claim.cancel });
     // The encoder starts only on a locked frame: a canvas sized after start is
     // the defect itself, so no picture in 5 s is a refusal, not a clip.
     const frame = await Promise.race([mixer.ready, new Promise((res) => setTimeout(res, 5000, null))]);
     if (!frame) throw Object.assign(new Error('The tab or screen sent nothing to record. Nothing was saved; press Record again.'), { code: 'NO_PICTURE' });
+    live(); // the last check: from recorder.start() on, a Stop files the clip
     const videoTrack = mixer.stream.getVideoTracks()[0];
 
     // One audio track, mixed if there are two. See mixAudio.
@@ -1129,7 +1227,9 @@ async function startRecording({
         });
       } catch (err) {
         camRecorder = null;
-        refused.push(`webcam track (${String(err?.message || err)}); the clip has no face on it`);
+        // A coded item the popup and the notification say in the tester's language (3.8.3); the screen clip goes on.
+        console.warn('[QA Wrap] webcam not saved:', String(err?.message || err), 'track', camStream.getVideoTracks()[0]?.readyState);
+        refused.push('webcam-not-saved');
       }
     }
 
@@ -1179,6 +1279,7 @@ async function startRecording({
       // it beside the picture. Null whenever there is no camera, or when
       // starting it failed — which is reported and survivable.
       camRecorder,
+      lock: frame,
       // Read by `companionRecord()` for `offsetMs`. A getter and not a value:
       // the first chunk has not arrived yet at the moment this object is built.
       get firstChunkAt() { return firstChunkAt; },
@@ -1222,10 +1323,13 @@ async function startRecording({
         return done;
       },
     };
-    return { id, format, mime, via: 'MediaRecorder', sources: active.sources, refused };
+    return { id, format, mime, via: 'MediaRecorder', sources: active.sources, refused, lock: frame };
   } catch (err) {
     abort();
+    claim.error = err; // a Stop waiting on this start answers with the start's own (coded, translated) refusal
     throw err;
+  } finally {
+    begun();
   }
 }
 
@@ -1401,8 +1505,19 @@ function startGifCapture({ id, sessionId, stream, feed, cam, fps, startedAt, web
  */
 async function stopRecording({ label } = {}) {
   if (!active) throw new Error('Nothing is being recorded.');
+  /*
+   * Stop while the clip is still starting (3.8.3, rule 4). Every surface already shows "recording" from the claim on,
+   * so refusing here ("still starting") lost the clip: the start finished afterwards and the tester's Stop was gone
+   * (recording.mjs step 5, the mid-clip resize clip never stored). Now the start is told to lock on the frame it has
+   * and finish, and this Stop then stops and files it. A start that fails instead had recorded nothing, and says so.
+   */
   if (active.kind === 'starting') {
-    throw new Error('That clip is still starting. Give it a moment, then press Stop.');
+    // Cancels the start (it ends in REC_CANCELLED, nothing recorded); a start already past its last check records,
+    // and this Stop then files it like any other.
+    const claim = active;
+    claim.cancel = true;
+    await claim.begun;
+    if (active?.id !== claim.id) throw claim.error?.code ? claim.error : cancelled();
   }
   if (active.kind === 'finishing') {
     throw new Error('That clip is already being saved. It will appear in the report on its own.');
@@ -1410,6 +1525,10 @@ async function stopRecording({ label } = {}) {
 
   const session = active;
   active = { ...session, kind: 'finishing' };
+  // ponytail: a clip stopped the moment it began has no encoded frame yet (B: "Nothing of that recording was written
+  // to disk"); 600 ms lets the encoder write some. A frame counter would be exact.
+  const young = 600 - (Date.now() - (session.startedAt || 0));
+  if (session.kind === 'recorder' && young > 0) await new Promise((res) => setTimeout(res, young));
 
   // Now, not after the encoder has flushed — and not at all if the source
   // already ended or the recorder failed, because those moments are the honest
@@ -1421,7 +1540,8 @@ async function stopRecording({ label } = {}) {
   try {
     // A GIF's stop() answers with the finished Blob; a recorder's answers with
     // whether the encoder got to the end.
-    const result = await session.stop();
+    // Bounded (3.8.3, B: one Stop hung 270 s): an encoder that never answers files what reached the disk.
+    const result = await within(session.stop(), 15000, { ok: false, error: 'The encoder did not finish; the clip is saved up to its last written part.' });
     if (result instanceof Blob) tail = result;
     else outcome = result || { ok: true };
   } catch (err) {
@@ -1439,10 +1559,12 @@ async function stopRecording({ label } = {}) {
      * filed: everything below this line releases hardware and writes evidence,
      * and a webcam recorder that throws on the way down would skip all of it.
      */
-    try { session.camRecorder?.stop(); } catch { /* already inactive */ }
-    await Promise.resolve(session.camRecorder?.flushed?.()).catch(() => {});
+    // Awaited to its `stop` event (3.8.3): its last `dataavailable` comes after stop() returns, and flushing before it
+    // filed the companion without its final chunk (758 bytes of a 5 s face, live).
+    await within(Promise.resolve().then(() => session.camRecorder?.stop()).catch(() => {}), 5000);
+    await within(Promise.resolve(session.camRecorder?.flushed?.()).catch(() => {}), 10000);
 
-    await session.flushed?.().catch(() => {});
+    await within(session.flushed?.()?.catch(() => {}), 10000);
     const rest = session.tailChunks?.() || [];
     if (rest.length) tail = new Blob(rest, { type: (session.mime || '').split(';')[0] });
     // Always release every source, even if encoding failed. A capture indicator
@@ -1519,7 +1641,8 @@ async function fileClip(session, { label, tail, outcome }) {
         cam
       );
       const camTail = new Blob(cam.tailChunks() || [], { type: companion.type });
-      const storedCam = await assembleMedia({ ...companion, blob: camTail.size ? camTail : null }, sha256Hex);
+      // A camera that failed mid-clip is kept up to the failure and says so on its own record (3.8.3).
+      const storedCam = await assembleMedia({ ...companion, ...(cam.failed ? { failed: cam.failed } : {}), blob: camTail.size ? camTail : null }, sha256Hex);
       if (storedCam.bytes) webcamTrackId = companion.id;
       else {
         await clearMediaParts(companionId).catch(() => {});
@@ -1530,12 +1653,14 @@ async function fileClip(session, { label, tail, outcome }) {
       webcamProblem = String(err?.message || err);
     }
     if (cam.failed) webcamProblem ||= cam.failed;
+    if (!webcamTrackId) console.warn('[QA Wrap] webcam not saved: 0 bytes;', webcamProblem);
   }
   // `null` and not absent: the editor reads a missing field as "this clip was
   // recorded before the webcam had its own track, so the face is baked in", and
   // a clip recorded today is not that clip whatever happened to its camera.
   record.webcamTrackId = webcamTrackId;
-  if (webcamProblem) record.webcamProblem = webcamProblem;
+  // Coded for the popup (EN/AR): no companion at all is WEBCAM_NOT_SAVED, one cut short by a failure is WEBCAM_SHORT.
+  if (webcamProblem) Object.assign(record, { webcamProblem, webcamCode: webcamTrackId ? 'WEBCAM_SHORT' : 'WEBCAM_NOT_SAVED' });
 
   let stored;
   try {
@@ -1568,7 +1693,7 @@ async function fileClip(session, { label, tail, outcome }) {
       stored: false,
       bytes: rescue.size,
       error:
-        `The clip was recorded but could not be stored: ${String(err?.message || err)}. ` +
+        `The clip was recorded but could not be stored: ${String(err?.message || err).replace(/\.$/, '')}. ` +
         (rescue.size
           ? 'It is still in memory. Press "Rescue the clip" to write it to your downloads before closing the browser.'
           : 'Nothing of it survived.'),
@@ -2217,10 +2342,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return extractAudio(msg);
       case 'UQA_OFF_ROLL':
         if (active && msg.op === 'start') return { rolling: false, why: 'recording' }; // one tab, one capture
-        return (rollMod = await import('./rolling.js')).rollOp(msg);
+        // 'stop' from the worker comes BEFORE it mints the Record's stream id: an id minted while the buffer's own
+        // capture is still opening is invalidated when that capture starts ("Invalid state", recording.mjs step 10).
+        if (msg.op === 'stop') { rollCancel = true; await rollBusy; }
+        if (msg.op === 'start') rollCancel = false;
+        {
+          const op = import('./rolling.js').then((m) => (rollMod = m).rollOp(msg, () => !!active || rollCancel));
+          if (msg.op === 'start') rollBusy = op.catch(() => {}); // settled stays settled: awaiting it later costs a tick
+          return op;
+        }
       case 'UQA_OFF_START':
-        rollMod?.stopRoll(); // cap1022: one tab, one capture; a normal Record takes over from the rolling buffer
-        return startRecording(msg);
+        return startRecording(msg); // claims synchronously: a Stop right behind it finds `starting`
+      case 'UQA_OFF_CANCEL':
+        if (msg.clear) cancelNext = false;
+        else if (!active) cancelNext = true;
+        else if (active.kind === 'starting') active.cancel = true;
+        return { ok: true };
       case 'UQA_OFF_STOP':
         return stopRecording(msg);
       /*
@@ -2235,7 +2372,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       case 'UQA_OFF_STATE':
         return active
           ? {
-              recording: true,
+              recording: active.kind !== 'starting', // shown as recording only once it is (3.8.3)
               starting: active.kind === 'starting',
               finishing: active.kind === 'finishing',
               id: active.id,
@@ -2243,6 +2380,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               startedAt: active.startedAt,
               frames: active.frameCount?.() ?? null,
               sources: active.sources || { tab: true },
+              lock: active.lock || null, // how the frame size locked (by, ms, path): read by the live checks
             }
           : { recording: false, rescuable: !!pendingBlob, rolling: !!rollMod?.rolling() };
       case 'UQA_OFF_RESCUE':
