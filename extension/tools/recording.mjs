@@ -393,6 +393,8 @@ try {
   truthy('the stored clip has bytes', (head?.bytes ?? 0) > 0, 'the stored clip is empty');
   check('the stored clip is an MP4 (ftypisom in its first bytes)', () => {
     if (!head) throw new Error('nothing was stored to look at');
+    // 3.8.4: an MP4 encoder that wrote nothing (another app holding H.264) is replaced by the WebM understudy; said, not failed.
+    if (head.type === 'video/webm' && head.ascii.startsWith('.E')) return void console.log('  note  the MP4 encoder wrote nothing; the WebM understudy was filed');
     if (!head.ascii.includes('ftypisom')) {
       throw new Error(`first bytes were "${head.ascii}" and the stored type is ${head.type}`);
     }

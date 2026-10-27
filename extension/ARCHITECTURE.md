@@ -1,6 +1,6 @@
 # Architecture
 
-**QA Wrap 3.8.3.** Rewritten 10 October 2026, against the source, after the
+**QA Wrap 3.8.4.** Rewritten 10 October 2026, against the source, after the
 layered restructure. Every count in it was measured that day; the commands that
 produced them are named beside them so the next person can re-measure rather
 than trust.

@@ -1113,11 +1113,8 @@ async function startRecording({
 
     const recorded = new MediaStream([videoTrack, ...(mixed.track ? [mixed.track] : [])]);
 
-    const recorder = new MediaRecorder(recorded, {
-      mimeType: mime,
-      videoBitsPerSecond: videoBitrate(quality, sourceTrack.getSettings?.().width, sourceTrack.getSettings?.().height),
-      audioBitsPerSecond: 128_000,
-    });
+    const vbps = videoBitrate(quality, sourceTrack.getSettings?.().width, sourceTrack.getSettings?.().height);
+    const recorder = new MediaRecorder(recorded, { mimeType: mime, videoBitsPerSecond: vbps, audioBitsPerSecond: 128_000 });
 
     /*
      * Every chunk goes to disk as it arrives.
@@ -1151,6 +1148,50 @@ async function startRecording({
       if (!e.data?.size) return;
       firstChunkAt ??= Date.now();
       parts.add(e.data, partSeq++);
+      dropBackup(); // the MP4 is writing: the understudy is not needed
+    };
+
+    /*
+     * A WebM understudy for the MP4's first seconds (3.8.4, rule 4).
+     *
+     * Live [V, A5]: while another browser was encoding H.264, Chrome's MP4 recorder took 46 frames in 4 s and wrote
+     * nothing (no chunk at 2 s, 0 bytes at stop even after requestData), so the clip was refused as empty and lost;
+     * CPU load alone never did it. A second recorder on the same tracks, in WebM (software VP8/9), keeps its chunks
+     * in memory and is dropped at the MP4's first bytes. If the MP4 has written nothing by 5 s or by Stop, the
+     * understudy becomes the clip (its chunks go to disk, the record says WebM) and the MP4 is stopped.
+     */
+    const backupMime = /mp4/i.test(mime) ? pickMime('webm') : null;
+    let backup = null;
+    let backupChunks = [];
+    let backupDone = null;
+    let promoted = false;
+    if (backupMime) {
+      try {
+        backup = new MediaRecorder(recorded, { mimeType: backupMime, videoBitsPerSecond: vbps, audioBitsPerSecond: 128_000 });
+        backupDone = new Promise((res) => { backup.onstop = res; backup.onerror = res; });
+        backup.ondataavailable = (e) => {
+          if (!e.data?.size) return;
+          if (!promoted) return void backupChunks.push(e.data);
+          firstChunkAt ??= Date.now();
+          parts.add(e.data, partSeq++);
+        };
+      } catch { backup = null; } // no understudy: the MP4 alone, as before
+    }
+    function dropBackup() {
+      if (!backup || promoted) return;
+      const b = backup;
+      backup = null;
+      backupChunks = [];
+      try { b.stop(); } catch { /* already inactive */ }
+    }
+    const promote = () => {
+      if (!backup || promoted) return false;
+      promoted = true;
+      recorder.ondataavailable = recorder.onerror = recorder.onstop = null; // the MP4 is no longer this clip
+      try { recorder.stop(); } catch { /* already inactive */ }
+      for (const c of backupChunks) { firstChunkAt ??= Date.now(); parts.add(c, partSeq++); }
+      backupChunks = [];
+      return true;
     };
 
     /**
@@ -1203,6 +1244,8 @@ async function startRecording({
     // A timeslice means chunks arrive as we go. Without it the whole recording
     // sits in the encoder until stop(), and a crash loses all of it.
     recorder.start(2000);
+    try { backup?.start(1000); } catch { backup = null; }
+    const watch = backup && setTimeout(() => { if (firstChunkAt == null) promote(); }, 5000);
     // The clip runs from here, not from the press: the frame lock above can
     // take up to 5 s, and a duration counted from the press would claim it.
     const recordingFrom = Date.now();
@@ -1288,7 +1331,7 @@ async function startRecording({
       // clip's duration.
       stoppedAt: claim.stoppedAt,
       failed: null,
-      mime,
+      get mime() { return promoted ? backupMime : mime; },
       /*
        * The extension, from the catalogue, decided here.
        *
@@ -1298,7 +1341,7 @@ async function startRecording({
        * `something.webm;codecs=vp8,opus`, a filename no operating system will
        * open. Naming the extension at the source removes the guess.
        */
-      ext,
+      get ext() { return promoted ? extForMime(backupMime, 'webm') : ext; },
       label,
       sources: {
         tab: !desktop,
@@ -1318,8 +1361,28 @@ async function startRecording({
       // the source and once by the tester (or the worker) asking to stop.
       // Calling `stop()` on an inactive recorder throws InvalidStateError;
       // asking for the settle that is already on its way does not.
-      stop: () => {
-        if (recorder.state !== 'inactive') recorder.stop();
+      stop: async () => {
+        clearTimeout(watch);
+        // Nothing from the MP4 yet: ask it for what it holds (requestData first: stopped before its first chunk it
+        // writes 0 bytes; never after one, it cuts), and if that is still nothing the understudy is the clip.
+        if (backup && !promoted && firstChunkAt == null) {
+          if (recorder.state !== 'inactive') {
+            try { recorder.requestData(); } catch { /* inactive */ }
+            try { recorder.stop(); } catch { /* inactive */ }
+            await within(done, 5000);
+          }
+          if (firstChunkAt == null) promote();
+        }
+        if (promoted) {
+          try { if (backup.state !== 'inactive') backup.stop(); } catch { /* inactive */ }
+          await within(backupDone, 5000);
+          return { ok: true };
+        }
+        dropBackup();
+        if (recorder.state !== 'inactive') {
+          if (firstChunkAt == null) try { recorder.requestData(); } catch { /* inactive */ }
+          recorder.stop();
+        }
         return done;
       },
     };

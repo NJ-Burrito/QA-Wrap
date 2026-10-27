@@ -6,6 +6,12 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.8.4, 2026-10-27
+
+### Fixed
+
+- A recording is no longer lost when another program is using the computer's video encoder. Before, the clip could save nothing at all; now it is saved as a WebM video instead.
+
 ## 3.8.3, 2026-10-27
 
 ### Fixed
