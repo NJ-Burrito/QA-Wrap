@@ -2051,6 +2051,7 @@
   "popup.record.room": "Room for about {span} of video.",
   "popup.record.roomMore": " Room for about {span} more.",
   "popup.record.saved": "Saved {mb}MB. It is in the report, under Screens & video.",
+  "popup.record.savedCamShort": "Saved {mb}MB. The webcam stopped early, so its clip is shorter or missing.",
   "popup.record.since": "Recording: {m}m {s}s so far.",
   "popup.record.started": "Recording. Press again to stop.",
   "popup.record.stop": "Stop",

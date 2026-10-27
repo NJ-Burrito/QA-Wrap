@@ -39,12 +39,16 @@ async function tick() {
 
 
 export function stopRoll() {
-  if (!r) return;
+  if (!r) return Promise.resolve();
   clearInterval(r.timer);
   chrome.runtime.onMessage.removeListener(r.onState);
-  for (const s of r.slots) if (s) { s.rec.onstop = null; try { s.rec.stop(); } catch { /* already inactive */ } }
+  // Settles once every slot's encoder has really stopped (1 s at most), so a Record that takes over the tab opens its
+  // own encoders after these are released (3.8.3: a webcam whose MP4 and WebM encoders both refused beside a buffer
+  // stopped a moment earlier).
+  const gone = r.slots.filter(Boolean).map((s) => new Promise((res) => { s.rec.onstop = res; try { s.rec.stop(); } catch { res(); } }));
   r.stream.getTracks().forEach((t) => t.stop());
   r = null;
+  return Promise.race([Promise.all(gone), new Promise((res) => setTimeout(res, 1000))]);
 }
 
 /** What the blob really decodes to, in ms; null when it cannot be read. A MediaRecorder file has no duration header, so seek far past the end to make the element compute it. */
@@ -85,7 +89,7 @@ async function save({ label }) {
 /** @param {{op: string, streamId?: string, sessionId?: string, tabId?: number, label?: string}} msg */
 export async function rollOp(msg, blocked) {
   if (msg.op === 'state') return { rolling: isOn() };
-  if (msg.op === 'stop') { stopRoll(); return { rolling: false }; }
+  if (msg.op === 'stop') { await stopRoll(); return { rolling: false }; }
   if (msg.op === 'save') return save(msg);
   if (msg.op !== 'start') throw new Error(`Unknown roll op: ${msg.op}`);
   if (r) return { rolling: true };

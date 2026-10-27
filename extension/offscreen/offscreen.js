@@ -359,16 +359,31 @@ function drawPointer(ctx, r) {
   ctx.restore();
 }
 
-/** The frame sizes a tab capture may settle on (see startRecording). Pure: tools/test-recording-frame-lock.mjs lifts it. */
+/**
+ * The frame sizes a tab capture may settle on (see startRecording), each with the size the clip locks at (`lock`).
+ * Pure: tools/test-recording-frame-lock.mjs lifts it.
+ *
+ * A tab capture delivers the tab's shape either fitted up to the capture edge or 1:1 at its monitor scale, and Chrome
+ * picks one per capture and holds it from the first frame (3.8.3, live: the same 1100x900 window gave 1358x1008 in
+ * one run and 1920x1424 in the next, never stepping). Both lock at the edge-fit size, so one window always records
+ * one size. DevTools device mode (the page's shape is not the tab's): the capture is the page's shape at a scale
+ * nobody can predict (390x844 @3 gave 854x1846 against 888x1920 computed), so it matches by shape (`shape`).
+ */
 function lockTargets(view, edge, ownDpr) {
   if (!(view?.w > 0 && view?.h > 0)) return null;
   const [pw, ph] = view.px || [];
   const dsf = pw > 0 ? pw / view.w : ownDpr || 1;
-  return [[view.w, view.h, dsf], ...(pw > 0 && ph > 0 ? [[pw, ph, 1]] : [])].flatMap(([w, h, s]) =>
-    [edge / Math.max(w, h), Math.min(s, edge / w, edge / h)].map((k) => ({ w: Math.round(w * k), h: Math.round(h * k) })));
+  const fit = (w, h, k) => ({ w: Math.round(w * k), h: Math.round(h * k) });
+  const up = fit(view.w, view.h, edge / Math.max(view.w, view.h));
+  const out = [up, fit(view.w, view.h, Math.min(dsf, edge / view.w, edge / view.h))].map((b) => ({ ...b, lock: up }));
+  if (pw > 0 && ph > 0 && Math.abs((pw / ph) / (view.w / view.h) - 1) > 0.02) {
+    const page = fit(pw, ph, edge / Math.max(pw, ph));
+    out.push({ ...page, lock: page, shape: true });
+  }
+  return out;
 }
 
-function composite({ feed, fps, cursor = false, hint = null }) {
+function composite({ feed, fps, cursor = false, hint = null, urgent = () => false }) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   let timer = null;
@@ -418,15 +433,26 @@ function composite({ feed, fps, cursor = false, hint = null }) {
       }
       seen.n++; // draw ticks: the count where the browser cannot report frames
       const held = n === null ? seen.n : n - seen.f + 1;
-      const at = !!hint?.some((b) => Math.abs(seen.w - b.w) <= 3 && Math.abs(seen.h - b.h) <= 3);
-      if (!at && now - first < 4000 && (hint || (held < 3 && now - seen.t < 600))) return;
-      locked = lockFrame(feed.videoWidth, feed.videoHeight);
+      const hit = hint?.find((b) => (b.shape
+        ? Math.abs((seen.w / seen.h) / (b.w / b.h) - 1) <= 0.01
+        : Math.abs(seen.w - b.w) <= 3 && Math.abs(seen.h - b.h) <= 3));
+      const at = !!hit;
+      // `urgent`: Stop was pressed while this clip was still starting. Lock on what is here now, so the encoder runs
+      // and the clip is filed (rule 4): a fitted, slightly soft clip beats a recording that disappears.
+      const hurry = urgent();
+      if (!at && !hurry && now - first < 4000 && (hint || (held < 3 && now - seen.t < 600))) return;
+      locked = hit ? lockFrame(hit.lock.w, hit.lock.h) : lockFrame(feed.videoWidth, feed.videoHeight);
       canvas.width = locked.w;
       canvas.height = locked.h;
       // How it locked, reported on the start reply: `rvfc` is the count of
       // presented frames (null where requestVideoFrameCallback is missing; 0
       // where it exists but never fires, as in a never-rendered document).
-      ready({ ...locked, ms: now - first, by: at ? 'hint' : now - first >= 4000 ? 'bound' : held >= 3 ? 'frames' : 'still', rvfc: n, hint, path });
+      ready({ ...locked, ms: now - first, by: at ? 'hint' : hurry ? 'stop' : now - first >= 4000 ? 'bound' : held >= 3 ? 'frames' : 'still', rvfc: n, hint, path });
+    }
+    // The sizes after the lock too (reported on the state, never read): a capture that steps later is fitted inside.
+    if (path.length < 8 && (seen.w !== feed.videoWidth || seen.h !== feed.videoHeight)) {
+      seen = { w: feed.videoWidth, h: feed.videoHeight };
+      path.push(`${seen.w}x${seen.h}@${Date.now() - first}`);
     }
     const r = fitRect(feed.videoWidth, feed.videoHeight, locked.w, locked.h);
     if (r.w < locked.w || r.h < locked.h) ctx.fillRect(0, 0, locked.w, locked.h);
@@ -435,10 +461,19 @@ function composite({ feed, fps, cursor = false, hint = null }) {
     // The picture, and then the pointer over it. Nothing else is drawn: the
     // webcam is its own clip now, laid over this one at playback.
     if (cursor) drawPointer(ctx, r);
+    // One frame per draw, never two closer than 0.9 of a tick (3.8.3): with `captureStream(fps)` Chrome chose when to
+    // take a frame, and some clips held two frames closer than one frame period, which a decoder at the clip's rate
+    // reads as one timestamp twice (ffmpeg: "non monotonically increasing dts to muxer in stream 0: 128 >= 128").
+    const now = Date.now();
+    if (now - lastFrame >= gap) { lastFrame = now; track?.requestFrame?.(); }
   };
 
-  const stream = canvas.captureStream(fps);
-  timer = setInterval(draw, Math.max(1, Math.round(1000 / (fps || 15))));
+  const stream = canvas.captureStream(0); // frames only when requested, above
+  const track = stream.getVideoTracks()[0];
+  const tickMs = Math.max(1, Math.round(1000 / (fps || 15)));
+  const gap = tickMs * 0.9;
+  let lastFrame = -Infinity;
+  timer = setInterval(draw, tickMs);
 
   return {
     stream,
@@ -565,7 +600,7 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
      * laptop with no room left.
      */
     videoBitsPerSecond: { low: 300_000, medium: 700_000, high: 1_200_000 }[quality] ?? 700_000,
-  }); r.start(2000); if (fault(m) === 'cam-mp4-error') setTimeout(() => r.dispatchEvent(new Event('error')), 1500); return r; };
+  }); r.start(2000); if (fault(m) === 'cam-mp4-error') setTimeout(() => { r.dispatchEvent(new Event('error')); r.stop(); }, 1500); return r; }; // as Chrome does: error, then the recorder stops
   // Started here, handlers attached below in the same task (no chunk can arrive before them). A second
   // hardware H.264 encoder beside the picture's can fail to come up (Blink "There was an error starting
   // the MediaRecorder", 1 run in 5 of tools/recording.mjs): the face is then written as WebM instead.
@@ -809,7 +844,10 @@ async function startRecording({
    */
   const startedAt = Date.now();
   const id = `m_${startedAt.toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
-  const claim = { kind: 'starting', id, sessionId, startedAt, stoppedAt: null, mime: null, sources: { tab: !desktop, screen: desktop } };
+  const claim = { kind: 'starting', id, sessionId, startedAt, stoppedAt: null, mime: null, sources: { tab: !desktop, screen: desktop }, stopAsked: false };
+  // Settles when this start does, either way: a Stop pressed while the clip is starting waits on it (stopRecording).
+  let begun;
+  claim.begun = new Promise((res) => { begun = res; });
   active = claim;
 
   // Declared out here so the catch below can reach them. A throw between
@@ -852,7 +890,7 @@ async function startRecording({
     // the desktop media-source constraint, and that could never work: such an
     // id is bound to the frame that asked for it, and the frame that asked was
     // never this one. See `displayStream` above for the measurements.
-    if (rollBusy) { await rollBusy; rollMod?.stopRoll(); } // a buffer still opening the tab gives it up first
+    if (rollBusy) { await rollBusy; await rollMod?.stopRoll(); } // a buffer still opening the tab gives it up first
     const wantsAudio = desktop ? systemAudio : tabAudio;
 
     const edge = CAPTURE_EDGE[quality] || CAPTURE_EDGE.medium;
@@ -1041,7 +1079,7 @@ async function startRecording({
     // The lock takes whichever of these the capture actually delivers; a later
     // change (emulation turned off) is a mid-clip resize, fitted inside.
     const hint = desktop ? null : lockTargets(view, edge, devicePixelRatio);
-    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor, hint });
+    mixer = composite({ feed, fps: fps || 15, cursor: drawnCursor, hint, urgent: () => claim.stopAsked });
     // The encoder starts only on a locked frame: a canvas sized after start is
     // the defect itself, so no picture in 5 s is a refusal, not a clip.
     const frame = await Promise.race([mixer.ready, new Promise((res) => setTimeout(res, 5000, null))]);
@@ -1224,6 +1262,7 @@ async function startRecording({
       // it beside the picture. Null whenever there is no camera, or when
       // starting it failed — which is reported and survivable.
       camRecorder,
+      lock: frame,
       // Read by `companionRecord()` for `offsetMs`. A getter and not a value:
       // the first chunk has not arrived yet at the moment this object is built.
       get firstChunkAt() { return firstChunkAt; },
@@ -1271,6 +1310,8 @@ async function startRecording({
   } catch (err) {
     abort();
     throw err;
+  } finally {
+    begun();
   }
 }
 
@@ -1446,8 +1487,22 @@ function startGifCapture({ id, sessionId, stream, feed, cam, fps, startedAt, web
  */
 async function stopRecording({ label } = {}) {
   if (!active) throw new Error('Nothing is being recorded.');
+  /*
+   * Stop while the clip is still starting (3.8.3, rule 4). Every surface already shows "recording" from the claim on,
+   * so refusing here ("still starting") lost the clip: the start finished afterwards and the tester's Stop was gone
+   * (recording.mjs step 5, the mid-clip resize clip never stored). Now the start is told to lock on the frame it has
+   * and finish, and this Stop then stops and files it. A start that fails instead had recorded nothing, and says so.
+   */
   if (active.kind === 'starting') {
-    throw new Error('That clip is still starting. Give it a moment, then press Stop.');
+    const claim = active;
+    claim.stopAsked = true;
+    await claim.begun;
+    if (active?.id !== claim.id) throw new Error('That clip did not start, so there was nothing to save.');
+    if (active.kind !== 'finishing') {
+      // ponytail: a fixed 300 ms so the encoder has frames to write (a stop on the same tick as start() files 0 bytes);
+      // a frame counter on the composite would be exact, 300 ms at 15 fps is ~4 frames.
+      await new Promise((res) => setTimeout(res, 300));
+    }
   }
   if (active.kind === 'finishing') {
     throw new Error('That clip is already being saved. It will appear in the report on its own.');
@@ -2272,7 +2327,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           return op;
         }
       case 'UQA_OFF_START':
-        rollMod?.stopRoll(); // cap1022: one tab, one capture; a normal Record takes over from the rolling buffer
+        await rollMod?.stopRoll(); // cap1022: one tab, one capture; a normal Record takes over from the rolling buffer (its encoders released first)
         return startRecording(msg);
       case 'UQA_OFF_STOP':
         return stopRecording(msg);
@@ -2296,6 +2351,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
               startedAt: active.startedAt,
               frames: active.frameCount?.() ?? null,
               sources: active.sources || { tab: true },
+              lock: active.lock || null, // how the frame size locked (by, ms, path): read by the live checks
             }
           : { recording: false, rescuable: !!pendingBlob, rolling: !!rollMod?.rolling() };
       case 'UQA_OFF_RESCUE':

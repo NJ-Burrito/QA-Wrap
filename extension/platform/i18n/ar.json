@@ -2051,6 +2051,7 @@
   "popup.record.room": "تتسع لنحو {span} من الفيديو.",
   "popup.record.roomMore": " وتتسع لنحو {span} إضافية.",
   "popup.record.saved": "حُفظ {mb}MB. وهو في التقرير تحت «اللقطات والفيديو».",
+  "popup.record.savedCamShort": "حُفظ {mb}MB. توقفت الكاميرا مبكرًا، فمقطعها أقصر أو غير موجود.",
   "popup.record.since": "التسجيل: {m} د {s} ث حتى الآن.",
   "popup.record.started": "التسجيل جارٍ. اضغطها مرة أخرى لإيقافه.",
   "popup.record.stop": "أوقف",

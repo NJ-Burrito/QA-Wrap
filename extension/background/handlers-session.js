@@ -801,7 +801,7 @@ export const recordingHandlers = {
 const legacyMediaMemo = new Map();
 
 async function mediaListFor(msg) {
-  const current = await listMedia(msg.sessionId);
+  const current = await listMedia(msg.sessionId, { companions: !!msg.companions });
   let legacy = legacyMediaMemo.get(msg.sessionId);
   if (!legacy) {
     const known = new Set(current.map((m) => m.id));
