@@ -388,6 +388,7 @@ export const recordingHandlers = {
 
       if (meta?.stored === false) {
         throw Object.assign(new Error(meta.error || 'The clip could not be stored.'), {
+          code: 'REC_NOT_STORED',
           mediaId: meta.id,
           rescuable: meta.bytes > 0,
         });

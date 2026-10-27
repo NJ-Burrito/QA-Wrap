@@ -503,5 +503,52 @@ await test("the 'cam-mp4-error' seam fails the webcam the way Chrome does: error
   for (const lang of ['en', 'ar']) assert.ok(JSON.parse(read(`platform/i18n/${lang}.json`))['popup.record.savedCamShort'], `${lang}: savedCamShort missing`);
 });
 
+await test('the webcam keeps what it wrote: requestData before every stop, on Stop and on an encoder error; 0 bytes is WEBCAM_NOT_SAVED', async () => {
+  const calls = [];
+  const parts = [];
+  const made = [];
+  class FakeRecorder {
+    constructor(_s, o) { this.mimeType = o.mimeType; this.state = 'inactive'; made.push(this); }
+    start() { this.state = 'recording'; }
+    // Chrome's MP4 recorder [V, live probe 3.8.3]: stopped before its first 2 s chunk it writes 0 bytes unless asked.
+    requestData() { calls.push('requestData'); this.asked = true; }
+    stop() { calls.push('stop'); this.state = 'inactive'; this.ondataavailable?.({ data: { size: this.asked ? 45790 : 0 } }); this.onstop?.(); }
+    dispatchEvent(e) { if (e.type === 'error') this.onerror?.(e); }
+  }
+  const make = new Function('pickMime', 'extForMime', 'partWriter', 'putMediaPart', 'putMediaPending', 'warnDisk', 'MediaRecorder', 'MediaStream', 'setTimeout', 'Event',
+    `${lift(OFF, 'startCamRecorder')}\nreturn startCamRecorder;`);
+  const timers = [];
+  const start = make(() => 'video/mp4', () => 'mp4', () => ({ add(b) { parts.push(b.size); }, chain: Promise.resolve(), chunks: [] }), () => {}, async () => {}, () => {},
+    FakeRecorder, class {}, (fn) => timers.push(fn), class { constructor(t) { this.type = t; } });
+  const cam = start({ id: 'm', sessionId: 's', camStream: { getVideoTracks: () => [{}] }, quality: 'medium', startedAt: 1 });
+  assert.deepEqual(await cam.stop(), { ok: true });
+  assert.deepEqual(calls, ['requestData', 'stop'], 'Stop does not ask for the held frames first');
+  assert.deepEqual(parts, [45790], 'a camera stopped before its first chunk lost its frames');
+  calls.length = 0; parts.length = 0;
+  // Once a chunk exists, requestData on Chrome's MP4 recorder cut a 5 s face to 1.6 s [V, live]: a plain stop() then.
+  const mid = start({ id: 'k', sessionId: 's', camStream: { getVideoTracks: () => [{}] }, quality: 'medium', startedAt: 1 });
+  made.at(-1).ondataavailable({ data: { size: 758 } });
+  await mid.stop();
+  assert.deepEqual(calls, ['stop'], 'requestData after the first chunk truncates the MP4 face');
+  calls.length = 0; parts.length = 0;
+  globalThis.__qawFault = 'cam-mp4-error';
+  try {
+    const failing = start({ id: 'n', sessionId: 's', camStream: { getVideoTracks: () => [{}] }, quality: 'medium', startedAt: 1 });
+    timers.forEach((fn) => fn());
+    assert.deepEqual(calls, ['requestData', 'stop'], 'an encoder error does not ask for the held frames before the recorder stops');
+    assert.deepEqual(parts, [45790]);
+    assert.deepEqual(await failing.stop(), { ok: false, error: failing.failed });
+  } finally { delete globalThis.__qawFault; }
+  // 0 bytes: no companion, a coded warning on the stop result, and the popup says it in EN and AR.
+  assert.ok(OFF.includes("webcamCode: webcamTrackId ? 'WEBCAM_SHORT' : 'WEBCAM_NOT_SAVED'"), 'the stop result carries no coded webcam warning');
+  const read = (p) => fs.readFileSync(path.join(HERE, '..', p), 'utf8');
+  assert.ok(read('popup/tool-actions.js').includes("out.result.webcamCode === 'WEBCAM_NOT_SAVED' ? 'popup.record.savedCamLost'"), 'the popup does not say the webcam was not saved');
+  for (const lang of ['en', 'ar']) {
+    const cat = JSON.parse(read(`platform/i18n/${lang}.json`));
+    assert.ok(cat['popup.record.savedCamLost']?.includes('{mb}'), `${lang}: savedCamLost missing`);
+    assert.notEqual(cat['popup.record.savedCamLost'], cat['popup.record.savedCamShort']);
+  }
+});
+
 console.log(`\n${passed} passed, ${failures.length} failed`);
 if (failures.length) process.exit(1);

@@ -12,6 +12,9 @@ Not shown to users: a release copies its own `## <version>` section only. Rename
 
 - A recording now starts at the tab's real size straight away. Before, a page that sat still could record its whole clip at a smaller, softer size when the browser was slow to send the sharp picture, or in the old shape right after the window was resized.
 - When nothing on the page changes, recording starts sooner: it no longer waits for frames that a still page never sends.
+- Pressing Stop while a recording is still starting saves the clip, or says in English or Arabic that nothing was recorded.
+- The webcam clip keeps everything it recorded, including its last seconds and a stop or camera failure in its first two seconds. If the webcam saved nothing, the popup now says so, while the screen clip stays complete.
+- If a clip cannot be stored, usually because the disk is full, the message is now short and in your language.
 
 ### Changed
 

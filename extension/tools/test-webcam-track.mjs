@@ -267,7 +267,8 @@ test('a webcam that cannot record does not cost the tester the clip', () => {
   );
   assert.match(
     OFF,
-    /try \{ session\.camRecorder\?\.stop\(\); \} catch \{ \/\* already inactive \*\/ \}/,
+    // 3.8.3: awaited to its stop event, a throw caught by the promise, bounded.
+    /await within\(Promise\.resolve\(\)\.then\(\(\) => session\.camRecorder\?\.stop\(\)\)\.catch\(\(\) => \{\}\), 5000\)/,
     'the companion stop is unguarded in the teardown, so a webcam recorder that throws on the way ' +
       'down skips every release and every write below it'
   );

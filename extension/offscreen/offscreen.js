@@ -592,7 +592,8 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
   const camId = `${id}_cam`;
   // Test-only fault seam (3.8.3): nothing in the extension sets `__qawFault`; a live harness sets it in this
   // document over CDP to drive the fallback below ('cam-mp4-start': the MP4 start throws) or the onerror
-  // path ('cam-mp4-error': the started MP4 recorder fails). Unset, as in every real run, it does nothing.
+  // path ('cam-mp4-error': the started MP4 recorder fails at 3 s, after its first chunk; 'cam-mp4-error-early': at
+  // 1.5 s, before it wrote a byte, so nothing is kept and the stop result says so). Unset, as in every real run, it does nothing.
   const fault = (m) => /^video\/mp4/.test(m) && globalThis.__qawFault;
   const open = (m) => { if (fault(m) === 'cam-mp4-start') throw new Error('forced cam MP4 start failure (__qawFault)'); const r = new MediaRecorder(new MediaStream([track]), {
     mimeType: m,
@@ -606,7 +607,7 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
      * laptop with no room left.
      */
     videoBitsPerSecond: { low: 300_000, medium: 700_000, high: 1_200_000 }[quality] ?? 700_000,
-  }); r.start(2000); if (fault(m) === 'cam-mp4-error') setTimeout(() => { r.dispatchEvent(new Event('error')); r.stop(); }, 1500); return r; }; // as Chrome does: error, then the recorder stops
+  }); r.start(2000); const f = fault(m); if (/^cam-mp4-error/.test(f || '')) setTimeout(() => { r.dispatchEvent(new Event('error')); r.stop(); }, f === 'cam-mp4-error' ? 3000 : 1500); return r; }; // as Chrome does: error, then the recorder stops
   // Started here, handlers attached below in the same task (no chunk can arrive before them). A second
   // hardware H.264 encoder beside the picture's can fail to come up (Blink "There was an error starting
   // the MediaRecorder", 1 run in 5 of tools/recording.mjs): the face is then written as WebM instead.
@@ -639,13 +640,13 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
       resolve(value);
     };
   });
-  recorder.onstop = () => settle({ ok: true });
+  recorder.onstop = () => settle(failed ? { ok: false, error: failed } : { ok: true });
   recorder.onerror = (e) => {
     failed = String(e?.error?.message || e?.error || 'The webcam recorder stopped with an error.');
     stoppedAt ??= Date.now();
-    // Nothing is broadcast. The worker's `UQA_SOURCE_ENDED` stops the whole
-    // clip, and a dead camera is not a reason to end a recording of the defect.
-    settle({ ok: false, error: failed });
+    // Keep what it wrote (3.8.3): ask for the frames held before the first 2 s chunk, and settle on `stop`, which
+    // follows the error and its last `dataavailable`. Nothing is broadcast: a dead camera does not end the clip.
+    try { if (recorder.state === 'recording' && firstChunkAt == null) recorder.requestData(); } catch { /* already inactive */ }
   };
   // The same timeslice as the picture, so the two are chunked on the same
   // rhythm and `offsetMs` is a real measurement rather than an artefact of one
@@ -681,8 +682,11 @@ function startCamRecorder({ id, sessionId, camStream, quality, label, geometry, 
     stop: () => {
       stoppedAt ??= Date.now();
       if (recorder.state !== 'inactive') {
+        // requestData first while nothing has arrived [V, live probe]: Chrome's MP4 recorder stopped before its first
+        // chunk writes 0 bytes, with it 45 KB. Once a chunk exists a plain stop() writes the rest.
+        if (firstChunkAt == null) try { recorder.requestData(); } catch { /* inactive */ }
         try { recorder.stop(); } catch { settle({ ok: false, error: 'already inactive' }); }
-      } else settle({ ok: true });
+      } else settle(failed ? { ok: false, error: failed } : { ok: true });
       return done;
     },
   };
@@ -1555,7 +1559,9 @@ async function stopRecording({ label } = {}) {
      * filed: everything below this line releases hardware and writes evidence,
      * and a webcam recorder that throws on the way down would skip all of it.
      */
-    try { session.camRecorder?.stop(); } catch { /* already inactive */ }
+    // Awaited to its `stop` event (3.8.3): its last `dataavailable` comes after stop() returns, and flushing before it
+    // filed the companion without its final chunk (758 bytes of a 5 s face, live).
+    await within(Promise.resolve().then(() => session.camRecorder?.stop()).catch(() => {}), 5000);
     await within(Promise.resolve(session.camRecorder?.flushed?.()).catch(() => {}), 10000);
 
     await within(session.flushed?.()?.catch(() => {}), 10000);
@@ -1647,12 +1653,14 @@ async function fileClip(session, { label, tail, outcome }) {
       webcamProblem = String(err?.message || err);
     }
     if (cam.failed) webcamProblem ||= cam.failed;
+    if (!webcamTrackId) console.warn('[QA Wrap] webcam not saved: 0 bytes;', webcamProblem);
   }
   // `null` and not absent: the editor reads a missing field as "this clip was
   // recorded before the webcam had its own track, so the face is baked in", and
   // a clip recorded today is not that clip whatever happened to its camera.
   record.webcamTrackId = webcamTrackId;
-  if (webcamProblem) record.webcamProblem = webcamProblem;
+  // Coded for the popup (EN/AR): no companion at all is WEBCAM_NOT_SAVED, one cut short by a failure is WEBCAM_SHORT.
+  if (webcamProblem) Object.assign(record, { webcamProblem, webcamCode: webcamTrackId ? 'WEBCAM_SHORT' : 'WEBCAM_NOT_SAVED' });
 
   let stored;
   try {
