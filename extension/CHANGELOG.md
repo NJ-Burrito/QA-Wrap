@@ -6,6 +6,17 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.8.3, 2026-10-27
+
+### Fixed
+
+- A recording now starts at the tab's real size straight away. Before, a page that sat still could record its whole clip at a smaller, softer size when the browser was slow to send the sharp picture, or in the old shape right after the window was resized.
+- When nothing on the page changes, recording starts sooner: it no longer waits for frames that a still page never sends.
+
+### Changed
+
+- The bundled voice tools use a newer, patched image library (sharp 0.35).
+
 ## 3.8.2, 2026-10-27
 
 ### Fixed

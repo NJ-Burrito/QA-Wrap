@@ -1,6 +1,6 @@
 {
   "name": "qa-wrap",
-  "version": "3.8.2",
+  "version": "3.8.3",
   "private": true,
   "license": "MIT",
   "engines": {
@@ -68,5 +68,8 @@
     "playwright": "^1.62.1",
     "pngjs": "^7.0.0",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "sharp": "^0.35.5"
   }
 }
