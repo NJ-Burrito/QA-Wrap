@@ -172,6 +172,7 @@ const ctx = await chromium.launchPersistentContext(PROFILE, {
     '--use-fake-device-for-media-stream',
     '--auto-accept-camera-and-microphone-capture',
     '--auto-select-desktop-capture-source=Entire screen',
+    '--remote-debugging-port=0', // 3.8.4: step 5c sets the test fault in the offscreen document over raw CDP
   ],
 });
 const w = await freshWorker(ctx);
@@ -263,9 +264,37 @@ function storedHead(mediaId, whole = false) {
       sessionId: rec.sessionId,
       label: rec.label,
       ascii: [...bytes].map((c) => (c > 31 && c < 127 ? String.fromCharCode(c) : '.')).join(''),
-      b64: whole ? await new Promise((res) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.readAsDataURL(rec.blob); }) : undefined,
+      b64: whole ? await new Promise((res) => { const r = new FileReader(); r.onload = () => { const u = String(r.result); res(u.slice(u.indexOf(';base64,') + 8)); }; r.readAsDataURL(rec.blob); }) : undefined,
     };
   }, [mediaId, whole]);
+}
+
+/** The offscreen document over raw CDP (Playwright cannot attach to it in a persistent context). */
+async function offscreenEval(expression) {
+  const port = fs.readFileSync(path.join(PROFILE, 'DevToolsActivePort'), 'utf8').split(/\r?\n/)[0];
+  const t = (await (await fetch(`http://127.0.0.1:${port}/json/list`)).json()).find((x) => /\/offscreen\/offscreen\.html/.test(x.url));
+  if (!t) return { error: 'no offscreen target' };
+  const ws = new WebSocket(t.webSocketDebuggerUrl);
+  await new Promise((res, rej) => { ws.onopen = res; ws.onerror = rej; });
+  const out = await new Promise((res) => {
+    ws.onmessage = (m) => { const d = JSON.parse(m.data); if (d.id === 1) res(d.result?.result?.value ?? d.result ?? d.error); };
+    ws.send(JSON.stringify({ id: 1, method: 'Runtime.evaluate', params: { expression, returnByValue: true } }));
+  });
+  ws.close();
+  return out;
+}
+
+/** A full ffmpeg decode: decoder errors, every frame size, the last frame's time. */
+function decodeFull(b64, ext) {
+  const file = path.join(os.tmpdir(), `qaw-rec-full-${process.pid}.${ext}`);
+  fs.writeFileSync(file, Buffer.from(b64, 'base64'));
+  const ff = spawnSync('ffmpeg', ['-v', 'error', '-i', file, '-f', 'null', '-'], { encoding: 'utf8', maxBuffer: 1 << 26 });
+  const errors = (ff.stderr || '').trim().split(/\r?\n/).filter((l) => l && !/non monotonically increasing dts/.test(l));
+  const fr = spawnSync('ffprobe', ['-v', 'error', '-select_streams', 'v', '-show_entries', 'frame=width,height,pts_time,best_effort_timestamp_time', '-of', 'json', file], { encoding: 'utf8', maxBuffer: 1 << 28 });
+  const rows = JSON.parse(fr.stdout || '{}').frames || [];
+  const pts = rows.map((r) => Number(r.pts_time ?? r.best_effort_timestamp_time)).filter(Number.isFinite);
+  fs.rmSync(file, { force: true });
+  return { errors: errors.length, firstError: errors[0] || '', sizes: [...new Set(rows.map((r) => `${r.width}x${r.height}`))], frames: rows.length, durationS: +(pts.length ? Math.max(...pts) : 0).toFixed(3) };
 }
 
 /* ------------------------------------------------------- wake and charter */
@@ -404,6 +433,55 @@ try {
     (clip?.durationMs ?? 0) >= 2000 && (clip?.durationMs ?? 0) <= 12_000,
     `durationMs was ${clip?.durationMs}`
   );
+
+  /* 5c. the MP4 encoder writes nothing: the WebM understudy is the clip (3.8.4) */
+
+  console.log('\nwhen the MP4 encoder writes nothing (fault rec-mp4-silent)');
+  truthy('the fault is set in the offscreen document', (await offscreenEval('globalThis.__qawFault = "rec-mp4-silent"')) === 'rec-mp4-silent');
+  const silentStart = await send({ type: 'UQA_RECORD_START', tabId, format: 'mp4' });
+  is('the clip starts', silentStart?.ok, true);
+  await popup.waitForTimeout(6500); // past the 5 s watchdog: the understudy takes over while recording
+  const silentStop = await send({ type: 'UQA_RECORD_STOP' });
+  await offscreenEval('delete globalThis.__qawFault');
+  is('it stops and is stored', silentStop?.ok && silentStop?.result?.stored !== false, true);
+  const fb = silentStop?.result;
+  is('filed as the WebM understudy', { type: fb?.type, ext: fb?.ext }, { type: 'video/webm', ext: 'webm' });
+  const fbHead = fb?.id ? await storedHead(fb.id, true) : null;
+  const fbd = fbHead?.b64 ? decodeFull(fbHead.b64, 'webm') : null;
+  console.log(`  note  understudy ${JSON.stringify({ durationMs: fb?.durationMs, ...fbd })}`);
+  truthy('it decodes with 0 errors, one frame size, its duration within 0.3 s of the stored one',
+    fbd && fbd.errors === 0 && fbd.sizes.length === 1 && Math.abs(fbd.durationS - fb.durationMs / 1000) <= 0.3, JSON.stringify(fbd));
+  {
+    const report = await ctx.newPage();
+    await report.goto(`chrome-extension://${id}/report/report.html?session=${encodeURIComponent(sid)}#evidence`);
+    await report.waitForTimeout(2500);
+    await report.getByText('Evidence', { exact: true }).first().click({ timeout: 5000 }).catch(() => {});
+    await report.waitForTimeout(1500);
+    const stages = report.locator('.shot-stage.is-video');
+    await stages.nth((await stages.count()) - 1).click({ timeout: 8000 }).catch(() => {});
+    await report.waitForTimeout(1500);
+    const lb = await report.evaluate(async () => {
+      const v = document.querySelector('#lightbox-stage video:not(.clip-cam)');
+      v?.play().catch(() => {});
+      await new Promise((r) => setTimeout(r, 1500));
+      return v ? { src: (v.currentSrc || '').slice(0, 5), t: v.currentTime, w: v.videoWidth, err: v.error?.code || 0 } : null;
+    });
+    truthy('the report lightbox plays it', lb && lb.t > 0 && lb.w > 0 && !lb.err, JSON.stringify(lb));
+    await report.close();
+    const ed = await ctx.newPage();
+    await ed.goto(`chrome-extension://${id}/videoedit/videoedit.html?id=${encodeURIComponent(fb?.id)}`);
+    await ed.waitForTimeout(3000);
+    const main = await ed.evaluate(() => { const v = [...document.querySelectorAll('video')].find((x) => x.id !== 'cam'); return v ? { ready: v.readyState, w: v.videoWidth, err: v.error?.code || 0 } : null; });
+    truthy('the editor loads it', main && main.ready >= 1 && main.w > 0 && !main.err, JSON.stringify(main));
+    const n0 = (await clips(sid)).length;
+    await ed.locator('#export').click();
+    let saved = null;
+    for (let i = 0; i < 60 && !saved; i++) { await ed.waitForTimeout(1000); saved = (await clips(sid)).length > n0 ? (await clips(sid)).find((m) => m.edited) : null; }
+    const out = saved ? await storedHead(saved.id, true) : null;
+    const od = out?.b64 ? decodeFull(out.b64, (out.type || '').includes('webm') ? 'webm' : 'mp4') : null;
+    truthy('and its export saves a copy that decodes', od && od.errors === 0 && od.durationS > 1, JSON.stringify({ type: saved?.type, bytes: saved?.bytes, status: await ed.locator('#status').textContent().catch(() => ''), od }));
+    await ed.close();
+  }
 
   /* 5b. the microphone, granted, and audible in the clip ------------------ */
 

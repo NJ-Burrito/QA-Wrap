@@ -1145,7 +1145,8 @@ async function startRecording({
       },
     });
     recorder.ondataavailable = (e) => {
-      if (!e.data?.size) return;
+      // Test-only seam (3.8.4), as the webcam's: 'rec-mp4-silent' swallows the MP4's chunks, so the understudy runs.
+      if (!e.data?.size || (/^video\/mp4/.test(mime) && globalThis.__qawFault === 'rec-mp4-silent')) return;
       firstChunkAt ??= Date.now();
       parts.add(e.data, partSeq++);
       dropBackup(); // the MP4 is writing: the understudy is not needed
