@@ -1,4 +1,4 @@
-# Opera add-ons: permission justifications for QA Wrap 3.8.0
+# Opera add-ons: permission justifications for QA Wrap 3.8.4
 
 Read from the built `dist/opera/manifest.json`; every permission the package declares has a row. Copy a row into the store's per-permission box.
 
@@ -19,7 +19,6 @@ Read from the built `dist/opera/manifest.json`; every permission the package dec
 | `tabCapture` | required | Records a video of the tab when the tester presses Record. |
 | `debugger` | required | Code coverage needs the debugger permission. It is attached to a tab only when the tester presses Measure and detached when the run ends; nothing attaches it on its own. |
 | `webRequest` | required | Observation only, never blocking: reads six security headers (CSP, HSTS, CORS, X-Frame-Options, Referrer-Policy, Permissions-Policy) off each response while a session records, so the fine-print check can report on them. Nothing is modified, redirected or delayed. |
-| `sidePanel` | required | The docked workbench beside the page, for testers who prefer it to the floating window. |
 | `system.display` | required | Reads monitor work areas so the floating window opens beside the browser, including on a second monitor, instead of off-screen. |
 | `<all_urls>` | required (host) | A QA tool has to work on whatever site is under test, including intranet and staging hosts that cannot be listed in advance, so its page scripts are present on every site. They record nothing until the tester wakes that window and presses Start, and then only the focused tab. No data leaves the browser except on a button press that names the destination. |
 | `cookies` | optional | Optional. The cookie editor and saved cookie profiles on the site under test; asked for the first time the tester opens it. |

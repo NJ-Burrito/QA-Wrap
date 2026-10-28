@@ -39,15 +39,17 @@ export const TARGETS = {
   opera: {
     label: 'Opera',
     engine: 'chromium',
-    drop: [],
+    /* Opera has no chrome.sidePanel (measured in Opera GX 137, 2026-10-28) and its add-ons review rejects redundant
+       permissions; the popup already hides the panel button where the API is missing (hasSidePanel()). */
+    drop: ['sidePanel'],
     note:
       'Chromium. Installs from the Chrome Web Store once "Install Chrome extensions" is enabled, ' +
-      'or from Opera add-ons, which reviews separately.',
+      'or from Opera add-ons, which reviews separately. Opera has no side panel API, so the float window is used.',
   },
   operagx: {
     label: 'Opera GX',
     engine: 'chromium',
-    drop: [],
+    drop: ['sidePanel'], // as Opera: no chrome.sidePanel
     note:
       'The same build as Opera. Its resource limiter can throttle a background tab mid-recording, ' +
       'so a long clip is best taken with the tab in front.',

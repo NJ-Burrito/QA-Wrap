@@ -71,7 +71,7 @@ The store build `dist/opera` (3.8.4, the zip in `package/`) was loaded unpacked 
 | Done card counts the problems | pass (2, the two planted) |
 | Copied report: title, failed `POST /api/save-profile 500`, the uncaught coupon error | pass |
 | Page errors on the popup pages | none |
-| `chrome.sidePanel` | **absent** in Opera GX; the side-panel button is hidden, the float window is used instead |
+| `chrome.sidePanel` | **absent** in Opera GX; the side-panel button is hidden, the float window is used instead (the permission is now dropped from the Opera build) |
 | `offscreen`, `debugger`, `downloads`, `tabCapture`, `system.display` (2 displays), `webRequest`, `notifications`, `contextMenus`, `scripting.registerContentScripts`, `runtime.getContexts`, `action.getUserSettings`, `storage.session.setAccessLevel` | present |
 | `storage.sync` | round trip works |
 | `storage.managed` | `get` returns `{}` (no policy); does not throw |
@@ -80,10 +80,9 @@ The store build `dist/opera` (3.8.4, the zip in `package/`) was loaded unpacked 
 
 ## Risks
 
-1. **Redundant permission.** The Opera build declares `sidePanel` and a `side_panel` key, but Opera GX has no `chrome.sidePanel`.
-   Opera's criteria say "no redundant permissions requested or unnecessary manifest entries". If a moderator rejects on this, the fix is
-   one line in `extension/tools/targets.mjs` (drop `sidePanel` and `side_panel` for `opera` and `operagx`) and a rebuild. Not done here:
-   this pack changes no product code and bumps nothing.
+1. **Side panel.** Opera GX has no `chrome.sidePanel`, so since 2026-10-28 the `opera` and `operagx` targets drop the `sidePanel`
+   permission and the `side_panel` key (`extension/tools/targets.mjs`); the zip here is that build. Chrome, Edge, Firefox, Brave and
+   DuckDuckGo zips are byte-identical before and after. The live test above ran on the earlier build, which still declared it.
 2. **Review time is unknown.** Opera's pages state none; developers on Opera's forum report long or indefinite waits.
 3. **Agent bridge on the store build.** The store build has no `key`, so Opera assigns a new extension id. The bridge would need
    `npx qa-wrap-bridge install --extension-id <id from opera://extensions>`, and whether Opera on Windows reads the bridge's Chrome

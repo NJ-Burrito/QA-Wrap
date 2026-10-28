@@ -84,7 +84,8 @@ await t('Chromium family: service worker, side panel, same key, floor 116, nothi
   for (const id of CHROMIUM) {
     const m = man(id);
     assert.ok(m.background.service_worker && !m.background.scripts, id);
-    assert.ok(m.side_panel?.default_path && m.permissions.includes('sidePanel'), `${id}: side panel`);
+    if (TARGETS[id === 'chrome-managed' ? 'chrome' : id].drop.includes('sidePanel')) assert.ok(!m.side_panel && !m.permissions.includes('sidePanel'), `${id}: no side panel (dropped)`);
+    else assert.ok(m.side_panel?.default_path && m.permissions.includes('sidePanel'), `${id}: side panel`);
     assert.equal(m.key, SRC.key, `${id}: same extension id as the store build`);
     assert.ok(Number(m.minimum_chrome_version) >= 116, `${id}: runtime.getContexts needs Chrome 116`);
     assert.equal(m.browser_specific_settings, undefined, id);
