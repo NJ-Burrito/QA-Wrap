@@ -431,6 +431,13 @@ export async function startRecording({
 
   // The rolling buffer lets go of the tab first (3.8.3, offscreen.js rollBusy).
   await rollOp({ op: 'stop' }).catch(() => {});
+  // 3.8.4 (A5): the document first, then the id, so the id is not minted while a document loads. Live [V]: after a
+  // sleep and wake under load, the tab capture can hang 8 s, fail AbortError "Invalid state" and leave the tab
+  // 'pending' in tabCapture for good (a reload does not clear it; cause [U]). One retry on a new id, then coded.
+  await ensureOffscreen().catch(mediaSlow);
+  const tab = await chrome.tabs.get(tabId).catch(() => null);
+  // Frame lock target: the tab's pixels at its monitor's DPR (3.8.3), 400 ms at most.
+  const [px] = await Promise.race([chrome.scripting.executeScript({ target: { tabId }, func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio] }), new Promise((r) => setTimeout(r, 400, []))]).catch(() => []);
   let streamId;
   try {
     streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
@@ -450,19 +457,23 @@ export async function startRecording({
             : 'Right-click the page and choose QA Wrap › Record a video of this tab.')
       ), { code: 'NEEDS_INVOKE' });
     }
+    if (/active stream/i.test(err.message)) throw tabBusy(); // a capture Chrome never let go of (after an Invalid state)
     if (/Chrome pages cannot be captured/i.test(err.message)) {
       throw new Error('Chrome will not record its own pages. Open the site you are testing first.');
     }
     throw err;
   }
-  const tab = await chrome.tabs.get(tabId).catch(() => null);
-  // Frame lock target: the tab's pixels at its monitor's DPR (3.8.3), 400 ms at most.
-  const [px] = await Promise.race([chrome.scripting.executeScript({ target: { tabId }, func: () => [innerWidth * devicePixelRatio, innerHeight * devicePixelRatio] }), new Promise((r) => setTimeout(r, 400, []))]).catch(() => []);
-  const started = await offscreen('UQA_OFF_START', {
+  const go = (streamId) => offscreen('UQA_OFF_START', {
     streamId, sessionId, format, fps, quality, label, view: tab && { w: tab.width, h: tab.height, px: px?.result },
     mic, tabAudio, webcam, webcamPosition, webcamSize,
     // Tab capture has no pointer: the offscreen document draws one (content/recorder.js reportCursor).
     cursor,
+  });
+  const busy = (e) => /Invalid state|AbortError/i.test(e?.message) || e?.code === 20;
+  const started = await go(streamId).catch(async (e) => {
+    if (!busy(e)) throw e;
+    const again = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId }).catch(() => null);
+    return go(again).catch((e2) => { throw busy(e2) || !again ? tabBusy() : e2; });
   });
   // Which window this clip is filming, so putting *that* window to sleep can
   // stop it without touching a clip running in another one.
@@ -474,6 +485,8 @@ export async function startRecording({
     refused: [...(started.refused || []), ...(blockedMic ? [MIC_BLOCKED] : [])],
   };
 }
+
+const tabBusy = () => Object.assign(new Error('Chrome is still holding this tab from an earlier recording. Close the tab, open the page again, then press Record.'), { code: 'REC_TAB_BUSY' });
 
 export const cancelStart = (clear = false) => offscreen('UQA_OFF_CANCEL', { clear }).catch(() => {});
 

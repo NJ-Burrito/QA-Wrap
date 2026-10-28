@@ -277,7 +277,8 @@ test('the encoder bitrate is sized to the captured frame', () => {
   assert.ok(videoBitrate('low', 1280, 720) >= 750_000, 'low at 720p starved');
   assert.ok(videoBitrate('medium', 3840, 2160) <= 16_000_000, 'the 2x ceiling is gone');
   assert.equal(videoBitrate('medium', 0, 0), 8_000_000, 'an unknown frame size falls back to the 1080p rate');
-  assert.match(OFF, /videoBitsPerSecond: videoBitrate\(quality, sourceTrack\.getSettings/, 'the recorder is back on a flat bitrate');
+  assert.match(OFF, /const vbps = videoBitrate\(quality, sourceTrack\.getSettings/, 'the recorder is back on a flat bitrate');
+  assert.match(OFF, /mimeType: mime, videoBitsPerSecond: vbps/, 'the recorder no longer uses the sized bitrate'); // 3.8.4: shared with the WebM understudy
 });
 
 test('a double-click on a save button saves once', () => {
