@@ -169,6 +169,7 @@
 - 💼 [المعرض](https://nj-burrito.github.io/): أعمال نادر ومشاريعه، وفيه قسم التواصل
 - 📦 [NJ-Kit](https://nj-burrito.github.io/NJ-Kit/): مهارات لـ Claude Code
 - 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): ملفك الشخصي كصفحة
+- 📄 [Business-Wrap](https://nj-burrito.github.io/Business-Wrap/): أدلة تدخل، ووثيقة واحدة بلغتين
 - 🐙 [GitHub](https://github.com/NJ-Burrito): الشيفرة وكل المستودعات المفتوحة
 - 🔗 [LinkedIn](https://www.linkedin.com/in/nader-alzghoul): ملف نادر
 
