@@ -14,7 +14,7 @@ retrieved 2026-10-20. Sources per row: `work/ui-1020/browsers.md`.
 | # | Rule (assertion) | Checked by |
 |---|---|---|
 | B1 | Every dist has a valid MV3 manifest, no duplicated or required-and-optional permission, every icon, the `en` and `ar` locales and a `BROWSER.md`; every file the manifest names ships. | test-browser-dists |
-| B2 | Chromium family (chrome, chrome-managed, edge, brave, opera, operagx, duckduckgo): `background.service_worker`, `side_panel`, the shared `key`, `minimum_chrome_version` >= 116, no `browser_specific_settings`, no `default_area`. | test-browser-dists |
+| B2 | Chromium family (chrome, chrome-managed, edge, brave, opera, operagx, duckduckgo): `background.service_worker`, `side_panel` (not opera/operagx: they drop `sidePanel`, Opera GX 137 has no `chrome.sidePanel`, measured 2026-10-28), the shared `key`, `minimum_chrome_version` >= 116, no `browser_specific_settings`, no `default_area`. | test-browser-dists |
 | B3 | chrome-managed is the Chrome build minus `debugger` and only `debugger`; its `BROWSER.md` carries the pin policy line. | test-browser-dists, test-managed-flavour |
 | B4 | Firefox: `background.scripts` (event page), `browser_specific_settings.gecko.id`, `strict_min_version` >= 140 (F3, fixed), `data_collection_permissions` with `required: ["none"]`, no `side_panel`, `key` or `minimum_chrome_version`, none of sidePanel, offscreen, tabCapture, desktopCapture, debugger, system.display (required or optional). | test-browser-dists, web-ext lint |
 | B5 | Safari folder: no `side_panel`, `key`, `minimum_chrome_version`, `browser_specific_settings`, none of the permissions in B4, and neither `downloads` nor `notifications` (F2, fixed: `omit` in targets.mjs). | test-browser-dists |
@@ -41,7 +41,7 @@ DuckDuckGo are not in BCD [A] (Chromium builds, `BROWSER.md` notes their tracker
 | API / key | Chrome, Edge, Brave, Opera/GX, DuckDuckGo | Firefox desktop | Firefox Android | Safari macOS | Safari iOS |
 |---|---|---|---|---|---|
 | `background.service_worker` | yes (Chrome 88, Opera 74) | not supported [V]; event page `background.scripts` | event page | yes (15.4), `type: module` [U] | same |
-| `sidePanel` + `side_panel` | yes (Chrome/Edge 114, Opera 100) | off; falls back to the float window (`hasSidePanel()`) | off | off | off |
+| `sidePanel` + `side_panel` | yes Chrome/Edge 114; Opera/GX: no `chrome.sidePanel` (measured GX 137, 2026-10-28), dropped from those builds | off; falls back to the float window (`hasSidePanel()`) | off | off | off |
 | `offscreen` (recorder, GIF, stitching) | yes | off, capability message | off | off | off |
 | `tabCapture`, `desktopCapture` | yes | off | off | off | off |
 | `debugger` (coverage, full-page) | yes; absent in chrome-managed | off [V] BCD | off | off [V] | off |

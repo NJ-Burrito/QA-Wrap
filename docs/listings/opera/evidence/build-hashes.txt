@@ -1,0 +1,31 @@
+# zip SHA-256 before and after dropping sidePanel from opera/operagx (2026-10-28)
+## before
+plain fe0bbc512bd01f2861ffcea83e35d443d397e2707e1d6870e57b58a83f1bd4b3 *qa-wrap-3.8.4-brave.zip
+plain 8c64cc1c008b0bc7d2e9b881f0efc9dd4812174e7af848534ac3e1f5feffab80 *qa-wrap-3.8.4-chrome.zip
+plain cb4930a8808aefd548a0f6cb64bf9a2b2556439e7bffe90c8ef0cb124610ac8e *qa-wrap-3.8.4-duckduckgo.zip
+plain 1f06f79eefdc762244800e0a45b64d051fbb6f4d63a4a7eed27ac60054ae2057 *qa-wrap-3.8.4-edge.zip
+plain 15e22d45dccc816a6efe5e6e6a74b4d43f3f1f27b7fbca35e55d98db7b6b0405 *qa-wrap-3.8.4-firefox.zip
+plain 30f408226a2823921d05b13aa741a0c4efc425501f04aba60f7318b719ebf058 *qa-wrap-3.8.4-opera.zip
+plain 7bcda5465df00b3e3c618866a9c082d5a8535570852d34fb534988c6e152f1ca *qa-wrap-3.8.4-operagx.zip
+--store 84406c938cc25a552e28c764ef038007b1c35ab4158d0bd7fffa392abb9ca193 *qa-wrap-3.8.4-brave.zip
+--store e33182ffb5b88b7d41574049295213ce0662fcb6a47141e45695b9dff4c40098 *qa-wrap-3.8.4-chrome.zip
+--store cb0b419bff95e26c917ac5aaf63e1cb60f440758520dd3a334a482c29d6db2d1 *qa-wrap-3.8.4-duckduckgo.zip
+--store be3c0d1a361b9a855a907544c864c3cbfd52e44b5599e2e8bf5a3120acaea17d *qa-wrap-3.8.4-edge.zip
+--store 8f92da9feabe1bb89f0f93826d3be3f3f8995d1f0ee6df8dcc4180463198670c *qa-wrap-3.8.4-firefox.zip
+--store 27854bb9cacc4fccee1b183edde035d00dc1defaa1b1c5c418801550442eac28 *qa-wrap-3.8.4-opera.zip
+--store 4856dec423780b3361ce45b7ead69e0f51b2659137c4f301749d15c19ca44e54 *qa-wrap-3.8.4-operagx.zip
+## after
+plain fe0bbc512bd01f2861ffcea83e35d443d397e2707e1d6870e57b58a83f1bd4b3 *qa-wrap-3.8.4-brave.zip
+plain 8c64cc1c008b0bc7d2e9b881f0efc9dd4812174e7af848534ac3e1f5feffab80 *qa-wrap-3.8.4-chrome.zip
+plain cb4930a8808aefd548a0f6cb64bf9a2b2556439e7bffe90c8ef0cb124610ac8e *qa-wrap-3.8.4-duckduckgo.zip
+plain 1f06f79eefdc762244800e0a45b64d051fbb6f4d63a4a7eed27ac60054ae2057 *qa-wrap-3.8.4-edge.zip
+plain 15e22d45dccc816a6efe5e6e6a74b4d43f3f1f27b7fbca35e55d98db7b6b0405 *qa-wrap-3.8.4-firefox.zip
+plain 1ff1cfad491a737488a47c4ea8417fedda21327ae14ed5ad54047045c0c8c368 *qa-wrap-3.8.4-opera.zip
+plain c92e4292cbe72a2eaf6f0a59056da45000c03a0f874cb85c3454bd668f7ebb8f *qa-wrap-3.8.4-operagx.zip
+--store 84406c938cc25a552e28c764ef038007b1c35ab4158d0bd7fffa392abb9ca193 *qa-wrap-3.8.4-brave.zip
+--store e33182ffb5b88b7d41574049295213ce0662fcb6a47141e45695b9dff4c40098 *qa-wrap-3.8.4-chrome.zip
+--store cb0b419bff95e26c917ac5aaf63e1cb60f440758520dd3a334a482c29d6db2d1 *qa-wrap-3.8.4-duckduckgo.zip
+--store be3c0d1a361b9a855a907544c864c3cbfd52e44b5599e2e8bf5a3120acaea17d *qa-wrap-3.8.4-edge.zip
+--store 8f92da9feabe1bb89f0f93826d3be3f3f8995d1f0ee6df8dcc4180463198670c *qa-wrap-3.8.4-firefox.zip
+--store 4a24b376a06fb05fad9d6b1dd6c36f7121d184d0cbd5e2622ab9988d8231f948 *qa-wrap-3.8.4-opera.zip
+--store 7166d748c78cd1c978b9b2b94819de67ec5e7764451a23e0f8c3f59b8a06b50f *qa-wrap-3.8.4-operagx.zip

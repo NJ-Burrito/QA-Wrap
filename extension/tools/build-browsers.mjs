@@ -113,6 +113,11 @@ function manifestFor(id) {
     out.permissions = out.permissions.filter((p) => !gone.includes(p));
     changes.push(`removed ${dropped.join(', ')} — ${spec.label} does not implement them, and a manifest naming one is rejected at install`);
   }
+  // A dropped sidePanel takes its manifest block with it (Opera: "no unnecessary manifest entries").
+  if (gone.includes('sidePanel') && out.side_panel) {
+    delete out.side_panel;
+    changes.push('dropped the side_panel key — no chrome.sidePanel in this browser');
+  }
 
   if (FLAVOUR) {
     out.permissions = (out.permissions || []).filter((p) => !MANAGED_DROP.includes(p));
