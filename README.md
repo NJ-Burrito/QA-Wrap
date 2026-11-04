@@ -16,6 +16,8 @@
 
 **QA-Wrap is a free, open-source bug report extension for QA testers.** It records a manual test session in Chrome or Edge, links every failure to the action that caused it, and writes the bug report for you, ready for Jira. A local-first, open-source alternative to Jam, Marker.io and BugHerd for manual and exploratory testing. No account, no server. [العربية](README.ar.md)
 
+By [Nader Alzghoul (NJ-Burrito)](https://nj-burrito.github.io/), a QA automation engineer in Amman, Jordan.
+
 [![QA-Wrap animated banner](site/assets/banner.gif)](https://nj-burrito.github.io/QA-Wrap/)
 
 🌐 [Website](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [Download](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · 📥 [Get it](#get) · ⚖️ [Compare](#compare) · ❓ [FAQ](#faq) · 🚀 [Install](#install) · 🔄 [Updates](#updates) · 🔒 [Privacy](#privacy) · 🧰 [More tools](#about)

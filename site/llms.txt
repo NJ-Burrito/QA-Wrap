@@ -27,4 +27,4 @@
 
 ## About the maker
 
-Nader Alzghoul is a QA automation engineer in Amman, Jordan. Portfolio https://nj-burrito.github.io/ , GitHub https://github.com/NJ-Burrito , LinkedIn https://www.linkedin.com/in/nader-alzghoul . Contact: naderalzghoulbusiness@gmail.com
+Nader Alzghoul (NJ-Burrito, نادر الزغول) is a QA automation engineer in Amman, Jordan. Portfolio https://nj-burrito.github.io/ , GitHub https://github.com/NJ-Burrito , LinkedIn https://www.linkedin.com/in/nader-alzghoul . Contact: naderalzghoulbusiness@gmail.com
