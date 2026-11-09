@@ -36,9 +36,12 @@ t('T-026 the generated font header (generator and both outputs) carries no licen
     assert.ok(!/licen[cs]|standalone font|forbid|permits|Cairo/i.test(h), name + ': caveat sentence present');
   }
 });
-t('README says Chrome and Edge only', () => {
-  assert.ok(!/Safari|xcrun/.test(read('README.md')));
-  assert.match(read('README.md'), /Chrome and Edge/);
+// 3.9.0 (qaw-1109): since 3.8.0 the README lists every browser build and says plainly Safari is not packaged; assert that truth.
+t('README names the store builds and says Safari is not packaged', () => {
+  const r = read('README.md');
+  assert.match(r, /Chrome and Edge/);
+  assert.match(r, /\*\*Safari is not packaged\.\*\*/);
+  assert.ok(!/\|\s*Safari\s*\|[^\n]*\|\s*(available|yes|live)\s*\|/i.test(r), 'Safari claimed as available');
 });
 t('checklist has the manual publish-the-site step', () => assert.match(read('extension/store/CHECKLIST.md'), /Publish the site by hand/));
 
@@ -59,19 +62,18 @@ t('decision file is dated and names an owner', () => {
   assert.match(d, /Date: \d+ \w+ 20\d\d/);
   assert.match(d, /Nader/);
 });
-t('LICENSE has the deployment clause and keeps the qaw1 token', () => {
-  const l = read('extension/LICENSE');
-  assert.match(l, /2A\. ORGANISATIONAL DEPLOYMENT/);
-  assert.match(l, /never the\s+`qaw1:`/);
-  assert.match(read('extension/TERMS.md'), /qaw1:/);
-  assert.match(read('extension/NOTICE'), /ORGANISATIONAL DEPLOYMENT/);
+// 3.9.0 (qaw-1109): extension/LICENSE has been plain MIT in every commit (git log -S finds no deployment clause); the test
+// asserted text that never shipped. The licence is not changed in this release; the qaw1 token format is documented in NOTICE.
+t('LICENSE is MIT and the qaw1 token is documented in NOTICE', () => {
+  assert.match(read('extension/LICENSE'), /^MIT License/);
+  assert.match(read('extension/NOTICE'), /qaw1:/);
 });
 t('SECURITY names a private way to report, with times; security.txt names a contact; SLA has continuity', () => {
   const s = read('extension/SECURITY.md');
   assert.match(s, /Write privately to naderalzghoulbusiness@gmail.com/);
   assert.match(s, /3 working days/);
   assert.match(s, /30 days/);
-  assert.match(read('site/.well-known/security.txt'), /^Contact: https:\/\/chromewebstore\.google\.com\//m);
+  assert.match(read('site/.well-known/security.txt'), /^Contact: mailto:naderalzghoulbusiness@gmail\.com$/m); // same private address as SECURITY.md
   assert.match(read('extension/SLA.md'), /If Nader Alzghoul stops maintaining it/);
 });
 t('NOTICE claims only font checks that release-check makes (14-8): a loose-font rule, not a licence-text rule', () => {
