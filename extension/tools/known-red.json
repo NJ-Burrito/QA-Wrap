@@ -5,5 +5,12 @@
     "ciOnly": true,
     "match": "NOT VERIFIED",
     "reason": "red only on a CI clone: keys/README.md and work/decisions/ are git-ignored owner evidence, so the suite says NOT VERIFIED out loud; green on the owner's checkout (ciOnly: not stale when green)"
+  },
+  "test-perf-worker": {
+    "id": "PW-1110",
+    "until": "2026-11-20",
+    "ciOnly": true,
+    "match": "days ago: rerun node tools/perf-worker\\.mjs --json",
+    "reason": "age only: the 2026-10-10 baseline passed 30 days and perf-worker refused 10 refresh runs on 2026-11-10 (CPU 12-89 % busy from a parallel session, spread 49-752 % vs 25 %). Relative measure shows no regression (real graph -0.9 ms vs the 762 KB reference). Refresh on a quiet machine with node tools/perf-worker.mjs --json tools/perf-worker-baseline.json, then delete this entry."
   }
 }
