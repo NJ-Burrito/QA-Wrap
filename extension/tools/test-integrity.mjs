@@ -56,7 +56,7 @@ assert.match(off, /stampDocument\(out, \{ format: request\.format/); assert.matc
 const rep = readFileSync(new URL('../report/report.js', import.meta.url), 'utf8');
 assert.match(rep, /import\('\.\.\/core\/integrity\.js'\)\)\.originCheck\(await got\.blob\.arrayBuffer\(\)\)/); assert.match(rep, /'content changed': 'report\.media\.contentChanged'/); ok('the report Origin button hashes the stored bytes with originCheck');
 const words = { en: JSON.parse(readFileSync(new URL('../platform/i18n/en.json', import.meta.url), 'utf8')), ar: JSON.parse(readFileSync(new URL('../platform/i18n/ar.json', import.meta.url), 'utf8')) };
-assert.match(words.en['report.media.contentChanged'], /content changed/); assert.match(words.ar['report.media.contentChanged'], /المحتوى تغيّر/);
+assert.match(words.en['report.media.contentChanged'], /content changed/); assert.match(words.ar['report.media.contentChanged'], /المحتوى تغير/);
 assert.ok(words.en['report.media.contentIntact'] && words.ar['report.media.contentIntact'] && words.en['report.media.noChecksum'] && words.ar['report.media.noChecksum']); ok('the three Origin answers are worded in en and ar');
 const stored = new Blob([flipped], { type: 'image/png' }); // what getMedia hands the report after one byte went bad
 assert.equal((await originCheck(await stored.arrayBuffer())).status, 'content changed'); ok('a stored blob with one flipped byte reaches the report as "content changed"');

@@ -32,6 +32,12 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
 
+New in 3.9.0
+- Your profile: set a name and, if you like, a picture. Every file you export ends with one small line (name, date, QA Wrap version) so the work can be traced to you. The name and picture stay on your computer.
+- Sealed timeline: both download options can include the whole timeline as a readable Markdown file with your profile in it and a seal at the end. Verify file says whether it is intact or altered, and whose it is. The seal is tamper-evidence, not secrecy: the text stays readable, and anyone can edit a file and seal it again with their own key (the key fingerprint then differs).
+- Performance indicators (KPI): a dashboard of time spent testing, page coverage and bugs filed per day and week, counted only from your own sessions on this device and only from notes you filed as a bug. Export it as a PDF.
+- Films: an Arabic cut of the 40-second film and six short tutorials in English and Arabic, hosted on the website. Nothing loads until you press a link.
+
 What it does not do
 - It never uploads anything of its own. No server, no analytics, no remote code. Data leaves only when you press a button that names where it goes.
 - It does not record password fields or cookie values into a session or an export.
@@ -48,6 +54,12 @@ Free and open source under the MIT licence. Interface in English and Arabic. Sou
 - فسّر: عندما يفشل شيء يريك النقرة التي سبّبته. اضغط «أوقف» فيجهز التقرير: عنوان وسلسلة السبب والنتيجة ولقطات الشاشة ونتائج إمكانية الوصول والسرعة وخط زمني تتنقل فيه.
 - سلّم: انسخ التقرير بصيغة Markdown، أو احفظه ملفات في مجلد تختاره، أو ارفعه إلى Jira بحقول مشروعك نفسها. وهناك تسع أدوات تتبّع أخرى وسبع وجهات محادثة، ولا يعمل أيّ منها إلا بعد أن تعدّه أنت وتضغط الزر.
 
+الجديد في 3.9.0
+- ملفك الشخصي: اكتب اسمك وأضف صورة إن شئت. ينتهي كل ملف تصدّره بسطر صغير واحد (الاسم والتاريخ وإصدار QA Wrap) ليُنسب العمل إليك. يبقى الاسم والصورة على حاسوبك.
+- خط زمني مختوم: يمكن لخياري التنزيل أن يضمّا الخط الزمني كاملا في ملف Markdown (نص منسّق) مقروء، وفيه ملفك الشخصي وختم في آخره. ويقول «تحقق من ملف مختوم» إن كان الملف سليما أو معدّلا ولمن هو. الختم كاشف للتعديل وليس سرّية: يبقى النص مقروءا، ويستطيع أي شخص تعديل الملف وختمه من جديد بمفتاحه (فتختلف بصمة المفتاح).
+- مؤشرات الأداء (KPI): لوحة للوقت الذي قضيته في الاختبار وتغطية الصفحات والأخطاء المسجّلة في اليوم والأسبوع، محسوبة من جلساتك أنت على هذا الجهاز فقط، ومن الملاحظات التي سجّلتها كخلل فقط. وتصدَّر بصيغة PDF.
+- أفلام: نسخة عربية من الفيلم القصير (40 ثانية) وستة دروس قصيرة بالإنجليزية والعربية، على الموقع. لا يُحمَّل شيء قبل أن تضغط رابطا.
+
 ما لا يفعله
 - لا يرفع شيئا من تلقاء نفسه. لا خادم ولا تحليلات ولا شيفرة بعيدة. لا تخرج البيانات إلا حين تضغط زرا يسمّي وجهتها.
 - لا يسجّل حقول كلمات المرور ولا قيم ملفات تعريف الارتباط في الجلسة ولا في أي تصدير.
@@ -57,6 +69,11 @@ Free and open source under the MIT licence. Interface in English and Arabic. Sou
 وفي الصندوق أيضا: جمع عناصر الصفحة بمحدِّدات موثَّقة وكائن صفحة لـ Playwright، وفحص الروابط، وقيم نماذج مصمَّمة، وكسر الطلبات، وفحص إمكانية الوصول (axe-core مضمَّن)، ومؤشرات Core Web Vitals، واختبار الاتجاه من اليمين إلى اليسار وتمدّد النص (العربية حالة أساسية)، ولقطات وتسجيلات مع تعليم وإخفاء، ومحرِّر ملفات تعريف الارتباط، وتصدير إلى Markdown وJSON وHAR وPostman وJUnit وExcel.
 
 مجاني ومفتوح المصدر بترخيص MIT. الواجهة بالعربية والإنجليزية. المصدر: https://github.com/NJ-Burrito/QA-Wrap`,
+};
+
+const NEWS = {
+  en: `Profile and fine print on every export, a sealed Markdown timeline with Verify file, a KPI dashboard with PDF export, and the film and six tutorials in Arabic and English.`,
+  ar: `ملف شخصي وسطر صغير في كل تصدير، وخط زمني مختوم مع التحقق من الملف، ولوحة مؤشرات أداء (KPI) تصدَّر بصيغة PDF، والفيلم وستة دروس بالعربية والإنجليزية.`,
 };
 
 const NAME = { en: 'QA Wrap', ar: 'QA Wrap' };
@@ -144,6 +161,12 @@ ${SHORT[lang]}
 
 \`\`\`
 ${LONG[lang]}
+\`\`\`
+
+## What's new in this version (${lang === 'en' ? 'short field, if the form has one' : 'Arabic short field, if the form has one'})
+
+\`\`\`
+${NEWS[lang]}
 \`\`\`
 ${dir === 'edge' ? `
 ## Search terms (max 7 terms, 30 characters each)
