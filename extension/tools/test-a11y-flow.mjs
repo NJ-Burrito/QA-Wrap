@@ -336,7 +336,7 @@ test('r10-04-1 (D-238): #defect-build and #defect-repro are labelled, repro offe
   const ar = JSON.parse(readFileSync(new URL('../platform/i18n/ar.json', import.meta.url), 'utf8'));
   const want = {
     'report.file.defectBuild': ['Build or version', 'الإصدار أو البناء'], 'report.file.defectRepro': ['How often it happens', 'مدى تكرار الحدوث'],
-    'report.file.reproAlways': ['Every time', 'في كل مرة'], 'report.file.reproSometimes': ['Sometimes', 'أحيانًا'],
+    'report.file.reproAlways': ['Every time', 'في كل مرة'], 'report.file.reproSometimes': ['Sometimes', 'أحيانا'],
     'report.file.reproOnce': ['Once', 'مرة واحدة'], 'report.file.reproUnknown': ['Unknown', 'غير معروف'],
   };
   for (const [k, [e, a]] of Object.entries(want)) { assert.equal(en[k], e, k); assert.equal(ar[k], a, k); }

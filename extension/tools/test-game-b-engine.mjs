@@ -627,7 +627,7 @@ await test('the learned feature follows the player language (AR name on the clea
   assert.equal(f.learned.length, 5);
   assert.deepEqual(f.learned.map((x) => x.primary.id), ['wake', 'recorder', 'note', 'shot', 'stop']);
   assert.equal(f.learned[0].primary.name, 'اختبر هذا الموقع');
-  assert.equal(f.board.find((r) => r.tool === 'notbug').name, 'ليست علّة');
+  assert.equal(f.board.find((r) => r.tool === 'notbug').name, 'ليس خللا');
 });
 
 await test('feature chips follow the extension counts when shared: a rise AFTER the catch claims the chip by itself; the self-report is refused', async () => {
@@ -673,7 +673,7 @@ await test('scoring table: one JSON file; every wrong row has a reason key; ever
   for (const [tool, def] of Object.entries(raw.tools)) if (def.wrong) assert.ok(def.wrong.reason && def.wrong.points < 0, tool);
   assert.equal(S.scoringKeys().length, 1 + 7, 'page label + seven reasons; feature tools are labelled from features.json');
   const { toolLabel } = await imp('engine.js');
-  assert.deepEqual(toolLabel('notbug', 'ar'), { tool: 'notbug', icon: 'event-request', name: 'ليست علّة' });
+  assert.deepEqual(toolLabel('notbug', 'ar'), { tool: 'notbug', icon: 'event-request', name: 'ليس خللا' });
   assert.equal(toolLabel('page').key, 'score.tool.page');
   assert.equal(S.ruleFor('note', 'nope'), null);
 });

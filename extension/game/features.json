@@ -37,7 +37,7 @@
         "key": "overlay.autopilot.notBug"
       },
       "en": "Not a bug",
-      "ar": "ليست علّة"
+      "ar": "ليس خللا"
     },
     "note": {
       "icon": "note",
@@ -110,7 +110,7 @@
     },
     "notbug": {
       "en": "I pressed Not a bug",
-      "ar": "ضغطت «ليست علّة»"
+      "ar": "ضغطت «ليس خللا»"
     },
     "notetype": {
       "en": "I picked a note type",
