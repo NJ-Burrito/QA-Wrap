@@ -18,7 +18,7 @@
 
 [![QA-Wrap animated banner](site/assets/banner.gif)](https://nj-burrito.github.io/QA-Wrap/)
 
-🌐 [Website](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [Download](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · 📥 [Get it](#get) · ⚖️ [Compare](#compare) · ❓ [FAQ](#faq) · 🚀 [Install](#install) · 🔄 [Updates](#updates) · 🔒 [Privacy](#privacy) · 🧰 [More tools](#about)
+🌐 [Website](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [Download](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · 📥 [Get it](#get) · ⚖️ [Compare](#compare) · ❓ [FAQ](#faq) · 🚀 [Install](#install) · ✨ [New](#new) · 🔄 [Updates](#updates) · 🔒 [Privacy](#privacy) · 🧰 [More tools](#about)
 
 </div>
 
@@ -50,7 +50,19 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 - 📝 **Writes the report**: one press copies a ready bug report (title, steps, what happened, evidence). Sending to Jira and other trackers is one button away.
 - 🌍 **Arabic and English**, right to left where it should be.
 
-🎞️ [Watch the 40-second film](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
+🎞️ Watch the 40-second film: [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4) · [العربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4)
+
+<a id="new"></a>
+
+## ✨ New in 3.9.0
+
+- 🪪 **Your profile.** Set your name, and a picture if you like. Every file you export ends with one small line (name, date, QA-Wrap version) so the work can be traced to you. The name and the picture stay on your computer; nothing is sent anywhere.
+- 📄 **Sealed timeline (Markdown).** Both download options can now include the whole timeline as a readable `.md` file with your profile in it and a seal block at the end.
+- 🔎 **Verify file.** Pick a sealed file and QA-Wrap says whether it is **intact** or **altered**, who sealed it, and the key fingerprint, and whether that key belongs to this install.
+- 📊 **Performance indicators (KPI dashboard).** Time spent testing per day, week and site, page coverage (tested against not tested), bugs filed per day and week, bugs by severity, sessions and average session length. Counted only from your own sessions on this device, and bugs are only the notes you filed as a bug. **Export as PDF** carries your profile line. Arabic and English, right to left where it should be.
+- 🎞️ **Films in both languages.** The 40-second film now has an Arabic cut with Arabic narration and words, plus six short tutorials (record a session, trace a failure to the click, notes and bugs, export and seal, profile and fine print, the KPI dashboard), each in English and Arabic. The films are hosted on the [website](https://nj-burrito.github.io/QA-Wrap/#tutorials); a press opens the file, and nothing loads before you press.
+
+**What the seal is, and is not.** It is tamper-evidence, not secrecy. The text stays readable, and the seal shows that it has not changed since the key in the file signed it. It does not prove the name is true: anyone can edit a file and seal it again with their own key, which gives a different fingerprint. Compare the fingerprint with one you already trust.
 
 <a id="compare"></a>
 
@@ -160,6 +172,7 @@ Each time Chrome starts (and then once a day), QA-Wrap asks GitHub whether a new
 - Nothing is sent anywhere until you press a button that says so (for example Send to Jira).
 - The one automatic request is the update check above: a plain read of the release list at `api.github.com/repos/NJ-Burrito/QA-Wrap`, with no cookies and no personal data.
 - Passwords, tokens and similar values are removed from what is recorded.
+- Your profile name and picture stay on this computer. The picture appears only inside a sealed timeline you export yourself. The seal is tamper-evidence, not secrecy: it does not hide the text.
 
 Details: [PRIVACY.md](extension/PRIVACY.md) ([العربية](extension/PRIVACY.ar.md)).
 

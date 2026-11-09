@@ -2,7 +2,7 @@
 
 > Every failure, traced.
 
-**v3.5.3** · A local-first, session-aware Chrome MV3 extension, built to the
+**v3.9.0** · A local-first, session-aware Chrome MV3 extension, built to the
 ISTQB CTFL shape. Amman edition: the QA Wrap mark, the
 owner's seal, Thmanyah (Sans and Serif Display) embedded, three theme states, and the workbench in a side
 panel that stays open. Privacy policy in `PRIVACY.md`, security notes in `SECURITY.md`. Supported browsers: **Chrome and Edge**.
