@@ -518,7 +518,7 @@ if (vendored.length) {
 /**
  * No film and no poster is in the package, and every lesson that is not
  * `pending` is marked `online: true` and has its film and poster in the site
- * folder (`site/tutorials/`), which is where the one tracked copy lives.
+ * folder (`site/media/tutorials/<id>-<en|ar>.mp4`, decision D2; the older `site/tutorials/` still counts), which is where the one tracked copy lives.
  *
  * The package carried 42 MB of films out of 42.6 MB, and every update
  * re-shipped them to every install. The films now load from the product's own
@@ -535,14 +535,20 @@ check(!media.length, 'no film, poster or caption file is in the package (the fil
   try { lessons = JSON.parse(text('tutorials/lessons.json') || 'null'); } catch { /* reported below */ }
   check(Array.isArray(lessons), 'tutorials/lessons.json parses as a list of lessons');
   const live = (lessons || []).filter((l) => !l.pending && l.files?.en !== 'qa-wrap-commercial-40s.mp4'); // the hosted film lives in site/media
-  const notOnline = live.filter((l) => !l.online);
-  check(!notOnline.length, 'every recorded lesson is marked online: true (hosted, not packaged)',
-    notOnline.length ? `not online: ${notOnline.map((l) => l.id).join(', ')}` : `${live.length} lessons, all online`);
-  const hosted = path.join(SITE_DIR, 'tutorials');
+  // D2: a lesson file is `tutorials/<id>-<en|ar>.mp4` (poster `tutorials/<id>.<ext>`), hosted at site/media/<that path>. The older bare
+  // file name is still read from site/tutorials/ (and must then be marked online: true), so an old lessons.json keeps its meaning.
+  const hostedAt = (f) => (String(f).startsWith('tutorials/') ? path.join(SITE_DIR, 'media', f) : path.join(SITE_DIR, 'tutorials', f));
+  const bare = live.filter((l) => Object.values(l.files || {}).some((f) => !String(f).startsWith('tutorials/')));
+  const notOnline = bare.filter((l) => !l.online);
+  check(!notOnline.length, 'every recorded lesson is hosted: a site/media/tutorials/ path, or marked online: true',
+    notOnline.length ? `not online: ${notOnline.map((l) => l.id).join(', ')}` : `${live.length} lessons, all hosted`);
+  const unpaired = live.filter((l) => !(l.files?.en && l.files?.ar));
+  check(!unpaired.length, 'every recorded lesson has both an English and an Arabic film (the pair is the unit)',
+    unpaired.length ? `missing a language: ${unpaired.map((l) => l.id).join(', ')}` : `${live.length} AR/EN pairs`);
   const absent = live.flatMap((l) => [...Object.values(l.files || {}), l.poster])
-    .filter((f) => f && !fs.existsSync(path.join(hosted, f)));
-  check(!absent.length, 'every hosted film and poster is in site/tutorials/',
-    absent.length ? `missing: ${absent.join(', ')}` : `${live.length} films, posters present`);
+    .filter((f) => f && !fs.existsSync(hostedAt(f)));
+  check(!absent.length, 'every hosted film and poster is in site/media/tutorials/ (or site/tutorials/ for a bare name)',
+    absent.length ? `missing: ${absent.join(', ')}` : `${live.length} lessons, films and posters present`);
   const pendingN = (lessons || []).filter((l) => l.pending).length;
   if (pendingN) {
     const page = text('tutorials/tutorials.js') || '';
