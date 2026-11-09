@@ -1,0 +1,161 @@
+{
+ "id": "trace-a-failure",
+ "no": 2,
+ "status": "animatic",
+ "dur": 52,
+ "title": {
+  "en": "Trace a failure to the click",
+  "ar": "تتبع الخطأ إلى النقرة"
+ },
+ "blurb": {
+  "en": "A request fails. QA Wrap shows the click that came right before it, with its time.",
+  "ar": "يفشل طلب، فيعرض كيو إيه راب النقرة التي سبقته مباشرة مع وقتها."
+ },
+ "site": "Practice Software Testing, Toolshop (payment step)",
+ "lines": [
+  {
+   "id": "L1",
+   "start": 0.5,
+   "end": 6.8,
+   "en": "A page breaks. The console shows a red 500. But which click caused it?",
+   "ar": "تتعطل الصفحة، ويظهر خطأ أحمر رقمه 500. لكن أي نقرة سببته؟",
+   "ar_tts": "تَتَعَطَّلُ الصَّفْحَةُ، وَيَظْهَرُ خَطَأٌ أَحْمَرُ رَقْمُهُ خَمْسُمِائَةٍ. لَكِنْ أَيُّ نَقْرَةٍ سَبَّبَتْهُ؟"
+  },
+  {
+   "id": "L2",
+   "start": 7.6,
+   "end": 14.2,
+   "en": "QA Wrap keeps every click, request and error on one timeline.",
+   "ar": "كيو إيه راب يحتفظ بكل نقرة وطلب وخطأ على خط زمني واحد.",
+   "ar_tts": "كِيُو إِيهْ رَاب يَحْتَفِظُ بِكُلِّ نَقْرَةٍ وَطَلَبٍ وَخَطَأٍ عَلَى خَطٍّ زَمَنِيٍّ وَاحِدٍ."
+  },
+  {
+   "id": "L3",
+   "start": 15,
+   "end": 21.4,
+   "en": "When a request fails, QA Wrap links it to the click right before it.",
+   "ar": "عندما يفشل طلب، يربطه كيو إيه راب بالنقرة التي سبقته مباشرة.",
+   "ar_tts": "عِنْدَمَا يَفْشَلُ طَلَبٌ، يَرْبِطُهُ كِيُو إِيهْ رَاب بِالنَّقْرَةِ الَّتِي سَبَقَتْهُ مُبَاشَرَةً."
+  },
+  {
+   "id": "L4",
+   "start": 22.2,
+   "end": 28.4,
+   "en": "So the click that broke the page is named, with its time.",
+   "ar": "فتعرف النقرة التي كسرت الصفحة، مع وقتها بالضبط.",
+   "ar_tts": "فَتَعْرِفُ النَّقْرَةَ الَّتِي كَسَرَتِ الصَّفْحَةَ، مَعَ وَقْتِهَا بِالضَّبْطِ."
+  },
+  {
+   "id": "L5",
+   "start": 29.2,
+   "end": 35.4,
+   "en": "Open the failure in the report, and the click sits right beside it.",
+   "ar": "افتح الخطأ في التقرير، وستجد النقرة بجانبه مباشرة.",
+   "ar_tts": "افْتَحِ الْخَطَأَ فِي التَّقْرِيرِ، وَسَتَجِدُ النَّقْرَةَ بِجَانِبِهِ مُبَاشَرَةً."
+  },
+  {
+   "id": "L6",
+   "start": 36.2,
+   "end": 42.6,
+   "en": "No guessing, and no digging through the console. Just the step that broke it.",
+   "ar": "بلا تخمين، وبلا بحث في وحدة التحكم. فقط الخطوة التي سببت العطل.",
+   "ar_tts": "بِلَا تَخْمِينٍ، وَبِلَا بَحْثٍ فِي وَحْدَةِ التَّحَكُّمِ. فَقَطِ الْخُطْوَةُ الَّتِي سَبَّبَتِ الْعُطْلَ."
+  },
+  {
+   "id": "L7",
+   "start": 43.4,
+   "end": 49,
+   "en": "Hand it over, and a developer can repeat it in seconds.",
+   "ar": "سلمه للمطور ليكرر الخطوات في ثوان.",
+   "ar_tts": "سَلِّمْهُ لِلْمُطَوِّرِ لِيُكَرِّرَ الْخُطُوَاتِ فِي ثَوَانٍ."
+  }
+ ],
+ "shots": [
+  {
+   "t": "0.0-7.2",
+   "what": "WS high angle: a Toolshop payment page; three quick clicks, Confirm, the page breaks and the console shows a red 500; three numbered click rings rise under a big question mark; push-in on the rings."
+  },
+  {
+   "t": "7.2-14.6",
+   "what": "EWS: one timeline draws across the frame (linear); seven dots land; the coral 500 dot carries its pill. The light turns green."
+  },
+  {
+   "t": "14.6-21.8",
+   "what": "MS push-in on the last click and the 500; the rest dims; an amber thread draws back from the failure to the click before it, on an arc. likely cause."
+  },
+  {
+   "t": "21.8-28.8",
+   "what": "CU low angle: the click becomes a card (You did · Confirm · 00:41)."
+  },
+  {
+   "t": "28.8-35.8",
+   "what": "MS the report Timeline: context rows dim, the failed row glows coral, an amber link joins it to the Confirm click with likely cause."
+  },
+  {
+   "t": "35.8-43.0",
+   "what": "MS: two big cards, You did Confirm 00:41, an arrow, Then POST /payment/check 500, over a blurred console."
+  },
+  {
+   "t": "43.0-49.6",
+   "what": "WS: the pair slides to a developer card (truck to the inline end); Watch the replay pressed; a green check."
+  },
+  {
+   "t": "49.8-52.0",
+   "what": "End card, centred."
+  }
+ ],
+ "onscreen": [
+  "Console / وحدة التحكم",
+  "Something went wrong (site)",
+  "POST /payment/check 500",
+  "00:38 · 00:41",
+  "likely cause / سبب مرجح",
+  "You did / ما فعلته",
+  "Then / ثم",
+  "Timeline / الخط الزمني",
+  "Actions, Network / الإجراءات، الشبكة",
+  "Watch the replay / شاهد إعادة التشغيل"
+ ],
+ "strings": {
+  "q": {
+   "en": "?",
+   "ar": "؟"
+  },
+  "console": {
+   "en": "Console",
+   "ar": "وحدة التحكم"
+  },
+  "likely": {
+   "en": "likely cause",
+   "ar": "سبب مرجح"
+  },
+  "youDid": {
+   "en": "You did",
+   "ar": "ما فعلته"
+  },
+  "then": {
+   "en": "Then",
+   "ar": "ثم"
+  },
+  "timeline": {
+   "en": "Timeline",
+   "ar": "الخط الزمني"
+  },
+  "kAct": {
+   "en": "Actions",
+   "ar": "الإجراءات"
+  },
+  "kNet": {
+   "en": "Network",
+   "ar": "الشبكة"
+  },
+  "replay": {
+   "en": "Watch the replay",
+   "ar": "شاهد إعادة التشغيل"
+  },
+  "more": {
+   "en": "More tutorials, inside the tool",
+   "ar": "المزيد من الدروس داخل الأداة"
+  }
+ }
+}

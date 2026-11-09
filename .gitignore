@@ -87,3 +87,6 @@ identity/banner/assets/fonts/
 identity/banner/renders/
 identity/banner/.hyperframes/
 identity/banner/node_modules/
+
+# qaw-1109: each built tutorial project gets the kit fonts copied in by videos-tut/build.mjs; only videos-tut/kit/fonts is tracked
+videos-tut/*/assets/fonts/

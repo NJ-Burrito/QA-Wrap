@@ -1,0 +1,110 @@
+  <style>
+    html[dir=rtl] .mir{transform:scaleX(-1)}
+    .ring{position:absolute;left:0;top:0;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;border:5px solid var(--ink);background:rgba(23,26,29,.85);color:var(--ink);font:700 34px/66px var(--serif);text-align:center;opacity:0;box-shadow:0 18px 30px rgba(0,0,0,.5)}
+    .td{position:absolute;top:525px;opacity:0}
+    .tt{position:absolute;top:580px;font-size:30px;color:var(--muted);opacity:0}
+    .trow{position:absolute;left:30px;right:30px;height:96px;display:flex;align-items:center;gap:26px;padding:0 30px;border-radius:14px}
+    .trow .tm{width:96px;font-size:30px;color:var(--muted)}
+    .trow .k{width:190px;font-size:30px;font-weight:700}
+    .trow .d{font-size:28px;color:var(--muted)}
+    .big{position:absolute;top:300px;width:560px;height:330px}
+  </style>
+
+  <div id="main" class="fill">
+    <!-- S1: a Toolshop payment page (Practice Software Testing look), seen from above as it breaks -->
+    <div class="tilt" id="s1"><div class="plane" id="plane1">
+      <div class="browser" id="browser" data-layout-ignore style="inset-inline-start:120px;top:150px;width:1000px;height:640px">
+        <div class="bar"><i></i><i></i><i></i><div class="url">practicesoftwaretesting.com/checkout</div></div>
+        <div class="page">
+          <div class="ts-head"><span class="logo">Toolshop</span><span>Home</span><span>Categories</span><span>Contact</span></div>
+          <div class="abs" style="left:40px;top:120px;width:480px;height:200px;border-radius:8px;border:2px solid #e3e3e3;background:#fff">
+            <div class="abs" style="left:20px;top:18px;font-size:26px;font-weight:700">Combination Pliers</div>
+            <div class="abs" style="left:20px;top:58px;font-size:22px;color:#6c757d">1 × $14.15</div>
+            <div class="ts-btn" style="left:20px;top:110px;width:260px;height:56px;font-size:20px">Proceed to checkout</div>
+          </div>
+          <div class="abs" style="left:580px;top:116px;font-size:28px;font-weight:700">Payment</div>
+          <div class="ts-in" style="left:580px;top:170px;width:360px">Bank Transfer</div>
+          <div class="ts-btn" style="left:580px;top:250px;width:360px">Confirm</div>
+          <div id="brk" class="abs" style="left:40px;top:370px;width:900px;height:76px;border-radius:6px;background:#f8d7da;border:2px solid #f1aeb5;color:#842029;font-size:26px;font-weight:700;display:flex;align-items:center;padding:0 22px;opacity:0">Something went wrong</div>
+        </div>
+      </div>
+      <div class="card" id="cons" style="inset-inline-start:1150px;top:190px;width:480px;height:330px;opacity:0">
+        <div class="abs lbl" style="inset-inline-start:28px;top:22px">{{console}}</div>
+        <div class="abs cons" style="left:28px;top:90px">GET /api/cart 200</div>
+        <div class="abs cons" style="left:28px;top:130px">GET /api/payment-methods 200</div>
+        <div id="c500" class="abs" style="left:16px;right:16px;top:172px;height:110px;border-radius:12px;background:rgba(255,125,99,.14);border:1px solid rgba(255,125,99,.55);direction:ltr;opacity:0">
+          <span class="abs num" style="left:18px;top:8px;font-size:64px;color:var(--fail)">500</span>
+          <span class="abs cons" style="left:150px;top:28px;color:#ffa591">POST /payment/check</span>
+          <span class="abs cons" style="left:150px;top:62px;font-size:20px">Internal Server Error</span>
+        </div>
+      </div>
+      <div class="ring" id="r1">1</div><div class="ring" id="r2">2</div><div class="ring" id="r3">3</div>
+    </div></div>
+    <div id="qm" class="abs serif" style="inset-inline-start:420px;top:110px;width:200px;height:220px;text-align:center;font-size:200px;line-height:220px;color:var(--fail);opacity:0">{{q}}</div>
+
+    <!-- S2-S3: one timeline across the frame; the thread draws back from the failure to the click before it -->
+    <div id="tline" class="abs" style="left:0;top:0;width:1920px;height:1080px">
+      <div class="tl-line" id="tll" style="inset-inline-start:190px;top:538px;width:1540px;height:6px;opacity:0"></div>
+      <div class="dot click td" id="t1" style="inset-inline-start:245px"></div>
+      <div class="dot req td" id="t2" style="inset-inline-start:465px"></div>
+      <div class="dot click td" id="t3" style="inset-inline-start:685px"></div>
+      <div class="dot req td" id="t4" style="inset-inline-start:905px"></div>
+      <div class="dot click td" id="t5" style="inset-inline-start:1125px"></div>
+      <div class="dot click td" id="t6" style="inset-inline-start:1345px"></div>
+      <div class="dot err td" id="t7" style="inset-inline-start:1582px;width:36px;height:36px;top:522px"></div>
+      <div class="tt num" id="tt5" style="inset-inline-start:1100px">00:38</div>
+      <div class="tt num" id="tt6" style="inset-inline-start:1320px">00:41</div>
+      <div class="pill fail abs" id="p500" style="inset-inline-start:1400px;top:420px;opacity:0"><svg class="i"><use href="#ic-req"/></svg><span class="ltr">POST /payment/check 500</span></div>
+      <svg class="abs mir" width="1920" height="1080" viewBox="0 0 1920 1080" style="left:0;top:0" fill="none">
+        <path id="thread" d="M1600 520 C1575 410 1385 410 1360 522" stroke="#f0b94a" stroke-width="6" stroke-linecap="round" opacity="0"/>
+      </svg>
+      <div class="pill amber abs" id="plk" style="inset-inline-start:1395px;top:340px;height:48px;font-size:24px;opacity:0">{{likely}}</div>
+    </div>
+
+    <!-- S4: the click becomes a card, seen from below -->
+    <div class="card" id="ccard" style="inset-inline-start:640px;top:280px;width:640px;height:380px;opacity:0">
+      <div class="abs lbl" style="inset-inline-start:40px;top:34px">{{youDid}}</div>
+      <div class="abs" style="inset-inline-start:40px;top:96px;display:flex;align-items:center;gap:18px"><span class="chip" style="position:static"><svg class="i"><use href="#ic-click"/></svg></span><span class="ltr" style="font-size:52px;font-weight:700">Confirm</span></div>
+      <div class="abs num" id="ctime" style="inset-inline-start:40px;top:200px;font-size:120px;line-height:1;color:var(--ink)">00:41</div>
+    </div>
+
+    <!-- S5: the report's Timeline -->
+    <div id="s5" class="scene">
+      <div class="card" style="left:280px;top:110px;width:1360px;height:660px">
+        <div class="abs" style="left:0;right:0;top:0;height:92px;background:#2d3238;border-bottom:1px solid var(--line)"></div>
+        <div class="abs pill" style="inset-inline-start:30px;top:16px;height:60px;background:var(--amber);color:#1d2024;border-color:var(--amber);box-shadow:none">{{timeline}}</div>
+        <div class="trow ctx" style="top:116px"><span class="tm num">00:31</span><span class="dot click" style="position:static"></span><span class="k">{{kAct}}</span><span class="d ltr">Proceed to checkout</span></div>
+        <div class="trow ctx" style="top:216px"><span class="tm num">00:38</span><span class="dot click" style="position:static"></span><span class="k">{{kAct}}</span><span class="d ltr">Bank Transfer</span></div>
+        <div class="trow" id="rc" style="top:316px"><span class="tm num">00:41</span><span class="dot click" style="position:static"></span><span class="k">{{kAct}}</span><span class="d ltr" style="color:var(--ink)">Confirm</span></div>
+        <div class="trow" id="rf" style="top:416px"><span class="tm num">00:41</span><span class="dot err" style="position:static"></span><span class="k" style="color:var(--fail)">{{kNet}}</span><span class="d ltr" style="color:#ffa591">POST /payment/check · 500</span></div>
+        <div class="trow ctx" style="top:516px"><span class="tm num">00:44</span><span class="dot req" style="position:static"></span><span class="k">{{kNet}}</span><span class="d ltr">GET /api/cart · 200</span></div>
+        <div id="lnk" class="abs" style="inset-inline-end:300px;top:364px;width:6px;height:100px;border-radius:3px;background:var(--amber);transform-origin:50% 0"></div>
+        <div class="pill amber abs" id="lkp" style="inset-inline-end:40px;top:390px;height:48px;font-size:24px;opacity:0">{{likely}}</div>
+      </div>
+    </div>
+
+    <!-- S6-S7: cause, arrow, effect; then handed over -->
+    <div class="card" id="blurc" data-layout-ignore style="inset-inline-start:360px;top:200px;width:1200px;height:560px;filter:blur(7px);opacity:0">
+      <div class="abs cons" style="left:40px;top:60px">GET /api/cart 200</div><div class="abs cons" style="left:40px;top:110px">GET /api/payment-methods 200</div><div class="abs cons" style="left:40px;top:160px;color:#ffa591">POST /payment/check 500</div><div class="abs cons" style="left:40px;top:210px">Uncaught (in promise) Error: 500</div>
+    </div>
+    <div id="pair" class="abs" style="z-index:2;left:0;top:0;width:1920px;height:1080px;opacity:0">
+      <div class="card big" id="bc1" style="inset-inline-start:260px">
+        <div class="abs lbl" style="inset-inline-start:40px;top:30px">{{youDid}}</div>
+        <div class="abs" style="inset-inline-start:40px;top:90px;display:flex;align-items:center;gap:18px"><span class="chip" style="position:static"><svg class="i"><use href="#ic-click"/></svg></span><span class="ltr" style="font-size:50px;font-weight:700">Confirm</span></div>
+        <div class="abs num" style="inset-inline-start:40px;top:190px;font-size:92px;line-height:1">00:41</div>
+      </div>
+      <svg class="abs mir" width="1920" height="1080" viewBox="0 0 1920 1080" style="left:0;top:0" fill="none"><path id="arw" d="M850 465 H1060 M1030 435 L1066 465 L1030 495" stroke="#f0b94a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="card big" id="bc2" style="inset-inline-start:1100px;border-color:rgba(255,125,99,.6)">
+        <div class="abs lbl" style="inset-inline-start:40px;top:30px">{{then}}</div>
+        <div class="abs cons" style="left:40px;top:104px;font-size:32px;color:#ffa591">POST /payment/check</div>
+        <div class="abs num" style="left:40px;top:170px;font-size:120px;line-height:1;color:var(--fail)">500</div>
+      </div>
+    </div>
+    <div class="card" id="dev" style="inset-inline-start:660px;top:150px;width:600px;height:630px;opacity:0">
+      <div class="abs" style="left:0;right:0;top:0;height:330px;background:#1d2024;border-bottom:1px solid var(--line)"></div>
+      <div class="abs" style="inset-inline-start:36px;top:362px;display:flex;align-items:center;gap:16px"><span class="chip" style="position:static"><svg class="i"><use href="#ic-user"/></svg></span></div>
+      <div id="rpl" class="btn-c abs" style="left:36px;right:36px;top:480px"><svg class="i"><use href="#ic-play"/></svg>{{replay}}</div>
+    </div>
+    <!-- the payoff: a 64 px green check in front of every card, on the developer card's top inline-end corner -->
+    <div class="chip" id="okc" style="z-index:5;inset-inline-start:1210px;top:118px;width:84px;height:84px;border-radius:24px;background:#1f3a29;color:var(--pass);border:2px solid var(--pass);box-shadow:0 0 40px rgba(123,211,137,.45),0 18px 30px rgba(0,0,0,.5);opacity:0"><svg class="i" style="width:64px;height:64px;stroke-width:2.8"><use href="#ic-check"/></svg></div>
+  </div>

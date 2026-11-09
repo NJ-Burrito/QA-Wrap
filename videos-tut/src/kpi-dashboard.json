@@ -1,0 +1,253 @@
+{
+ "id": "kpi-dashboard",
+ "no": 6,
+ "status": "animatic round 2 (director notes applied; qaw-1109 tut-b)",
+ "dur": 54,
+ "title": {
+  "en": "Your performance dashboard",
+  "ar": "لوحة مؤشرات أدائك"
+ },
+ "blurb": {
+  "en": "A personal dashboard built from your own sessions on this device: time spent testing, page coverage, bugs filed, and a PDF to hand over.",
+  "ar": "لوحة شخصية من جلساتك أنت على هذا الجهاز: وقت الاختبار، وتغطية الصفحات، والخلل المسجل، وملف بي دي إف للتسليم."
+ },
+ "site": "Swag Labs, The Internet and Toolshop as three site entries on the charts (sample numbers only)",
+ "lines": [
+  {
+   "id": "L1",
+   "start": 0.6,
+   "end": 6.6,
+   "en": "Every session you record feeds a dashboard that is yours alone.",
+   "ar": "كل جلسة تسجلها تغذي لوحة تخصك وحدك.",
+   "ar_tts": "كُلُّ جَلْسَةٍ تُسَجِّلُهَا تُغَذِّي لَوْحَةً تَخُصُّكَ وَحْدَكَ."
+  },
+  {
+   "id": "L2",
+   "start": 7.2,
+   "end": 14.0,
+   "en": "Open it from Settings, under Performance indicators. It is all worked out on this device.",
+   "ar": "افتحها من الإعدادات، من «مؤشرات الأداء». والحساب كله على هذا الجهاز.",
+   "ar_tts": "افْتَحْهَا مِنَ الْإِعْدَادَاتِ، مِنْ «مُؤَشِّرَاتِ الْأَدَاءِ». وَالْحِسَابُ كُلُّهُ عَلَى هَذَا الْجِهَازِ."
+  },
+  {
+   "id": "L3",
+   "start": 14.8,
+   "end": 21.6,
+   "en": "See how long you test, per day or per week, and on which sites.",
+   "ar": "اعرف كم تختبر، في اليوم أو في الأسبوع، وعلى أي مواقع.",
+   "ar_tts": "اعْرِفْ كَمْ تَخْتَبِرُ، فِي الْيَوْمِ أَوْ فِي الْأُسْبُوعِ، وَعَلَى أَيِّ مَوَاقِعَ."
+  },
+  {
+   "id": "L4",
+   "start": 22.4,
+   "end": 29.6,
+   "en": "Coverage compares the pages you tested with the pages your sessions found.",
+   "ar": "التغطية تقارن الصفحات التي اختبرتها بالصفحات التي وجدتها جلساتك.",
+   "ar_tts": "التَّغْطِيَةُ تُقَارِنُ الصَّفَحَاتِ الَّتِي اخْتَبَرْتَهَا بِالصَّفَحَاتِ الَّتِي وَجَدَتْهَا جَلَسَاتُكَ."
+  },
+  {
+   "id": "L5",
+   "start": 30.2,
+   "end": 36.8,
+   "en": "Bugs filed counts only the notes you filed as bugs. Console errors do not count.",
+   "ar": "و«الخلل المسجل» يشمل ما سجلته كخلل فقط، لا أخطاء وحدة التحكم.",
+   "ar_tts": "وَ«الْخَلَلُ الْمُسَجَّلُ» يَشْمَلُ مَا سَجَّلْتَهُ كَخَلَلٍ فَقَطْ، لَا أَخْطَاءَ وَحْدَةِ التَّحَكُّمِ."
+  },
+  {
+   "id": "L6",
+   "start": 37.4,
+   "end": 43.4,
+   "en": "Sessions per day and your average session sit beside them.",
+   "ar": "وبجانبها الجلسات في كل يوم، ومتوسط جلستك.",
+   "ar_tts": "وَبِجَانِبِهَا الْجَلَسَاتُ فِي كُلِّ يَوْمٍ، وَمُتَوَسِّطُ جَلْسَتِكَ."
+  },
+  {
+   "id": "L7",
+   "start": 44.2,
+   "end": 50.4,
+   "en": "Export it as a PDF, and hand the page over.",
+   "ar": "ويمكنك تصديرها بصيغة بي دي إف وتسليم الصفحة.",
+   "ar_tts": "وَيُمْكِنُكَ تَصْدِيرُهَا بِصِيغَةِ بِي دِي إِفْ وَتَسْلِيمُ الصَّفْحَةِ."
+  }
+ ],
+ "shots": [
+  {
+   "t": "0-7",
+   "what": "WS slight high angle: session cards from tutorials 1-3 fall on arcs into an empty dashboard frame and turn into its first bars (cards become data)."
+  },
+  {
+   "t": "7-14.4",
+   "what": "MS: Settings, Performance indicators, Open the dashboard pressed; the dashboard head lights up; the lede writes in. Green light."
+  },
+  {
+   "t": "14.4-22",
+   "what": "MS: Time spent testing per day; bars grow one by one, split by site; Group by flips Day to Week."
+  },
+  {
+   "t": "22-30",
+   "what": "WS high angle: a map of 14 page squares; tested squares fill amber, untested stay hollow; a ring counts to 9 of 14 pages."
+  },
+  {
+   "t": "30-37",
+   "what": "MS: Bugs filed per day; coral bug flags land on the line; grey console and request markers drift past and fall away."
+  },
+  {
+   "t": "37-44",
+   "what": "MS: the tiles slide in: Sessions, Average session (focal), Bugs filed, Pages tested; numbers tick."
+  },
+  {
+   "t": "44-51",
+   "what": "MS then CU: Export as PDF pressed; a page assembles; push-in on the trace line at its foot."
+  },
+  {
+   "t": "51-54",
+   "what": "End card: QA Wrap lockup, More tutorials, inside the tool."
+  }
+ ],
+ "onscreen": [
+  "Performance indicators / مؤشرات الأداء",
+  "Open the dashboard / افتح لوحة المؤشرات",
+  "YOUR OWN WORK / عملك أنت",
+  "Time spent testing per day / الوقت المستغرق في الاختبار يوميا",
+  "Group by / التجميع",
+  "Day / يوم",
+  "Week / أسبوع",
+  "Time per site / الوقت لكل موقع",
+  "Page coverage per site / تغطية الصفحات لكل موقع",
+  "Tested (at least one recorded action) / مختبرة (إجراء مسجل واحد على الأقل)",
+  "Not tested yet / لم تختبر بعد",
+  "9 of 14 pages / 9 من 14 صفحة",
+  "Bugs filed per day / الخلل المسجل يوميا",
+  "Only notes you filed as a bug are counted. / لا تحسب إلا الملاحظات التي سجلتها أنت كخلل.",
+  "Sessions / الجلسات",
+  "Average session / متوسط الجلسة",
+  "24 min / 24 د",
+  "Bugs filed / الخلل المسجل",
+  "Pages tested / الصفحات المختبرة",
+  "Export as PDF / تصدير بصيغة PDF",
+  "KPI report / تقرير مؤشرات الأداء",
+  "QA Wrap version 3.9.0 · 2026-11-09 / QA Wrap الإصدار 3.9.0 · 2026-11-09"
+ ],
+ "strings": {
+  "c1": {
+   "en": "Checkout flow",
+   "ar": "مسار الدفع"
+  },
+  "c2": {
+   "en": "Payment check",
+   "ar": "فحص الدفع"
+  },
+  "c3": {
+   "en": "Contact form",
+   "ar": "نموذج التواصل"
+  },
+  "sessionWord": {
+   "en": "Session",
+   "ar": "جلسة"
+  },
+  "settings": {
+   "en": "Settings",
+   "ar": "الإعدادات"
+  },
+  "kpi": {
+   "en": "Performance indicators",
+   "ar": "مؤشرات الأداء"
+  },
+  "open": {
+   "en": "Open the dashboard",
+   "ar": "افتح لوحة المؤشرات"
+  },
+  "eyebrow": {
+   "en": "YOUR OWN WORK",
+   "ar": "عملك أنت"
+  },
+  "lede": {
+   "en": "Time, coverage and bugs, counted only from your own sessions and worked out on this device.",
+   "ar": "الوقت والتغطية والخلل، محسوبة من جلساتك أنت فقط وعلى هذا الجهاز."
+  },
+  "timeDay": {
+   "en": "Time spent testing per day",
+   "ar": "الوقت المستغرق في الاختبار يوميا"
+  },
+  "timeWeek": {
+   "en": "Time spent testing per week",
+   "ar": "الوقت المستغرق في الاختبار أسبوعيا"
+  },
+  "groupBy": {
+   "en": "Group by",
+   "ar": "التجميع"
+  },
+  "day": {
+   "en": "Day",
+   "ar": "يوم"
+  },
+  "week": {
+   "en": "Week",
+   "ar": "أسبوع"
+  },
+  "sites": {
+   "en": "Time per site",
+   "ar": "الوقت لكل موقع"
+  },
+  "coverage": {
+   "en": "Page coverage per site",
+   "ar": "تغطية الصفحات لكل موقع"
+  },
+  "tested": {
+   "en": "Tested (at least one recorded action)",
+   "ar": "مختبرة (إجراء مسجل واحد على الأقل)"
+  },
+  "untested": {
+   "en": "Not tested yet",
+   "ar": "لم تختبر بعد"
+  },
+  "of14": {
+   "en": "of 14 pages",
+   "ar": "من 14 صفحة"
+  },
+  "bugsDay": {
+   "en": "Bugs filed per day",
+   "ar": "الخلل المسجل يوميا"
+  },
+  "bugNote": {
+   "en": "Only notes you filed as a bug are counted.",
+   "ar": "لا تحسب إلا الملاحظات التي سجلتها أنت كخلل."
+  },
+  "tSessions": {
+   "en": "Sessions",
+   "ar": "الجلسات"
+  },
+  "tAvg": {
+   "en": "Average session",
+   "ar": "متوسط الجلسة"
+  },
+  "min": {
+   "en": "min",
+   "ar": "د"
+  },
+  "tBugs": {
+   "en": "Bugs filed",
+   "ar": "الخلل المسجل"
+  },
+  "tPages": {
+   "en": "Pages tested",
+   "ar": "الصفحات المختبرة"
+  },
+  "exportPdf": {
+   "en": "Export as PDF",
+   "ar": "تصدير بصيغة PDF"
+  },
+  "report": {
+   "en": "KPI report",
+   "ar": "تقرير مؤشرات الأداء"
+  },
+  "trace": {
+   "en": "<bdi>QA Wrap</bdi> version <bdi>3.9.0</bdi> · <bdi>2026-11-09</bdi>",
+   "ar": "<bdi>QA Wrap</bdi> الإصدار <bdi>3.9.0</bdi> · <bdi>2026-11-09</bdi>"
+  },
+  "more": {
+   "en": "More tutorials, inside the tool",
+   "ar": "المزيد من الدروس داخل الأداة"
+  }
+ }
+}

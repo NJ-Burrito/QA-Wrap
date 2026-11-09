@@ -1,0 +1,106 @@
+  <style>
+    .bt{font-family:var(--serif);font-weight:700;font-size:64px;position:absolute;inset-inline-start:120px;top:64px;color:#d8d6d1;opacity:0;white-space:nowrap}
+    .bt em{font-style:normal;color:var(--pass)}
+    .mi{height:70px;border-radius:14px;display:flex;align-items:center;gap:16px;padding:0 20px;font-size:28px;font-weight:700}
+    .mi .mbar{height:16px;border-radius:8px;background:var(--line)}
+    .erow{position:absolute;inset-inline-start:40px;inset-inline-end:40px;height:72px;display:flex;align-items:center;gap:22px;font-size:28px;border-bottom:2px solid rgba(241,239,233,.07)}
+    .erow .tm{width:86px;color:var(--muted);font-weight:400;direction:ltr;text-align:start}
+    .erow .k{font-weight:700}
+    .erow .v{color:var(--muted);font-weight:400}
+    .sealrow{font-size:25px;color:var(--ink);font-weight:400;height:42px;line-height:42px;white-space:nowrap}
+    .vcard{position:absolute;width:500px;height:430px;border-radius:26px;background:var(--ground2);box-shadow:0 40px 90px rgba(0,0,0,.55);overflow:hidden;opacity:0}
+    .vcard .vh{display:flex;align-items:center;gap:16px;padding:30px 30px 0;font-family:var(--serif);font-size:54px}
+    .vcard .vb{padding:16px 30px 0;font-size:28px;line-height:1.35}
+    .vcard .vm{padding:18px 30px 0;font-size:24px;color:var(--muted);line-height:1.5}
+    bdi{unicode-bidi:isolate}
+  </style>
+
+  <!-- S1: the saved session (tutorial 1) and the popup's More menu -->
+  <div id="s1" class="scene">
+    <div class="card" id="saved" style="inset-inline-start:150px;top:250px;width:640px;height:400px">
+      <div class="abs lbl" style="inset-inline-start:36px;top:30px">{{sessionWord}}</div>
+      <div class="abs serif" style="inset-inline-start:36px;top:70px;font-size:56px;white-space:nowrap">{{charter}}</div>
+      <div class="tl-line abs" style="left:36px;top:230px;width:568px"></div>
+      <div class="sdots abs" style="left:36px;right:36px;top:217px;height:26px;display:flex;justify-content:space-between;padding:0 30px"><span class="dot click" style="position:static;width:26px;height:26px"></span><span class="dot req" style="position:static;width:26px;height:26px"></span><span class="dot click" style="position:static;width:26px;height:26px"></span><span class="dot err" style="position:static;width:26px;height:26px"></span><span class="dot shot" style="position:static;width:26px;height:26px"></span></div>
+      <div class="pill ok abs" style="inset-inline-start:36px;top:296px"><svg class="i"><use href="#ic-check"/></svg>{{saved}}</div>
+    </div>
+    <div class="pop" id="pop" style="inset-inline-start:1060px;top:160px;height:560px">
+      <div class="hd"><svg viewBox="0 0 64 64" width="38" height="38" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-2 1)"><path stroke="#ECEAE3" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/><path stroke="#FF8A6E" d="M36 36L42.5 44L55 20"/></g></svg><span>QA Wrap</span></div>
+      <div class="abs lbl" style="inset-inline-start:24px;top:100px;font-size:26px">{{charter}}</div>
+      <div id="morebtn" class="btn-s abs" style="inset-inline-start:24px;inset-inline-end:24px;top:150px">{{moreBtn}}</div>
+      <div id="menu" class="abs" style="inset-inline-start:24px;inset-inline-end:24px;top:246px;border-radius:18px;background:var(--raise);border:2px solid var(--line);padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 24px 50px rgba(0,0,0,.5);opacity:0">
+        <div class="mi"><span class="mbar" style="width:220px"></span></div>
+        <div class="mi"><span class="mbar" style="width:170px"></span></div>
+        <div class="mi" id="mi" style="color:var(--ink)"><svg class="i"><use href="#ic-note"/></svg>{{sealedItem}}</div>
+        <div class="mi"><span class="mbar" style="width:250px"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- the exported file: one object from S2 to S7 -->
+  <div id="docwrap" class="abs" style="left:0;top:0;width:1920px;height:1080px;opacity:0">
+    <div class="card" id="doc" style="left:550px;top:50px;width:820px;height:700px;background:#22262b">
+      <div class="abs" style="left:0;right:0;top:0;height:64px;background:var(--raise);border-bottom:2px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 24px;direction:ltr;font-size:24px;color:var(--muted)"><svg class="i" style="width:28px;height:28px;color:var(--corn)"><use href="#ic-note"/></svg>qaw-timeline-checkout-flow.md</div>
+      <div class="abs" id="docview" style="left:0;right:0;top:64px;bottom:0;overflow:hidden">
+        <div id="docin" class="abs" style="left:0;right:0;top:0;height:1120px">
+          <div class="abs serif" id="dh" style="inset-inline-start:40px;top:26px;font-size:46px;white-space:nowrap"><span style="color:var(--muted)">#</span> {{timeline}} · {{charter}}</div>
+          <div class="abs" id="prow" style="inset-inline-start:40px;inset-inline-end:40px;top:108px;height:72px;display:flex;align-items:center;gap:18px;font-size:30px">
+            <span class="k" style="font-weight:700;color:var(--muted)">{{profile}}:</span>
+            <span id="pband" style="height:56px;border-radius:12px;background:rgba(226,174,56,.18);border:2px solid rgba(226,174,56,.55);display:flex;align-items:center;padding:0 16px;overflow:hidden;white-space:nowrap;color:var(--corn);font-weight:700">{{name}}</span>
+            <span id="pav" style="width:56px;height:56px;border-radius:50%;background:var(--corn);color:#1D2024;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;direction:ltr">LH</span>
+          </div>
+          <div class="abs" style="inset-inline-start:40px;inset-inline-end:40px;top:196px;height:2px;background:var(--line)"></div>
+          <div class="erow" style="top:214px"><span class="tm">00:02</span><span class="dot click" style="position:static"></span><span class="k">{{click}}</span><span class="v"><bdi>ADD TO CART</bdi></span></div>
+          <div class="erow" style="top:298px"><span class="tm">00:05</span><span class="dot req" style="position:static"></span><span class="k">{{request}}</span><span class="v"><bdi>POST /cart · 200</bdi></span></div>
+          <div class="erow" style="top:382px"><span class="tm">00:07</span><span class="dot click" style="position:static"></span><span class="k">{{click}}</span><span class="v"><bdi>Cart</bdi></span></div>
+          <div class="erow" id="row4" style="top:466px"><span class="tm">00:09</span><span class="dot click" style="position:static"></span><span class="k">{{click}}</span><span class="v" style="position:relative;display:inline-block;width:190px;height:40px"><bdi id="wold" class="abs" style="inset-inline-start:0;top:0">Checkout</bdi><bdi id="wnew" class="abs" style="inset-inline-start:0;top:0;color:var(--fail);opacity:0">Continue</bdi><span id="wline" class="abs" style="inset-inline-start:0;top:20px;width:140px;height:3px;background:var(--fail)"></span></span></div>
+          <div class="erow" style="top:550px"><span class="tm">00:12</span><span class="dot err" style="position:static"></span><span class="k" style="color:var(--fail)">{{error}}</span><span class="v"><bdi>TypeError</bdi></span></div>
+          <div class="erow" style="top:634px;border-bottom:0"><span class="tm">00:14</span><span class="dot shot" style="position:static"></span><span class="k">{{shot}}</span><span class="v"><bdi>checkout.png</bdi></span></div>
+          <!-- the seal block -->
+          <div id="sealblk" class="abs" style="inset-inline-start:30px;inset-inline-end:30px;top:740px;height:320px;border-radius:20px;border:3px solid rgba(126,208,138,.55);background:rgba(126,208,138,.06);opacity:0">
+            <div class="abs" style="inset-inline-start:28px;top:22px;display:flex;align-items:center;gap:16px"><span class="serif" style="font-size:44px">{{seal}}</span></div>
+            <div id="sck" class="abs" style="inset-inline-end:26px;top:18px;width:66px;height:66px;border-radius:50%;background:var(--pass);display:flex;align-items:center;justify-content:center"><svg class="i" style="width:40px;height:40px;color:#1D2024;stroke-width:3"><use href="#ic-check"/></svg></div>
+            <div id="scx" class="abs" style="inset-inline-end:26px;top:18px;width:66px;height:66px;border-radius:50%;background:var(--fail);display:flex;align-items:center;justify-content:center;opacity:0"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#1D2024" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></div>
+            <div class="abs" style="inset-inline-start:28px;inset-inline-end:28px;top:92px;display:flex;flex-direction:column">
+              <div class="sealrow sr">{{signer}}</div>
+              <div class="sealrow sr">{{sealDate}}</div>
+              <div class="sealrow sr">{{sealTool}}</div>
+              <div class="sealrow sr">{{fp}}</div>
+              <div class="sealrow sr" style="display:flex;align-items:center;gap:14px;margin-top:8px"><span style="color:var(--muted);font-weight:700">{{signature}}</span><span id="sigbars" style="display:flex;gap:6px;direction:ltr"><i style="display:block;width:92px;height:14px;border-radius:7px;background:#4c535b"></i><i style="display:block;width:150px;height:14px;border-radius:7px;background:#4c535b"></i><i style="display:block;width:70px;height:14px;border-radius:7px;background:#4c535b"></i><i style="display:block;width:118px;height:14px;border-radius:7px;background:#4c535b"></i></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- S7: a clear glass plate over the open file: readable through it, nothing hidden -->
+    <div id="plate" class="abs" style="left:627px;top:186px;width:666px;height:568px;border-radius:32px;border:1px solid rgba(236,235,231,.25);background:linear-gradient(to bottom,rgba(255,255,255,.11),rgba(255,255,255,.03) 20%,rgba(255,255,255,.012));box-shadow:inset 0 1px 0 rgba(255,255,255,.28);overflow:hidden;opacity:0">
+      <div id="sheen" class="abs" style="top:-200px;left:-400px;width:160px;height:1000px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent)"></div>
+    </div>
+    <svg id="pencil" class="abs" viewBox="0 0 64 64" width="96" height="96" style="left:0;top:0;opacity:0" fill="none" stroke-linejoin="round"><path d="M10 54l4-14 30-30 10 10-30 30z" fill="#E2AE38" stroke="#1D2024" stroke-width="3"/><path d="M10 54l4-14 10 10z" fill="#F1EFE9" stroke="#1D2024" stroke-width="3"/><path d="M38 16l10 10" stroke="#1D2024" stroke-width="3"/></svg>
+  </div>
+
+  <!-- S6: Settings > Sessions > Verify a sealed file, then two verdicts -->
+  <div id="s6" class="scene">
+    <div class="card" id="set" style="inset-inline-start:90px;top:150px;width:600px;height:520px">
+      <div class="abs serif" style="inset-inline-start:36px;top:30px;font-size:50px">{{settings}}</div>
+      <div class="abs pill" style="inset-inline-start:36px;top:116px;height:56px;box-shadow:none">{{sessions}}</div>
+      <div class="abs" style="inset-inline-start:36px;inset-inline-end:36px;top:206px;height:18px;border-radius:9px;background:var(--line)"></div>
+      <div class="abs" style="inset-inline-start:36px;top:244px;width:300px;height:18px;border-radius:9px;background:var(--line)"></div>
+      <div id="vbtn" class="btn-c abs" style="inset-inline-start:36px;inset-inline-end:36px;top:310px"><svg class="i" style="width:34px;height:34px"><use href="#ic-note"/></svg>{{verifyPick}}</div>
+      <div class="abs" style="inset-inline-start:36px;top:420px;display:flex;gap:12px;align-items:center;direction:ltr;font-size:22px;color:var(--muted)"><svg class="i" style="width:26px;height:26px"><use href="#ic-note"/></svg>qaw-timeline-checkout-flow.md</div>
+    </div>
+    <div class="vcard" id="vok" style="inset-inline-start:740px;top:150px;border:3px solid rgba(126,208,138,.6)">
+      <div class="vh" style="color:var(--pass)"><svg class="i" style="width:52px;height:52px;stroke-width:2.6"><use href="#ic-check"/></svg>{{intact}}</div>
+      <div class="vb">{{intactBody}}</div>
+      <div class="vm">{{signer}}<br>{{fp}}</div>
+    </div>
+    <div class="vcard" id="vbad" style="inset-inline-start:1290px;top:150px;border:3px solid rgba(255,146,112,.6)">
+      <div class="vh" style="color:var(--fail)"><svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>{{altered}}</div>
+      <div class="vb">{{alteredBody}}</div>
+    </div>
+  </div>
+
+<!-- overlay -->
+  <!-- S7 title: the honest close -->
+  <div class="bt" id="honest" style="inset-inline-start:0;inset-inline-end:0;text-align:center;top:56px;font-size:60px">{{honest}}</div>
+

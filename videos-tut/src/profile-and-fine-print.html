@@ -1,0 +1,99 @@
+  <style>
+    bdi{unicode-bidi:isolate}
+    .paper{position:absolute;border-radius:16px;background:#F4F1EA;box-shadow:0 30px 70px rgba(0,0,0,.55);overflow:hidden;color:#262B30}
+    .paper .hb{position:absolute;inset-inline-start:34px;height:18px;border-radius:9px;background:#C9C3B6}
+    .paper .tg{position:absolute;inset-inline-start:30px;top:28px;height:46px;border-radius:12px;display:flex;align-items:center;gap:10px;padding:0 14px;font-weight:700;font-size:22px;direction:ltr}
+    .foot{position:absolute;inset-inline-start:24px;inset-inline-end:24px;bottom:26px;height:34px;border-top:2px solid #DDD7CB;padding-top:8px;font-size:15px;color:#5D646B;white-space:nowrap;overflow:hidden}
+    .foot .fw{display:inline-block;white-space:nowrap;vertical-align:top}
+    .big{font-size:58px;font-weight:700;white-space:nowrap;color:var(--ink)}
+    .big .part{position:relative;display:inline-block;padding:6px 14px;border-radius:14px}
+    .big .sep{color:var(--muted);padding:0 6px}
+    .thread{fill:none;stroke:#E2AE38;stroke-width:4;stroke-linecap:round}
+  </style>
+
+  <!-- S1: unsigned work, from above -->
+  <div id="s1" class="scene">
+    <div id="stack" class="abs" style="left:0;top:0;width:1920px;height:1080px">
+      <div class="paper pg" style="left:520px;top:150px;width:420px;height:540px" data-rz="-14"><div class="hb" style="top:60px;width:220px"></div><div class="hb" style="top:110px;width:320px;background:#DDD7CB"></div><div class="hb" style="top:150px;width:280px;background:#DDD7CB"></div><div class="hb" style="top:190px;width:300px;background:#DDD7CB"></div></div>
+      <div class="paper pg" style="left:900px;top:110px;width:420px;height:540px" data-rz="9"><div class="hb" style="top:60px;width:180px"></div><div class="hb" style="top:110px;width:330px;background:#DDD7CB"></div><div class="hb" style="top:150px;width:240px;background:#DDD7CB"></div></div>
+      <div class="paper pg" style="left:1160px;top:230px;width:420px;height:540px" data-rz="-4"><div class="hb" style="top:60px;width:240px"></div><div class="hb" style="top:110px;width:300px;background:#DDD7CB"></div><div class="hb" style="top:150px;width:330px;background:#DDD7CB"></div></div>
+      <div class="paper pg" style="left:330px;top:300px;width:420px;height:540px" data-rz="18"><div class="hb" style="top:60px;width:200px"></div><div class="hb" style="top:110px;width:310px;background:#DDD7CB"></div></div>
+      <div class="paper" id="p1" style="left:740px;top:200px;width:440px;height:560px" data-rz="3">
+        <div class="hb" style="top:60px;width:240px"></div><div class="hb" style="top:110px;width:340px;background:#DDD7CB"></div><div class="hb" style="top:150px;width:300px;background:#DDD7CB"></div><div class="hb" style="top:190px;width:320px;background:#DDD7CB"></div><div class="hb" style="top:230px;width:220px;background:#DDD7CB"></div>
+        <div id="slot" class="abs" style="inset-inline-start:30px;inset-inline-end:30px;bottom:30px;height:90px;border:3px dashed #E9805F;border-radius:14px;display:flex;align-items:center;justify-content:center"><svg class="i" style="width:60px;height:60px;color:#E9805F;stroke-width:2.4"><use href="#ic-q"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Settings > Sessions, the name field -->
+  <div id="s2" class="scene">
+    <div class="card" style="inset-inline-start:260px;top:170px;width:1000px;height:480px">
+      <div class="abs serif" style="inset-inline-start:40px;top:30px;font-size:54px">{{settings}}</div>
+      <div class="abs pill" style="inset-inline-start:40px;top:116px;height:56px;box-shadow:none">{{sessions}}</div>
+      <div class="abs lbl" style="inset-inline-start:40px;top:214px">{{nameLabel}}</div>
+      <div class="field abs" id="nfield" style="inset-inline-start:40px;top:262px;width:700px;height:80px;overflow:hidden">
+        <span id="ntyped" style="display:inline-block;white-space:nowrap;color:var(--ink);font-weight:700">{{name}}</span><span id="caret" style="display:inline-block;width:3px;height:40px;background:var(--corn);margin-inline-start:4px"></span>
+      </div>
+      <div class="abs" style="inset-inline-start:40px;top:380px;width:520px;height:16px;border-radius:8px;background:var(--line)"></div>
+      <div class="abs" style="inset-inline-start:40px;top:414px;width:380px;height:16px;border-radius:8px;background:var(--line)"></div>
+    </div>
+  </div>
+
+  <!-- the avatar: one object from S2 to S6 (graphic match) -->
+  <div id="av" class="abs" style="left:0;top:0;width:150px;height:150px;border-radius:50%;background:var(--raise2);border:4px solid var(--corn);overflow:hidden;opacity:0;box-shadow:0 20px 50px rgba(0,0,0,.5)">
+    <div id="avini" class="fill" style="display:flex;align-items:center;justify-content:center;font-weight:700;font-size:52px;color:var(--corn)">{{initials}}</div>
+    <svg id="avpic" class="fill" viewBox="0 0 150 150" style="opacity:0"><rect width="150" height="150" fill="#D8C6A4"/><circle cx="75" cy="64" r="40" fill="#5B3B2E"/><ellipse cx="75" cy="70" rx="27" ry="31" fill="#C89A78"/><path d="M48 60c4-22 50-26 56 0-10-8-22-12-28-12s-20 4-28 12z" fill="#5B3B2E"/><path d="M22 150c4-34 26-46 53-46s49 12 53 46z" fill="#7ED08A"/><circle cx="65" cy="70" r="3" fill="#262B30"/><circle cx="85" cy="70" r="3" fill="#262B30"/><path d="M67 84c5 4 11 4 16 0" stroke="#262B30" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+  </div>
+
+  <!-- S3: Choose a picture -->
+  <div id="s3" class="scene">
+    <div id="choose" class="btn-s abs" style="left:740px;width:440px;top:640px">{{choose}}</div>
+    <div class="pill ok abs" id="picsaved" style="left:0;right:0;margin:0 auto;width:max-content;top:740px;opacity:0"><svg class="i"><use href="#ic-check"/></svg>{{picSaved}}</div>
+  </div>
+  <div id="tile" class="abs" style="left:0;top:0;width:200px;height:200px;border-radius:22px;overflow:hidden;opacity:0;box-shadow:0 24px 50px rgba(0,0,0,.55);border:4px solid #F4F1EA">
+    <svg class="fill" viewBox="0 0 150 150"><rect width="150" height="150" fill="#D8C6A4"/><circle cx="75" cy="64" r="40" fill="#5B3B2E"/><ellipse cx="75" cy="70" rx="27" ry="31" fill="#C89A78"/><path d="M48 60c4-22 50-26 56 0-10-8-22-12-28-12s-20 4-28 12z" fill="#5B3B2E"/><path d="M22 150c4-34 26-46 53-46s49 12 53 46z" fill="#7ED08A"/><circle cx="65" cy="70" r="3" fill="#262B30"/><circle cx="85" cy="70" r="3" fill="#262B30"/><path d="M67 84c5 4 11 4 16 0" stroke="#262B30" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+  </div>
+
+  <!-- S4: three exports, each gets the fine-print line -->
+  <div id="s4" class="scene">
+    <div class="paper ex" id="ex1" data-layout-ignore style="inset-inline-start:130px;top:120px;width:460px;height:560px">
+      <div class="tg" style="background:rgba(255,146,112,.2);color:#9C3520">PDF</div>
+      <div class="hb" style="top:110px;width:300px"></div><div class="hb" style="top:150px;width:340px;background:#DDD7CB"></div><div class="abs" style="inset-inline-start:34px;top:200px;width:350px;height:150px;border-radius:12px;background:#E8E3D8;display:flex;align-items:flex-end;gap:16px;padding:16px;direction:ltr"><i style="display:block;width:40px;height:60%;background:#C9C3B6;border-radius:6px"></i><i style="display:block;width:40px;height:85%;background:#C9C3B6;border-radius:6px"></i><i style="display:block;width:40px;height:45%;background:#C9C3B6;border-radius:6px"></i><i style="display:block;width:40px;height:70%;background:#C9C3B6;border-radius:6px"></i></div><div class="hb" style="top:380px;width:320px;background:#DDD7CB"></div>
+      <div class="foot"><span class="fw">{{fpName}} · <bdi>2026-11-09</bdi> · <bdi>QA Wrap 3.9.0</bdi></span></div>
+    </div>
+    <div class="paper ex" id="ex2" data-layout-ignore style="inset-inline-start:730px;top:120px;width:460px;height:560px">
+      <div class="tg" style="background:rgba(226,174,56,.25);color:#7a5a12"><svg class="i" style="width:24px;height:24px"><use href="#ic-note"/></svg>.md</div>
+      <div class="hb" style="top:110px;width:260px"></div>
+      <div class="abs" style="inset-inline-start:34px;top:160px;display:flex;flex-direction:column;gap:22px"><i style="display:block;width:330px;height:14px;border-radius:7px;background:#DDD7CB"></i><i style="display:block;width:300px;height:14px;border-radius:7px;background:#DDD7CB"></i><i style="display:block;width:320px;height:14px;border-radius:7px;background:#DDD7CB"></i><i style="display:block;width:260px;height:14px;border-radius:7px;background:#DDD7CB"></i></div>
+      <div class="abs" style="inset-inline-start:34px;inset-inline-end:34px;top:330px;height:110px;border-radius:12px;border:3px solid #7ED08A;background:rgba(126,208,138,.12)"></div>
+      <div class="foot"><span class="fw">{{fpName}} · <bdi>2026-11-09</bdi> · <bdi>QA Wrap 3.9.0</bdi></span></div>
+    </div>
+    <div class="paper ex" id="ex3" data-layout-ignore style="inset-inline-start:1330px;top:120px;width:460px;height:560px">
+      <div class="tg" style="background:rgba(255,146,112,.2);color:#9C3520"><svg class="i" style="width:24px;height:24px"><use href="#ic-bug"/></svg></div>
+      <div class="hb" style="top:110px;width:320px"></div><div class="hb" style="top:150px;width:250px;background:#DDD7CB"></div>
+      <div class="abs" style="inset-inline-start:34px;top:200px;width:350px;height:180px;border-radius:12px;background:#E8E3D8"><div class="abs" style="left:20px;top:20px;width:120px;height:18px;border-radius:9px;background:#C9C3B6"></div><div class="abs" style="left:20px;top:56px;width:300px;height:100px;border-radius:10px;background:#F4F1EA"></div></div>
+      <div class="foot"><span class="fw">{{fpName}} · <bdi>2026-11-09</bdi> · <bdi>QA Wrap 3.9.0</bdi></span></div>
+    </div>
+  </div>
+
+  <!-- S5: one fine-print line, big -->
+  <div id="s5" class="scene">
+    <div class="big abs" style="left:0;right:0;top:380px;text-align:center">
+      <span class="part" id="b1"><span class="hl abs" id="h1" style="inset:0;border-radius:14px;background:rgba(226,174,56,.22);border:3px solid rgba(226,174,56,.7);opacity:0"></span><span style="position:relative">{{fpName}}</span></span><span class="sep">·</span><span class="part" id="b2"><span class="hl abs" id="h2" style="inset:0;border-radius:14px;background:rgba(226,174,56,.22);border:3px solid rgba(226,174,56,.7);opacity:0"></span><bdi style="position:relative">2026-11-09</bdi></span><span class="sep">·</span><span class="part" id="b3"><span class="hl abs" id="h3" style="inset:0;border-radius:14px;background:rgba(226,174,56,.22);border:3px solid rgba(226,174,56,.7);opacity:0"></span><bdi style="position:relative">QA Wrap 3.9.0</bdi></span>
+    </div>
+    <div class="abs" id="bigrule" style="left:300px;right:300px;top:350px;height:3px;background:var(--line)"></div>
+  </div>
+
+  <!-- S6: every document points back to her -->
+  <div id="s6" class="scene">
+    <svg class="abs" width="1920" height="1080" viewBox="0 0 1920 1080" style="left:0;top:0">
+      <path class="thread" id="t1" d="M560 480 C560 400 800 420 920 360"/>
+      <path class="thread" id="t2" d="M960 480 C960 440 960 420 960 375"/>
+      <path class="thread" id="t3" d="M1360 480 C1360 400 1120 420 1000 360"/>
+    </svg>
+    <div class="paper md" style="left:445px;top:480px;width:230px;height:290px"><div class="tg" style="background:rgba(255,146,112,.2);color:#9C3520;top:18px;height:38px;font-size:18px">PDF</div><div class="hb" style="top:80px;width:150px;inset-inline-start:22px"></div><div class="hb" style="top:114px;width:170px;inset-inline-start:22px;background:#DDD7CB"></div><div class="abs" style="left:18px;right:18px;bottom:20px;height:4px;border-radius:2px;background:#E2AE38"></div></div>
+    <div class="paper md" style="left:845px;top:480px;width:230px;height:290px"><div class="tg" style="background:rgba(226,174,56,.25);color:#7a5a12;top:18px;height:38px;font-size:18px">.md</div><div class="hb" style="top:80px;width:150px;inset-inline-start:22px"></div><div class="hb" style="top:114px;width:170px;inset-inline-start:22px;background:#DDD7CB"></div><div class="abs" style="left:18px;right:18px;bottom:20px;height:4px;border-radius:2px;background:#E2AE38"></div></div>
+    <div class="paper md" style="left:1245px;top:480px;width:230px;height:290px"><div class="tg" style="background:rgba(255,146,112,.2);color:#9C3520;top:18px;height:38px"><svg class="i" style="width:22px;height:22px"><use href="#ic-bug"/></svg></div><div class="hb" style="top:80px;width:150px;inset-inline-start:22px"></div><div class="hb" style="top:114px;width:170px;inset-inline-start:22px;background:#DDD7CB"></div><div class="abs" style="left:18px;right:18px;bottom:20px;height:4px;border-radius:2px;background:#E2AE38"></div></div>
+    <div class="abs pill corn" id="avname" style="inset-inline-start:1120px;top:208px;opacity:0">{{name}}</div>
+  </div>
+

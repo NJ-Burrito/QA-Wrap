@@ -1,216 +1,103 @@
 /* QA Wrap — local-first QA toolkit in the ISTQB shape. */
 /**
- * The tutorials manifest, checked against the storyboards it came from.
+ * The tutorials manifest and the page that reads it (run qaw-1109, R2 / D1 / D2).
  *
  *   node tools/test-tutorials.mjs
  *
- * `tutorials/lessons.json` is the whole index of the films page: a lesson that
- * is not in it cannot be reached by any route, and a number in it that is
- * wrong is a number printed under a card. It is written from the storyboards
- * by the film pipeline, so every claim it makes is checkable against the
- * storyboard that produced it, and this file checks the ones that go stale
- * silently.
+ * `tutorials/lessons.json` is the whole index of the films page: the commercial, then six illustrated
+ * tutorials, each an English and an Arabic film hosted on the site. It is written by
+ * `videos-tut/gen-lessons.mjs` from the film scripts (`videos-tut/src/*.json`), so this checks the
+ * manifest against those scripts, the hosted files against the manifest, and the page against both:
  *
- * The one that matters most is the chapter clock. A chapter is a seek point:
- * `{ t, titleKey }`, where `t` is a second in the DELIVERED film. The
- * storyboard's own clock does not include the 2 s poster card the film opens
- * on or the 2 s the end card grows by (`compose/frames.mjs` POSTER_HOLD and
- * END_CARD_GROWTH), so a chapter time copied straight off the shot table lands
- * two seconds early on every chapter of every film — a fault nothing else
- * would notice, because a video seeks happily to the wrong second. Here, a
- * chapter that falls outside its film's own storyboard length plus those four
- * seconds fails.
+ *   - the set is the commercial plus the six D1 topics, in order;
+ *   - every lesson names an English and an Arabic file, a poster, a length of 40 to 60 s (the commercial: 40),
+ *     and a blurb in both languages with no visible tashkeel;
+ *   - a lesson is `pending` exactly while one of its two films is missing; a drawn lesson has both files;
+ *   - the manifest's titles, blurbs and lengths are the scripts' (nothing hand-edited in one place only);
+ *   - the page picks the file by the interface language, opens it in a new tab on a press, and loads nothing before one.
+ *
+ * The page's behaviour in a real browser (the right URL in English and in Arabic) is `tools/e2e` territory:
+ * the entry smoke of the run opens tutorials.html with the extension loaded in both languages.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const BOARDS = path.join(EXT, 'tools', 'film', 'storyboard');
-/* The films are hosted, never packaged (T-048): the one tracked copy is in the site folder. */
-const MEDIA = path.join(EXT, '..', 'site', 'tutorials');
-
-/** The poster card the film opens on, plus the end card's growth. */
-const DELIVERY_GROWTH = 4;
+const REPO = path.resolve(EXT, '..');
+const MEDIA = path.join(REPO, 'site', 'media');
+const SRC = path.join(REPO, 'videos-tut', 'src');
 
 let fail = 0;
 let checks = 0;
 const bad = (where, why) => { fail++; console.log(`  FAIL  ${where}\n          ${why}`); };
 const ok = () => { checks++; };
+const check = (cond, where, why) => (cond ? ok() : bad(where, why));
+const read = (p) => fs.readFileSync(p, 'utf8');
+const TASHKEEL = /[ً-ْٰـ]/;
 
-const lessons = JSON.parse(fs.readFileSync(path.join(EXT, 'tutorials', 'lessons.json'), 'utf8'));
-const en = JSON.parse(fs.readFileSync(path.join(EXT, 'platform', 'i18n', 'en.json'), 'utf8'));
-const ar = JSON.parse(fs.readFileSync(path.join(EXT, 'platform', 'i18n', 'ar.json'), 'utf8'));
+const lessons = JSON.parse(read(path.join(EXT, 'tutorials', 'lessons.json')));
+const scripts = Object.fromEntries(fs.readdirSync(SRC).filter((f) => f.endsWith('.json')).map((f) => {
+  const j = JSON.parse(read(path.join(SRC, f)));
+  return [j.id, j];
+}));
 
-/* ── 1. the round-3 set is all there, in the order the page reads ───────── */
+/* ── 1. the set and its order ──────────────────────────────────────────── */
+const SET = ['qa-wrap', 'record-a-session', 'trace-a-failure', 'notes-and-bugs', 'export-and-seal', 'profile-and-fine-print', 'kpi-dashboard'];
+check(JSON.stringify(lessons.map((l) => l.id)) === JSON.stringify(SET), 'tutorials/lessons.json', `the set reads ${lessons.map((l) => l.id).join(', ')}, not ${SET.join(', ')}`);
+check(lessons[0]?.kind === 'trailer' && lessons.slice(1).every((l) => l.kind === 'feature'), 'tutorials/lessons.json', 'the commercial is not the one trailer, first');
+check(lessons.length - 1 <= 6, 'tutorials/lessons.json', 'more than six tutorials');
 
-/**
- * Decision 88: ten round-3 films — the commercial, five walkthroughs, and four
- * category films, one per popup group. The sixteen round-2 tool films stay in
- * the manifest behind them, so the count is not asserted; the ten ids are.
- */
-const ROUND3 = [
-  'qa-wrap',
-  'record-a-session', 'the-tools', 'file-it', 'save-and-diagram', 'protect-the-data',
-  'cat-capture', 'cat-check', 'cat-design', 'cat-break',
-];
-const ids = lessons.map((l) => l.id);
-const missing = ROUND3.filter((id) => !ids.includes(id));
-if (missing.length) bad('tutorials/lessons.json', `round-3 film(s) not in the manifest: ${missing.join(', ')}`);
-else ok();
-
-const at = (id) => ids.indexOf(id);
-if (at('qa-wrap') !== 0) bad('tutorials/lessons.json', 'the trailer is not first; the page gives the first card the full width');
-else ok();
-const orderIsRight = ROUND3.every((id, i) => i === 0 || at(id) > at(ROUND3[i - 1]));
-if (!orderIsRight) bad('tutorials/lessons.json', `the round-3 films are out of order; they read ${ROUND3.join(', ')}`);
-else ok();
-const lastRound3 = Math.max(...ROUND3.map(at));
-const firstTool = lessons.findIndex((l) => l.kind === 'tool');
-if (firstTool !== -1 && firstTool < lastRound3) bad('tutorials/lessons.json', 'a round-2 tool film is filed before a round-3 film');
-else ok();
-
-/* ── 2. the chapter clock, against the storyboard ───────────────────────── */
-
-const CATEGORY = ['cat-capture', 'cat-check', 'cat-design', 'cat-break'];
-for (const lesson of lessons) {
-  const board = path.join(BOARDS, `${lesson.id}.storyboard.json`);
-  const wantsChapters = CATEGORY.includes(lesson.id);
-  if (wantsChapters && !lesson.chapters?.length) {
-    bad(`tutorials/lessons.json:${lesson.id}`, 'a category film with no chapters; the page draws its rail from them');
-    continue;
-  }
-  if (!lesson.chapters?.length) continue;
-  if (!fs.existsSync(board)) { bad(`tutorials/lessons.json:${lesson.id}`, `chapters, but no storyboard at ${path.relative(EXT, board)}`); continue; }
-  const seconds = JSON.parse(fs.readFileSync(board, 'utf8')).seconds;
-  const limit = seconds + DELIVERY_GROWTH;
-
-  let last = -1;
-  for (const [i, ch] of lesson.chapters.entries()) {
-    const where = `tutorials/lessons.json:${lesson.id} chapter ${i + 1}`;
-    if (typeof ch.t !== 'number' || !Number.isFinite(ch.t) || ch.t < 0) {
-      bad(where, `t is ${JSON.stringify(ch.t)}; a chapter is a second in the delivered film`);
-      continue;
-    }
-    if (ch.t > limit) {
-      bad(where, `starts at ${ch.t}s, past the ${limit}s the film runs `
-        + `(storyboard ${seconds}s plus the ${DELIVERY_GROWTH}s of poster card and end card)`);
-    }
-    if (ch.t <= last) bad(where, `starts at ${ch.t}s, at or before the chapter in front of it (${last}s)`);
-    last = ch.t;
-    if (!ch.titleKey) { bad(where, 'no titleKey; a chapter title is never hand-typed English'); continue; }
-    if (!en[ch.titleKey]) bad(where, `titleKey "${ch.titleKey}" has no English`);
-    if (!ar[ch.titleKey]) bad(where, `titleKey "${ch.titleKey}" has no Arabic`);
-  }
-  ok();
-}
-
-/* ── 3. a film is playable, or it says it is not ────────────────────────── */
-
-/**
- * `pending` is the page's whole answer to a film that has not been encoded
- * yet: the lesson is not drawn at all, so the browser is never pointed at a
- * file that is not there. A lesson whose flag disagrees with the folder is
- * either a broken card or a card hidden for nothing.
- */
-for (const lesson of lessons) {
-  if (lesson.pending) continue;
-  // 3.6.8: the one film hosted with the website (site/media), opened in a new tab; its banner is packaged beside the page.
-  if (lesson.files?.en === 'qa-wrap-commercial-40s.mp4') {
-    if (!fs.existsSync(path.join(EXT, '..', 'site', 'media', lesson.files.en))) bad(`tutorials/lessons.json:${lesson.id}`, 'the hosted film is not in site/media');
-    if (!lesson.thumb || !fs.existsSync(path.join(EXT, 'tutorials', lesson.thumb))) bad(`tutorials/lessons.json:${lesson.id}`, 'the hosted film has no packaged thumbnail');
-    continue;
-  }
-  if (!lesson.online) { bad(`tutorials/lessons.json:${lesson.id}`, 'a recorded film that is not marked online: it would have to be packaged'); continue; }
-  const here = [lesson.files?.en, lesson.poster].filter(Boolean);
-  const absent = here.filter((f) => !fs.existsSync(path.join(MEDIA, f)));
-  if (absent.length && !lesson.pending) {
-    bad(`tutorials/lessons.json:${lesson.id}`, `not in site/tutorials and not marked pending: ${absent.join(', ')}`);
-  } else if (!absent.length && lesson.pending) {
-    bad(`tutorials/lessons.json:${lesson.id}`, 'marked pending, but the film and its poster are both on disk; the card would refuse to play a film that is there');
+/* ── 2. every lesson carries what the page reads ───────────────────────── */
+for (const l of lessons) {
+  const w = `tutorials/lessons.json:${l.id}`;
+  check(l.en && l.ar && l.blurb?.en && l.blurb?.ar, w, 'a title or blurb is missing in a language');
+  check(!TASHKEEL.test(`${l.ar} ${l.blurb?.ar}`), w, 'visible Arabic carries tashkeel');
+  check(l.files?.en && l.files?.ar && l.files.en !== l.files.ar, w, 'English and Arabic must be two different files');
+  check(l.poster, w, 'no poster');
+  const lo = l.kind === 'trailer' ? 40 : 40; const hi = l.kind === 'trailer' ? 40 : 60;
+  check(Number.isFinite(l.secs) && l.secs >= lo && l.secs <= hi, w, `${l.secs} s is outside ${lo}-${hi}`);
+  check(!('online' in l), w, 'the S-07 `online` flag is back');
+  const exists = (f) => fs.existsSync(path.join(MEDIA, f));
+  const both = exists(l.files.en) && exists(l.files.ar);
+  if (l.pending) check(true, w, '');
+  else check(both, w, `drawn on the page but a film is missing: ${[l.files.en, l.files.ar].filter((f) => !exists(f)).join(', ')}`);
+  if (l.pending) check(!both, w, 'both films exist but the lesson is still pending (run videos-tut/gen-lessons.mjs)');
+  if (!l.pending) check(exists(l.poster), w, `poster ${l.poster} is not in site/media`);
+  if (l.posters) {
+    check(l.posters.en && l.posters.ar && l.posters.en !== l.posters.ar, w, 'English and Arabic posters must be two different files');
+    check(/-ar\./.test(l.posters.ar) && /-en\./.test(l.posters.en), w, 'a poster is named for the wrong language');
+    if (!l.pending) for (const p of [l.posters.en, l.posters.ar]) check(exists(p), w, `poster ${p} is not in site/media`);
+  } else check(l.kind === 'trailer', w, 'a tutorial has no per-language posters');
+  if (!l.pending) {
+    for (const f of [l.files.en, l.files.ar]) check(fs.statSync(path.join(MEDIA, f)).size < 50 * 1024 * 1024, w, `${f} is 50 MB or more`);
   }
 }
-ok();
 
-/* ── 3b. a pending film is off the page, not advertised on it ──────────── */
-
-/**
- * A "coming soon" chip is a promise with a date attached, and the four
- * category films are not coming this week. So the shipped page draws nothing
- * for a pending lesson: `render()` builds every list — the opening run, the
- * per-group film, the chapter rail, the leftovers, and each section's tally —
- * from one filtered list, and this asserts that line is still there. It is a
- * source check because the alternative is booting a browser for one boolean;
- * the line is short, named, and commented in `tutorials.js` for exactly this.
- */
-const page = fs.readFileSync(path.join(EXT, 'tutorials', 'tutorials.js'), 'utf8');
-const FILTER = 'const shown = lessons.filter((l) => !l.pending);';
-if (!page.includes(FILTER)) {
-  bad('tutorials/tutorials.js', `render() no longer starts from \`${FILTER}\`; a film that has not been recorded would be drawn on the shipped page`);
-} else ok();
-for (const [name, list] of [['byId', 'shown.map'], ['start', 'shown.filter'], ['rest', 'shown.filter']]) {
-  if (!page.includes(list)) bad('tutorials/tutorials.js', `render() builds ${name} from something other than \`shown\``);
+/* ── 3. the manifest is the scripts' ───────────────────────────────────── */
+for (const l of lessons.slice(1)) {
+  const s = scripts[l.id];
+  if (!s) { bad(`tutorials/lessons.json:${l.id}`, 'no script in videos-tut/src'); continue; }
+  check(l.en === s.title.en && l.ar === s.title.ar, l.id, 'title differs from the script');
+  check(l.blurb.en === s.blurb.en && l.blurb.ar === s.blurb.ar, l.id, 'blurb differs from the script');
+  check(l.secs === s.dur, l.id, `secs ${l.secs} is not the script's ${s.dur}`);
+  check(l.files.en === `tutorials/${l.id}-en.mp4` && l.files.ar === `tutorials/${l.id}-ar.mp4`, l.id, 'file names are not tutorials/<id>-<lang>.mp4');
 }
-ok();
+check(Object.keys(scripts).length === 6, 'videos-tut/src', `${Object.keys(scripts).length} scripts, expected 6`);
 
-/* ── 4. every lesson carries what the page reads ────────────────────────── */
+/* ── 4. the commercial has its Arabic cut named too ────────────────────── */
+check(lessons[0].files.en === 'qa-wrap-commercial-40s.mp4' && lessons[0].files.ar === 'qa-wrap-commercial-40s-ar.mp4', 'qa-wrap', 'the commercial does not name both language files');
 
-for (const lesson of lessons) {
-  for (const key of ['id', 'kind', 'ar', 'en', 'blurb', 'files', 'poster', 'secs']) {
-    if (lesson[key] === undefined || lesson[key] === '') bad(`tutorials/lessons.json:${lesson.id}`, `${key} is missing`);
-  }
-  if (!Number.isInteger(lesson.secs) || lesson.secs <= 0) bad(`tutorials/lessons.json:${lesson.id}`, `secs is ${lesson.secs}; two files do Math.floor(s / 60) on it`);
-  if (!['trailer', 'feature', 'category', 'tool'].includes(lesson.kind)) {
-    bad(`tutorials/lessons.json:${lesson.id}`, `kind "${lesson.kind}" is not one the films page knows`);
-  }
-  const blurb = `tutorials.lesson.${lesson.id}.blurb`;
-  if (!en[blurb]) bad(`platform/i18n/en.json`, `${blurb} is missing; the card would print the key`);
-  if (!ar[blurb]) bad(`platform/i18n/ar.json`, `${blurb} is missing; the card would print the key`);
-}
-ok();
+/* ── 5. the page ───────────────────────────────────────────────────────── */
+const js = read(path.join(EXT, 'tutorials', 'tutorials.js'));
+check(js.includes('QAWi18n.lang()') && js.includes('const fileOf = (lesson) => lesson.files[lang] || lesson.files.en;'), 'tutorials.js', 'the film is not chosen by the interface language');
+check(/window\.open\(u, '_blank', 'noopener'\)/.test(js), 'tutorials.js', 'a press does not open the film in a new tab');
+check(!/localStorage\.getItem\('qaw-tutorial-lang'\)/.test(js), 'tutorials.js', 'a stored language overrides the interface language');
+const card = js.slice(js.indexOf('function cardFor'), js.indexOf('function chapterList'));
+check(!/createElement\('img'\)/.test(card) && (card.match(/\.src = [^;]+;/g) || []).join() === '.src = lesson.thumb;', 'tutorials.js', 'the card loads something other than its packaged thumbnail before a press');
+const play = js.slice(js.indexOf('function play('), js.indexOf("$('feature-close')"));
+check(!/\.src\s*=|\.poster\s*=|\.play\(\)/.test(play), 'tutorials.js', 'the details panel loads or plays media');
+check(js.includes("MEDIA_URL = 'https://nj-burrito.github.io/QA-Wrap/media/'"), 'tutorials.js', 'the hosted base address is not the site media folder');
 
-/* ── 5. the number under the card is the film's own length ──────────────── */
-
-/**
- * `secs` is printed under every card and beside the player, and it is written
- * from the storyboard as easily as from the file. Round 3 wrote the planned
- * lengths (40, 42, 36, 34, 34) over five cards whose media were still the
- * round-2 masters at 20 s each, so every one of them promised twice the film
- * it played. Read the length back out of the file instead.
- *
- * Read from the `mvhd` atom rather than by shelling out to ffprobe: the film
- * pipeline may assume ffmpeg on the PATH, but `npm test` runs where a QA
- * engineer sits, and a unit gate that skips itself when a binary is absent is
- * a gate that has never once failed.
- */
-function mp4Seconds(file) {
-  const buf = fs.readFileSync(file);
-  const at = buf.indexOf('mvhd', 0, 'latin1');
-  if (at < 0) return null;
-  const version = buf.readUInt8(at + 4);
-  // version, 3 flag bytes, then the two dates: 4 bytes each at v0, 8 at v1.
-  const head = at + 8 + (version === 1 ? 16 : 8);
-  const timescale = buf.readUInt32BE(head);
-  const duration = version === 1 ? Number(buf.readBigUInt64BE(head + 4)) : buf.readUInt32BE(head + 4);
-  return timescale ? duration / timescale : null;
-}
-
-for (const lesson of lessons) {
-  if (lesson.pending) continue;
-  const file = path.join(MEDIA, lesson.files?.en || '');
-  if (!lesson.files?.en || !fs.existsSync(file)) continue; // §3 already failed it
-  const real = mp4Seconds(file);
-  if (real == null) { bad(`site/tutorials/${lesson.files.en}`, 'no mvhd atom; this is not an mp4 the page can time'); continue; }
-  if (Math.round(real) !== lesson.secs) {
-    bad(`tutorials/lessons.json:${lesson.id}`, `secs is ${lesson.secs}, but ${lesson.files.en} runs ${real.toFixed(1)}s; `
-      + 'the card would print a length the film does not have');
-  }
-}
-ok();
-
-const chaptered = lessons.filter((l) => l.chapters?.length);
-console.log(`\n${lessons.length} lessons, ${chaptered.length} with chapters `
-  + `(${chaptered.map((l) => `${l.id} ${l.chapters.length}`).join(', ')}), `
-  + `${lessons.filter((l) => l.pending).length} pending`);
-console.log(fail ? `${fail} problem(s), ${checks} check(s) passed` : `all ${checks} check(s) passed`);
+console.log(`\n${checks} check(s)${fail ? `, ${fail} FAILED` : ' passed'}`);
 process.exit(fail ? 1 : 0);

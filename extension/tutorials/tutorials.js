@@ -39,17 +39,18 @@
  * them renders without an `<img>` and without a player, so no route through
  * this file can point a `<video>` at a file that is not there.
  *
- * ── the language ───────────────────────────────────────────────────────────
+ * ── the language ──────────────────────────────────────────────────────────
  *
- * The films are English only. The Arabic narrations were recorded once and
- * withdrawn, and the five files shipped unreachable in every package for a
- * release afterwards. So `lang` defaults to `en`, and the language switch is
- * gone, because the buttons it bound to were removed from the markup.
+ * Every film exists as an English and an Arabic pair (run qaw-1109, decision D2). The page picks the file
+ * by the interface language, `QAWi18n.lang()`, and the deep link's `?lang=ar|en` overrides it for that
+ * visit. Nothing about the language is stored: change the interface language and the next press opens the
+ * other file. `?t=<seconds>` beside `?v=` still names a chapter for the old in-page player.
  *
- * `lang` is kept rather than deleted: the deep link carries it
- * (`tutorials.html?v=the-tools&lang=en`, which is how Settings sends you
- * straight to a film), other pages build that link, and the films are meant to
- * be recorded in Arabic again. `?t=<seconds>` beside it opens on a chapter.
+ * ── where a film plays ─────────────────────────────────────────────────────
+ *
+ * Films are hosted with the site (`site/media/`, tutorials in `site/media/tutorials/`), never packaged.
+ * A press on a card opens the site file in a new tab; nothing loads before a press (3.6.7). The deep link
+ * `?v=<id>` opens the details panel, whose "Watch online" link carries the same file.
  */
 
 await QAWi18n.ready();
@@ -57,31 +58,22 @@ await QAWi18n.ready();
 const $ = (id) => document.getElementById(id);
 const t = (k, v) => QAWi18n.t(k, v);
 
-/**
- * Where every film is watched (T-048).
- *
- * No film is in the package: they are hosted with the product's site and loaded
- * when a person presses a card, so an update no longer re-ships 42 MB to every
- * install. `lessons.json` marks each recorded lesson `online: true`. When the
- * film cannot arrive (offline, a blocked host, a slow link) the page draws a
- * designed empty state beside the player instead of a dead video, and the
- * written tutorials stand in; a closed-network tester loses the films only.
- * S-07 (sdlc-1014): the films were removed and nothing loads remote media any more.
- */
-/** The one hosted film (Nader, 2026-10-23): the Lead flips FILM_LIVE to true once site/media/qa-wrap-commercial-40s.mp4 is published. Pressed, its card opens the site in a new tab; nothing loads before a press. */
+/* Where every film is watched: hosted with the site, never packaged (T-048), opened in a new tab on a press (D2, qaw-1109). */
+/** Films are hosted on the site (D2, qaw-1109). `lessons.json` names each file relative to the site's media folder, one per UI language. FILM_LIVE flips to false to take every film off the page without touching the manifest. */
 const FILM_LIVE = true;
-const FILM_FILE = 'qa-wrap-commercial-40s.mp4';
-const FILM_URL = 'https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4';
-const hostedUrl = (f) => (FILM_LIVE && f === FILM_FILE ? FILM_URL : ''); // S-07 (sdlc-1014): the films were removed and nothing loads remote media; the extension-page CSP (manifest) allows only 'self' media and images
-const onlineUrl = (lesson) => hostedUrl(lesson.files[lang] || lesson.files.en);
-/* The poster travels with its film. A hosted one that does not arrive leaves
-   the tile the CSS already draws, which carries the title — better than a
-   broken-image glyph, and the reason the <img> hides itself on error. */
-const posterUrl = (lesson) => hostedUrl(lesson.poster);
+const MEDIA_URL = 'https://nj-burrito.github.io/QA-Wrap/media/';
+const hostedUrl = (f) => (FILM_LIVE && f ? MEDIA_URL + f : ''); // the extension-page CSP allows only 'self' media and images, so a film is opened in a new tab, never loaded here
+/** The film for the language in use, falling back to English when a language has no file. */
+const fileOf = (lesson) => lesson.files[lang] || lesson.files.en;
+const filmUrl = (lesson) => hostedUrl(fileOf(lesson));
+/** The poster for the language in use, chosen like the film (an Arabic card never names an English poster). Only a path: the page fetches no poster (T-048). */
+const posterOf = (lesson) => lesson.posters?.[lang] || lesson.poster || '';
 const params = new URLSearchParams(location.search);
 
 let lessons = [];
-let lang = params.get('lang') || localStorage.getItem('qaw-tutorial-lang') || 'en';
+/** The deep link's `?lang=` wins for this visit; otherwise the interface language. */
+const pickLang = () => (['ar', 'en'].includes(params.get('lang')) ? params.get('lang') : (QAWi18n.lang() === 'ar' ? 'ar' : 'en'));
+let lang = pickLang();
 let open = null;
 
 const el = (tag, cls, text) => {
@@ -127,27 +119,23 @@ const tally = (list) => t(list.length === 1 ? 'tutorials.tally.one' : 'tutorials
   time: mmss(list.reduce((n, l) => n + l.secs, 0)),
 });
 
-/**
- * One language, so nothing to paint.
- *
- * Kept as a function rather than deleted at every call site: the films are
- * meant to be recorded in Arabic again, and the deep link already carries a
- * `lang` parameter that other pages build.
- */
+/** The language in use: the interface's, or the deep link's `?lang=` for this visit. Nothing is stored. */
 function paintLang() {
-  try { localStorage.setItem('qaw-tutorial-lang', lang); } catch { /* no storage */ }
+  lang = pickLang();
 }
 
 /**
  * The blurb, translated.
  *
- * `lessons.json` is generated from the storyboards, so it is not hand-edited
- * here. The title (`lesson.en`/`lesson.ar`) is a fixed bilingual pair shown
- * together on every card regardless of interface language; only the blurb —
- * English-only in the manifest — is looked up by lesson id in this page's own
- * table, English kept as the source of record.
+ * `lessons.json` is written by `videos-tut/gen-lessons.mjs` from the film scripts, so it is not
+ * hand-edited here. The title (`lesson.en`/`lesson.ar`) is a fixed bilingual pair shown together on
+ * every card regardless of interface language. The blurb comes from this page's own i18n table when it
+ * has a key for the lesson, and otherwise from the manifest's `{ en, ar }` pair.
  */
-const blurbOf = (lesson) => t(`tutorials.lesson.${lesson.id}.blurb`);
+const blurbOf = (lesson) => {
+  if (QAWi18n.has(`tutorials.lesson.${lesson.id}.blurb`)) return t(`tutorials.lesson.${lesson.id}.blurb`);
+  return lesson.blurb?.[QAWi18n.lang() === 'ar' ? 'ar' : 'en'] || lesson.blurb?.en || '';
+};
 
 /** The eyebrow above a card's title. Never a number. */
 const labelFor = (lesson) => {
@@ -196,8 +184,17 @@ function cardFor(lesson) {
     el('p', null, blurbOf(lesson))
   );
   card.append(poster, body);
+  if (!lesson.pending && posterOf(lesson)) card.dataset.poster = posterOf(lesson);
   if (lesson.pending) card.disabled = true;
-  else card.addEventListener('click', () => (lesson.files.en === FILM_FILE ? window.open(FILM_URL, '_blank', 'noopener') : play(lesson)));
+  else {
+    card.addEventListener('click', () => {
+      const u = filmUrl(lesson);
+      if (u && navigator.onLine) { window.open(u, '_blank', 'noopener'); return; }
+      // Offline (or the films switched off): the details panel says why instead of opening a tab that cannot load.
+      play(lesson);
+      if (u) { const n = $('feature-offline'); n.hidden = false; n.textContent = t('tutorials.online.unreachable', { url: MEDIA_URL }); }
+    });
+  }
   return card;
 }
 
@@ -310,42 +307,23 @@ function render() {
   }
 }
 
-/** The designed empty state: shown in place of the player when a hosted film cannot arrive. */
-function setEmpty(on) {
-  $('feature-empty').hidden = !on;
-  $('feature-video').hidden = !!on;
-}
-window.addEventListener('online', () => { if (open?.online) play(open); });
-
-/** `at` is a second inside the film: a chapter, or `?t=` on the deep link. */
-function play(lesson, at = null) {
+/**
+ * The details panel for one film (the deep link `?v=<id>`; a card press opens the film itself in a new tab).
+ *
+ * It never loads media: the `<video>` stays hidden and sourceless, because the extension-page CSP allows
+ * only 'self' media and the films live on the site. The "Watch online" link is the language's hosted file.
+ */
+function play(lesson) {
   open = lesson;
-  const video = $('feature-video');
   const link = $('feature-online');
   const note = $('feature-offline');
-
-  // An online film is still played in this same element — the browser streams
-  // it — so the only difference a tester sees is the link beside it and, with
-  // no network, a sentence instead of a spinner that never resolves. The poster
-  // ships either way, so the card and the player look the same offline.
-  if (lesson.online) {
-    const href = onlineUrl(lesson);
-    video.src = href;
-    link.href = href;
-    link.hidden = false;
-    note.hidden = navigator.onLine;
-    setEmpty(!navigator.onLine);
-    note.textContent = navigator.onLine
-      ? ''
-      : t('tutorials.online.offlineNote');
-  } else {
-    // Not hosted: no lesson is packaged any more, so this branch is only a hand-edited manifest.
-    video.removeAttribute('src');
-    link.hidden = true;
-    note.hidden = true;
-    setEmpty(true);
-  }
-  video.poster = posterUrl(lesson);
+  const href = filmUrl(lesson);
+  $('feature-video').hidden = true;
+  $('feature-empty').hidden = true;
+  link.href = href || '#';
+  link.hidden = !href;
+  note.hidden = navigator.onLine;
+  note.textContent = navigator.onLine ? '' : t('tutorials.online.offlineNote');
   $('feature-kind').textContent =
     lesson.kind === 'trailer' ? t('tutorials.feature.kindTrailer')
       : lesson.kind === 'category' ? t('tutorials.feature.kindCategory', { group: (groupOf(lesson.id) || lesson.en).toUpperCase() })
@@ -355,7 +333,9 @@ function play(lesson, at = null) {
   $('feature-blurb').textContent = blurbOf(lesson);
   const chips = $('feature-chips');
   chips.replaceChildren();
-  chips.append(el('span', 'chip', dur(lesson.secs)), el('span', 'chip', t('tutorials.chip.narration')), el('span', 'chip', lesson.ar));
+  chips.append(el('span', 'chip', dur(lesson.secs)));
+  if (lang === 'en') chips.append(el('span', 'chip', t('tutorials.chip.narration')));
+  chips.append(el('span', 'chip', lesson.ar));
   if (lesson.chapters?.length) {
     chips.append(el('span', 'chip', t(lesson.chapters.length === 1 ? 'tutorials.chapters.one' : 'tutorials.chapters.many', { n: lesson.chapters.length })));
   }
@@ -368,43 +348,22 @@ function play(lesson, at = null) {
   // r9-08-3: a tester who asked for less motion gets the jump, not the glide.
   const calm = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   $('feature').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
-  /* A seek before the file has any duration is dropped by the element, so the
-     chapter is applied on the first metadata the browser reports. */
-  if (at != null) {
-    const seek = () => { try { video.currentTime = at; } catch { /* not seekable yet */ } };
-    if (video.readyState >= 1) seek();
-    else video.addEventListener('loadedmetadata', seek, { once: true });
-  }
-  video.play().catch(() => {});
   window.UQASound?.play('ui.open');
-  // `play()` resolving is not the same as the file arriving: a hosted film that
-  // 404s or times out rejects on the element, not on the promise.
-  video.onerror = () => {
-    if (!open?.online) return;
-    note.hidden = false;
-    note.textContent = t('tutorials.online.unreachable', { url: '' });
-    setEmpty(true);
-  };
-  video.onloadeddata = () => setEmpty(false);
   const url = new URL(location.href);
   url.searchParams.set('v', lesson.id);
   url.searchParams.set('lang', lang);
-  if (at != null) url.searchParams.set('t', String(at));
-  else url.searchParams.delete('t');
+  url.searchParams.delete('t');
   history.replaceState(null, '', url);
 }
 
 $('feature-close').addEventListener('click', () => {
-  $('feature-video').pause();
   $('feature').hidden = true;
   open = null;
   window.UQASound?.play('ui.close');
 });
 
-/* The language switch was here. Its `[data-lang]` buttons were taken out of
-   tutorials.html when the films became English only, so the query matched
-   nothing and the whole block was dead code that read as a working feature.
-   `paintLang()` above still runs — it remembers the deep link's choice. */
+/* The language follows the interface (QAWi18n.lang()); there is no switch on this page. A change of
+   interface language re-renders below, so the next press opens the other file. */
 
 /**
  * The theme button in this page's own bar.
@@ -434,6 +393,7 @@ paintTheme();
 
 QAWi18n.onChange(() => {
   QAWi18n.apply();
+  paintLang();
   render();
   paintTheme();
   if (open) play(open);
@@ -445,7 +405,6 @@ $('open-options').addEventListener('click', () => chrome.runtime.openOptionsPage
   paintLang();
   try {
     lessons = await (await fetch('lessons.json')).json();
-    if (FILM_LIVE) for (const l of lessons) if (l.files?.en === FILM_FILE) l.pending = false;
   } catch {
     lessons = [];
   }
@@ -457,8 +416,7 @@ $('open-options').addEventListener('click', () => chrome.runtime.openOptionsPage
   const wanted = params.get('v');
   if (wanted) {
     const lesson = lessons.find((l) => l.id === wanted);
-    const at = Number(params.get('t'));
-    if (lesson && !lesson.pending) play(lesson, Number.isFinite(at) && at > 0 ? at : null);
+    if (lesson && !lesson.pending) play(lesson);
   }
   // Opening this page is the answer to the one-time pointer in the popup.
   try { localStorage.setItem('qaw-tutorial-seen', '1'); } catch { /* no storage */ }

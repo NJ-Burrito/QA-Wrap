@@ -1,0 +1,182 @@
+{
+ "id": "notes-and-bugs",
+ "no": 3,
+ "status": "animatic",
+ "dur": 52,
+ "title": {
+  "en": "Notes and bugs",
+  "ar": "الملاحظات والأخطاء"
+ },
+ "blurb": {
+  "en": "Write a note while you test, mark it as a bug, attach a screenshot, and find it again on the timeline.",
+  "ar": "دون ملاحظة أثناء الاختبار، وسجلها كخلل، وأرفق لقطة شاشة، ثم اعثر عليها على الخط الزمني."
+ },
+ "site": "Practice Software Testing, Toolshop (contact form)",
+ "lines": [
+  {
+   "id": "L1",
+   "start": 0.5,
+   "end": 6.6,
+   "en": "While you test, you spot things worth writing down.",
+   "ar": "أثناء الاختبار، تلاحظ أشياء تستحق التدوين.",
+   "ar_tts": "أَثْنَاءَ الِاخْتِبَارِ، تُلَاحِظُ أَشْيَاءَ تَسْتَحِقُّ التَّدْوِينَ."
+  },
+  {
+   "id": "L2",
+   "start": 7.4,
+   "end": 13.4,
+   "en": "Type a short note, like: Send stays disabled.",
+   "ar": "اكتب ملاحظة قصيرة، مثلا: زر الإرسال يبقى معطلا.",
+   "ar_tts": "اكْتُبْ مُلَاحَظَةً قَصِيرَةً، مَثَلًا: زِرُّ الْإِرْسَالِ يَبْقَى مُعَطَّلًا."
+  },
+  {
+   "id": "L3",
+   "start": 14,
+   "end": 20.6,
+   "en": "Pick Note for something you saw, or Bug when something is wrong.",
+   "ar": "اختر «ملاحظة» لما رأيته، أو «خلل» عندما يكون هناك خطأ.",
+   "ar_tts": "اخْتَرْ «مُلَاحَظَةً» لِمَا رَأَيْتَهُ، أَوْ «خَلَلٌ» عِنْدَمَا يَكُونُ هُنَاكَ خَطَأٌ."
+  },
+  {
+   "id": "L4",
+   "start": 21.2,
+   "end": 27.4,
+   "en": "Add a screenshot, and it is attached to that note.",
+   "ar": "أضف لقطة شاشة، فتلتصق بتلك الملاحظة.",
+   "ar_tts": "أَضِفْ لَقْطَةَ شَاشَةٍ، فَتَلْتَصِقُ بِتِلْكَ الْمُلَاحَظَةِ."
+  },
+  {
+   "id": "L5",
+   "start": 28.2,
+   "end": 35.4,
+   "en": "Each note lands on the timeline, at the moment you made it.",
+   "ar": "تقع كل ملاحظة على الخط الزمني، في اللحظة التي كتبتها فيها.",
+   "ar_tts": "تَقَعُ كُلُّ مُلَاحَظَةٍ عَلَى الْخَطِّ الزَّمَنِيِّ، فِي اللَّحْظَةِ الَّتِي كَتَبْتَهَا فِيهَا."
+  },
+  {
+   "id": "L6",
+   "start": 36.2,
+   "end": 42.6,
+   "en": "Later, filter to the bugs, and your list for the report is ready.",
+   "ar": "لاحقا، اعرض الخلل فقط، وتصبح قائمة التقرير جاهزة.",
+   "ar_tts": "لَاحِقًا، اعْرِضِ الْخَلَلَ فَقَطْ، وَتُصْبِحُ قَائِمَةُ التَّقْرِيرِ جَاهِزَةً."
+  },
+  {
+   "id": "L7",
+   "start": 43.6,
+   "end": 49,
+   "en": "Only what you file as a bug counts toward your numbers.",
+   "ar": "وما تسجله كخلل فقط هو ما يدخل في أرقامك.",
+   "ar_tts": "وَمَا تُسَجِّلُهُ كَخَلَلٍ فَقَطْ هُوَ مَا يَدْخُلُ فِي أَرْقَامِكَ."
+  }
+ ],
+ "shots": [
+  {
+   "t": "0.0-7.2",
+   "what": "MS: a Toolshop contact form, Send greyed out; the cursor presses Send twice, nothing; an amber thought bubble pops beside it."
+  },
+  {
+   "t": "7.2-13.8",
+   "what": "MS split: the page slides to the inline start, the tool note card arrives at the inline end; the placeholder, then the note is typed."
+  },
+  {
+   "t": "13.8-21.0",
+   "what": "CU the type menu: Note highlighted, then Bug pressed; the tag turns coral."
+  },
+  {
+   "t": "21.0-27.8",
+   "what": "MS the note card: Screenshot, note pressed, a flash, a thumbnail drops under the note and clips on; Add note pressed. The light turns green."
+  },
+  {
+   "t": "27.8-35.9",
+   "what": "WS pull-out to a timeline with six dots; the note flies down on an arc and rises as a coral flag at 00:27."
+  },
+  {
+   "t": "36.0-43.0",
+   "what": "MS the Timeline tab: Bugs pressed; notes and clicks fade, three bug rows slide up."
+  },
+  {
+   "t": "43.4-49.6",
+   "what": "CU low angle: a counter; three bug pills drop in and it counts 1, 2, 3; two note pills drift past and fade. Title: Only bugs count."
+  },
+  {
+   "t": "49.8-52.0",
+   "what": "End card, centred."
+  }
+ ],
+ "onscreen": [
+  "Contact · Send (site)",
+  "Name it, e.g. Submit stays disabled / سمها، مثلا: زر الإرسال يبقى معطلا",
+  "Send stays disabled / زر الإرسال يبقى معطلا",
+  "Note / ملاحظة",
+  "Bug / خلل",
+  "Screenshot, note / لقطة مع ملاحظة",
+  "Add note / أضف ملاحظة",
+  "Timeline / الخط الزمني",
+  "All / الكل",
+  "Bugs / الخلل",
+  "Only bugs count / الخلل وحده في العدد"
+ ],
+ "strings": {
+  "note": {
+   "en": "Note",
+   "ar": "ملاحظة"
+  },
+  "bug": {
+   "en": "Bug",
+   "ar": "خلل"
+  },
+  "bugs": {
+   "en": "Bugs",
+   "ar": "الخلل"
+  },
+  "placeholder": {
+   "en": "Name it, e.g. Submit stays disabled",
+   "ar": "سمها، مثلا: زر الإرسال يبقى معطلا"
+  },
+  "noteText": {
+   "en": "Send stays disabled",
+   "ar": "زر الإرسال يبقى معطلا"
+  },
+  "addNote": {
+   "en": "Add note",
+   "ar": "أضف ملاحظة"
+  },
+  "shotNote": {
+   "en": "Screenshot, note",
+   "ar": "لقطة مع ملاحظة"
+  },
+  "timeline": {
+   "en": "Timeline",
+   "ar": "الخط الزمني"
+  },
+  "all": {
+   "en": "All",
+   "ar": "الكل"
+  },
+  "kAct": {
+   "en": "Actions",
+   "ar": "الإجراءات"
+  },
+  "n2": {
+   "en": "Email accepts a@b without a dot",
+   "ar": "حقل البريد يقبل a@b بلا نقطة"
+  },
+  "n3": {
+   "en": "Subject list is empty on mobile",
+   "ar": "قائمة الموضوع فارغة على الجوال"
+  },
+  "n4": {
+   "en": "Check the reply time",
+   "ar": "راجع وقت الرد"
+  },
+  "onlyBugs": {
+   "en": "Only <b class=\"bad\">bugs</b> count",
+   "ar": "<b class=\"bad\">الخلل</b> وحده في العدد"
+  },
+  "more": {
+   "en": "More tutorials, inside the tool",
+   "ar": "المزيد من الدروس داخل الأداة"
+  }
+ }
+}

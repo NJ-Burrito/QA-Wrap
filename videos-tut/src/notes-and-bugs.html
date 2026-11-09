@@ -1,0 +1,105 @@
+  <style>
+    html[dir=rtl] .mir{transform:scaleX(-1)}
+    .nc{position:absolute;inset-inline-start:1240px;top:150px;width:560px;height:680px}
+    .mi{position:absolute;inset-inline-start:24px;width:240px;height:60px;display:flex;align-items:center;gap:12px;padding:0 18px;font-size:28px;font-weight:700}
+    .ld{position:absolute;top:988px;opacity:0}
+    .trow{position:absolute;left:30px;right:30px;height:92px;display:flex;align-items:center;gap:24px;padding:0 30px}
+    .trow .tm{width:96px;font-size:30px;color:var(--muted)}
+    .trow .d{font-size:30px;font-weight:700}
+    .bp{position:absolute;left:0;top:0;opacity:0}
+  </style>
+
+  <div id="main" class="fill">
+    <!-- S1: a Toolshop contact form whose Send stays dead -->
+    <div class="browser" id="browser" data-layout-ignore style="inset-inline-start:360px;top:130px;width:1200px;height:700px">
+      <div class="bar"><i></i><i></i><i></i><div class="url">practicesoftwaretesting.com/contact</div></div>
+      <div class="page">
+        <div class="ts-head"><span class="logo">Toolshop</span><span>Home</span><span>Categories</span><span style="color:#c4471d">Contact</span></div>
+        <div class="abs" style="left:60px;top:106px;font-size:30px;font-weight:700">Contact</div>
+        <div class="ts-in" style="left:60px;top:160px;width:500px;color:#262b30">Layla</div>
+        <div class="ts-in" style="left:600px;top:160px;width:500px;color:#262b30">Haddad</div>
+        <div class="ts-in" style="left:60px;top:236px;width:1040px;color:#262b30">layla@example.com</div>
+        <div class="ts-in" style="left:60px;top:312px;width:1040px;color:#262b30">Return</div>
+        <div class="ts-in" style="left:60px;top:388px;width:1040px;height:120px;align-items:flex-start;padding-top:14px;color:#262b30">The pliers arrived without the box.</div>
+        <div class="ts-btn" id="send" style="left:60px;top:540px;width:200px;background:#9cbfa4">Send</div>
+        <div id="bub" class="abs" style="left:290px;top:500px;width:150px;height:110px;opacity:0">
+          <div class="abs" style="left:30px;top:0;width:120px;height:80px;border-radius:40px;background:var(--amber);box-shadow:0 12px 26px rgba(0,0,0,.3)"></div>
+          <div class="abs" style="left:52px;top:34px;width:14px;height:14px;border-radius:7px;background:#1d2024"></div><div class="abs" style="left:83px;top:34px;width:14px;height:14px;border-radius:7px;background:#1d2024"></div><div class="abs" style="left:114px;top:34px;width:14px;height:14px;border-radius:7px;background:#1d2024"></div>
+          <div class="abs" style="left:14px;top:78px;width:22px;height:22px;border-radius:11px;background:var(--amber)"></div>
+          <div class="abs" style="left:0;top:98px;width:12px;height:12px;border-radius:6px;background:var(--amber)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2-S4: the tool's note card, beside the page it is about -->
+    <div class="card nc" id="nc" style="opacity:0">
+      <div class="abs" style="left:0;right:0;top:0;height:76px;display:flex;align-items:center;gap:14px;padding:0 24px;font-weight:700;font-size:28px;border-bottom:1px solid var(--line)"><svg viewBox="0 0 64 64" width="38" height="38" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-2 1)"><path stroke="#ecebe7" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/><path stroke="#ff7d63" d="M36 36L42.5 44L55 20"/></g></svg>QA Wrap<span class="abs" style="inset-inline-end:28px;top:27px;width:22px;height:22px;border-radius:50%;background:var(--fail)"></span></div>
+      <div class="field abs" style="inset-inline-start:24px;inset-inline-end:24px;top:100px;height:150px;align-items:flex-start;padding-top:18px;font-size:30px">
+        <span id="nph" class="abs" style="inset-inline-start:22px;top:18px">{{placeholder}}</span>
+        <span id="ntx" class="abs" style="inset-inline-start:22px;top:18px;color:var(--ink);white-space:nowrap">{{noteText}}</span>
+        <span id="caret" class="abs" style="inset-inline-start:22px;top:16px;width:3px;height:40px;background:var(--amber)"></span>
+      </div>
+      <div id="tchip" class="raise abs" style="inset-inline-start:24px;top:270px;width:200px;height:60px;display:flex;align-items:center;gap:12px;padding:0 18px">
+        <span id="tagN" class="tag note abs" style="inset-inline-start:12px;top:8px">{{note}}</span>
+        <span id="tagB" class="tag fail abs" style="inset-inline-start:12px;top:8px;opacity:0">{{bug}}</span>
+        <svg class="i abs" style="inset-inline-end:14px;top:14px;color:var(--muted)" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div id="thumb" class="abs" style="inset-inline-start:250px;top:262px;width:120px;height:76px;border-radius:8px;background:#f4f1ea;border:3px solid #ecebe7;box-shadow:0 10px 20px rgba(0,0,0,.4);opacity:0;overflow:hidden">
+        <div class="abs" style="left:0;right:0;top:0;height:14px;background:#fff;border-bottom:1px solid #ddd"></div><div class="abs" style="left:8px;top:58px;width:34px;height:10px;border-radius:2px;background:#9cbfa4"></div><div class="abs" style="left:8px;top:22px;width:100px;height:6px;background:#cfd4d9"></div><div class="abs" style="left:8px;top:34px;width:100px;height:6px;background:#cfd4d9"></div>
+      </div>
+      <div id="shotb" class="btn-s abs" style="left:24px;right:24px;top:470px">{{shotNote}}</div>
+      <div id="addb" class="btn-c abs" style="left:24px;right:24px;top:566px">{{addNote}}</div>
+      <div id="menu" class="card abs" style="inset-inline-start:24px;top:338px;width:240px;height:128px;border-radius:14px;opacity:0;overflow:visible">
+        <div id="mN" class="mi" style="inset-inline-start:0;top:4px;border-radius:10px"><span class="dot note" style="position:static;width:18px;height:18px"></span>{{note}}</div>
+        <div id="mB" class="mi" style="inset-inline-start:0;top:64px;border-radius:10px"><span class="dot err" style="position:static;width:18px;height:18px"></span>{{bug}}</div>
+      </div>
+    </div>
+
+    <!-- S5: the lane; the note lands at its moment -->
+    <div id="lane" class="abs" style="left:0;top:0;width:1920px;height:1080px;opacity:0">
+      <div class="tl-line" id="laneline" style="inset-inline-start:200px;top:998px;width:1520px;height:6px"></div>
+      <div class="dot click ld" id="l1" style="inset-inline-start:330px"></div>
+      <div class="dot note ld" id="l2" style="inset-inline-start:560px"></div>
+      <div class="dot click ld" id="l3" style="inset-inline-start:790px"></div>
+      <div class="dot click ld" id="l4" style="inset-inline-start:1020px"></div>
+      <div class="dot click ld" id="l6" style="inset-inline-start:1480px"></div>
+      <div id="flag" class="abs" style="inset-inline-start:1248px;top:850px;width:220px;height:150px;opacity:0;transform-origin:0 100%">
+        <div class="abs" style="inset-inline-start:0;top:0;width:6px;height:150px;border-radius:3px;background:var(--fail)"></div>
+        <div class="abs" style="inset-inline-start:6px;top:0;height:64px;padding:0 20px;border-radius:0 12px 12px 0;background:var(--fail);color:#1d2024;font-weight:700;font-size:30px;display:flex;align-items:center;gap:12px;white-space:nowrap"><span>{{bug}}</span><span class="num">00:27</span></div>
+      </div>
+    </div>
+    <div class="pill fail bp" id="fl"><svg class="i"><use href="#ic-bug"/></svg>{{noteText}}</div>
+
+    <!-- S6: the Timeline tab, filtered to bugs -->
+    <div id="s6" class="scene">
+      <div class="card" style="left:300px;top:96px;width:1320px;height:700px">
+        <div class="abs" style="left:0;right:0;top:0;height:92px;background:#2d3238;border-bottom:1px solid var(--line)"></div>
+        <div class="abs pill" style="inset-inline-start:30px;top:16px;height:60px;background:var(--amber);color:#1d2024;border-color:var(--amber);box-shadow:none">{{timeline}}</div>
+        <div class="abs" style="inset-inline-end:30px;top:16px;display:flex;gap:14px">
+          <div id="fAll" class="pill" style="height:60px;box-shadow:none;border-color:var(--ink)">{{all}}</div>
+          <div id="fBug" class="pill fail" style="height:60px;box-shadow:none">{{bugs}}</div>
+        </div>
+        <div class="trow o" style="top:112px"><span class="tm num">00:12</span><span class="dot click" style="position:static"></span><span class="d" style="color:var(--muted)">{{kAct}}</span></div>
+        <div class="trow b" id="b1" style="top:204px"><span class="tm num">00:19</span><span class="tag fail">{{bug}}</span><span class="d">{{n2}}</span></div>
+        <div class="trow o" style="top:296px"><span class="tm num">00:23</span><span class="tag note">{{note}}</span><span class="d" style="color:var(--muted)">{{n4}}</span></div>
+        <div class="trow b" id="b2" style="top:388px"><span class="tm num">00:27</span><span class="tag fail">{{bug}}</span><span class="d">{{noteText}}</span></div>
+        <div class="trow o" style="top:480px"><span class="tm num">00:31</span><span class="dot click" style="position:static"></span><span class="d" style="color:var(--muted)">{{kAct}}</span></div>
+        <div class="trow b" id="b3" style="top:572px"><span class="tm num">00:36</span><span class="tag fail">{{bug}}</span><span class="d">{{n3}}</span></div>
+      </div>
+    </div>
+
+    <!-- S7: the counter, seen from slightly below -->
+    <div class="card" id="ctr" style="inset-inline-start:660px;top:250px;width:600px;height:460px;opacity:0">
+      <div class="abs" style="inset-inline-start:40px;top:34px"><span class="tag fail">{{bugs}}</span></div>
+      <div class="abs num" style="inset-inline-start:40px;top:120px;width:300px;height:260px;font-size:240px;line-height:260px;color:var(--fail)">
+        <span class="abs k1" style="inset-inline-start:0;opacity:0">1</span><span class="abs k2" style="inset-inline-start:0;opacity:0">2</span><span class="abs k3" style="inset-inline-start:0;opacity:0">3</span>
+      </div>
+    </div>
+    <div class="pill fail bp" id="q1"><svg class="i"><use href="#ic-bug"/></svg>{{bug}}</div>
+    <div class="pill fail bp" id="q2"><svg class="i"><use href="#ic-bug"/></svg>{{bug}}</div>
+    <div class="pill fail bp" id="q3"><svg class="i"><use href="#ic-bug"/></svg>{{bug}}</div>
+    <div class="pill bp" id="w1" style="color:var(--note)"><svg class="i"><use href="#ic-note"/></svg>{{note}}</div>
+    <div class="pill bp" id="w2" style="color:var(--note)"><svg class="i"><use href="#ic-note"/></svg>{{note}}</div>
+  </div>
+<!-- overlay -->
+  <div class="ttl" id="t7">{{onlyBugs}}</div>

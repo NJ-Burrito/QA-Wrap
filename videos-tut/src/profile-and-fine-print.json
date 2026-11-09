@@ -1,0 +1,141 @@
+{
+ "id": "profile-and-fine-print",
+ "no": 5,
+ "status": "animatic round 2 (director notes applied; qaw-1109 tut-b)",
+ "dur": 46,
+ "title": {
+  "en": "Your profile and the fine print",
+  "ar": "ملفك الشخصي والسطر التعريفي"
+ },
+ "blurb": {
+  "en": "Set your name and an optional picture once. Every export ends with a fine-print line: your name, the date and the QA Wrap version.",
+  "ar": "اضبط اسمك وصورة اختيارية مرة واحدة. ينتهي كل تصدير بسطر تعريفي: اسمك والتاريخ ونسخة كيو إيه راب."
+ },
+ "site": "none (tool UI and exported documents only)",
+ "lines": [
+  {
+   "id": "L1",
+   "start": 0.8,
+   "end": 6.0,
+   "en": "A report is more useful when people know who made it.",
+   "ar": "التقرير يفيد أكثر حين يعرف الناس من أعده.",
+   "ar_tts": "التَّقْرِيرُ يُفِيدُ أَكْثَرَ حِينَ يَعْرِفُ النَّاسُ مَنْ أَعَدَّهُ."
+  },
+  {
+   "id": "L2",
+   "start": 7.0,
+   "end": 12.8,
+   "en": "In Settings, under Sessions, type your name once.",
+   "ar": "في الإعدادات، في قسم الجلسات، اكتب اسمك مرة واحدة.",
+   "ar_tts": "فِي الْإِعْدَادَاتِ، فِي قِسْمِ الْجَلَسَاتِ، اكْتُبِ اسْمَكَ مَرَّةً وَاحِدَةً."
+  },
+  {
+   "id": "L3",
+   "start": 13.8,
+   "end": 18.8,
+   "en": "Add a picture if you like. It stays on this computer.",
+   "ar": "وأضف صورة إن شئت، وتبقى على هذا الجهاز.",
+   "ar_tts": "وَأَضِفْ صُورَةً إِنْ شِئْتَ، وَتَبْقَى عَلَى هَذَا الْجِهَازِ."
+  },
+  {
+   "id": "L4",
+   "start": 20.0,
+   "end": 26.8,
+   "en": "From then on, every export ends with a fine-print line.",
+   "ar": "ومن بعدها، ينتهي كل تصدير بسطر تعريفي صغير.",
+   "ar_tts": "وَمِنْ بَعْدِهَا، يَنْتَهِي كُلُّ تَصْدِيرٍ بِسَطْرٍ تَعْرِيفِيٍّ صَغِيرٍ."
+  },
+  {
+   "id": "L5",
+   "start": 27.8,
+   "end": 34.8,
+   "en": "It names you, the date, and the QA Wrap version that made the file.",
+   "ar": "فيه اسمك، والتاريخ، ونسخة كيو إيه راب التي صنعت الملف.",
+   "ar_tts": "فِيهِ اسْمُكَ، وَالتَّارِيخُ، وَنُسْخَةُ كِيُو إِيهْ رَاب الَّتِي صَنَعَتِ الْمِلَفَّ."
+  },
+  {
+   "id": "L6",
+   "start": 35.6,
+   "end": 42.6,
+   "en": "So every report points back to its author: the name you typed, not a proof of identity.",
+   "ar": "فيشير كل تقرير إلى كاتبه. وهو الاسم الذي كتبته، وليس إثباتا للهوية.",
+   "ar_tts": "فَيُشِيرُ كُلُّ تَقْرِيرٍ إِلَى كَاتِبِهِ. وَهُوَ الِاسْمُ الَّذِي كَتَبْتَهُ، وَلَيْسَ إِثْبَاتًا لِلْهُوِيَّةِ."
+  }
+ ],
+ "shots": [
+  {
+   "t": "0-6.4",
+   "what": "WS high angle: a loose stack of report pages drifting under warm light; one page lifts toward us showing an empty name slot with a question mark."
+  },
+  {
+   "t": "7-13.2",
+   "what": "MS eye level: Settings, Sessions; the caret types Layla Haddad into the name field; the initials circle fills."
+  },
+  {
+   "t": "13.8-19.4",
+   "what": "CU: the initials circle grows to centre (graphic match); Choose a picture; a drawn picture tile flies on an arc into the circle and settles; Picture saved."
+  },
+  {
+   "t": "20-27.2",
+   "what": "WS: three exports (a PDF page, a sealed timeline file, a bug report) arrive on arcs; a fine-print line writes itself at each foot. Green light."
+  },
+  {
+   "t": "27.8-35.2",
+   "what": "ECU: one fine-print line, big; a highlight moves along the name, the date, the version."
+  },
+  {
+   "t": "35.8-42.4",
+   "what": "MS low angle: the three documents linked by amber threads to one avatar above them; pull-out."
+  },
+  {
+   "t": "43-46",
+   "what": "End card: QA Wrap lockup, More tutorials, inside the tool."
+  }
+ ],
+ "onscreen": [
+  "Settings / الإعدادات",
+  "Sessions / الجلسات",
+  "Your name, as the team folder shows it / اسمك كما يظهر في مجلد الفريق",
+  "Choose a picture / اختر صورة",
+  "Picture saved. / تم حفظ الصورة.",
+  "Prepared by Layla Haddad · 2026-11-09 · QA Wrap 3.9.0 / إعداد: ليلى حداد · 2026-11-09 · QA Wrap 3.9.0"
+ ],
+ "strings": {
+  "settings": {
+   "en": "Settings",
+   "ar": "الإعدادات"
+  },
+  "sessions": {
+   "en": "Sessions",
+   "ar": "الجلسات"
+  },
+  "nameLabel": {
+   "en": "Your name, as the team folder shows it",
+   "ar": "اسمك كما يظهر في مجلد الفريق"
+  },
+  "name": {
+   "en": "Layla Haddad",
+   "ar": "ليلى حداد"
+  },
+  "choose": {
+   "en": "Choose a picture",
+   "ar": "اختر صورة"
+  },
+  "picSaved": {
+   "en": "Picture saved.",
+   "ar": "تم حفظ الصورة."
+  },
+  "fpName": {
+   "en": "Prepared by Layla Haddad",
+   "ar": "إعداد: ليلى حداد"
+  },
+  "more": {
+   "en": "More tutorials, inside the tool",
+   "ar": "المزيد من الدروس داخل الأداة"
+  },
+  "initials": {
+   "en": "LH",
+   "ar": "ل ح"
+  }
+ }
+}

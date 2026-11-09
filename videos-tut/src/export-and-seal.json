@@ -1,0 +1,231 @@
+{
+ "id": "export-and-seal",
+ "no": 4,
+ "status": "animatic round 2 (director notes applied; qaw-1109 tut-b)",
+ "dur": 54,
+ "title": {
+  "en": "Export and seal",
+  "ar": "التصدير والختم"
+ },
+ "blurb": {
+  "en": "Export a session as a sealed timeline: a plain text file with your name at the top and a seal at the foot that shows any later edit.",
+  "ar": "صدر الجلسة خطا زمنيا مختوما: ملف نصي بسيط يحمل اسمك في أعلاه وختما في أسفله يكشف أي تعديل لاحق."
+ },
+ "site": "none (tool UI and the exported file only)",
+ "lines": [
+  {
+   "id": "L1",
+   "start": 0.6,
+   "end": 6.6,
+   "en": "When the session is done, open More and choose Timeline, sealed.",
+   "ar": "عندما تنتهي الجلسة، افتح «المزيد» واختر الخط الزمني مختوما.",
+   "ar_tts": "عِنْدَمَا تَنْتَهِي الْجَلْسَةُ، افْتَحْ «الْمَزِيدَ» وَاخْتَرِ الْخَطَّ الزَّمَنِيَّ مَخْتُومًا."
+  },
+  {
+   "id": "L2",
+   "start": 7.2,
+   "end": 13.6,
+   "en": "It is a plain text file: every event, in order, readable by anyone.",
+   "ar": "ملف نصي بسيط: كل حدث بترتيبه، يقرؤه أي أحد.",
+   "ar_tts": "مِلَفٌّ نَصِّيٌّ بَسِيطٌ: كُلُّ حَدَثٍ بِتَرْتِيبِهِ، يَقْرَؤُهُ أَيُّ أَحَدٍ."
+  },
+  {
+   "id": "L3",
+   "start": 14.2,
+   "end": 20.4,
+   "en": "Your name from Settings is written at the top.",
+   "ar": "واسمك من الإعدادات مكتوب في أعلاه.",
+   "ar_tts": "وَاسْمُكَ مِنَ الْإِعْدَادَاتِ مَكْتُوبٌ فِي أَعْلَاهُ."
+  },
+  {
+   "id": "L4",
+   "start": 21.1,
+   "end": 28.6,
+   "en": "At the end sits a seal: your name, the date, a fingerprint of the text, and a signature.",
+   "ar": "وفي آخره ختم: اسمك، والتاريخ، وبصمة النص، وتوقيع.",
+   "ar_tts": "وَفِي آخِرِهِ خَتْمٌ: اسْمُكَ، وَالتَّارِيخُ، وَبَصْمَةُ النَّصِّ، وَتَوْقِيعٌ."
+  },
+  {
+   "id": "L5",
+   "start": 29.2,
+   "end": 35.4,
+   "en": "Change one word by hand, and the seal no longer matches.",
+   "ar": "إن غيرت كلمة واحدة بيدك، لا يعود الختم مطابقا.",
+   "ar_tts": "إِنْ غَيَّرْتَ كَلِمَةً وَاحِدَةً بِيَدِكَ، لَا يَعُودُ الْخَتْمُ مُطَابِقًا."
+  },
+  {
+   "id": "L6",
+   "start": 36.1,
+   "end": 43.6,
+   "en": "In Settings, press Verify a sealed file. QA Wrap says intact or altered, and who sealed it.",
+   "ar": "في الإعدادات، اضغط «تحقق من ملف مختوم»، فيقول لك: سليم أو معدل، ومن ختمه.",
+   "ar_tts": "فِي الْإِعْدَادَاتِ، اضْغَطْ «تَحَقَّقْ مِنْ مِلَفٍّ مَخْتُومٍ»، فَيَقُولُ لَكَ: سَلِيمٌ أَوْ مُعَدَّلٌ، وَمَنْ خَتَمَهُ."
+  },
+  {
+   "id": "L7",
+   "start": 44.2,
+   "end": 50.8,
+   "en": "A seal shows a change. It hides nothing, and it does not prove who you are.",
+   "ar": "الختم يكشف التغيير. لا يخفي شيئا، ولا يثبت هويتك.",
+   "ar_tts": "الْخَتْمُ يَكْشِفُ التَّغْيِيرَ. لَا يُخْفِي شَيْئًا، وَلَا يُثْبِتُ هُوِيَّتَكَ."
+  }
+ ],
+ "shots": [
+  {
+   "t": "0-7",
+   "what": "MS: the saved Checkout flow card from tutorial 1 beside the popup; More opens with a dip, Timeline (sealed) is pressed."
+  },
+  {
+   "t": "7-14",
+   "what": "MS track-with: a document slides out of the popup and unfolds; the .md file name on its tab; event rows write in order."
+  },
+  {
+   "t": "14-21",
+   "what": "CU of the document head: the Profile line types Layla Haddad in an amber band."
+  },
+  {
+   "t": "21-29",
+   "what": "MS: the document scrolls to its end; the seal block slams down (power4.in): sealed by, date, tool, key fingerprint, signature."
+  },
+  {
+   "t": "29-36",
+   "what": "CU push-in on one body row: a pencil turns Checkout into Continue; the seal's check flips to a coral cross; warm light returns."
+  },
+  {
+   "t": "36-44",
+   "what": "WS pull-out: Settings > Sessions, Verify a sealed file pressed; two verdict cards side by side, Intact (green) then Altered (coral)."
+  },
+  {
+   "t": "44-51",
+   "what": "MS centred: the document under clear glass, readable, the seal at its foot; the honest line."
+  },
+  {
+   "t": "51-54",
+   "what": "End card: QA Wrap lockup, More tutorials, inside the tool."
+  }
+ ],
+ "onscreen": [
+  "More / المزيد",
+  "Timeline (sealed) / الخط الزمني (مختوم)",
+  "Profile / الملف الشخصي",
+  "Sealed by: Layla Haddad / مختوم باسم: ليلى حداد",
+  "Verify a sealed file / تحقق من ملف مختوم",
+  "Intact. This file is unchanged since it was sealed. / سليم. لم يتغير هذا الملف منذ ختمه.",
+  "Altered. This file was changed after it was sealed. / معدل. تغير هذا الملف بعد ختمه.",
+  "A seal shows a change. It hides nothing. / الختم يكشف التغيير، ولا يخفي شيئا."
+ ],
+ "strings": {
+  "charter": {
+   "en": "Checkout flow",
+   "ar": "مسار الدفع"
+  },
+  "sessionWord": {
+   "en": "Session",
+   "ar": "جلسة"
+  },
+  "saved": {
+   "en": "Recording saved",
+   "ar": "تم حفظ التسجيل"
+  },
+  "moreBtn": {
+   "en": "More",
+   "ar": "المزيد"
+  },
+  "sealedItem": {
+   "en": "Timeline (sealed)",
+   "ar": "الخط الزمني (مختوم)"
+  },
+  "timeline": {
+   "en": "Timeline",
+   "ar": "الخط الزمني"
+  },
+  "session": {
+   "en": "Session",
+   "ar": "الجلسة"
+  },
+  "profile": {
+   "en": "Profile",
+   "ar": "الملف الشخصي"
+  },
+  "name": {
+   "en": "Layla Haddad",
+   "ar": "ليلى حداد"
+  },
+  "click": {
+   "en": "Click",
+   "ar": "نقرة"
+  },
+  "request": {
+   "en": "Request",
+   "ar": "طلب"
+  },
+  "error": {
+   "en": "Error",
+   "ar": "خطأ"
+  },
+  "shot": {
+   "en": "Screenshot",
+   "ar": "لقطة"
+  },
+  "seal": {
+   "en": "Seal",
+   "ar": "الختم"
+  },
+  "signer": {
+   "en": "Sealed by: Layla Haddad",
+   "ar": "مختوم باسم: ليلى حداد"
+  },
+  "sealDate": {
+   "en": "Sealed on: <bdi>2026-11-09</bdi>",
+   "ar": "تاريخ الختم: <bdi>2026-11-09</bdi>"
+  },
+  "sealTool": {
+   "en": "Tool: <bdi>QA Wrap 3.9.0</bdi>",
+   "ar": "الأداة: <bdi>QA Wrap 3.9.0</bdi>"
+  },
+  "fp": {
+   "en": "Key fingerprint: <bdi>3F9A 1C07 B2E4 58D1</bdi>",
+   "ar": "بصمة المفتاح: <bdi>3F9A 1C07 B2E4 58D1</bdi>"
+  },
+  "signature": {
+   "en": "Signature",
+   "ar": "التوقيع"
+  },
+  "settings": {
+   "en": "Settings",
+   "ar": "الإعدادات"
+  },
+  "sessions": {
+   "en": "Sessions",
+   "ar": "الجلسات"
+  },
+  "verifyPick": {
+   "en": "Verify a sealed file",
+   "ar": "تحقق من ملف مختوم"
+  },
+  "intact": {
+   "en": "Intact.",
+   "ar": "سليم."
+  },
+  "intactBody": {
+   "en": "This file is unchanged since it was sealed.",
+   "ar": "لم يتغير هذا الملف منذ ختمه."
+  },
+  "altered": {
+   "en": "Altered.",
+   "ar": "معدل."
+  },
+  "alteredBody": {
+   "en": "This file was changed after it was sealed.",
+   "ar": "تغير هذا الملف بعد ختمه."
+  },
+  "honest": {
+   "en": "A seal shows a change. <em>It hides nothing.</em>",
+   "ar": "الختم يكشف التغيير، <em>ولا يخفي شيئا.</em>"
+  },
+  "more": {
+   "en": "More tutorials, inside the tool",
+   "ar": "المزيد من الدروس داخل الأداة"
+  }
+ }
+}

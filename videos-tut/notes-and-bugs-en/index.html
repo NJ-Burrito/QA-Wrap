@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>Notes and bugs (QA Wrap tutorial, EN)</title>
+<script src="./gsap.min.js"></script>
+<style>
+/* QA Wrap tutorial kit, round 2: the commercial bible's look (docs/film/commercial-bible.md §2-4, §9).
+   Ground #171a1d, ghost blocks and bokeh drifting, one key glow per act (warm coral = problem, green = the tool),
+   raised cards, amber pressable buttons, coral = failure, amber = the user's action, green = proof. Thmanyah only. */
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyah-sans-400.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyah-sans-500.woff2") format("woff2");font-weight:500;font-display:block}
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyah-sans-700.woff2") format("woff2");font-weight:700;font-display:block}
+@font-face{font-family:"Thmanyah Serif Display";src:url("./assets/fonts/thmanyah-serif-display-700.woff2") format("woff2");font-weight:700;font-display:block}
+:root{
+  --ground:#171a1d;--ground2:#24282c;--raise:#2a2e33;--raise2:#30353b;--edge:#343a41;--line:#3a4047;
+  --ink:#ecebe7;--muted:#a3a8ad;--dim:#8a9096;
+  --fail:#ff7d63;--amber:#f0b94a;--amber-edge:#c08a25;--pass:#7bd389;--note:#9db8e8;
+  /* round-1 names kept so older scene files still resolve */
+  --corn:var(--amber);--tortilla:#d8c6a4;--petra:#b5432b;
+  --sans:"Thmanyah Sans",sans-serif;--serif:"Thmanyah Serif Display",serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--ground)}
+#root{position:relative;width:100%;height:100%;overflow:hidden;background:var(--ground);color:var(--ink);font-family:var(--sans)}
+.abs{position:absolute}
+.fill{position:absolute;inset:0}
+svg.i{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ---- ground: ambient depth (never stops) and the act light ---- */
+#amb{position:absolute;inset:-80px}
+.ghost{position:absolute;border-radius:26px;background:#262d38;opacity:.42;filter:blur(7px)}
+.bokeh{position:absolute;border-radius:50%;background:#aeb6bf;opacity:.28;filter:blur(5px)}
+.glow{position:absolute;width:1300px;height:1300px;border-radius:50%;opacity:0;pointer-events:none}
+.glow.g-warm{background:radial-gradient(closest-side,rgba(255,125,99,.30),rgba(255,125,99,.09) 55%,transparent)}
+.glow.g-green{background:radial-gradient(closest-side,rgba(123,211,137,.26),rgba(123,211,137,.07) 55%,transparent)}
+.glow.g-amber{width:900px;height:900px;background:radial-gradient(closest-side,rgba(240,185,74,.30),rgba(240,185,74,.06) 60%,transparent)}
+/* round-1 glow names */
+.glow.g-corn{background:radial-gradient(closest-side,rgba(240,185,74,.26),rgba(240,185,74,.07) 60%,transparent)}
+.glow.g-fail{background:radial-gradient(closest-side,rgba(255,125,99,.26),rgba(255,125,99,.07) 60%,transparent)}
+.glow.g-pass{background:radial-gradient(closest-side,rgba(123,211,137,.24),rgba(123,211,137,.06) 60%,transparent)}
+
+/* ---- camera: #world holds every scene; scaling or moving it is a push-in, pull-out or truck ---- */
+#world{position:absolute;inset:0;transform-origin:50% 50%}
+.scene{position:absolute;inset:0;opacity:0}
+.tilt{position:absolute;inset:0;perspective:1700px;perspective-origin:50% 30%}
+.plane{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:50% 60%}
+
+/* ---- words: one beat title (Serif Display), captions bottom inline-start ---- */
+.ttl{position:absolute;inset-inline-start:112px;top:72px;font-family:var(--serif);font-weight:700;font-size:70px;line-height:1.1;color:#d8d6d1;opacity:0;white-space:nowrap}
+html[dir=ltr] .ttl{text-transform:uppercase;letter-spacing:.02em}
+.ttl b{font-weight:700}
+.ttl .ok{color:var(--pass)}.ttl .bad{color:var(--fail)}
+#cap{position:absolute;left:112px;right:112px;bottom:64px;height:140px;pointer-events:none}
+#cap::before{content:"";position:absolute;left:-112px;right:-112px;bottom:-64px;height:180px;background:linear-gradient(to top,rgba(23,26,29,.6) 0,rgba(23,26,29,.6) 140px,rgba(23,26,29,0) 180px)}
+.cap{position:absolute;left:0;right:0;bottom:0;font-size:44px;line-height:1.32;font-weight:500;color:#eeede9;opacity:0;max-width:1560px;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+html[dir=rtl] .cap{text-align:right;margin-left:auto}
+html[dir=ltr] .cap{text-align:left}
+
+/* caption band (C4): y >= 900 stays free of world objects; the 140 px 0.6 scrim above sits under every caption */
+/* end card (C1-C2): the wordmark, then the maker line 16 px below the wordmark's descender */
+#lockup{position:absolute;left:560px;top:300px;width:800px;height:135px}
+#maker{position:absolute;left:0;right:0;top:451px;text-align:center;font-size:38px;font-weight:500;color:#c9c8c3}
+#maker bdi{unicode-bidi:isolate;direction:ltr}
+
+/* ---- objects ---- */
+.card{position:absolute;border-radius:18px;background:linear-gradient(#2a2e33,#24282c);border:1px solid var(--edge);box-shadow:0 30px 60px rgba(0,0,0,.45);overflow:hidden}
+.raise{background:linear-gradient(#2d3238,#272b30);border:1px solid var(--edge);border-radius:14px}
+.chip{position:absolute;width:60px;height:60px;border-radius:16px;background:linear-gradient(#2d3238,#23272c);border:1px solid var(--edge);display:flex;align-items:center;justify-content:center;color:var(--ink);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.pill{display:inline-flex;align-items:center;gap:12px;height:58px;padding:0 24px 0 18px;border-radius:29px;background:#272b30;border:1px solid var(--line);font-weight:700;font-size:26px;white-space:nowrap;box-shadow:0 16px 36px rgba(0,0,0,.4)}
+.pill.fail{color:var(--fail);border-color:rgba(255,125,99,.55)}
+.pill.ok{color:var(--pass);border-color:rgba(123,211,137,.55)}
+.pill.corn,.pill.amber{color:var(--amber);border-color:rgba(240,185,74,.55)}
+.lbl{font-size:28px;font-weight:700;color:var(--muted)}
+.caps{text-transform:uppercase;letter-spacing:.06em}
+.serif{font-family:var(--serif);font-weight:700}
+.num{font-family:var(--serif);font-weight:700;unicode-bidi:isolate}
+.ltr{direction:ltr;unicode-bidi:isolate}
+
+/* the drawn browser: its chrome follows the UI language (an Arabic Chrome mirrors), the site under test stays English */
+.browser{position:absolute;border-radius:22px;background:#f4f1ea;box-shadow:0 50px 110px rgba(0,0,0,.6),0 0 0 1px rgba(236,235,231,.14);overflow:hidden;color:#262b30}
+.browser .bar{position:absolute;left:0;top:0;right:0;height:64px;background:#e6e3dc;display:flex;align-items:center;gap:10px;padding:0 22px}
+.browser .bar i{width:14px;height:14px;border-radius:50%;background:#b4b0a6;display:block}
+.browser .url{margin-inline-start:18px;height:36px;border-radius:18px;background:#f7f5f1;padding:0 18px;display:flex;align-items:center;font-size:20px;color:#5d646b;font-weight:400;flex:1;max-width:620px;direction:ltr}
+.browser .ext{position:absolute;inset-inline-end:20px;top:8px;width:48px;height:48px;border-radius:12px;background:#262b30;display:flex;align-items:center;justify-content:center}
+.browser .page{position:absolute;left:0;right:0;top:64px;bottom:0;direction:ltr;font-weight:400;overflow:hidden}
+/* Swag Labs (Sauce Demo look, no logo copied) */
+.sd-head{position:absolute;left:0;right:0;top:0;height:92px;background:#132322;color:#f1efe9;display:flex;align-items:center;padding:0 40px;font-family:var(--serif);font-size:44px}
+.sd-head .cart{margin-left:auto;position:relative;width:48px;height:48px}
+.sd-head .cart b{position:absolute;right:-8px;top:-10px;min-width:26px;height:26px;border-radius:13px;background:#e2463b;color:#fff;font:700 18px/26px var(--sans);text-align:center}
+.tile{position:absolute;width:300px;height:380px;border-radius:14px;background:#fff;border:2px solid #e1ddd3;overflow:hidden;color:#262b30}
+.tile .art{height:190px;display:flex;align-items:center;justify-content:center;background:#efebe1}
+.tile .nm{font-size:24px;font-weight:700;padding:14px 18px 0;color:#18583a}
+.tile .pr{font-size:24px;padding:4px 18px;color:#262b30}
+.tile .btn{position:absolute;left:18px;right:18px;bottom:18px;height:52px;border-radius:8px;border:2px solid #132322;color:#132322;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;letter-spacing:.5px}
+/* Toolshop (Practice Software Testing look) */
+.ts-head{position:absolute;left:0;right:0;top:0;height:84px;background:#fff;border-bottom:2px solid #e3e3e3;display:flex;align-items:center;padding:0 36px;gap:36px;font-size:24px;color:#333}
+.ts-head .logo{font-family:var(--serif);font-size:36px;color:#c4471d}
+.ts-btn{position:absolute;height:64px;border-radius:6px;background:#2a7a3b;color:#fff;font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center}
+.ts-in{position:absolute;height:56px;border-radius:6px;background:#fff;border:2px solid #cfd4d9;font-size:22px;color:#6c757d;display:flex;align-items:center;padding:0 16px}
+
+/* the tool, drawn as cards */
+.pop{position:absolute;width:520px;border-radius:22px;background:linear-gradient(#2a2e33,#24282c);border:1px solid var(--edge);box-shadow:0 40px 90px rgba(0,0,0,.6);overflow:hidden}
+.pop .hd{display:flex;align-items:center;gap:14px;height:76px;padding:0 24px;font-weight:700;font-size:28px;border-bottom:1px solid var(--line)}
+.field{height:68px;border-radius:14px;background:#1d2024;border:1px solid var(--line);display:flex;align-items:center;padding:0 22px;font-size:28px;color:var(--dim)}
+.btn-c{height:76px;border-radius:18px;background:var(--amber);color:#1d2024;font-weight:700;font-size:30px;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 8px 0 var(--amber-edge),0 18px 30px rgba(0,0,0,.35)}
+.btn-s{height:76px;border-radius:18px;background:var(--raise2);color:var(--ink);font-weight:700;font-size:30px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid var(--line);box-shadow:0 8px 0 #1f2327}
+
+/* timelines: time is a line, events are dots on it */
+.tl-line{position:absolute;height:4px;border-radius:2px;background:var(--line);transform-origin:0 50%}
+html[dir=rtl] .tl-line{transform-origin:100% 50%}
+.dot{position:absolute;width:30px;height:30px;border-radius:50%}
+.dot.click{background:var(--ink)}
+.dot.req{background:var(--amber)}
+.dot.err{background:var(--fail)}
+.dot.shot{border-radius:8px;background:var(--tortilla)}
+.dot.note{background:var(--note)}
+.dot.bug{background:var(--fail);border-radius:6px;transform:rotate(45deg)}
+
+.cursor{position:absolute;left:0;top:0;width:56px;height:56px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.ripple{position:absolute;left:0;top:0;width:70px;height:70px;border-radius:50%;border:4px solid var(--amber);opacity:0}
+.row2{position:absolute;left:30px;right:30px;height:96px;display:flex;align-items:center;gap:26px;padding:0 30px}
+.tag{display:inline-flex;align-items:center;height:44px;padding:0 16px;border-radius:12px;font-weight:700;font-size:28px}
+.tag.fail{background:rgba(255,125,99,.15);color:#ffa591}
+.tag.ok{background:rgba(123,211,137,.15);color:var(--pass)}
+.tag.corn,.tag.amber{background:rgba(240,185,74,.16);color:var(--amber)}
+.tag.note{background:rgba(157,184,232,.16);color:var(--note)}
+.cons{font-size:24px;line-height:1;color:var(--muted);direction:ltr;white-space:nowrap}
+
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="qaw-tut-notes-and-bugs-en" data-start="0" data-width="1920" data-height="1080" data-duration="52" data-fps="30">
+  <div id="ground" class="fill">
+    <div id="amb"><div class="ghost" style="left:794px;top:162px;width:283px;height:150px"></div><div class="ghost" style="left:157px;top:44px;width:304px;height:159px"></div><div class="ghost" style="left:1347px;top:168px;width:209px;height:116px"></div><div class="ghost" style="left:1669px;top:417px;width:178px;height:186px"></div><div class="ghost" style="left:1866px;top:95px;width:265px;height:126px"></div><div class="ghost" style="left:398px;top:882px;width:213px;height:161px"></div><div class="ghost" style="left:1443px;top:712px;width:306px;height:130px"></div><div class="ghost" style="left:1063px;top:29px;width:306px;height:157px"></div><div class="ghost" style="left:1455px;top:338px;width:339px;height:175px"></div><div class="bokeh" style="left:451px;top:316px;width:11px;height:11px"></div><div class="bokeh" style="left:384px;top:646px;width:23px;height:23px"></div><div class="bokeh" style="left:327px;top:326px;width:22px;height:22px"></div><div class="bokeh" style="left:1917px;top:429px;width:10px;height:10px"></div><div class="bokeh" style="left:1257px;top:773px;width:8px;height:8px"></div><div class="bokeh" style="left:1349px;top:498px;width:19px;height:19px"></div><div class="bokeh" style="left:1634px;top:87px;width:18px;height:18px"></div><div class="bokeh" style="left:245px;top:465px;width:25px;height:25px"></div><div class="bokeh" style="left:1111px;top:662px;width:25px;height:25px"></div><div class="bokeh" style="left:1663px;top:264px;width:19px;height:19px"></div><div class="bokeh" style="left:127px;top:750px;width:13px;height:13px"></div><div class="bokeh" style="left:1812px;top:301px;width:20px;height:20px"></div><div class="bokeh" style="left:985px;top:352px;width:15px;height:15px"></div><div class="bokeh" style="left:11px;top:664px;width:10px;height:10px"></div></div>
+    <div id="glowW" class="glow g-warm" style="inset-inline-start:-420px;top:-160px"></div>
+    <div id="glowG" class="glow g-green" style="inset-inline-end:-420px;top:-120px"></div>
+    <div id="glowA" class="glow g-amber" style="left:0;top:0"></div>
+  </div>
+  <div id="world">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="ic-click" viewBox="0 0 24 24"><path d="M5.5 4.5l5 14 2.2-5.8 5.8-2.2z"/></symbol>
+      <symbol id="ic-req" viewBox="0 0 24 24"><path d="M8 19V5M4.5 8.5 8 5l3.5 3.5M16 5v14M12.5 15.5 16 19l3.5-3.5"/></symbol>
+      <symbol id="ic-err" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9l3 3-3 3M13 15h4"/></symbol>
+      <symbol id="ic-shot" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/></symbol>
+      <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="ic-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5a4.3 4.3 0 0 1-.5 8.5z"/></symbol>
+      <symbol id="ic-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5L19.5 7"/></symbol>
+      <symbol id="ic-cart" viewBox="0 0 24 24"><path d="M3 4h2.5l2.2 10.5h9.6L19.5 7H6.4"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></symbol>
+      <symbol id="ic-q" viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-1 .6-1.5 1.2-1.5 2.4M12 18v.01"/></symbol>
+      <symbol id="ic-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5"/></symbol>
+      <symbol id="ic-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></symbol>
+      <symbol id="ic-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+      <symbol id="ic-note" viewBox="0 0 24 24"><path d="M10.5 21H8a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h6l5 5v3M14 3v5h5M8 9h3M8 13h5"/></symbol>
+      <symbol id="ic-bug" viewBox="0 0 24 24"><rect x="7" y="8" width="10" height="12" rx="5"/><path d="M9 8a3 3 0 0 1 6 0M3 13h4M17 13h4M4 7l3 2M20 7l-3 2M4 19l3-2M20 19l-3-2"/></symbol>
+      <symbol id="ic-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></symbol>
+    </defs>
+  </svg>
+
+
+  <style>
+    html[dir=rtl] .mir{transform:scaleX(-1)}
+    .nc{position:absolute;inset-inline-start:1240px;top:150px;width:560px;height:680px}
+    .mi{position:absolute;inset-inline-start:24px;width:240px;height:60px;display:flex;align-items:center;gap:12px;padding:0 18px;font-size:28px;font-weight:700}
+    .ld{position:absolute;top:988px;opacity:0}
+    .trow{position:absolute;left:30px;right:30px;height:92px;display:flex;align-items:center;gap:24px;padding:0 30px}
+    .trow .tm{width:96px;font-size:30px;color:var(--muted)}
+    .trow .d{font-size:30px;font-weight:700}
+    .bp{position:absolute;left:0;top:0;opacity:0}
+  </style>
+
+  <div id="main" class="fill">
+    <!-- S1: a Toolshop contact form whose Send stays dead -->
+    <div class="browser" id="browser" data-layout-ignore style="inset-inline-start:360px;top:130px;width:1200px;height:700px">
+      <div class="bar"><i></i><i></i><i></i><div class="url">practicesoftwaretesting.com/contact</div></div>
+      <div class="page">
+        <div class="ts-head"><span class="logo">Toolshop</span><span>Home</span><span>Categories</span><span style="color:#c4471d">Contact</span></div>
+        <div class="abs" style="left:60px;top:106px;font-size:30px;font-weight:700">Contact</div>
+        <div class="ts-in" style="left:60px;top:160px;width:500px;color:#262b30">Layla</div>
+        <div class="ts-in" style="left:600px;top:160px;width:500px;color:#262b30">Haddad</div>
+        <div class="ts-in" style="left:60px;top:236px;width:1040px;color:#262b30">layla@example.com</div>
+        <div class="ts-in" style="left:60px;top:312px;width:1040px;color:#262b30">Return</div>
+        <div class="ts-in" style="left:60px;top:388px;width:1040px;height:120px;align-items:flex-start;padding-top:14px;color:#262b30">The pliers arrived without the box.</div>
+        <div class="ts-btn" id="send" style="left:60px;top:540px;width:200px;background:#9cbfa4">Send</div>
+        <div id="bub" class="abs" style="left:290px;top:500px;width:150px;height:110px;opacity:0">
+          <div class="abs" style="left:30px;top:0;width:120px;height:80px;border-radius:40px;background:var(--amber);box-shadow:0 12px 26px rgba(0,0,0,.3)"></div>
+          <div class="abs" style="left:52px;top:34px;width:14px;height:14px;border-radius:7px;background:#1d2024"></div><div class="abs" style="left:83px;top:34px;width:14px;height:14px;border-radius:7px;background:#1d2024"></div><div class="abs" style="left:114px;top:34px;width:14px;height:14px;border-radius:7px;background:#1d2024"></div>
+          <div class="abs" style="left:14px;top:78px;width:22px;height:22px;border-radius:11px;background:var(--amber)"></div>
+          <div class="abs" style="left:0;top:98px;width:12px;height:12px;border-radius:6px;background:var(--amber)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2-S4: the tool's note card, beside the page it is about -->
+    <div class="card nc" id="nc" style="opacity:0">
+      <div class="abs" style="left:0;right:0;top:0;height:76px;display:flex;align-items:center;gap:14px;padding:0 24px;font-weight:700;font-size:28px;border-bottom:1px solid var(--line)"><svg viewBox="0 0 64 64" width="38" height="38" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-2 1)"><path stroke="#ecebe7" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/><path stroke="#ff7d63" d="M36 36L42.5 44L55 20"/></g></svg>QA Wrap<span class="abs" style="inset-inline-end:28px;top:27px;width:22px;height:22px;border-radius:50%;background:var(--fail)"></span></div>
+      <div class="field abs" style="inset-inline-start:24px;inset-inline-end:24px;top:100px;height:150px;align-items:flex-start;padding-top:18px;font-size:30px">
+        <span id="nph" class="abs" style="inset-inline-start:22px;top:18px">Name it, e.g. Submit stays disabled</span>
+        <span id="ntx" class="abs" style="inset-inline-start:22px;top:18px;color:var(--ink);white-space:nowrap">Send stays disabled</span>
+        <span id="caret" class="abs" style="inset-inline-start:22px;top:16px;width:3px;height:40px;background:var(--amber)"></span>
+      </div>
+      <div id="tchip" class="raise abs" style="inset-inline-start:24px;top:270px;width:200px;height:60px;display:flex;align-items:center;gap:12px;padding:0 18px">
+        <span id="tagN" class="tag note abs" style="inset-inline-start:12px;top:8px">Note</span>
+        <span id="tagB" class="tag fail abs" style="inset-inline-start:12px;top:8px;opacity:0">Bug</span>
+        <svg class="i abs" style="inset-inline-end:14px;top:14px;color:var(--muted)" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div id="thumb" class="abs" style="inset-inline-start:250px;top:262px;width:120px;height:76px;border-radius:8px;background:#f4f1ea;border:3px solid #ecebe7;box-shadow:0 10px 20px rgba(0,0,0,.4);opacity:0;overflow:hidden">
+        <div class="abs" style="left:0;right:0;top:0;height:14px;background:#fff;border-bottom:1px solid #ddd"></div><div class="abs" style="left:8px;top:58px;width:34px;height:10px;border-radius:2px;background:#9cbfa4"></div><div class="abs" style="left:8px;top:22px;width:100px;height:6px;background:#cfd4d9"></div><div class="abs" style="left:8px;top:34px;width:100px;height:6px;background:#cfd4d9"></div>
+      </div>
+      <div id="shotb" class="btn-s abs" style="left:24px;right:24px;top:470px">Screenshot, note</div>
+      <div id="addb" class="btn-c abs" style="left:24px;right:24px;top:566px">Add note</div>
+      <div id="menu" class="card abs" style="inset-inline-start:24px;top:338px;width:240px;height:128px;border-radius:14px;opacity:0;overflow:visible">
+        <div id="mN" class="mi" style="inset-inline-start:0;top:4px;border-radius:10px"><span class="dot note" style="position:static;width:18px;height:18px"></span>Note</div>
+        <div id="mB" class="mi" style="inset-inline-start:0;top:64px;border-radius:10px"><span class="dot err" style="position:static;width:18px;height:18px"></span>Bug</div>
+      </div>
+    </div>
+
+    <!-- S5: the lane; the note lands at its moment -->
+    <div id="lane" class="abs" style="left:0;top:0;width:1920px;height:1080px;opacity:0">
+      <div class="tl-line" id="laneline" style="inset-inline-start:200px;top:998px;width:1520px;height:6px"></div>
+      <div class="dot click ld" id="l1" style="inset-inline-start:330px"></div>
+      <div class="dot note ld" id="l2" style="inset-inline-start:560px"></div>
+      <div class="dot click ld" id="l3" style="inset-inline-start:790px"></div>
+      <div class="dot click ld" id="l4" style="inset-inline-start:1020px"></div>
+      <div class="dot click ld" id="l6" style="inset-inline-start:1480px"></div>
+      <div id="flag" class="abs" style="inset-inline-start:1248px;top:850px;width:220px;height:150px;opacity:0;transform-origin:0 100%">
+        <div class="abs" style="inset-inline-start:0;top:0;width:6px;height:150px;border-radius:3px;background:var(--fail)"></div>
+        <div class="abs" style="inset-inline-start:6px;top:0;height:64px;padding:0 20px;border-radius:0 12px 12px 0;background:var(--fail);color:#1d2024;font-weight:700;font-size:30px;display:flex;align-items:center;gap:12px;white-space:nowrap"><span>Bug</span><span class="num">00:27</span></div>
+      </div>
+    </div>
+    <div class="pill fail bp" id="fl"><svg class="i"><use href="#ic-bug"/></svg>Send stays disabled</div>
+
+    <!-- S6: the Timeline tab, filtered to bugs -->
+    <div id="s6" class="scene">
+      <div class="card" style="left:300px;top:96px;width:1320px;height:700px">
+        <div class="abs" style="left:0;right:0;top:0;height:92px;background:#2d3238;border-bottom:1px solid var(--line)"></div>
+        <div class="abs pill" style="inset-inline-start:30px;top:16px;height:60px;background:var(--amber);color:#1d2024;border-color:var(--amber);box-shadow:none">Timeline</div>
+        <div class="abs" style="inset-inline-end:30px;top:16px;display:flex;gap:14px">
+          <div id="fAll" class="pill" style="height:60px;box-shadow:none;border-color:var(--ink)">All</div>
+          <div id="fBug" class="pill fail" style="height:60px;box-shadow:none">Bugs</div>
+        </div>
+        <div class="trow o" style="top:112px"><span class="tm num">00:12</span><span class="dot click" style="position:static"></span><span class="d" style="color:var(--muted)">Actions</span></div>
+        <div class="trow b" id="b1" style="top:204px"><span class="tm num">00:19</span><span class="tag fail">Bug</span><span class="d">Email accepts a@b without a dot</span></div>
+        <div class="trow o" style="top:296px"><span class="tm num">00:23</span><span class="tag note">Note</span><span class="d" style="color:var(--muted)">Check the reply time</span></div>
+        <div class="trow b" id="b2" style="top:388px"><span class="tm num">00:27</span><span class="tag fail">Bug</span><span class="d">Send stays disabled</span></div>
+        <div class="trow o" style="top:480px"><span class="tm num">00:31</span><span class="dot click" style="position:static"></span><span class="d" style="color:var(--muted)">Actions</span></div>
+        <div class="trow b" id="b3" style="top:572px"><span class="tm num">00:36</span><span class="tag fail">Bug</span><span class="d">Subject list is empty on mobile</span></div>
+      </div>
+    </div>
+
+    <!-- S7: the counter, seen from slightly below -->
+    <div class="card" id="ctr" style="inset-inline-start:660px;top:250px;width:600px;height:460px;opacity:0">
+      <div class="abs" style="inset-inline-start:40px;top:34px"><span class="tag fail">Bugs</span></div>
+      <div class="abs num" style="inset-inline-start:40px;top:120px;width:300px;height:260px;font-size:240px;line-height:260px;color:var(--fail)">
+        <span class="abs k1" style="inset-inline-start:0;opacity:0">1</span><span class="abs k2" style="inset-inline-start:0;opacity:0">2</span><span class="abs k3" style="inset-inline-start:0;opacity:0">3</span>
+      </div>
+    </div>
+    <div class="pill fail bp" id="q1"><svg class="i"><use href="#ic-bug"/></svg>Bug</div>
+    <div class="pill fail bp" id="q2"><svg class="i"><use href="#ic-bug"/></svg>Bug</div>
+    <div class="pill fail bp" id="q3"><svg class="i"><use href="#ic-bug"/></svg>Bug</div>
+    <div class="pill bp" id="w1" style="color:var(--note)"><svg class="i"><use href="#ic-note"/></svg>Note</div>
+    <div class="pill bp" id="w2" style="color:var(--note)"><svg class="i"><use href="#ic-note"/></svg>Note</div>
+  </div>
+
+    <div id="end" class="scene">
+      <img id="lockup" src="./assets/qa-wrap-wordmark-dark.svg" alt="QA Wrap" />
+      <div id="maker">Made by Nader Alzghoul (<bdi>NJ-Burrito</bdi>)</div>
+      <div class="abs lbl" id="endnote" style="left:0;right:0;top:600px;text-align:center;font-size:36px">More tutorials, inside the tool</div>
+    </div>
+    <div class="ripple" id="rip"></div>
+    <svg id="cursor" class="cursor" viewBox="0 0 56 56" style="opacity:0"><path d="M8 4l0 38 10-9 7 16 7-3-7-15 14-1z" fill="#ecebe7" stroke="#171a1d" stroke-width="3" stroke-linejoin="round"/></svg>
+  </div>
+
+  <div class="ttl" id="t7">Only <b class="bad">bugs</b> count</div>
+
+  <div id="cap">
+    <div class="cap" id="cap-L1-0">While you test, you spot things worth writing down.</div>
+    <div class="cap" id="cap-L2-0">Type a short note, like: Send stays disabled.</div>
+    <div class="cap" id="cap-L3-0">Pick Note for something you saw,</div>
+    <div class="cap" id="cap-L3-1">or Bug when something is wrong.</div>
+    <div class="cap" id="cap-L4-0">Add a screenshot,</div>
+    <div class="cap" id="cap-L4-1">and it is attached to that note.</div>
+    <div class="cap" id="cap-L5-0">Each note lands on the timeline,</div>
+    <div class="cap" id="cap-L5-1">at the moment you made it.</div>
+    <div class="cap" id="cap-L6-0">Later, filter to the bugs,</div>
+    <div class="cap" id="cap-L6-1">and your list for the report is ready.</div>
+    <div class="cap" id="cap-L7-0">Only what you file as a bug counts toward your numbers.</div>
+    </div>
+  <div id="flash" class="fill" style="background:#fff;opacity:0"></div>
+</div>
+<script>
+(() => {
+  const ID = "qaw-tut-notes-and-bugs-en", D = 52, LANG = "en", RTL = false;
+  const LINES = {"L1":{"start":0.5,"end":6.6},"L2":{"start":7.4,"end":13.4},"L3":{"start":14,"end":20.6},"L4":{"start":21.2,"end":27.4},"L5":{"start":28.2,"end":35.4},"L6":{"start":36.2,"end":42.6},"L7":{"start":43.6,"end":49}};
+  const CAPS = [{"id":"cap-L1-0","start":0.5,"end":6.6,"last":true},{"id":"cap-L2-0","start":7.4,"end":13.4,"last":true},{"id":"cap-L3-0","start":14,"end":17.3,"last":false},{"id":"cap-L3-1","start":17.3,"end":20.6,"last":true},{"id":"cap-L4-0","start":21.2,"end":23.06,"last":false},{"id":"cap-L4-1","start":23.06,"end":27.4,"last":true},{"id":"cap-L5-0","start":28.2,"end":31.8,"last":false},{"id":"cap-L5-1","start":31.8,"end":35.4,"last":true},{"id":"cap-L6-0","start":36.2,"end":38.662,"last":false},{"id":"cap-L6-1","start":38.662,"end":42.6,"last":true},{"id":"cap-L7-0","start":43.6,"end":49,"last":true}];
+  const tl = gsap.timeline({ paused: true });
+  const q = (s) => document.querySelector(s);
+  // ---- kit (round 2): helpers shared by every film, inlined by build.mjs. In scope: tl, q, D, LANG, RTL. ----
+  // Eases by object class (commercial-bible §4): arrivals overshoot, moves ease in-out, time is linear, stamps slam.
+  const E = { out: 'power3.out', in: 'power2.in', io: 'power2.inOut', back: 'back.out(1.6)', slam: 'power4.in', time: 'none', drift: 'sine.inOut' };
+  /** Screen direction. X(x): an EN stage x as the AR stage mirrors it; mx(dx): a horizontal move, mirrored in AR. */
+  const X = (x) => (RTL ? 1920 - x : x);
+  const mx = (dx) => (RTL ? -dx : dx);
+  /** A point inside an English site miniature (LTR content) whose box sits at EN left L, width W; u = x inside it. */
+  const B = (L, W, u) => (RTL ? 1920 - L - W + u : L + u);
+
+  /** A scene is on stage from a to b (0.35 s fade at each end). drift is optional; the default holds still. */
+  const scene = (sel, a, b, drift) => {
+    tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out', immediateRender: false }, a);
+    if (drift) tl.fromTo(sel, drift.from, { ...drift.to, duration: b - a + 0.3, ease: 'none', immediateRender: false, transformOrigin: '50% 50%' }, a);
+    tl.to(sel, { opacity: 0, duration: 0.35, ease: 'power1.in' }, b);
+  };
+  /** Arrive with an overshoot (light things). */
+  const pop = (sel, at, from = {}, dur = 0.45) => tl.fromTo(sel, { opacity: 0, scale: 0.6, y: 18, ...from }, { opacity: 1, scale: 1, x: 0, y: 0, duration: dur, ease: E.back, immediateRender: false, transformOrigin: '50% 50%' }, at);
+  const fadeIn = (sel, at, vars = {}, dur = 0.3) => tl.fromTo(sel, { opacity: 0, ...vars }, { opacity: 1, x: 0, y: 0, duration: dur, ease: E.out, immediateRender: false }, at);
+  const fadeOut = (sel, at, dur = 0.25) => tl.to(sel, { opacity: 0, duration: dur, ease: 'power1.in' }, at);
+  /** A verdict or a heavy thing: from 1.4x, accelerating into rest. */
+  const slam = (sel, at, dur = 0.32) => tl.fromTo(sel, { opacity: 0, scale: 1.45 }, { opacity: 1, scale: 1, duration: dur, ease: E.slam, immediateRender: false, transformOrigin: '50% 50%' }, at);
+  /** A glow breathes up to o at `at` and back down at `end`. */
+  const glow = (sel, at, end, o = 1) => { tl.to(sel, { opacity: o, duration: 0.8, ease: 'sine.out' }, at); if (end != null) tl.to(sel, { opacity: 0, duration: 0.8, ease: 'sine.in' }, end); };
+  /** The act light: warm coral on the inline-start side until the tool acts at `turn`, green on the inline-end side after. */
+  const act = (turn, warm = 0.95, green = 0.9) => {
+    tl.fromTo('#glowW', { opacity: 0 }, { opacity: warm, duration: 1.0, ease: 'sine.out', immediateRender: false }, 0);
+    tl.to('#glowW', { opacity: 0, duration: 0.9, ease: 'sine.inOut' }, turn - 0.2);
+    tl.fromTo('#glowG', { opacity: 0 }, { opacity: green, duration: 1.0, ease: 'sine.inOut', immediateRender: false }, turn);
+  };
+  /** One amber key light that moves to the focal point of a beat (EN coordinates of its centre). */
+  const key = (at, x, y, o = 0.8, dur = 0.8) => tl.to('#glowA', { x: X(x) - 450, y: y - 450, opacity: o, duration: dur, ease: E.io }, at);
+  /** Camera on #world: x is mirrored in AR; s is the scale (1 = rest). */
+  const cam = (at, dur, { x = 0, y = 0, s = 1 } = {}, ease = E.io) => tl.to('#world', { x: mx(x), y, scale: s, duration: dur, ease }, at);
+  const camSet = (at, { x = 0, y = 0, s = 1 } = {}) => tl.set('#world', { x: mx(x), y, scale: s }, at);
+  /** The beat title (one per film, Serif Display, top inline-start). */
+  const title = (sel, at, out) => { tl.fromTo(sel, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: E.out, immediateRender: false }, at); if (out != null) fadeOut(sel, out, 0.3); };
+  /** Fly on an arc (never a straight diagonal): from (x0,y0) to (x1,y1) in EN stage px, lifting by `lift`. */
+  const fly = (sel, at, dur, x0, y0, x1, y1, lift = 140, s1 = 1) => {
+    const top = Math.min(y0, y1) - lift;
+    tl.set(sel, { x: X(x0), y: y0, xPercent: -50, yPercent: -50, opacity: 1, scale: 1 }, at);
+    tl.to(sel, { x: X(x1), duration: dur, ease: 'sine.inOut' }, at);
+    tl.to(sel, { y: top, duration: dur * 0.45, ease: 'power2.out' }, at);
+    tl.to(sel, { y: y1, duration: dur * 0.55, ease: 'power2.in' }, at + dur * 0.45);
+    tl.to(sel, { scale: s1, duration: dur, ease: E.in }, at);
+  };
+  /** Cursor: its tip goes to the EN stage point (x, y); X() mirrors it in AR. Press = a dip and an amber ripple. */
+  const cursorAt = (at, x, y) => tl.set('#cursor', { x: X(x) - 8, y: y - 4 }, at);
+  const cursorTo = (at, x, y, dur = 0.7) => tl.to('#cursor', { x: X(x) - 8, y: y - 4, duration: dur, ease: E.io }, at);
+  /** C5: where a cursor presses a button: the inline-end third, so the tip never hides the label.
+   *  third(cx, w) for tool buttons in EN stage px (X() mirrors it to the AR inline end); for English site buttons use cx + w / 6 inside B(). */
+  const third = (cx, w) => cx + w / 6;
+  /** As cursorTo, but x is already a stage x (from B()). */
+  const cursorToRaw = (at, x, y, dur = 0.7) => tl.to('#cursor', { x: x - 8, y: y - 4, duration: dur, ease: E.io }, at);
+  const press = (at, x, y, rip = '#rip', raw = false) => {
+    const sx = raw ? x : X(x);
+    tl.to('#cursor', { scale: 0.82, duration: 0.09, ease: 'power1.in', transformOrigin: '8px 4px' }, at);
+    tl.to('#cursor', { scale: 1, duration: 0.18, ease: 'power2.out', transformOrigin: '8px 4px' }, at + 0.09);
+    tl.set(rip, { x: sx - 35, y: y - 35 }, at);
+    tl.fromTo(rip, { opacity: 0.95, scale: 0.3 }, { opacity: 0, scale: 1.7, duration: 0.5, ease: 'power2.out', immediateRender: false }, at);
+  };
+  /** A button pressed: anticipation (a dip into its hard edge) then release. */
+  const push = (sel, at) => { tl.to(sel, { y: 6, duration: 0.08, ease: 'power1.in' }, at); tl.to(sel, { y: 0, duration: 0.22, ease: 'back.out(2)' }, at + 0.08); };
+  /** Type text into a clip: the wrapper's clip-path opens from the inline start like a caret. ltr = true for
+   *  English site text, which always types left to right. */
+  const type = (wrap, at, dur, ltr = false) => tl.fromTo(wrap, { clipPath: RTL && !ltr ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0%)', duration: dur, ease: `steps(${Math.max(6, Math.round(dur * 14))})`, immediateRender: false }, at);
+  /** A screenshot flash. */
+  const flash = (at) => { tl.fromTo('#flash', { opacity: 0 }, { opacity: 0.8, duration: 0.06, ease: 'none', immediateRender: false }, at); tl.to('#flash', { opacity: 0, duration: 0.35, ease: 'power2.out' }, at + 0.06); };
+  /** Draw a time line (linear, it is time) from the inline start. */
+  const draw = (sel, at, dur) => tl.fromTo(sel, { scaleX: 0 }, { scaleX: 1, duration: dur, ease: E.time, immediateRender: false }, at);
+  /** Draw an SVG stroke whose path length is len. */
+  const stroke = (sel, at, dur, len, ease = 'power2.inOut') => tl.fromTo(sel, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: dur, ease, immediateRender: false }, at);
+  /** The end card: lockup arrives, then the note; held to the last frame. */
+  const endCard = (a) => {
+    tl.fromTo('#end', { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.out', immediateRender: false }, a);
+    pop('#lockup', a + 0.15, { y: 14, scale: 0.85 }, 0.6);
+    fadeIn('#maker', a + 0.6, { y: 8 }, 0.45);
+    fadeIn('#endnote', a + 1.1, { y: 10 }, 0.5);
+  };
+  /** Push in (s > 1) or pull out so the EN stage point (px, py) comes to the frame centre; mirrored in AR. */
+  const camOn = (at, dur, px, py, s, ease = E.io) => cam(at, dur, { x: -s * (px - 960), y: -s * (py - 540), s }, ease);
+
+  // ===== notes-and-bugs (treatment docs/film/treatments/notes-and-bugs.md), round 2 =====
+  const BL = 360, BW = 1200, PT = 194;
+  const P = (u, v) => [B(BL, BW, u), PT + v];
+  const NC = (o, y) => [1240 + o, y];               // a point in the note card (EN stage), mirrored by X() in the helpers
+  gsap.set('#ntx', { clipPath: RTL ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' });
+  gsap.set('#caret', { opacity: 0 });
+  act(23.4);
+
+  // S1 0-7.2 MS: something is off; Send stays dead
+  fadeIn('#browser', 0, { y: 24 }, 0.6);
+  const [sx, sy] = P(193, 572);                    // Send's inline-end third (C5)
+  cursorAt(0.2, 1500, 900);
+  tl.to('#cursor', { opacity: 1, duration: 0.2 }, 0.4);
+  cursorToRaw(0.8, sx, sy, 1.0);
+  [2.1, 2.9].forEach((a) => { press(a, sx, sy, '#rip', true); tl.to('#send', { y: 2, duration: 0.06, yoyo: true, repeat: 1 }, a); });
+  key(2.0, B(BL, BW, 160), 766, 0.55, 0.6);
+  pop('#bub', 3.9, { scale: 0.3, y: 20 }, 0.5);
+  tl.to('#bub', { y: -8, duration: 1.4, ease: E.drift, yoyo: true, repeat: 1 }, 4.5);
+  fadeOut('#cursor', 5.2);
+
+  // S2 7.2-13.8 MS split: the page makes room at the inline start; the note card arrives at the inline end
+  tl.to('#browser', { x: mx(-300), scale: 0.8, duration: 0.9, ease: E.io, transformOrigin: RTL ? '100% 50%' : '0% 50%' }, 7.2);
+  fadeOut('#bub', 7.2, 0.3);
+  key(7.4, 1520, 300, 0.5, 0.8);
+  tl.fromTo('#nc', { opacity: 0, x: mx(220) }, { opacity: 1, x: 0, duration: 0.7, ease: E.out, immediateRender: false }, 7.6);
+  tl.to('#caret', { opacity: 1, duration: 0.05 }, 8.4);
+  tl.to('#caret', { opacity: 0, duration: 0.05, yoyo: true, repeat: 5, repeatDelay: 0.35 }, 8.7);
+  tl.to('#nph', { opacity: 0, duration: 0.1 }, 10.6);
+  type('#ntx', 10.7, 1.6);
+  tl.set('#caret', { opacity: 0 }, 10.6);
+
+  // S3 13.8-21.0 CU: the type menu; Note, then Bug
+  camOn(13.8, 1.0, 1400, 601, 1.4);
+  cursorAt(14.4, 1520, 700);
+  tl.to('#cursor', { opacity: 1, duration: 0.2 }, 14.6);
+  cursorTo(14.8, ...NC(157, 450), 0.7);
+  press(15.6, ...NC(157, 450));
+  tl.fromTo('#menu', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.3, ease: E.out, immediateRender: false }, 15.75);
+  tl.to('#mN', { backgroundColor: 'rgba(157,184,232,.18)', duration: 0.2 }, 16.2);
+  cursorTo(17.6, ...NC(184, 582), 0.6);
+  tl.to('#mN', { backgroundColor: 'rgba(157,184,232,0)', duration: 0.2 }, 17.9);
+  tl.to('#mB', { backgroundColor: 'rgba(255,125,99,.2)', duration: 0.2 }, 17.9);
+  press(18.5, ...NC(184, 582));
+  tl.to('#menu', { opacity: 0, duration: 0.2 }, 18.75);
+  tl.to('#tagN', { opacity: 0, duration: 0.15 }, 18.8);
+  slam('#tagB', 18.8, 0.28);
+  key(18.6, 1364, 450, 0.0, 0.5);
+
+  // S4 21.0-27.8 MS: proof joins the claim; the light turns green as it clips on
+  camOn(21.0, 0.9, 1460, 560, 1.18);
+  cursorTo(21.6, ...NC(365, 658), 0.6);
+  push('#shotb', 22.4); press(22.4, ...NC(365, 658));
+  flash(22.55);
+  tl.fromTo('#thumb', { opacity: 0, y: -160, rotation: -10 }, { opacity: 1, y: 0, rotation: 0, duration: 0.55, ease: 'back.out(2.2)', immediateRender: false }, 22.9);
+  tl.to('#thumb', { rotation: 3, duration: 0.12, ease: 'power1.out', yoyo: true, repeat: 1 }, 23.45);      // follow-through: clipped on
+  cursorTo(24.8, ...NC(365, 754), 0.6);
+  push('#addb', 25.6); press(25.6, ...NC(365, 754));
+  tl.to('#nc', { boxShadow: '0 30px 60px rgba(0,0,0,.45), 0 0 0 2px rgba(123,211,137,.55)', duration: 0.4 }, 25.8);
+  fadeOut('#cursor', 26.3);
+
+  // S5 27.8-35.9 WS pull-out: the note lands at its moment on the timeline
+  camOn(27.8, 1.4, 960, 640, 0.8);
+  fadeIn('#lane', 28.0);
+  draw('#laneline', 28.1, 1.8);
+  ['#l1', '#l2', '#l3', '#l4', '#l6'].forEach((s, i) => pop(s, 28.3 + i * 0.32, { y: -40, scale: 0.3 }, 0.35));
+  fly('#fl', 29.6, 0.01, 1520, 330, 1520, 330, 0);
+  tl.fromTo('#fl', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: E.back, immediateRender: false }, 29.6);
+  fly('#fl', 30.4, 1.0, 1520, 330, 1251, 1000, 160, 0.15);
+  tl.to('#fl', { opacity: 0, duration: 0.12 }, 31.3);
+  tl.fromTo('#flag', { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: 0.55, ease: 'back.out(1.8)', immediateRender: false }, 31.35);
+  key(31.3, 1340, 900, 0.6, 0.8);
+  tl.to('#browser, #nc, #lane', { opacity: 0, duration: 0.4 }, 35.5);
+  key(35.4, 1340, 900, 0, 0.5);
+
+  // S6 36.0-43.0 MS: the Timeline tab; Bugs, and everything else leaves
+  camSet(35.95, { s: 1 });
+  tl.fromTo('#s6', { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.out', immediateRender: false }, 36.0);
+  cursorAt(37.0, 1300, 700);
+  tl.to('#cursor', { opacity: 1, duration: 0.2 }, 37.0);
+  cursorTo(37.3, 1552, 142, 0.8);
+  press(38.3, 1552, 142);
+  tl.to('#fAll', { borderColor: 'rgba(58,64,71,1)', duration: 0.2 }, 38.4);
+  tl.to('#fBug', { backgroundColor: 'rgba(255,125,99,.2)', duration: 0.2 }, 38.4);
+  tl.to('#s6 .o', { opacity: 0, x: mx(-30), duration: 0.4, stagger: 0.06 }, 38.6);
+  [['#b1', -92], ['#b2', -184], ['#b3', -276]].forEach(([s, dy], i) => tl.to(s, { y: dy, duration: 0.55, ease: E.io }, 39.1 + i * 0.12));
+  fadeOut('#cursor', 39.2);
+  fadeOut('#s6', 43.0, 0.35);
+
+  // S7 43.4-49.6 CU, low angle: only bugs count
+  tl.fromTo('#ctr', { opacity: 0, scale: 0.8, rotationX: 0, transformPerspective: 1200 }, { opacity: 1, scale: 1, rotationX: 12, duration: 0.6, ease: E.back, immediateRender: false, transformOrigin: '50% 100%' }, 43.35);
+  title('#t7', 43.7, 49.25);
+  key(43.6, 960, 480, 0.55, 0.8);
+  [44.4, 45.2, 46.0].forEach((a, i) => {
+    fly('#q' + (i + 1), a, 0.65, 700 + i * 260, 120, 850, 520, 60, 0.3);
+    tl.to('#q' + (i + 1), { opacity: 0, duration: 0.1 }, a + 0.6);
+    if (i) tl.set('#ctr .k' + i, { opacity: 0 }, a + 0.62);
+    tl.fromTo('#ctr .k' + (i + 1), { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: E.slam, immediateRender: false }, a + 0.62);
+  });
+  [[44.8, 760], [45.8, 820]].forEach(([a, y], i) => {
+    fly('#w' + (i + 1), a, 2.4, 260, y, 1660, y - 40, 30, 1);
+    tl.fromTo('#w' + (i + 1), { opacity: 0.9 }, { opacity: 0, duration: 1.0, immediateRender: false }, a + 1.4);
+  });
+  fadeOut('#main', 49.25, 0.4);
+
+  // S8 49.8-52 end card
+  camSet(49.7, { s: 1 });
+  endCard(49.8);
+
+  // ambient depth: ghosts and bokeh drift linearly for the whole film (the world is alive), in the film's direction
+  tl.fromTo('#amb', { x: 0, y: 0 }, { x: mx(70), y: -24, duration: D, ease: 'none', immediateRender: false }, 0);
+  tl.fromTo('.bokeh', { x: 0 }, { x: (i) => mx(18 + (i % 5) * 9), duration: D, ease: 'none', immediateRender: false }, 0);
+  // captions: fade up, hold until the next one, the last of a line lingers a beat past its slot
+  CAPS.forEach((c, i) => {
+    const next = CAPS[i + 1];
+    const out = Math.min(c.end + (c.last ? 0.3 : 0), next ? next.start - 0.02 : D - 0.1);
+    tl.fromTo('#' + c.id, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', immediateRender: false }, c.start);
+    tl.to('#' + c.id, { opacity: 0, duration: 0.2, ease: 'power1.in' }, Math.max(c.start + 0.4, out - 0.2));
+  });
+  window.__timelines = window.__timelines || {};
+  window.__timelines[ID] = tl;
+})();
+</script>
+</body>
+</html>

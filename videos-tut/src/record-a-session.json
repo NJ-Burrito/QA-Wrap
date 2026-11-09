@@ -1,0 +1,173 @@
+{
+ "id": "record-a-session",
+ "no": 1,
+ "status": "animatic",
+ "dur": 52,
+ "title": {
+  "en": "Record a session",
+  "ar": "سجل جلسة"
+ },
+ "blurb": {
+  "en": "Wake QA Wrap on the site you are testing, name the run, press Start, then read what it caught.",
+  "ar": "أيقظ كيو إيه راب على الموقع الذي تختبره، وأعط الجلسة اسما، واضغط ابدأ، ثم اقرأ ما التقطه."
+ },
+ "site": "Sauce Demo (Swag Labs inventory and cart)",
+ "lines": [
+  {
+   "id": "L1",
+   "start": 0.5,
+   "end": 6.8,
+   "en": "Open the site you want to test. QA Wrap sleeps until you wake it.",
+   "ar": "افتح الموقع الذي تريد اختباره، وكيو إيه راب نائم حتى توقظه.",
+   "ar_tts": "افْتَحِ الْمَوْقِعَ الَّذِي تُرِيدُ اخْتِبَارَهُ، وَكِيُو إِيهْ رَاب نَائِمٌ حَتَّى تُوقِظَهُ."
+  },
+  {
+   "id": "L2",
+   "start": 7.5,
+   "end": 13.5,
+   "en": "Wake it on that tab, give the run a name, and press Start.",
+   "ar": "أيقظه في هذا التبويب، وأعط الجلسة اسما، ثم اضغط «ابدأ التسجيل».",
+   "ar_tts": "أَيْقِظْهُ فِي هَذَا التَّبْوِيبِ، وَأَعْطِ الْجَلْسَةَ اسْمًا، ثُمَّ اضْغَطْ «ابْدَأِ التَّسْجِيلَ»."
+  },
+  {
+   "id": "L3",
+   "start": 14.2,
+   "end": 19.8,
+   "en": "Then test like you always do. Click, type, scroll.",
+   "ar": "ثم اختبر كما تفعل دائما. انقر، واكتب، ومرر الصفحة.",
+   "ar_tts": "ثُمَّ اخْتَبِرْ كَمَا تَفْعَلُ دَائِمًا. انْقُرْ، وَاكْتُبْ، وَمَرِّرِ الصَّفْحَةَ."
+  },
+  {
+   "id": "L4",
+   "start": 20.5,
+   "end": 27.6,
+   "en": "Every click, request, error and screenshot drops onto one timeline.",
+   "ar": "كل نقرة وطلب وخطأ ولقطة شاشة تسقط على خط زمني واحد.",
+   "ar_tts": "كُلُّ نَقْرَةٍ وَطَلَبٍ وَخَطَأٍ وَلَقْطَةِ شَاشَةٍ تَسْقُطُ عَلَى خَطٍّ زَمَنِيٍّ وَاحِدٍ."
+  },
+  {
+   "id": "L5",
+   "start": 28.3,
+   "end": 34.6,
+   "en": "Everything stays on your computer. Nothing is sent anywhere.",
+   "ar": "كل شيء يبقى على جهازك، ولا يغادره أي شيء.",
+   "ar_tts": "كُلُّ شَيْءٍ يَبْقَى عَلَى جِهَازِكَ، وَلَا يُغَادِرُهُ أَيُّ شَيْءٍ."
+  },
+  {
+   "id": "L6",
+   "start": 35.3,
+   "end": 40.6,
+   "en": "When you are done, press Stop. The session is saved.",
+   "ar": "عندما تنتهي، اضغط «أوقف». الجلسة محفوظة.",
+   "ar_tts": "عِنْدَمَا تَنْتَهِي، اضْغَطْ «أَوْقِفْ». الْجَلْسَةُ مَحْفُوظَةٌ."
+  },
+  {
+   "id": "L7",
+   "start": 41.3,
+   "end": 48,
+   "en": "Open its Timeline, and read what happened, step by step.",
+   "ar": "افتح الخط الزمني، واقرأ ما حدث خطوة خطوة.",
+   "ar_tts": "افْتَحِ الْخَطَّ الزَّمَنِيَّ، وَاقْرَأْ مَا حَدَثَ خُطْوَةً خُطْوَةً."
+  }
+ ],
+ "shots": [
+  {
+   "t": "0.0-7.2",
+   "what": "WS: a Swag Labs inventory in a browser; QA Wrap asleep in the toolbar (grey, rising z). Slow truck toward the toolbar."
+  },
+  {
+   "t": "7.2-13.8",
+   "what": "CU the icon wakes (dip, amber glow), then MS the popup: a name is typed, Start recording pressed. The light turns green."
+  },
+  {
+   "t": "14.0-20.2",
+   "what": "MS the shop, a live counter card docked at the side; the cursor clicks Add to cart, opens the cart, types a name, scrolls."
+  },
+  {
+   "t": "20.2-28.0",
+   "what": "Pull-out to one lane under the page; each event pill flies on an arc down to it and becomes a dot."
+  },
+  {
+   "t": "28.0-35.0",
+   "what": "EWS high angle: a small laptop with the lane glowing inside; a dashed arrow toward a cloud stops at a coral barrier. Title: On your computer."
+  },
+  {
+   "t": "35.0-41.0",
+   "what": "MS the popup: Stop pressed, the record dot goes out, Recording saved pops with the run name and its dots."
+  },
+  {
+   "t": "41.0-48.4",
+   "what": "MS then push-in on the Timeline card; an amber highlight steps down five rows."
+  },
+  {
+   "t": "48.5-52.0",
+   "what": "End card, centred: the QA Wrap lockup and More tutorials, inside the tool."
+  }
+ ],
+ "onscreen": [
+  "QA Wrap",
+  "What are you testing? / ما الذي تختبره؟",
+  "Checkout flow / مسار الدفع",
+  "Start recording / ابدأ التسجيل",
+  "Records every tab here until you stop. / يسجل كل تبويب هنا حتى تضغط الإيقاف.",
+  "On your computer / على جهازك",
+  "Stop / أوقف",
+  "Recording saved / تم حفظ التسجيل",
+  "Timeline / الخط الزمني",
+  "Actions, Network, Errors, Shots / الإجراءات، الشبكة، الأخطاء، اللقطات"
+ ],
+ "strings": {
+  "placeholder": {
+   "en": "What are you testing?",
+   "ar": "ما الذي تختبره؟"
+  },
+  "charter": {
+   "en": "Checkout flow",
+   "ar": "مسار الدفع"
+  },
+  "start": {
+   "en": "Start recording",
+   "ar": "ابدأ التسجيل"
+  },
+  "startNote": {
+   "en": "Records every tab here until you stop.",
+   "ar": "يسجل كل تبويب هنا حتى تضغط الإيقاف."
+  },
+  "stop": {
+   "en": "Stop",
+   "ar": "أوقف"
+  },
+  "saved": {
+   "en": "Recording saved",
+   "ar": "تم حفظ التسجيل"
+  },
+  "timeline": {
+   "en": "Timeline",
+   "ar": "الخط الزمني"
+  },
+  "kAct": {
+   "en": "Actions",
+   "ar": "الإجراءات"
+  },
+  "kNet": {
+   "en": "Network",
+   "ar": "الشبكة"
+  },
+  "kErr": {
+   "en": "Errors",
+   "ar": "الأخطاء"
+  },
+  "kShot": {
+   "en": "Shots",
+   "ar": "اللقطات"
+  },
+  "onComputer": {
+   "en": "On your <b class=\"ok\">computer</b>",
+   "ar": "على <b class=\"ok\">جهازك</b>"
+  },
+  "more": {
+   "en": "More tutorials, inside the tool",
+   "ar": "المزيد من الدروس داخل الأداة"
+  }
+ }
+}

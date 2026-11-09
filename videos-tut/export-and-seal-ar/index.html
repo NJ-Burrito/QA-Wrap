@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>التصدير والختم (QA Wrap tutorial, AR)</title>
+<script src="./gsap.min.js"></script>
+<style>
+/* QA Wrap tutorial kit, round 2: the commercial bible's look (docs/film/commercial-bible.md §2-4, §9).
+   Ground #171a1d, ghost blocks and bokeh drifting, one key glow per act (warm coral = problem, green = the tool),
+   raised cards, amber pressable buttons, coral = failure, amber = the user's action, green = proof. Thmanyah only. */
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyah-sans-400.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyah-sans-500.woff2") format("woff2");font-weight:500;font-display:block}
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyah-sans-700.woff2") format("woff2");font-weight:700;font-display:block}
+@font-face{font-family:"Thmanyah Serif Display";src:url("./assets/fonts/thmanyah-serif-display-700.woff2") format("woff2");font-weight:700;font-display:block}
+:root{
+  --ground:#171a1d;--ground2:#24282c;--raise:#2a2e33;--raise2:#30353b;--edge:#343a41;--line:#3a4047;
+  --ink:#ecebe7;--muted:#a3a8ad;--dim:#8a9096;
+  --fail:#ff7d63;--amber:#f0b94a;--amber-edge:#c08a25;--pass:#7bd389;--note:#9db8e8;
+  /* round-1 names kept so older scene files still resolve */
+  --corn:var(--amber);--tortilla:#d8c6a4;--petra:#b5432b;
+  --sans:"Thmanyah Sans",sans-serif;--serif:"Thmanyah Serif Display",serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--ground)}
+#root{position:relative;width:100%;height:100%;overflow:hidden;background:var(--ground);color:var(--ink);font-family:var(--sans)}
+.abs{position:absolute}
+.fill{position:absolute;inset:0}
+svg.i{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ---- ground: ambient depth (never stops) and the act light ---- */
+#amb{position:absolute;inset:-80px}
+.ghost{position:absolute;border-radius:26px;background:#262d38;opacity:.42;filter:blur(7px)}
+.bokeh{position:absolute;border-radius:50%;background:#aeb6bf;opacity:.28;filter:blur(5px)}
+.glow{position:absolute;width:1300px;height:1300px;border-radius:50%;opacity:0;pointer-events:none}
+.glow.g-warm{background:radial-gradient(closest-side,rgba(255,125,99,.30),rgba(255,125,99,.09) 55%,transparent)}
+.glow.g-green{background:radial-gradient(closest-side,rgba(123,211,137,.26),rgba(123,211,137,.07) 55%,transparent)}
+.glow.g-amber{width:900px;height:900px;background:radial-gradient(closest-side,rgba(240,185,74,.30),rgba(240,185,74,.06) 60%,transparent)}
+/* round-1 glow names */
+.glow.g-corn{background:radial-gradient(closest-side,rgba(240,185,74,.26),rgba(240,185,74,.07) 60%,transparent)}
+.glow.g-fail{background:radial-gradient(closest-side,rgba(255,125,99,.26),rgba(255,125,99,.07) 60%,transparent)}
+.glow.g-pass{background:radial-gradient(closest-side,rgba(123,211,137,.24),rgba(123,211,137,.06) 60%,transparent)}
+
+/* ---- camera: #world holds every scene; scaling or moving it is a push-in, pull-out or truck ---- */
+#world{position:absolute;inset:0;transform-origin:50% 50%}
+.scene{position:absolute;inset:0;opacity:0}
+.tilt{position:absolute;inset:0;perspective:1700px;perspective-origin:50% 30%}
+.plane{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:50% 60%}
+
+/* ---- words: one beat title (Serif Display), captions bottom inline-start ---- */
+.ttl{position:absolute;inset-inline-start:112px;top:72px;font-family:var(--serif);font-weight:700;font-size:70px;line-height:1.1;color:#d8d6d1;opacity:0;white-space:nowrap}
+html[dir=ltr] .ttl{text-transform:uppercase;letter-spacing:.02em}
+.ttl b{font-weight:700}
+.ttl .ok{color:var(--pass)}.ttl .bad{color:var(--fail)}
+#cap{position:absolute;left:112px;right:112px;bottom:64px;height:140px;pointer-events:none}
+#cap::before{content:"";position:absolute;left:-112px;right:-112px;bottom:-64px;height:180px;background:linear-gradient(to top,rgba(23,26,29,.6) 0,rgba(23,26,29,.6) 140px,rgba(23,26,29,0) 180px)}
+.cap{position:absolute;left:0;right:0;bottom:0;font-size:44px;line-height:1.32;font-weight:500;color:#eeede9;opacity:0;max-width:1560px;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+html[dir=rtl] .cap{text-align:right;margin-left:auto}
+html[dir=ltr] .cap{text-align:left}
+
+/* caption band (C4): y >= 900 stays free of world objects; the 140 px 0.6 scrim above sits under every caption */
+/* end card (C1-C2): the wordmark, then the maker line 16 px below the wordmark's descender */
+#lockup{position:absolute;left:560px;top:300px;width:800px;height:135px}
+#maker{position:absolute;left:0;right:0;top:451px;text-align:center;font-size:38px;font-weight:500;color:#c9c8c3}
+#maker bdi{unicode-bidi:isolate;direction:ltr}
+
+/* ---- objects ---- */
+.card{position:absolute;border-radius:18px;background:linear-gradient(#2a2e33,#24282c);border:1px solid var(--edge);box-shadow:0 30px 60px rgba(0,0,0,.45);overflow:hidden}
+.raise{background:linear-gradient(#2d3238,#272b30);border:1px solid var(--edge);border-radius:14px}
+.chip{position:absolute;width:60px;height:60px;border-radius:16px;background:linear-gradient(#2d3238,#23272c);border:1px solid var(--edge);display:flex;align-items:center;justify-content:center;color:var(--ink);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.pill{display:inline-flex;align-items:center;gap:12px;height:58px;padding:0 24px 0 18px;border-radius:29px;background:#272b30;border:1px solid var(--line);font-weight:700;font-size:26px;white-space:nowrap;box-shadow:0 16px 36px rgba(0,0,0,.4)}
+.pill.fail{color:var(--fail);border-color:rgba(255,125,99,.55)}
+.pill.ok{color:var(--pass);border-color:rgba(123,211,137,.55)}
+.pill.corn,.pill.amber{color:var(--amber);border-color:rgba(240,185,74,.55)}
+.lbl{font-size:28px;font-weight:700;color:var(--muted)}
+.caps{text-transform:uppercase;letter-spacing:.06em}
+.serif{font-family:var(--serif);font-weight:700}
+.num{font-family:var(--serif);font-weight:700;unicode-bidi:isolate}
+.ltr{direction:ltr;unicode-bidi:isolate}
+
+/* the drawn browser: its chrome follows the UI language (an Arabic Chrome mirrors), the site under test stays English */
+.browser{position:absolute;border-radius:22px;background:#f4f1ea;box-shadow:0 50px 110px rgba(0,0,0,.6),0 0 0 1px rgba(236,235,231,.14);overflow:hidden;color:#262b30}
+.browser .bar{position:absolute;left:0;top:0;right:0;height:64px;background:#e6e3dc;display:flex;align-items:center;gap:10px;padding:0 22px}
+.browser .bar i{width:14px;height:14px;border-radius:50%;background:#b4b0a6;display:block}
+.browser .url{margin-inline-start:18px;height:36px;border-radius:18px;background:#f7f5f1;padding:0 18px;display:flex;align-items:center;font-size:20px;color:#5d646b;font-weight:400;flex:1;max-width:620px;direction:ltr}
+.browser .ext{position:absolute;inset-inline-end:20px;top:8px;width:48px;height:48px;border-radius:12px;background:#262b30;display:flex;align-items:center;justify-content:center}
+.browser .page{position:absolute;left:0;right:0;top:64px;bottom:0;direction:ltr;font-weight:400;overflow:hidden}
+/* Swag Labs (Sauce Demo look, no logo copied) */
+.sd-head{position:absolute;left:0;right:0;top:0;height:92px;background:#132322;color:#f1efe9;display:flex;align-items:center;padding:0 40px;font-family:var(--serif);font-size:44px}
+.sd-head .cart{margin-left:auto;position:relative;width:48px;height:48px}
+.sd-head .cart b{position:absolute;right:-8px;top:-10px;min-width:26px;height:26px;border-radius:13px;background:#e2463b;color:#fff;font:700 18px/26px var(--sans);text-align:center}
+.tile{position:absolute;width:300px;height:380px;border-radius:14px;background:#fff;border:2px solid #e1ddd3;overflow:hidden;color:#262b30}
+.tile .art{height:190px;display:flex;align-items:center;justify-content:center;background:#efebe1}
+.tile .nm{font-size:24px;font-weight:700;padding:14px 18px 0;color:#18583a}
+.tile .pr{font-size:24px;padding:4px 18px;color:#262b30}
+.tile .btn{position:absolute;left:18px;right:18px;bottom:18px;height:52px;border-radius:8px;border:2px solid #132322;color:#132322;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;letter-spacing:.5px}
+/* Toolshop (Practice Software Testing look) */
+.ts-head{position:absolute;left:0;right:0;top:0;height:84px;background:#fff;border-bottom:2px solid #e3e3e3;display:flex;align-items:center;padding:0 36px;gap:36px;font-size:24px;color:#333}
+.ts-head .logo{font-family:var(--serif);font-size:36px;color:#c4471d}
+.ts-btn{position:absolute;height:64px;border-radius:6px;background:#2a7a3b;color:#fff;font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center}
+.ts-in{position:absolute;height:56px;border-radius:6px;background:#fff;border:2px solid #cfd4d9;font-size:22px;color:#6c757d;display:flex;align-items:center;padding:0 16px}
+
+/* the tool, drawn as cards */
+.pop{position:absolute;width:520px;border-radius:22px;background:linear-gradient(#2a2e33,#24282c);border:1px solid var(--edge);box-shadow:0 40px 90px rgba(0,0,0,.6);overflow:hidden}
+.pop .hd{display:flex;align-items:center;gap:14px;height:76px;padding:0 24px;font-weight:700;font-size:28px;border-bottom:1px solid var(--line)}
+.field{height:68px;border-radius:14px;background:#1d2024;border:1px solid var(--line);display:flex;align-items:center;padding:0 22px;font-size:28px;color:var(--dim)}
+.btn-c{height:76px;border-radius:18px;background:var(--amber);color:#1d2024;font-weight:700;font-size:30px;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 8px 0 var(--amber-edge),0 18px 30px rgba(0,0,0,.35)}
+.btn-s{height:76px;border-radius:18px;background:var(--raise2);color:var(--ink);font-weight:700;font-size:30px;display:flex;align-items:center;justify-content:center;gap:12px;border:1px solid var(--line);box-shadow:0 8px 0 #1f2327}
+
+/* timelines: time is a line, events are dots on it */
+.tl-line{position:absolute;height:4px;border-radius:2px;background:var(--line);transform-origin:0 50%}
+html[dir=rtl] .tl-line{transform-origin:100% 50%}
+.dot{position:absolute;width:30px;height:30px;border-radius:50%}
+.dot.click{background:var(--ink)}
+.dot.req{background:var(--amber)}
+.dot.err{background:var(--fail)}
+.dot.shot{border-radius:8px;background:var(--tortilla)}
+.dot.note{background:var(--note)}
+.dot.bug{background:var(--fail);border-radius:6px;transform:rotate(45deg)}
+
+.cursor{position:absolute;left:0;top:0;width:56px;height:56px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.ripple{position:absolute;left:0;top:0;width:70px;height:70px;border-radius:50%;border:4px solid var(--amber);opacity:0}
+.row2{position:absolute;left:30px;right:30px;height:96px;display:flex;align-items:center;gap:26px;padding:0 30px}
+.tag{display:inline-flex;align-items:center;height:44px;padding:0 16px;border-radius:12px;font-weight:700;font-size:28px}
+.tag.fail{background:rgba(255,125,99,.15);color:#ffa591}
+.tag.ok{background:rgba(123,211,137,.15);color:var(--pass)}
+.tag.corn,.tag.amber{background:rgba(240,185,74,.16);color:var(--amber)}
+.tag.note{background:rgba(157,184,232,.16);color:var(--note)}
+.cons{font-size:24px;line-height:1;color:var(--muted);direction:ltr;white-space:nowrap}
+
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="qaw-tut-export-and-seal-ar" data-start="0" data-width="1920" data-height="1080" data-duration="54" data-fps="30">
+  <div id="ground" class="fill">
+    <div id="amb"><div class="ghost" style="left:794px;top:162px;width:283px;height:150px"></div><div class="ghost" style="left:157px;top:44px;width:304px;height:159px"></div><div class="ghost" style="left:1347px;top:168px;width:209px;height:116px"></div><div class="ghost" style="left:1669px;top:417px;width:178px;height:186px"></div><div class="ghost" style="left:1866px;top:95px;width:265px;height:126px"></div><div class="ghost" style="left:398px;top:882px;width:213px;height:161px"></div><div class="ghost" style="left:1443px;top:712px;width:306px;height:130px"></div><div class="ghost" style="left:1063px;top:29px;width:306px;height:157px"></div><div class="ghost" style="left:1455px;top:338px;width:339px;height:175px"></div><div class="bokeh" style="left:451px;top:316px;width:11px;height:11px"></div><div class="bokeh" style="left:384px;top:646px;width:23px;height:23px"></div><div class="bokeh" style="left:327px;top:326px;width:22px;height:22px"></div><div class="bokeh" style="left:1917px;top:429px;width:10px;height:10px"></div><div class="bokeh" style="left:1257px;top:773px;width:8px;height:8px"></div><div class="bokeh" style="left:1349px;top:498px;width:19px;height:19px"></div><div class="bokeh" style="left:1634px;top:87px;width:18px;height:18px"></div><div class="bokeh" style="left:245px;top:465px;width:25px;height:25px"></div><div class="bokeh" style="left:1111px;top:662px;width:25px;height:25px"></div><div class="bokeh" style="left:1663px;top:264px;width:19px;height:19px"></div><div class="bokeh" style="left:127px;top:750px;width:13px;height:13px"></div><div class="bokeh" style="left:1812px;top:301px;width:20px;height:20px"></div><div class="bokeh" style="left:985px;top:352px;width:15px;height:15px"></div><div class="bokeh" style="left:11px;top:664px;width:10px;height:10px"></div></div>
+    <div id="glowW" class="glow g-warm" style="inset-inline-start:-420px;top:-160px"></div>
+    <div id="glowG" class="glow g-green" style="inset-inline-end:-420px;top:-120px"></div>
+    <div id="glowA" class="glow g-amber" style="left:0;top:0"></div>
+  </div>
+  <div id="world">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="ic-click" viewBox="0 0 24 24"><path d="M5.5 4.5l5 14 2.2-5.8 5.8-2.2z"/></symbol>
+      <symbol id="ic-req" viewBox="0 0 24 24"><path d="M8 19V5M4.5 8.5 8 5l3.5 3.5M16 5v14M12.5 15.5 16 19l3.5-3.5"/></symbol>
+      <symbol id="ic-err" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9l3 3-3 3M13 15h4"/></symbol>
+      <symbol id="ic-shot" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/></symbol>
+      <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="ic-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5a4.3 4.3 0 0 1-.5 8.5z"/></symbol>
+      <symbol id="ic-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5L19.5 7"/></symbol>
+      <symbol id="ic-cart" viewBox="0 0 24 24"><path d="M3 4h2.5l2.2 10.5h9.6L19.5 7H6.4"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></symbol>
+      <symbol id="ic-q" viewBox="0 0 24 24"><path d="M9 9a3 3 0 1 1 4.5 2.6c-1 .6-1.5 1.2-1.5 2.4M12 18v.01"/></symbol>
+      <symbol id="ic-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4-6.5 8-6.5s7 2 8 6.5"/></symbol>
+      <symbol id="ic-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></symbol>
+      <symbol id="ic-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+      <symbol id="ic-note" viewBox="0 0 24 24"><path d="M10.5 21H8a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h6l5 5v3M14 3v5h5M8 9h3M8 13h5"/></symbol>
+      <symbol id="ic-bug" viewBox="0 0 24 24"><rect x="7" y="8" width="10" height="12" rx="5"/><path d="M9 8a3 3 0 0 1 6 0M3 13h4M17 13h4M4 7l3 2M20 7l-3 2M4 19l3-2M20 19l-3-2"/></symbol>
+      <symbol id="ic-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></symbol>
+    </defs>
+  </svg>
+
+
+  <style>
+    .bt{font-family:var(--serif);font-weight:700;font-size:64px;position:absolute;inset-inline-start:120px;top:64px;color:#d8d6d1;opacity:0;white-space:nowrap}
+    .bt em{font-style:normal;color:var(--pass)}
+    .mi{height:70px;border-radius:14px;display:flex;align-items:center;gap:16px;padding:0 20px;font-size:28px;font-weight:700}
+    .mi .mbar{height:16px;border-radius:8px;background:var(--line)}
+    .erow{position:absolute;inset-inline-start:40px;inset-inline-end:40px;height:72px;display:flex;align-items:center;gap:22px;font-size:28px;border-bottom:2px solid rgba(241,239,233,.07)}
+    .erow .tm{width:86px;color:var(--muted);font-weight:400;direction:ltr;text-align:start}
+    .erow .k{font-weight:700}
+    .erow .v{color:var(--muted);font-weight:400}
+    .sealrow{font-size:25px;color:var(--ink);font-weight:400;height:42px;line-height:42px;white-space:nowrap}
+    .vcard{position:absolute;width:500px;height:430px;border-radius:26px;background:var(--ground2);box-shadow:0 40px 90px rgba(0,0,0,.55);overflow:hidden;opacity:0}
+    .vcard .vh{display:flex;align-items:center;gap:16px;padding:30px 30px 0;font-family:var(--serif);font-size:54px}
+    .vcard .vb{padding:16px 30px 0;font-size:28px;line-height:1.35}
+    .vcard .vm{padding:18px 30px 0;font-size:24px;color:var(--muted);line-height:1.5}
+    bdi{unicode-bidi:isolate}
+  </style>
+
+  <!-- S1: the saved session (tutorial 1) and the popup's More menu -->
+  <div id="s1" class="scene">
+    <div class="card" id="saved" style="inset-inline-start:150px;top:250px;width:640px;height:400px">
+      <div class="abs lbl" style="inset-inline-start:36px;top:30px">جلسة</div>
+      <div class="abs serif" style="inset-inline-start:36px;top:70px;font-size:56px;white-space:nowrap">مسار الدفع</div>
+      <div class="tl-line abs" style="left:36px;top:230px;width:568px"></div>
+      <div class="sdots abs" style="left:36px;right:36px;top:217px;height:26px;display:flex;justify-content:space-between;padding:0 30px"><span class="dot click" style="position:static;width:26px;height:26px"></span><span class="dot req" style="position:static;width:26px;height:26px"></span><span class="dot click" style="position:static;width:26px;height:26px"></span><span class="dot err" style="position:static;width:26px;height:26px"></span><span class="dot shot" style="position:static;width:26px;height:26px"></span></div>
+      <div class="pill ok abs" style="inset-inline-start:36px;top:296px"><svg class="i"><use href="#ic-check"/></svg>تم حفظ التسجيل</div>
+    </div>
+    <div class="pop" id="pop" style="inset-inline-start:1060px;top:160px;height:560px">
+      <div class="hd"><svg viewBox="0 0 64 64" width="38" height="38" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-2 1)"><path stroke="#ECEAE3" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/><path stroke="#FF8A6E" d="M36 36L42.5 44L55 20"/></g></svg><span>QA Wrap</span></div>
+      <div class="abs lbl" style="inset-inline-start:24px;top:100px;font-size:26px">مسار الدفع</div>
+      <div id="morebtn" class="btn-s abs" style="inset-inline-start:24px;inset-inline-end:24px;top:150px">المزيد</div>
+      <div id="menu" class="abs" style="inset-inline-start:24px;inset-inline-end:24px;top:246px;border-radius:18px;background:var(--raise);border:2px solid var(--line);padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 24px 50px rgba(0,0,0,.5);opacity:0">
+        <div class="mi"><span class="mbar" style="width:220px"></span></div>
+        <div class="mi"><span class="mbar" style="width:170px"></span></div>
+        <div class="mi" id="mi" style="color:var(--ink)"><svg class="i"><use href="#ic-note"/></svg>الخط الزمني (مختوم)</div>
+        <div class="mi"><span class="mbar" style="width:250px"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- the exported file: one object from S2 to S7 -->
+  <div id="docwrap" class="abs" style="left:0;top:0;width:1920px;height:1080px;opacity:0">
+    <div class="card" id="doc" style="left:550px;top:50px;width:820px;height:700px;background:#22262b">
+      <div class="abs" style="left:0;right:0;top:0;height:64px;background:var(--raise);border-bottom:2px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 24px;direction:ltr;font-size:24px;color:var(--muted)"><svg class="i" style="width:28px;height:28px;color:var(--corn)"><use href="#ic-note"/></svg>qaw-timeline-checkout-flow.md</div>
+      <div class="abs" id="docview" style="left:0;right:0;top:64px;bottom:0;overflow:hidden">
+        <div id="docin" class="abs" style="left:0;right:0;top:0;height:1120px">
+          <div class="abs serif" id="dh" style="inset-inline-start:40px;top:26px;font-size:46px;white-space:nowrap"><span style="color:var(--muted)">#</span> الخط الزمني · مسار الدفع</div>
+          <div class="abs" id="prow" style="inset-inline-start:40px;inset-inline-end:40px;top:108px;height:72px;display:flex;align-items:center;gap:18px;font-size:30px">
+            <span class="k" style="font-weight:700;color:var(--muted)">الملف الشخصي:</span>
+            <span id="pband" style="height:56px;border-radius:12px;background:rgba(226,174,56,.18);border:2px solid rgba(226,174,56,.55);display:flex;align-items:center;padding:0 16px;overflow:hidden;white-space:nowrap;color:var(--corn);font-weight:700">ليلى حداد</span>
+            <span id="pav" style="width:56px;height:56px;border-radius:50%;background:var(--corn);color:#1D2024;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;direction:ltr">LH</span>
+          </div>
+          <div class="abs" style="inset-inline-start:40px;inset-inline-end:40px;top:196px;height:2px;background:var(--line)"></div>
+          <div class="erow" style="top:214px"><span class="tm">00:02</span><span class="dot click" style="position:static"></span><span class="k">نقرة</span><span class="v"><bdi>ADD TO CART</bdi></span></div>
+          <div class="erow" style="top:298px"><span class="tm">00:05</span><span class="dot req" style="position:static"></span><span class="k">طلب</span><span class="v"><bdi>POST /cart · 200</bdi></span></div>
+          <div class="erow" style="top:382px"><span class="tm">00:07</span><span class="dot click" style="position:static"></span><span class="k">نقرة</span><span class="v"><bdi>Cart</bdi></span></div>
+          <div class="erow" id="row4" style="top:466px"><span class="tm">00:09</span><span class="dot click" style="position:static"></span><span class="k">نقرة</span><span class="v" style="position:relative;display:inline-block;width:190px;height:40px"><bdi id="wold" class="abs" style="inset-inline-start:0;top:0">Checkout</bdi><bdi id="wnew" class="abs" style="inset-inline-start:0;top:0;color:var(--fail);opacity:0">Continue</bdi><span id="wline" class="abs" style="inset-inline-start:0;top:20px;width:140px;height:3px;background:var(--fail)"></span></span></div>
+          <div class="erow" style="top:550px"><span class="tm">00:12</span><span class="dot err" style="position:static"></span><span class="k" style="color:var(--fail)">خطأ</span><span class="v"><bdi>TypeError</bdi></span></div>
+          <div class="erow" style="top:634px;border-bottom:0"><span class="tm">00:14</span><span class="dot shot" style="position:static"></span><span class="k">لقطة</span><span class="v"><bdi>checkout.png</bdi></span></div>
+          <!-- the seal block -->
+          <div id="sealblk" class="abs" style="inset-inline-start:30px;inset-inline-end:30px;top:740px;height:320px;border-radius:20px;border:3px solid rgba(126,208,138,.55);background:rgba(126,208,138,.06);opacity:0">
+            <div class="abs" style="inset-inline-start:28px;top:22px;display:flex;align-items:center;gap:16px"><span class="serif" style="font-size:44px">الختم</span></div>
+            <div id="sck" class="abs" style="inset-inline-end:26px;top:18px;width:66px;height:66px;border-radius:50%;background:var(--pass);display:flex;align-items:center;justify-content:center"><svg class="i" style="width:40px;height:40px;color:#1D2024;stroke-width:3"><use href="#ic-check"/></svg></div>
+            <div id="scx" class="abs" style="inset-inline-end:26px;top:18px;width:66px;height:66px;border-radius:50%;background:var(--fail);display:flex;align-items:center;justify-content:center;opacity:0"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#1D2024" stroke-width="3" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></div>
+            <div class="abs" style="inset-inline-start:28px;inset-inline-end:28px;top:92px;display:flex;flex-direction:column">
+              <div class="sealrow sr">مختوم باسم: ليلى حداد</div>
+              <div class="sealrow sr">تاريخ الختم: <bdi>2026-11-09</bdi></div>
+              <div class="sealrow sr">الأداة: <bdi>QA Wrap 3.9.0</bdi></div>
+              <div class="sealrow sr">بصمة المفتاح: <bdi>3F9A 1C07 B2E4 58D1</bdi></div>
+              <div class="sealrow sr" style="display:flex;align-items:center;gap:14px;margin-top:8px"><span style="color:var(--muted);font-weight:700">التوقيع</span><span id="sigbars" style="display:flex;gap:6px;direction:ltr"><i style="display:block;width:92px;height:14px;border-radius:7px;background:#4c535b"></i><i style="display:block;width:150px;height:14px;border-radius:7px;background:#4c535b"></i><i style="display:block;width:70px;height:14px;border-radius:7px;background:#4c535b"></i><i style="display:block;width:118px;height:14px;border-radius:7px;background:#4c535b"></i></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- S7: a clear glass plate over the open file: readable through it, nothing hidden -->
+    <div id="plate" class="abs" style="left:627px;top:186px;width:666px;height:568px;border-radius:32px;border:1px solid rgba(236,235,231,.25);background:linear-gradient(to bottom,rgba(255,255,255,.11),rgba(255,255,255,.03) 20%,rgba(255,255,255,.012));box-shadow:inset 0 1px 0 rgba(255,255,255,.28);overflow:hidden;opacity:0">
+      <div id="sheen" class="abs" style="top:-200px;left:-400px;width:160px;height:1000px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent)"></div>
+    </div>
+    <svg id="pencil" class="abs" viewBox="0 0 64 64" width="96" height="96" style="left:0;top:0;opacity:0" fill="none" stroke-linejoin="round"><path d="M10 54l4-14 30-30 10 10-30 30z" fill="#E2AE38" stroke="#1D2024" stroke-width="3"/><path d="M10 54l4-14 10 10z" fill="#F1EFE9" stroke="#1D2024" stroke-width="3"/><path d="M38 16l10 10" stroke="#1D2024" stroke-width="3"/></svg>
+  </div>
+
+  <!-- S6: Settings > Sessions > Verify a sealed file, then two verdicts -->
+  <div id="s6" class="scene">
+    <div class="card" id="set" style="inset-inline-start:90px;top:150px;width:600px;height:520px">
+      <div class="abs serif" style="inset-inline-start:36px;top:30px;font-size:50px">الإعدادات</div>
+      <div class="abs pill" style="inset-inline-start:36px;top:116px;height:56px;box-shadow:none">الجلسات</div>
+      <div class="abs" style="inset-inline-start:36px;inset-inline-end:36px;top:206px;height:18px;border-radius:9px;background:var(--line)"></div>
+      <div class="abs" style="inset-inline-start:36px;top:244px;width:300px;height:18px;border-radius:9px;background:var(--line)"></div>
+      <div id="vbtn" class="btn-c abs" style="inset-inline-start:36px;inset-inline-end:36px;top:310px"><svg class="i" style="width:34px;height:34px"><use href="#ic-note"/></svg>تحقق من ملف مختوم</div>
+      <div class="abs" style="inset-inline-start:36px;top:420px;display:flex;gap:12px;align-items:center;direction:ltr;font-size:22px;color:var(--muted)"><svg class="i" style="width:26px;height:26px"><use href="#ic-note"/></svg>qaw-timeline-checkout-flow.md</div>
+    </div>
+    <div class="vcard" id="vok" style="inset-inline-start:740px;top:150px;border:3px solid rgba(126,208,138,.6)">
+      <div class="vh" style="color:var(--pass)"><svg class="i" style="width:52px;height:52px;stroke-width:2.6"><use href="#ic-check"/></svg>سليم.</div>
+      <div class="vb">لم يتغير هذا الملف منذ ختمه.</div>
+      <div class="vm">مختوم باسم: ليلى حداد<br>بصمة المفتاح: <bdi>3F9A 1C07 B2E4 58D1</bdi></div>
+    </div>
+    <div class="vcard" id="vbad" style="inset-inline-start:1290px;top:150px;border:3px solid rgba(255,146,112,.6)">
+      <div class="vh" style="color:var(--fail)"><svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>معدل.</div>
+      <div class="vb">تغير هذا الملف بعد ختمه.</div>
+    </div>
+  </div>
+
+
+    <div id="end" class="scene">
+      <img id="lockup" src="./assets/qa-wrap-wordmark-dark.svg" alt="QA Wrap" />
+      <div id="maker">من صنع نادر الزغول (<bdi>NJ-Burrito</bdi>)</div>
+      <div class="abs lbl" id="endnote" style="left:0;right:0;top:600px;text-align:center;font-size:36px">المزيد من الدروس داخل الأداة</div>
+    </div>
+    <div class="ripple" id="rip"></div>
+    <svg id="cursor" class="cursor" viewBox="0 0 56 56" style="opacity:0"><path d="M8 4l0 38 10-9 7 16 7-3-7-15 14-1z" fill="#ecebe7" stroke="#171a1d" stroke-width="3" stroke-linejoin="round"/></svg>
+  </div>
+
+  <!-- S7 title: the honest close -->
+  <div class="bt" id="honest" style="inset-inline-start:0;inset-inline-end:0;text-align:center;top:56px;font-size:60px">الختم يكشف التغيير، <em>ولا يخفي شيئا.</em></div>
+
+
+  <div id="cap">
+    <div class="cap" id="cap-L1-0">عندما تنتهي الجلسة، افتح «المزيد» واختر الخط الزمني مختوما.</div>
+    <div class="cap" id="cap-L2-0">ملف نصي بسيط: كل حدث بترتيبه، يقرؤه أي أحد.</div>
+    <div class="cap" id="cap-L3-0">واسمك من الإعدادات مكتوب في أعلاه.</div>
+    <div class="cap" id="cap-L4-0">وفي آخره ختم: اسمك، والتاريخ، وبصمة النص، وتوقيع.</div>
+    <div class="cap" id="cap-L5-0">إن غيرت كلمة واحدة بيدك، لا يعود الختم مطابقا.</div>
+    <div class="cap" id="cap-L6-0">في الإعدادات، اضغط «تحقق من ملف مختوم»،</div>
+    <div class="cap" id="cap-L6-1">فيقول لك: سليم أو معدل، ومن ختمه.</div>
+    <div class="cap" id="cap-L7-0">الختم يكشف التغيير.</div>
+    <div class="cap" id="cap-L7-1">لا يخفي شيئا، ولا يثبت هويتك.</div>
+    </div>
+  <div id="flash" class="fill" style="background:#fff;opacity:0"></div>
+</div>
+<script>
+(() => {
+  const ID = "qaw-tut-export-and-seal-ar", D = 54, LANG = "ar", RTL = true;
+  const LINES = {"L1":{"start":0.6,"end":6.6},"L2":{"start":7.2,"end":13.6},"L3":{"start":14.2,"end":20.4},"L4":{"start":21.1,"end":28.6},"L5":{"start":29.2,"end":35.4},"L6":{"start":36.1,"end":43.6},"L7":{"start":44.2,"end":50.8}};
+  const CAPS = [{"id":"cap-L1-0","start":0.6,"end":6.6,"last":true},{"id":"cap-L2-0","start":7.2,"end":13.6,"last":true},{"id":"cap-L3-0","start":14.2,"end":20.4,"last":true},{"id":"cap-L4-0","start":21.1,"end":28.6,"last":true},{"id":"cap-L5-0","start":29.2,"end":35.4,"last":true},{"id":"cap-L6-0","start":36.1,"end":39.85,"last":false},{"id":"cap-L6-1","start":39.85,"end":43.6,"last":true},{"id":"cap-L7-0","start":44.2,"end":46.4,"last":false},{"id":"cap-L7-1","start":46.4,"end":50.8,"last":true}];
+  const tl = gsap.timeline({ paused: true });
+  const q = (s) => document.querySelector(s);
+  // ---- kit (round 2): helpers shared by every film, inlined by build.mjs. In scope: tl, q, D, LANG, RTL. ----
+  // Eases by object class (commercial-bible §4): arrivals overshoot, moves ease in-out, time is linear, stamps slam.
+  const E = { out: 'power3.out', in: 'power2.in', io: 'power2.inOut', back: 'back.out(1.6)', slam: 'power4.in', time: 'none', drift: 'sine.inOut' };
+  /** Screen direction. X(x): an EN stage x as the AR stage mirrors it; mx(dx): a horizontal move, mirrored in AR. */
+  const X = (x) => (RTL ? 1920 - x : x);
+  const mx = (dx) => (RTL ? -dx : dx);
+  /** A point inside an English site miniature (LTR content) whose box sits at EN left L, width W; u = x inside it. */
+  const B = (L, W, u) => (RTL ? 1920 - L - W + u : L + u);
+
+  /** A scene is on stage from a to b (0.35 s fade at each end). drift is optional; the default holds still. */
+  const scene = (sel, a, b, drift) => {
+    tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out', immediateRender: false }, a);
+    if (drift) tl.fromTo(sel, drift.from, { ...drift.to, duration: b - a + 0.3, ease: 'none', immediateRender: false, transformOrigin: '50% 50%' }, a);
+    tl.to(sel, { opacity: 0, duration: 0.35, ease: 'power1.in' }, b);
+  };
+  /** Arrive with an overshoot (light things). */
+  const pop = (sel, at, from = {}, dur = 0.45) => tl.fromTo(sel, { opacity: 0, scale: 0.6, y: 18, ...from }, { opacity: 1, scale: 1, x: 0, y: 0, duration: dur, ease: E.back, immediateRender: false, transformOrigin: '50% 50%' }, at);
+  const fadeIn = (sel, at, vars = {}, dur = 0.3) => tl.fromTo(sel, { opacity: 0, ...vars }, { opacity: 1, x: 0, y: 0, duration: dur, ease: E.out, immediateRender: false }, at);
+  const fadeOut = (sel, at, dur = 0.25) => tl.to(sel, { opacity: 0, duration: dur, ease: 'power1.in' }, at);
+  /** A verdict or a heavy thing: from 1.4x, accelerating into rest. */
+  const slam = (sel, at, dur = 0.32) => tl.fromTo(sel, { opacity: 0, scale: 1.45 }, { opacity: 1, scale: 1, duration: dur, ease: E.slam, immediateRender: false, transformOrigin: '50% 50%' }, at);
+  /** A glow breathes up to o at `at` and back down at `end`. */
+  const glow = (sel, at, end, o = 1) => { tl.to(sel, { opacity: o, duration: 0.8, ease: 'sine.out' }, at); if (end != null) tl.to(sel, { opacity: 0, duration: 0.8, ease: 'sine.in' }, end); };
+  /** The act light: warm coral on the inline-start side until the tool acts at `turn`, green on the inline-end side after. */
+  const act = (turn, warm = 0.95, green = 0.9) => {
+    tl.fromTo('#glowW', { opacity: 0 }, { opacity: warm, duration: 1.0, ease: 'sine.out', immediateRender: false }, 0);
+    tl.to('#glowW', { opacity: 0, duration: 0.9, ease: 'sine.inOut' }, turn - 0.2);
+    tl.fromTo('#glowG', { opacity: 0 }, { opacity: green, duration: 1.0, ease: 'sine.inOut', immediateRender: false }, turn);
+  };
+  /** One amber key light that moves to the focal point of a beat (EN coordinates of its centre). */
+  const key = (at, x, y, o = 0.8, dur = 0.8) => tl.to('#glowA', { x: X(x) - 450, y: y - 450, opacity: o, duration: dur, ease: E.io }, at);
+  /** Camera on #world: x is mirrored in AR; s is the scale (1 = rest). */
+  const cam = (at, dur, { x = 0, y = 0, s = 1 } = {}, ease = E.io) => tl.to('#world', { x: mx(x), y, scale: s, duration: dur, ease }, at);
+  const camSet = (at, { x = 0, y = 0, s = 1 } = {}) => tl.set('#world', { x: mx(x), y, scale: s }, at);
+  /** The beat title (one per film, Serif Display, top inline-start). */
+  const title = (sel, at, out) => { tl.fromTo(sel, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: E.out, immediateRender: false }, at); if (out != null) fadeOut(sel, out, 0.3); };
+  /** Fly on an arc (never a straight diagonal): from (x0,y0) to (x1,y1) in EN stage px, lifting by `lift`. */
+  const fly = (sel, at, dur, x0, y0, x1, y1, lift = 140, s1 = 1) => {
+    const top = Math.min(y0, y1) - lift;
+    tl.set(sel, { x: X(x0), y: y0, xPercent: -50, yPercent: -50, opacity: 1, scale: 1 }, at);
+    tl.to(sel, { x: X(x1), duration: dur, ease: 'sine.inOut' }, at);
+    tl.to(sel, { y: top, duration: dur * 0.45, ease: 'power2.out' }, at);
+    tl.to(sel, { y: y1, duration: dur * 0.55, ease: 'power2.in' }, at + dur * 0.45);
+    tl.to(sel, { scale: s1, duration: dur, ease: E.in }, at);
+  };
+  /** Cursor: its tip goes to the EN stage point (x, y); X() mirrors it in AR. Press = a dip and an amber ripple. */
+  const cursorAt = (at, x, y) => tl.set('#cursor', { x: X(x) - 8, y: y - 4 }, at);
+  const cursorTo = (at, x, y, dur = 0.7) => tl.to('#cursor', { x: X(x) - 8, y: y - 4, duration: dur, ease: E.io }, at);
+  /** C5: where a cursor presses a button: the inline-end third, so the tip never hides the label.
+   *  third(cx, w) for tool buttons in EN stage px (X() mirrors it to the AR inline end); for English site buttons use cx + w / 6 inside B(). */
+  const third = (cx, w) => cx + w / 6;
+  /** As cursorTo, but x is already a stage x (from B()). */
+  const cursorToRaw = (at, x, y, dur = 0.7) => tl.to('#cursor', { x: x - 8, y: y - 4, duration: dur, ease: E.io }, at);
+  const press = (at, x, y, rip = '#rip', raw = false) => {
+    const sx = raw ? x : X(x);
+    tl.to('#cursor', { scale: 0.82, duration: 0.09, ease: 'power1.in', transformOrigin: '8px 4px' }, at);
+    tl.to('#cursor', { scale: 1, duration: 0.18, ease: 'power2.out', transformOrigin: '8px 4px' }, at + 0.09);
+    tl.set(rip, { x: sx - 35, y: y - 35 }, at);
+    tl.fromTo(rip, { opacity: 0.95, scale: 0.3 }, { opacity: 0, scale: 1.7, duration: 0.5, ease: 'power2.out', immediateRender: false }, at);
+  };
+  /** A button pressed: anticipation (a dip into its hard edge) then release. */
+  const push = (sel, at) => { tl.to(sel, { y: 6, duration: 0.08, ease: 'power1.in' }, at); tl.to(sel, { y: 0, duration: 0.22, ease: 'back.out(2)' }, at + 0.08); };
+  /** Type text into a clip: the wrapper's clip-path opens from the inline start like a caret. ltr = true for
+   *  English site text, which always types left to right. */
+  const type = (wrap, at, dur, ltr = false) => tl.fromTo(wrap, { clipPath: RTL && !ltr ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0%)', duration: dur, ease: `steps(${Math.max(6, Math.round(dur * 14))})`, immediateRender: false }, at);
+  /** A screenshot flash. */
+  const flash = (at) => { tl.fromTo('#flash', { opacity: 0 }, { opacity: 0.8, duration: 0.06, ease: 'none', immediateRender: false }, at); tl.to('#flash', { opacity: 0, duration: 0.35, ease: 'power2.out' }, at + 0.06); };
+  /** Draw a time line (linear, it is time) from the inline start. */
+  const draw = (sel, at, dur) => tl.fromTo(sel, { scaleX: 0 }, { scaleX: 1, duration: dur, ease: E.time, immediateRender: false }, at);
+  /** Draw an SVG stroke whose path length is len. */
+  const stroke = (sel, at, dur, len, ease = 'power2.inOut') => tl.fromTo(sel, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: dur, ease, immediateRender: false }, at);
+  /** The end card: lockup arrives, then the note; held to the last frame. */
+  const endCard = (a) => {
+    tl.fromTo('#end', { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.out', immediateRender: false }, a);
+    pop('#lockup', a + 0.15, { y: 14, scale: 0.85 }, 0.6);
+    fadeIn('#maker', a + 0.6, { y: 8 }, 0.45);
+    fadeIn('#endnote', a + 1.1, { y: 10 }, 0.5);
+  };
+  /** Push in (s > 1) or pull out so the EN stage point (px, py) comes to the frame centre; mirrored in AR. */
+  const camOn = (at, dur, px, py, s, ease = E.io) => cam(at, dur, { x: -s * (px - 960), y: -s * (py - 540), s }, ease);
+
+  // ===== export-and-seal: timeline =====
+  const S = RTL ? -1 : 1;                 // screen direction: AR mirrors travel
+  cursorAt(0, 1560, 760);
+  gsap.set('#sheen', { rotation: 20 });
+  gsap.set('#s1', { opacity: 1 });
+  gsap.set('#wline', { scaleX: 0 });
+
+  // S1 0-7: the saved session, More, Timeline (sealed)
+  act(6.4);                    // warm until the file comes out of the tool, green after
+  key(0.6, 1320, 470, 0.6); key(6.2, 960, 400, 0, 0.6);
+  tl.fromTo('#s1', { scale: 1.0 }, { scale: 1.03, duration: 7.2, ease: 'none', immediateRender: false, transformOrigin: '50% 50%' }, 0);
+  tl.to('#cursor', { opacity: 1, duration: 0.25 }, 0.9);
+  cursorTo(1.1, 1462, 348, 0.8);
+  tl.to('#morebtn', { scale: 0.96, borderColor: 'rgba(226,174,56,.7)', duration: 0.15, ease: 'power1.in', transformOrigin: '50% 50%' }, 1.95);
+  press(2.1, 1462, 348);
+  tl.to('#morebtn', { scale: 1, duration: 0.2, ease: E.out }, 2.2);
+  tl.fromTo('#menu', { opacity: 0, y: -14, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: E.back, immediateRender: false, transformOrigin: '50% 0%' }, 2.35);
+  cursorTo(3.4, 1470, 605, 0.8);
+  tl.to('#mi', { backgroundColor: 'rgba(226,174,56,.22)', duration: 0.2 }, 4.1);
+  press(4.5, 1470, 605);
+  tl.to('#mi', { backgroundColor: 'rgba(226,174,56,.5)', duration: 0.12, yoyo: true, repeat: 1 }, 4.5);
+  fadeOut('#cursor', 5.4);
+  tl.to('#s1', { opacity: 0, duration: 0.4, ease: 'power1.in' }, 6.8);
+
+  // S2 7-14: the file slides out of the popup and unfolds; events write in order (green: the tool has acted)
+  tl.set('#docwrap', { opacity: 1 }, 6.0);
+  tl.fromTo('#doc', { x: 360 * S, y: 40, scale: 0.12, opacity: 0 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 1.5, ease: E.io, immediateRender: false, transformOrigin: '50% 50%' }, 6.1);
+  tl.set('#doc', { opacity: 0 }, 0);
+  fadeIn('#dh', 7.9, { y: 12 }, 0.4);
+  tl.set('#dh', { opacity: 0 }, 0);
+  tl.set('.erow', { opacity: 0 }, 0);
+  tl.fromTo('.erow', { opacity: 0, x: -24 * S }, { opacity: 1, x: 0, duration: 0.35, stagger: 0.42, ease: E.out, immediateRender: false }, 8.8);
+  tl.set('#prow', { opacity: 0 }, 0);
+
+  // S3 14-21: close on the head; her name types in an amber band
+  tl.to('#doc', { height: 280, scale: 1.6, duration: 1.1, ease: E.io, transformOrigin: '50% 0%' }, 13.9); // crop to the head, 68 % of the width
+  tl.to('.erow', { opacity: 0, duration: 0.5, ease: 'power1.in' }, 13.9); // the CU isolates the head
+  fadeIn('#prow', 14.9, {}, 0.25);
+  type('#pband', 15.2, 1.3);
+  pop('#pav', 16.7, { y: 0, scale: 0.4 }, 0.45);
+  tl.set('#pav', { opacity: 0 }, 0);
+  tl.fromTo('#pband', { boxShadow: '0 0 0 0 rgba(226,174,56,0)' }, { boxShadow: '0 0 0 10px rgba(226,174,56,.15)', duration: 0.6, yoyo: true, repeat: 1, ease: 'sine.inOut', immediateRender: false }, 17.6);
+  tl.to('#doc', { height: 700, scale: 1, duration: 1.0, ease: E.io }, 20.2);
+  tl.to('.erow:nth-of-type(n+7)', { opacity: 1, duration: 0.4 }, 21.6); // rows 4-6 return as the page scrolls; 1-3 stay gone
+
+  // S4 21-29: scroll to the end; the seal slams down; its rows list name, date, fingerprint, signature
+  tl.to('#docin', { y: -440, duration: 1.5, ease: E.io }, 21.2);
+  tl.fromTo('#sealblk', { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: 'power4.in', immediateRender: false, transformOrigin: '50% 50%' }, 22.9);
+  tl.fromTo('#doc', { y: 0 }, { y: 8, duration: 0.07, yoyo: true, repeat: 1, ease: 'power1.out', immediateRender: false }, 23.35);
+  tl.set('.sr', { opacity: 0 }, 0);
+  tl.fromTo('.sr', { opacity: 0, x: -16 * S }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.75, ease: E.out, immediateRender: false }, 23.9);
+  tl.fromTo('#sigbars i', { scaleX: 0 }, { scaleX: 1, duration: 0.6, stagger: 0.12, ease: 'none', immediateRender: false, transformOrigin: RTL ? '100% 50%' : '0% 50%' }, 27.0);
+  pop('#sck', 27.7, { y: 0, scale: 0.3 }, 0.45);
+  tl.set('#sck', { opacity: 0 }, 0);
+
+  // S5 29-36: push in on one row; a pencil changes one word; the seal's check flips to a coral cross
+  tl.to('#doc', { scale: 1.2, duration: 1.0, ease: E.io, transformOrigin: RTL ? '65% 10%' : '35% 10%' }, 29.0); // bottom stays above the caption band
+  const wx = RTL ? 1005 : 915, wy = 187;
+  tl.set('#pencil', { x: wx - 15 + 140 * S, y: wy - 71 - 150 }, 29.5);
+  tl.to('#pencil', { opacity: 1, duration: 0.25 }, 29.6);
+  tl.to('#pencil', { keyframes: [{ x: wx - 15 + 60 * S, y: wy - 71 - 120, duration: 0.35 }, { x: wx - 15, y: wy - 71, duration: 0.45 }], ease: 'sine.inOut' }, 29.7);
+  tl.to('#pencil', { x: '+=' + 22 * S, y: '-=4', duration: 0.12, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 30.6);
+  tl.to('#wline', { scaleX: 1, duration: 0.35, ease: 'none', transformOrigin: RTL ? '100% 50%' : '0% 50%' }, 30.65);
+  fadeOut('#wold', 31.15, 0.2);
+  tl.fromTo('#wnew', { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.3, ease: E.back, immediateRender: false }, 31.3);
+  fadeOut('#wline', 31.3, 0.15);
+  tl.to('#pencil', { opacity: 0, y: '-=60', duration: 0.4, ease: E.in }, 31.9);
+  tl.to('#glowW', { opacity: 0.85, duration: 0.8, ease: 'sine.inOut' }, 31.8); tl.to('#glowG', { opacity: 0.2, duration: 0.8, ease: 'sine.inOut' }, 31.8); // the warm light returns with the tamper
+  tl.to('#glowW', { opacity: 0, duration: 0.8, ease: 'sine.inOut' }, 35.6); tl.to('#glowG', { opacity: 0.9, duration: 0.8, ease: 'sine.inOut' }, 35.6);
+  tl.to('#sck', { rotationY: 90, opacity: 0, duration: 0.18, ease: 'power2.in' }, 32.5);
+  tl.fromTo('#scx', { opacity: 0, rotationY: -90, scale: 1 }, { opacity: 1, rotationY: 0, duration: 0.3, ease: E.back, immediateRender: false }, 32.68);
+  tl.to('#sealblk', { borderColor: 'rgba(255,146,112,.75)', backgroundColor: 'rgba(255,146,112,.08)', duration: 0.3 }, 32.68);
+  tl.to('#sigbars i', { backgroundColor: '#8a4a3d', duration: 0.3 }, 32.8);
+  tl.to('#docwrap', { opacity: 0, duration: 0.4, ease: 'power1.in' }, 35.5);
+
+  // S6 36-44: Settings > Sessions > Verify a sealed file; two verdicts side by side
+  scene('#s6', 36.0, 43.8, { from: { scale: 1.06 }, to: { scale: 1.0 } }); // pull-out to fit both cards
+  cursorAt(36.4, 760, 820);
+  tl.to('#cursor', { opacity: 1, duration: 0.2 }, 36.5);
+  cursorTo(36.7, 548, 498, 0.8);
+  tl.to('#vbtn', { scale: 0.96, duration: 0.15, ease: 'power1.in', transformOrigin: '50% 50%' }, 37.65);
+  press(37.8, 548, 498);
+  tl.to('#vbtn', { scale: 1, duration: 0.2, ease: E.out }, 37.9);
+  fadeOut('#cursor', 38.6);
+  tl.fromTo('#vok', { opacity: 0, x: -40 * S, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: E.back, immediateRender: false, transformOrigin: '50% 50%' }, 38.4);
+  tl.fromTo('#vbad', { opacity: 0, x: -40 * S, scale: 0.9 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: E.back, immediateRender: false, transformOrigin: '50% 50%' }, 40.1);
+  tl.fromTo('#vbad', { x: 0 }, { x: 8, duration: 0.06, yoyo: true, repeat: 3, ease: 'none', immediateRender: false }, 40.65);
+
+  // S7 44-51: the same file, intact, under clear glass; the honest line
+  tl.set('#wold', { opacity: 1 }, 43.9); tl.set('#wnew', { opacity: 0 }, 43.9);
+  tl.set('#sck', { opacity: 1, rotationY: 0 }, 43.9); tl.set('#scx', { opacity: 0 }, 43.9);
+  tl.set('#sealblk', { borderColor: 'rgba(126,208,138,.55)', backgroundColor: 'rgba(126,208,138,.06)' }, 43.9);
+  tl.set('#sigbars i', { backgroundColor: '#4c535b' }, 43.9);
+  tl.set('#docin', { y: -440 }, 43.9); // rows 4-6 and the whole seal
+  tl.set('#doc', { scale: 0.74, y: 70, transformOrigin: '50% 50%' }, 43.9);
+  tl.to('#docwrap', { opacity: 1, duration: 0.5, ease: 'power1.out' }, 44.0);
+  tl.to('#plate', { opacity: 1, duration: 0.6, ease: 'sine.out' }, 44.5);
+  tl.fromTo('#sheen', { x: 0 }, { x: 1500, duration: 1.8, ease: E.io, immediateRender: false }, 45.2);
+  fadeIn('#honest', 45.6, { y: 16 }, 0.5);
+  fadeOut('#honest', 50.6, 0.35);
+  tl.to('#docwrap', { opacity: 0, duration: 0.4, ease: 'power1.in' }, 50.7);
+
+  // end card 51-54
+  endCard(51.0);
+
+  // ambient depth: ghosts and bokeh drift linearly for the whole film (the world is alive), in the film's direction
+  tl.fromTo('#amb', { x: 0, y: 0 }, { x: mx(70), y: -24, duration: D, ease: 'none', immediateRender: false }, 0);
+  tl.fromTo('.bokeh', { x: 0 }, { x: (i) => mx(18 + (i % 5) * 9), duration: D, ease: 'none', immediateRender: false }, 0);
+  // captions: fade up, hold until the next one, the last of a line lingers a beat past its slot
+  CAPS.forEach((c, i) => {
+    const next = CAPS[i + 1];
+    const out = Math.min(c.end + (c.last ? 0.3 : 0), next ? next.start - 0.02 : D - 0.1);
+    tl.fromTo('#' + c.id, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', immediateRender: false }, c.start);
+    tl.to('#' + c.id, { opacity: 0, duration: 0.2, ease: 'power1.in' }, Math.max(c.start + 0.4, out - 0.2));
+  });
+  window.__timelines = window.__timelines || {};
+  window.__timelines[ID] = tl;
+})();
+</script>
+</body>
+</html>

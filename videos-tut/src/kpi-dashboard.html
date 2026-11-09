@@ -1,0 +1,145 @@
+  <style>
+    bdi{unicode-bidi:isolate}
+    .sc{position:absolute;left:0;top:0;width:420px;height:170px;border-radius:22px;background:var(--ground2);border:2px solid var(--line);box-shadow:0 30px 60px rgba(0,0,0,.5);opacity:0}
+    .sc .l{position:absolute;inset-inline-start:26px;top:18px;font-size:22px;color:var(--muted);font-weight:700}
+    .sc .t{position:absolute;inset-inline-start:26px;top:48px;font-family:var(--serif);font-size:40px;white-space:nowrap}
+    .sc .ln{position:absolute;left:26px;right:26px;top:128px;height:4px;border-radius:2px;background:var(--line)}
+    .ctl{position:absolute;inset-inline-start:50px;top:36px;font-family:var(--serif);font-size:46px;white-space:nowrap}
+    .kbars{position:absolute;inset-inline-start:90px;inset-inline-end:90px;top:170px;height:340px;display:flex;align-items:flex-end;gap:44px;border-bottom:3px solid var(--line)}
+    .kbar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:4px}
+    .kbar i{display:block;border-radius:8px 8px 4px 4px}
+    .s1c{background:#d8cfb8}.s2c{background:#ecebe7}.s3c{background:#8a9096}
+    .kchip{display:inline-flex;align-items:center;gap:12px;height:52px;padding:0 20px;border-radius:26px;background:var(--raise);border:2px solid var(--line);font-size:26px;font-weight:700;direction:ltr}
+    .kchip b{display:block;width:20px;height:20px;border-radius:6px}
+    .seg{position:absolute;inset-inline-end:50px;top:40px;display:flex;align-items:center;gap:18px}
+    .seg .box{position:relative;width:280px;height:60px;border-radius:30px;background:var(--raise);border:2px solid var(--line);display:flex}
+    .seg .box span{position:relative;flex:1;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;z-index:1}
+    .sq{width:110px;height:110px;border-radius:16px;border:4px solid #5D646B;background:transparent}
+    .odo{position:relative;height:110px;overflow:hidden}
+    .odo .col{position:absolute;inset-inline-start:0;top:0;display:flex;flex-direction:column}
+    .odo .col span{height:110px;line-height:110px;font-family:var(--serif);font-size:92px;white-space:nowrap}
+    .tileK{position:relative;width:360px;height:240px;border-radius:24px;background:var(--ground2);border:2px solid var(--line);box-shadow:0 30px 60px rgba(0,0,0,.45);padding:26px 30px;opacity:0}
+    .tileK .l{font-size:28px;color:var(--muted);font-weight:700;white-space:nowrap}
+    .mk{position:absolute;display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 18px;border-radius:25px;background:var(--raise);border:2px solid var(--line);color:var(--dim);font-size:22px;direction:ltr;opacity:0}
+    .flag{position:absolute;width:64px;height:64px;border-radius:50%;background:var(--fail);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(0,0,0,.45);opacity:0}
+    html[lang=en] #cap-L4-0{max-width:860px} /* break after "tested": bottom-heavy (review note 6) */
+  </style>
+
+  <!-- S1: sessions pour into an empty frame -->
+  <div id="s1" class="scene">
+    <div id="frame" class="abs" style="left:410px;top:170px;width:1100px;height:560px;border-radius:30px;border:3px dashed rgba(241,239,233,.25)">
+      <div class="abs" style="inset-inline-start:80px;inset-inline-end:80px;bottom:70px;height:260px;display:flex;align-items:flex-end;gap:60px">
+        <i id="fb1" style="display:block;flex:1;height:120px;border-radius:12px;background:#d8cfb8"></i>
+        <i id="fb2" style="display:block;flex:1;height:200px;border-radius:12px;background:#ecebe7"></i>
+        <i id="fb3" style="display:block;flex:1;height:160px;border-radius:12px;background:#8a9096"></i>
+      </div>
+      <div class="abs" style="inset-inline-start:80px;inset-inline-end:80px;bottom:22px;height:40px;display:flex;gap:60px;font-size:28px;font-weight:700;color:var(--ink)"><span class="fbl" style="flex:1;text-align:center;opacity:0">{{c1}}</span><span class="fbl" style="flex:1;text-align:center;opacity:0">{{c2}}</span><span class="fbl" style="flex:1;text-align:center;opacity:0">{{c3}}</span></div>
+    </div>
+    <div class="sc" id="sc1"><div class="l">{{sessionWord}}</div><div class="t">{{c1}}</div><div class="ln"></div></div>
+    <div class="sc" id="sc2"><div class="l">{{sessionWord}}</div><div class="t">{{c2}}</div><div class="ln"></div></div>
+    <div class="sc" id="sc3"><div class="l">{{sessionWord}}</div><div class="t">{{c3}}</div><div class="ln"></div></div>
+  </div>
+
+  <!-- S2: Settings > Performance indicators > Open the dashboard; the head lights up -->
+  <div id="s2" class="scene">
+    <div class="card" id="setc" style="inset-inline-start:120px;top:240px;width:600px;height:330px">
+      <div class="abs serif" style="inset-inline-start:36px;top:30px;font-size:50px">{{settings}}</div>
+      <div class="abs lbl" style="inset-inline-start:36px;top:130px;color:var(--ink)">{{kpi}}</div>
+      <div id="openl" class="abs" style="inset-inline-start:36px;top:196px;height:70px;padding:0 24px;border-radius:18px;background:rgba(226,174,56,.14);border:2px solid rgba(226,174,56,.6);color:var(--corn);font-size:30px;font-weight:700;display:flex;align-items:center;white-space:nowrap">{{open}}</div>
+    </div>
+    <div id="dhd" class="abs" style="inset-inline-start:820px;top:220px;width:980px">
+      <div id="eb" style="font-size:28px;font-weight:700;letter-spacing:.12em;color:var(--corn);opacity:0">{{eyebrow}}</div>
+      <div id="dt" class="serif" style="font-size:84px;margin-top:14px;white-space:nowrap;opacity:0">{{kpi}}</div>
+      <div id="lede" style="font-size:36px;line-height:1.45;margin-top:22px;color:var(--ink);max-width:940px">{{lede}}</div>
+    </div>
+  </div>
+
+  <!-- S3: time per day, then per week -->
+  <div id="s3" class="scene">
+    <div class="card" style="inset-inline-start:200px;top:70px;width:1520px;height:680px">
+      <div class="ctl" id="tday">{{timeDay}}</div>
+      <div class="ctl" id="tweek" style="opacity:0">{{timeWeek}}</div>
+      <div class="seg"><span class="lbl">{{groupBy}}</span><div class="box"><div id="knob" class="abs" style="inset-inline-start:4px;top:4px;width:136px;height:48px;border-radius:24px;background:var(--corn)"></div><span id="sgd" style="color:#1D2024">{{day}}</span><span id="sgw">{{week}}</span></div></div>
+      <div class="kbars" id="bday">
+        <div class="kbar"><i class="s3c" style="height:30px"></i><i class="s2c" style="height:60px"></i><i class="s1c" style="height:90px"></i></div>
+        <div class="kbar"><i class="s3c" style="height:50px"></i><i class="s2c" style="height:40px"></i><i class="s1c" style="height:150px"></i></div>
+        <div class="kbar"><i class="s2c" style="height:70px"></i><i class="s1c" style="height:60px"></i></div>
+        <div class="kbar"><i class="s3c" style="height:80px"></i><i class="s2c" style="height:90px"></i><i class="s1c" style="height:110px"></i></div>
+        <div class="kbar"><i class="s3c" style="height:40px"></i><i class="s1c" style="height:70px"></i></div>
+        <div class="kbar"><i class="s2c" style="height:40px"></i><i class="s1c" style="height:40px"></i></div>
+        <div class="kbar"><i class="s3c" style="height:60px"></i><i class="s2c" style="height:110px"></i><i class="s1c" style="height:120px"></i></div>
+      </div>
+      <div class="kbars" id="bweek" style="gap:160px;padding:0 160px">
+        <div class="kbar"><i class="s3c" style="height:70px"></i><i class="s2c" style="height:120px"></i><i class="s1c" style="height:130px"></i></div>
+        <div class="kbar"><i class="s3c" style="height:90px"></i><i class="s2c" style="height:110px"></i><i class="s1c" style="height:100px"></i></div>
+      </div>
+      <div class="abs" style="inset-inline-start:90px;top:560px;display:flex;align-items:center;gap:18px">
+        <span class="lbl" id="sitesl">{{sites}}</span>
+        <span class="kchip lg"><b class="s1c"></b>Swag Labs</span><span class="kchip lg"><b class="s2c"></b>The Internet</span><span class="kchip lg"><b class="s3c"></b>Toolshop</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: coverage, a map seen from above -->
+  <div id="s4" class="scene">
+    <div class="card" style="inset-inline-start:200px;top:70px;width:1520px;height:680px">
+      <div class="ctl">{{coverage}}</div>
+      <div class="abs kchip" style="inset-inline-start:50px;top:120px">Swag Labs</div>
+      <div id="grid" class="abs" style="inset-inline-start:90px;top:220px;width:914px;display:grid;grid-template-columns:repeat(7,110px);gap:24px">
+        <div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div>
+        <div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div><div class="sq"></div>
+      </div>
+      <div class="abs" style="inset-inline-start:90px;top:540px;display:flex;align-items:center;gap:40px">
+        <span style="display:flex;align-items:center;gap:14px;font-size:26px"><b style="display:block;width:30px;height:30px;border-radius:8px;background:var(--corn)"></b>{{tested}}</span>
+        <span style="display:flex;align-items:center;gap:14px;font-size:26px"><b style="display:block;width:30px;height:30px;border-radius:8px;border:4px solid #5D646B"></b>{{untested}}</span>
+      </div>
+      <div class="abs" style="inset-inline-start:1110px;top:150px;width:320px;height:320px">
+        <svg width="320" height="320" viewBox="0 0 320 320" style="position:absolute;inset:0;transform:rotate(-90deg)"><circle cx="160" cy="160" r="135" fill="none" stroke="#353B41" stroke-width="26"/><circle id="ring" cx="160" cy="160" r="135" fill="none" stroke="#E2AE38" stroke-width="26" stroke-linecap="round" stroke-dasharray="848.2" stroke-dashoffset="848.2"/></svg>
+        <div class="odo abs" style="left:0;right:0;top:105px;height:110px"><div class="col" id="covodo" style="left:0;right:0;align-items:center">
+          <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+      </div>
+      <div class="abs" style="inset-inline-start:1110px;width:320px;top:490px;text-align:center;font-size:34px;font-weight:700">{{of14}}</div>
+    </div>
+  </div>
+
+  <!-- S5: bugs filed per day; only bugs count -->
+  <div id="s5" class="scene">
+    <div class="card" style="inset-inline-start:200px;top:70px;width:1520px;height:680px">
+      <div class="ctl">{{bugsDay}}</div>
+      <div class="abs" style="inset-inline-start:90px;inset-inline-end:90px;top:440px;height:4px;border-radius:2px;background:var(--line)"></div>
+      <div class="abs" id="ticks" style="inset-inline-start:90px;inset-inline-end:90px;top:430px;height:24px;display:flex;justify-content:space-between;padding:0 40px"><i style="display:block;width:4px;height:24px;background:var(--line)"></i><i style="display:block;width:4px;height:24px;background:var(--line)"></i><i style="display:block;width:4px;height:24px;background:var(--line)"></i><i style="display:block;width:4px;height:24px;background:var(--line)"></i><i style="display:block;width:4px;height:24px;background:var(--line)"></i><i style="display:block;width:4px;height:24px;background:var(--line)"></i><i style="display:block;width:4px;height:24px;background:var(--line)"></i></div>
+      <div class="flag" id="f1" style="inset-inline-start:100px;top:356px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
+      <div class="flag" id="f2" style="inset-inline-start:302px;top:356px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
+      <div class="flag" id="f3" style="inset-inline-start:706px;top:356px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
+      <div class="flag" id="f4" style="inset-inline-start:706px;top:284px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
+      <div class="flag" id="f5" style="inset-inline-start:1110px;top:356px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
+      <div class="mk" id="m1" style="inset-inline-start:1200px;top:180px"><svg class="i" style="width:26px;height:26px"><use href="#ic-err"/></svg>TypeError</div>
+      <div class="mk" id="m2" style="inset-inline-start:1200px;top:250px"><svg class="i" style="width:26px;height:26px"><use href="#ic-req"/></svg>POST /cart 500</div>
+      <div class="mk" id="m3" style="inset-inline-start:1200px;top:180px"><svg class="i" style="width:26px;height:26px"><use href="#ic-err"/></svg>ReferenceError</div>
+      <div class="abs" id="bnote" style="inset-inline-start:90px;top:520px;font-size:32px;color:var(--ink)">{{bugNote}}</div>
+    </div>
+  </div>
+
+  <!-- S6: the tiles -->
+  <div id="s6" class="scene">
+    <div class="abs" style="inset-inline-start:195px;top:250px;display:flex;gap:30px">
+      <div class="tileK" id="k1"><div class="l">{{tSessions}}</div><div class="odo" style="margin-top:20px"><div class="col" id="o1"><span>8</span><span>10</span><span>12</span></div></div></div>
+      <div class="tileK" id="k2" style="border:3px solid rgba(226,174,56,.75)"><div class="l">{{tAvg}}</div><div class="odo" style="margin-top:20px"><div class="col" id="o2"><span>18 <small style="font-size:44px">{{min}}</small></span><span>21 <small style="font-size:44px">{{min}}</small></span><span>24 <small style="font-size:44px">{{min}}</small></span></div></div></div>
+      <div class="tileK" id="k3"><div class="l">{{tBugs}}</div><div class="odo" style="margin-top:20px"><div class="col" id="o3"><span>3</span><span>4</span><span>5</span></div></div></div>
+      <div class="tileK" id="k4"><div class="l">{{tPages}}</div><div class="odo" style="margin-top:20px"><div class="col" id="o4"><span>7</span><span>8</span><span>9</span></div></div><div style="font-size:26px;color:var(--muted);margin-top:-8px">{{of14}}</div></div>
+    </div>
+  </div>
+
+  <!-- S7: Export as PDF; the page and its trace line -->
+  <div id="s7" class="scene">
+    <div id="pdfb" class="btn-c abs" style="inset-inline-start:110px;top:330px;width:440px"><svg class="i" style="width:34px;height:34px"><use href="#ic-note"/></svg>{{exportPdf}}</div>
+    <div id="pg" class="abs" style="left:700px;top:40px;width:560px;height:740px;border-radius:12px;background:#F4F1EA;box-shadow:0 40px 90px rgba(0,0,0,.6);color:#262B30;overflow:hidden;opacity:0">
+      <div class="pb abs serif" style="inset-inline-start:40px;top:36px;font-size:40px">{{report}}</div>
+      <div class="pb abs" style="inset-inline-start:40px;inset-inline-end:40px;top:110px;height:200px;border-radius:10px;background:#E8E3D8;display:flex;align-items:flex-end;gap:14px;padding:16px"><i style="display:block;flex:1;height:50%;background:#C9C3B6;border-radius:5px"></i><i style="display:block;flex:1;height:80%;background:#C9C3B6;border-radius:5px"></i><i style="display:block;flex:1;height:40%;background:#C9C3B6;border-radius:5px"></i><i style="display:block;flex:1;height:90%;background:#C9C3B6;border-radius:5px"></i><i style="display:block;flex:1;height:30%;background:#C9C3B6;border-radius:5px"></i><i style="display:block;flex:1;height:60%;background:#C9C3B6;border-radius:5px"></i><i style="display:block;flex:1;height:75%;background:#C9C3B6;border-radius:5px"></i></div>
+      <div class="pb abs" style="inset-inline-start:40px;top:340px;width:150px;height:150px;border-radius:50%;border:18px solid #E2AE38;border-inline-end-color:#DDD7CB"></div>
+      <div class="pb abs" style="inset-inline-start:230px;top:350px;display:flex;flex-direction:column;gap:18px"><i style="display:block;width:250px;height:16px;border-radius:8px;background:#DDD7CB"></i><i style="display:block;width:200px;height:16px;border-radius:8px;background:#DDD7CB"></i><i style="display:block;width:230px;height:16px;border-radius:8px;background:#DDD7CB"></i></div>
+      <div class="pb abs" style="inset-inline-start:40px;inset-inline-end:40px;top:540px;height:90px;display:flex;gap:14px"><i style="display:block;flex:1;border-radius:10px;background:#E8E3D8"></i><i style="display:block;flex:1;border-radius:10px;background:#E8E3D8"></i><i style="display:block;flex:1;border-radius:10px;background:#E8E3D8"></i><i style="display:block;flex:1;border-radius:10px;background:#E8E3D8"></i></div>
+      <div id="trace" class="abs" style="inset-inline-start:40px;inset-inline-end:40px;bottom:26px;height:40px;border-top:2px solid #DDD7CB;padding-top:10px;font-size:20px;color:#3a4047;white-space:nowrap">{{trace}}</div>
+    </div>
+  </div>
+

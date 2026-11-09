@@ -1,0 +1,124 @@
+  <style>
+    html[dir=rtl] .mir{transform:scaleX(-1)}
+    #pop .cnt b{position:absolute;inset:0;text-align:center}
+    .ev{position:absolute;left:0;top:0;opacity:0}
+    .trow{position:absolute;left:30px;right:30px;height:100px;display:flex;align-items:center;gap:26px;padding:0 30px}
+    .trow .tm{width:96px;font-size:30px;color:var(--muted)}
+    .trow .k{width:200px;font-size:30px;font-weight:700}
+    .trow .d{font-size:28px;color:var(--muted)}
+  </style>
+
+  <div id="main" class="fill">
+    <!-- the site under test: Swag Labs, drawn the Sauce Demo way (dark green bar, white tiles), no logo copied -->
+    <div class="browser" id="browser" data-layout-ignore style="inset-inline-start:140px;top:130px;width:1180px;height:700px">
+      <div class="bar"><i></i><i></i><i></i><div class="url">www.saucedemo.com/inventory.html</div>
+        <div class="ext" id="ext"><svg viewBox="0 0 64 64" width="40" height="40" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-2 1)"><path id="xr" stroke="#7d848b" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/><path id="xc" stroke="#7d848b" d="M36 36L42.5 44L55 20"/></g></svg></div>
+      </div>
+      <div class="page" id="page">
+        <div id="pgscroll" class="fill">
+        <div id="pg-inv" class="fill">
+          <div class="sd-head">Swag Labs<span class="cart"><svg class="i" style="width:48px;height:48px;color:#f1efe9"><use href="#ic-cart"/></svg><b id="badge" style="opacity:0">1</b></span></div>
+          <div class="abs" style="left:30px;top:100px;font-size:26px;font-weight:700;color:#132322">Products</div>
+          <div class="tile" style="left:30px;top:150px;width:340px;height:400px"><div class="art"><svg viewBox="0 0 120 120" width="150" height="150" fill="none" stroke="#262b30" stroke-width="5" stroke-linejoin="round"><rect x="28" y="30" width="64" height="76" rx="22" fill="#5d646b"/><path d="M44 30a16 16 0 0 1 32 0"/><rect x="40" y="66" width="40" height="26" rx="8" fill="#f4f1ea"/></svg></div><div class="nm">Sauce Labs Backpack</div><div class="pr">$29.99</div><div class="btn" id="addbtn">Add to cart</div></div>
+          <div class="tile" style="left:410px;top:150px;width:340px;height:400px"><div class="art"><svg viewBox="0 0 120 120" width="150" height="150" fill="none" stroke="#262b30" stroke-width="5" stroke-linejoin="round"><rect x="36" y="36" width="48" height="52" rx="12" fill="#b4b0a6"/><circle cx="60" cy="62" r="14" fill="#f0b94a"/><path d="M60 14v14M30 22l8 10M90 22l-8 10"/></svg></div><div class="nm">Sauce Labs Bike Light</div><div class="pr">$9.99</div><div class="btn">Add to cart</div></div>
+          <div class="tile" style="left:790px;top:150px;width:340px;height:400px"><div class="art"><svg viewBox="0 0 120 120" width="150" height="150" fill="none" stroke="#262b30" stroke-width="5" stroke-linejoin="round"><path d="M40 24l-24 16 10 18 12-6v50h44V52l12 6 10-18-24-16c-4 8-12 12-20 12s-16-4-20-12z" fill="#3a4047"/></svg></div><div class="nm">Sauce Labs Bolt T-Shirt</div><div class="pr">$15.99</div><div class="btn">Add to cart</div></div>
+        </div>
+        <div id="pg-info" class="fill" style="opacity:0;background:#f4f1ea">
+          <div class="sd-head">Swag Labs<span class="cart"><svg class="i" style="width:48px;height:48px;color:#f1efe9"><use href="#ic-cart"/></svg><b>1</b></span></div>
+          <div class="abs" style="left:30px;top:104px;font-size:26px;font-weight:700;color:#132322">Checkout: Your Information</div>
+          <div class="ts-in" style="left:60px;top:160px;width:600px"><span id="fn-ph">First Name</span><span id="fn" class="abs" style="left:16px;color:#262b30">Layla</span></div>
+          <div class="ts-in" style="left:60px;top:236px;width:600px">Last Name</div>
+          <div class="ts-in" style="left:60px;top:312px;width:600px">Zip/Postal Code</div>
+          <div id="pg-err" class="abs" style="left:60px;top:392px;width:600px;height:56px;border-radius:6px;background:#e2463b;color:#fff;font-size:22px;font-weight:700;display:flex;align-items:center;padding:0 18px;opacity:0">Error: Last Name is required</div>
+          <div class="abs" style="left:820px;top:472px;width:320px;height:64px;border-radius:6px;background:#3ddc91;color:#132322;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center">Continue</div>
+          <div class="abs" style="left:60px;top:600px;width:1060px;height:120px;border-radius:10px;background:#e8e5de"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div id="sleepz" class="abs" style="inset-inline-start:1286px;top:70px;width:90px;height:90px">
+      <svg viewBox="0 0 24 24" width="36" height="36" class="abs z z1" style="inset-inline-start:0;top:40px;fill:none;stroke:#ecebe7;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><path d="M6 6h12L6 18h12"/></svg>
+      <svg viewBox="0 0 24 24" width="32" height="32" class="abs z z2" style="inset-inline-start:0;top:40px;fill:none;stroke:#ecebe7;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><path d="M6 6h12L6 18h12"/></svg>
+      <svg viewBox="0 0 24 24" width="28" height="28" class="abs z z3" style="inset-inline-start:0;top:40px;fill:none;stroke:#ecebe7;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><path d="M6 6h12L6 18h12"/></svg>
+    </div>
+
+    <!-- the beam from the toolbar icon to the tool's popup -->
+    <svg class="abs mir" id="beam" width="1920" height="1080" viewBox="0 0 1920 1080" style="left:0;top:0;opacity:0" fill="none"><path id="beamp" d="M1300 170 C1330 200 1340 230 1362 240" stroke="#f0b94a" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 10"/></svg>
+
+    <!-- the tool's popup: first the start view, then the live counter card -->
+    <div class="pop" id="pop" style="inset-inline-start:1360px;top:120px;width:460px;height:640px;opacity:0">
+      <div class="hd"><svg viewBox="0 0 64 64" width="38" height="38" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-2 1)"><path stroke="#ecebe7" d="M45.01 37.98 A17 17 0 1 0 34.97 46.26"/><path stroke="#ff7d63" d="M36 36L42.5 44L55 20"/></g></svg><span>QA Wrap</span><span id="recdot" class="abs" style="inset-inline-end:28px;top:27px;width:22px;height:22px;border-radius:50%;background:var(--fail);opacity:0"></span></div>
+      <div id="viewA" class="abs" style="left:0;top:76px;right:0;bottom:0">
+        <div class="field abs" style="left:24px;right:24px;top:24px;overflow:hidden"><span id="ph" class="abs" style="inset-inline-start:22px">{{placeholder}}</span><span class="abs" style="inset-inline-start:22px;top:0;bottom:0;display:flex;align-items:center;white-space:nowrap;color:var(--ink)" id="typed">{{charter}}</span></div>
+        <div id="startbtn" class="btn-c abs" style="left:24px;right:24px;top:112px">{{start}}</div>
+        <div class="abs lbl" style="left:24px;right:24px;top:222px;font-weight:400;line-height:1.35">{{startNote}}</div>
+      </div>
+      <div id="viewB" class="abs" style="left:0;top:76px;right:0;bottom:0;opacity:0">
+        <div class="abs serif" style="inset-inline-start:24px;top:16px;font-size:34px">{{charter}}</div>
+        <div class="raise abs" style="left:24px;right:24px;top:80px;height:64px;display:flex;align-items:center;padding:0 18px;gap:14px"><span class="dot click" style="position:static"></span><span class="lbl" style="color:var(--ink)">{{kAct}}</span><span class="abs cnt c-a" style="inset-inline-end:20px;top:9px;width:44px;height:46px;font-size:34px;font-weight:700"><b class="n0">0</b><b class="n1" style="opacity:0">1</b><b class="n2" style="opacity:0">2</b><b class="n3" style="opacity:0">3</b><b class="n4" style="opacity:0">4</b></span></div>
+        <div class="raise abs" style="left:24px;right:24px;top:156px;height:64px;display:flex;align-items:center;padding:0 18px;gap:14px"><span class="dot req" style="position:static"></span><span class="lbl" style="color:var(--ink)">{{kNet}}</span><span class="abs cnt c-n" style="inset-inline-end:20px;top:9px;width:44px;height:46px;font-size:34px;font-weight:700"><b class="n0">0</b><b class="n1" style="opacity:0">1</b></span></div>
+        <div class="raise abs" style="left:24px;right:24px;top:232px;height:64px;display:flex;align-items:center;padding:0 18px;gap:14px"><span class="dot err" style="position:static"></span><span class="lbl" style="color:var(--ink)">{{kErr}}</span><span class="abs cnt c-e" style="inset-inline-end:20px;top:9px;width:44px;height:46px;font-size:34px;font-weight:700"><b class="n0">0</b><b class="n1" style="opacity:0">1</b></span></div>
+        <div class="raise abs" style="left:24px;right:24px;top:308px;height:64px;display:flex;align-items:center;padding:0 18px;gap:14px"><span class="dot shot" style="position:static"></span><span class="lbl" style="color:var(--ink)">{{kShot}}</span><span class="abs cnt c-s" style="inset-inline-end:20px;top:9px;width:44px;height:46px;font-size:34px;font-weight:700"><b class="n0">0</b><b class="n1" style="opacity:0">1</b></span></div>
+        <div id="stopbtn" class="btn-s abs" style="left:24px;right:24px;top:408px"><span style="width:22px;height:22px;border-radius:5px;background:var(--fail);display:block"></span>{{stop}}</div>
+      </div>
+    </div>
+
+    <!-- one lane under the page: every event lands on it as a dot -->
+    <div id="lane" class="abs" style="left:0;top:0;width:1920px;height:1080px;opacity:0">
+      <div class="tl-line" id="laneline" style="inset-inline-start:200px;top:998px;width:1520px;height:6px"></div>
+      <div class="dot click abs" id="d1" style="inset-inline-start:345px;top:986px;opacity:0"></div>
+      <div class="dot req abs" id="d2" style="inset-inline-start:605px;top:986px;opacity:0"></div>
+      <div class="dot click abs" id="d3" style="inset-inline-start:865px;top:986px;opacity:0"></div>
+      <div class="dot err abs" id="d4" style="inset-inline-start:1125px;top:986px;opacity:0"></div>
+      <div class="dot shot abs" id="d5" style="inset-inline-start:1385px;top:986px;opacity:0"></div>
+      <div class="lbl abs" id="lanelbl" style="inset-inline-start:200px;top:1030px;font-size:32px;opacity:0">{{timeline}}</div>
+    </div>
+    <div class="pill ev" id="e1"><svg class="i"><use href="#ic-click"/></svg><span class="ltr">Add to cart</span></div>
+    <div class="pill amber ev" id="e2"><svg class="i"><use href="#ic-req"/></svg><span class="ltr">GET /cart.html 200</span></div>
+    <div class="pill ev" id="e3"><svg class="i"><use href="#ic-click"/></svg><span class="ltr">Continue</span></div>
+    <div class="pill fail ev" id="e4"><svg class="i"><use href="#ic-err"/></svg><span class="ltr">Last Name is required</span></div>
+    <div class="pill ev" id="e5" style="color:var(--tortilla)"><svg class="i"><use href="#ic-shot"/></svg><span class="ltr">checkout-step-one.png</span></div>
+  </div>
+
+  <!-- S6: Stop, saved -->
+  <div class="card" id="saved" style="inset-inline-start:980px;top:300px;width:660px;height:380px;opacity:0">
+    <div class="abs serif" style="inset-inline-start:36px;top:34px;font-size:56px;white-space:nowrap">{{charter}}</div>
+    <div class="tl-line abs" style="inset-inline-start:36px;top:190px;width:588px"></div>
+    <div class="dot click abs" style="inset-inline-start:80px;top:177px"></div><div class="dot req abs" style="inset-inline-start:200px;top:177px"></div><div class="dot click abs" style="inset-inline-start:320px;top:177px"></div><div class="dot err abs" style="inset-inline-start:440px;top:177px"></div><div class="dot shot abs" style="inset-inline-start:560px;top:177px"></div>
+    <div class="pill ok abs" id="savedpill" style="inset-inline-start:36px;top:268px"><svg class="i"><use href="#ic-check"/></svg>{{saved}}</div>
+  </div>
+
+  <!-- S7: the Timeline tab -->
+  <div id="s7" class="scene">
+    <div class="card" style="left:300px;top:96px;width:1320px;height:670px">
+      <div class="abs" style="left:0;right:0;top:0;height:92px;background:#2d3238;border-bottom:1px solid var(--line)"></div>
+      <div class="abs pill" style="inset-inline-start:30px;top:16px;height:60px;background:var(--amber);color:#1d2024;border-color:var(--amber);box-shadow:none">{{timeline}}</div>
+      <div class="abs lbl" style="inset-inline-end:40px;top:28px">{{charter}}</div>
+      <div id="hl" class="abs" style="left:30px;right:30px;top:120px;height:100px;border-radius:14px;background:rgba(240,185,74,.13);border:2px solid rgba(240,185,74,.55);opacity:0"></div>
+      <div class="trow" style="top:120px"><span class="tm num">00:03</span><span class="dot click" style="position:static"></span><span class="k">{{kAct}}</span><span class="d ltr">Add to cart · Sauce Labs Backpack</span></div>
+      <div class="trow" style="top:226px"><span class="tm num">00:04</span><span class="dot req" style="position:static"></span><span class="k">{{kNet}}</span><span class="d ltr">GET /cart.html · 200</span></div>
+      <div class="trow" style="top:332px"><span class="tm num">00:09</span><span class="dot click" style="position:static"></span><span class="k">{{kAct}}</span><span class="d ltr">Continue</span></div>
+      <div class="trow" style="top:438px"><span class="tm num">00:11</span><span class="dot err" style="position:static"></span><span class="k" style="color:var(--fail)">{{kErr}}</span><span class="d ltr">Error: Last Name is required</span></div>
+      <div class="trow" style="top:544px"><span class="tm num">00:11</span><span class="dot shot" style="position:static"></span><span class="k">{{kShot}}</span><span class="d ltr">checkout-step-one.png</span></div>
+    </div>
+  </div>
+<!-- overlay -->
+  <!-- S5: it stays on this computer: a high, wide angle makes the laptop a small safe box -->
+  <div id="s5" class="scene">
+    <div class="tilt"><div class="plane" id="plane">
+      <div class="abs" style="inset-inline-start:420px;top:420px;width:620px;height:380px;border-radius:26px;background:linear-gradient(#30353b,#24282c);border:1px solid var(--edge);box-shadow:0 60px 80px rgba(0,0,0,.6)">
+        <div class="abs" style="left:40px;right:40px;top:40px;bottom:120px;border-radius:12px;background:repeating-linear-gradient(90deg,#2a2e33 0 40px,#272b30 40px 44px)"></div>
+        <div class="abs" style="left:230px;right:230px;bottom:40px;height:54px;border-radius:10px;background:#272b30"></div>
+      </div>
+      <div id="screen" class="abs" style="inset-inline-start:420px;top:40px;width:620px;height:390px;border-radius:24px;background:#1d2024;border:10px solid #30353b;transform-origin:50% 100%;transform:rotateX(-68deg) translateZ(0);box-shadow:0 0 120px rgba(123,211,137,.25)">
+        <div class="tl-line" style="inset-inline-start:60px;top:190px;width:480px;background:var(--pass)"></div>
+        <div class="dot click abs" style="inset-inline-start:90px;top:178px"></div><div class="dot req abs" style="inset-inline-start:190px;top:178px"></div><div class="dot click abs" style="inset-inline-start:290px;top:178px"></div><div class="dot err abs" style="inset-inline-start:390px;top:178px"></div><div class="dot shot abs" style="inset-inline-start:480px;top:178px"></div>
+      </div>
+    </div></div>
+    <svg class="abs mir" width="1920" height="1080" viewBox="0 0 1920 1080" style="left:0;top:0" fill="none">
+      <path id="arrow" d="M940 500 C1080 400 1240 330 1352 318" stroke="#f0b94a" stroke-width="6" stroke-linecap="round" stroke-dasharray="14 14"/>
+      <g transform="translate(1500 210)"><g id="cloud" stroke="#8a9096" stroke-width="7" stroke-linejoin="round"><path d="M40 150a60 60 0 0 1-8-119A90 90 0 0 1 205 22a64 64 0 0 1-8 128z"/></g></g>
+      <g id="barrier"><circle cx="1400" cy="314" r="46" fill="#171a1d" stroke="#ff7d63" stroke-width="7"/><path d="M1378 292l44 44M1422 292l-44 44" stroke="#ff7d63" stroke-width="7" stroke-linecap="round"/></g>
+    </svg>
+  </div>
+  <div class="ttl" id="t5">{{onComputer}}</div>
