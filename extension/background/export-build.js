@@ -35,7 +35,12 @@ import { sha256Hex, captureHashes } from '../core/integrity.js';
 import { stampDocument } from '../core/provenance-stamp.js';
 import { getSettings } from '../platform/settings.js';
 import { scanOutbound } from '../core/secret-scan-text.js';
-import { loadDocFonts } from '../core/docshell.js';
+import { loadDocFonts, sessionIsArabic } from '../core/docshell.js';
+import { loadProfile, traceLine } from '../core/profile.js';
+import { withTrace } from '../core/trace-export.js';
+import { sealMarkdown } from '../core/seal.js';
+import { buildTimelineMarkdown } from '../core/timeline-md.js';
+import { getSealKey } from '../platform/seal-key.js';
 import { buildPlaywrightSpec } from '../core/artifact.js';
 /*
  * The Markdown, JSON and session-sheet builders live in their own module
@@ -138,7 +143,7 @@ const lastOfKind = (events, kind, what) => {
  * text — attaching to a Jira issue, where the far end wants a readable file —
  * can ask for it without going round the gzip.
  */
-async function buildExportRaw({ sessionId, format, withImages = true, files, version, shotPaths }) {
+async function buildExportRaw({ sessionId, format, withImages = true, files, version, shotPaths }, ctx = {}) {
   /*
    * The build number is passed in, not read here.
    *
@@ -150,7 +155,16 @@ async function buildExportRaw({ sessionId, format, withImages = true, files, ver
    * has the version; it sends it.
    */
   const build = version || globalThis.chrome?.runtime?.getManifest?.()?.version || '';
-  const { session, events } = await loadSession(sessionId);
+  const { session: stored, events } = await loadSession(sessionId);
+  /*
+   * R3: who is on this export. The profile is read once here; `ctx` carries it (and the trace line built from it) back to
+   * buildExport(), which adds the line to every text format and seals the timeline, and into the workbooks as a row.
+   */
+  ctx.profile = await loadProfile();
+  ctx.lang = sessionIsArabic(stored, events) ? 'ar' : 'en';
+  ctx.version = build;
+  ctx.trace = traceLine({ lang: ctx.lang, date: Date.now(), version: build, profile: ctx.profile });
+  const session = stored;
 
   let captures = {};
   if (withImages) {
@@ -308,9 +322,12 @@ async function buildExportRaw({ sessionId, format, withImages = true, files, ver
     // Workbooks are bytes; the message channel carries JSON, so they travel as
     // base64 with the encoding declared, and the page turns them back.
     case 'timeline-xlsx':
-      return { filename: `qaw-timeline-${slug}-${stamp}.xlsx`, mime: XLSX_MIME, encoding: 'base64', content: toBase64(buildTimelineWorkbook(session, events, await shotHashes(events))) };
+      return { filename: `qaw-timeline-${slug}-${stamp}.xlsx`, mime: XLSX_MIME, encoding: 'base64', content: toBase64(buildTimelineWorkbook({ ...session, traceLine: ctx.trace }, events, await shotHashes(events))) };
     case 'sheet-xlsx':
-      return { filename: `qaw-session-sheet-${slug}-${stamp}.xlsx`, mime: XLSX_MIME, encoding: 'base64', content: toBase64(buildSessionWorkbook(session, events, await shotHashes(events))) };
+      return { filename: `qaw-session-sheet-${slug}-${stamp}.xlsx`, mime: XLSX_MIME, encoding: 'base64', content: toBase64(buildSessionWorkbook({ ...session, traceLine: ctx.trace }, events, await shotHashes(events))) };
+    /* R5: the full timeline as readable Markdown with the profile in it. buildExport() adds the trace line and seals it last, so the seal covers everything the reader sees. */
+    case 'timeline-md':
+      return { filename: `qaw-timeline-${slug}-${stamp}.md`, mime: 'text/markdown', content: buildTimelineMarkdown(session, events, { profile: ctx.profile, version: build }) };
     case 'srs':
       return { filename: `qaw-srs-${slug}-${stamp}.md`, mime: 'text/markdown', content: buildSrs(session, events) };
     case 'manual':
@@ -391,12 +408,20 @@ async function buildBundle({ sessionId, parts, version }) {
  */
 export async function buildExport(request) {
   if (request.format === 'bundle') return buildBundle(request);
-  const out = await buildExportRaw(request);
+  const ctx = {};
+  const out = await buildExportRaw(request, ctx);
   if (out.encoding || typeof out.content !== 'string') return out;
   // T-067: control characters out of every text, here, once (they are not valid XML and mean nothing in a report).
   out.content = stripControl(out.content);
   const { findings, redacted } = scanOutbound({ content: out.content });
-  return findings.length ? { ...out, content: redacted.content, secretScan: findings } : out;
+  let done = findings.length ? { ...out, content: redacted.content, secretScan: findings } : out;
+  // R3: the fine-print trace line (name, date, tool version) on every text export, after the secret scan so it is never redacted.
+  done = withTrace(done, ctx.trace);
+  // R5: the seal is the very last step, so it covers the whole readable text including the trace line.
+  if (request.format === 'timeline-md') {
+    done = { ...done, content: await sealMarkdown(done.content, { key: await getSealKey(), name: ctx.profile?.name || '', version: ctx.version, when: Date.now() }) };
+  }
+  return done;
 }
 
 /**

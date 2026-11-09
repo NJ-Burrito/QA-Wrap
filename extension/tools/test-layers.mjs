@@ -96,6 +96,12 @@ const groupOf = (dir) => GROUP[dir] ?? dir;
  */
 const KNOWN = [
   {
+    from: 'core/profile.js',
+    to: 'platform/profile-source.js',
+    why: 'loadProfile() is the one reader every surface (the exports, the KPI page) calls, and core/ cannot read storage. It fetches the Settings-backed reader '
+      + 'with a lazy import() on first use; nothing is imported at load, the service worker never loads either file, and a test replaces the source with setProfileSource().',
+  },
+  {
     from: 'report/report.js',
     to: 'background/notify.js',
     why: 'report.js lazily imports summarise() to build a chat summary. notify.js '

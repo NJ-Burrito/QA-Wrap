@@ -8,9 +8,9 @@
  * traced to its author. The same name goes into the sealed timeline (core/seal.js).
  *
  * This module is pure (no chrome.*, no DOM): the Node suites, the offscreen document that builds exports and the KPI
- * page all import it. It does not read storage itself, because core/ may not touch chrome.*; instead
- * platform/settings.js registers the one source (`setProfileSource`) when it loads, and every page that reads
- * settings has therefore registered it. `loadProfile()` is the only reader anyone calls.
+ * page all import it. It does not read storage itself, because core/ may not touch chrome.*: `loadProfile()` fetches
+ * platform/profile-source.js on first use (which reads Settings), or uses the source a test registered with
+ * `setProfileSource`. `loadProfile()` is the only reader anyone calls.
  *
  * The name is the tester's own word and goes into files other people open: it is cut to one line, stripped of
  * control and bidi-override characters, and capped. The picture stays on this machine as a small data URL and is
@@ -53,7 +53,7 @@ let source = null;
 /** @type {Profile} */
 let last = { name: '', picture: '', named: false };
 
-/** platform/settings.js registers where the profile lives. A test may register its own. */
+/** A test (or a page with its own storage) may register where the profile lives; the default is platform/profile-source.js. */
 export function setProfileSource(fn) {
   source = typeof fn === 'function' ? fn : null;
 }
@@ -64,9 +64,11 @@ export function setProfileSource(fn) {
  * @returns {Promise<Profile>}
  */
 export async function loadProfile() {
-  if (source) {
-    try { last = normaliseProfile(await source()); } catch { /* keep the last good profile */ }
-  }
+  try {
+    // core/ may not import platform/ at load time or call chrome.*, so the reader is fetched on first use (a named exception in tools/test-layers.mjs)
+    if (!source) source = (await import('../platform/profile-source.js')).readProfile;
+    last = normaliseProfile(await source());
+  } catch { /* keep the last good profile */ }
   return { ...last };
 }
 
@@ -104,55 +106,4 @@ export function traceLine({ lang = 'en', date, version = '', name, profile } = {
       : `تم الإعداد بواسطة ${iso(tool)} · ${iso(day)}`;
   }
   return who ? `Prepared by ${who} · ${day} · ${tool}` : `Prepared with ${tool} · ${day}`;
-}
-
-/* ── where the line goes, per format ─────────────────────────────────────── */
-
-const escHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-/** Text inside an XML/HTML comment: `--` is illegal inside one. */
-const inComment = (s) => String(s).replace(/-(?=-)/g, '- ');
-
-/**
- * Add the trace line to a finished text export, in the form its format can carry without breaking it:
- * Markdown/text a closing line, HTML a small footer, JSON a `_trace` field (HAR: `log.comment`), CSV/YAML/TS a comment
- * line, XML/SVG a comment. Binary (`encoding`) outputs are left to their builders (workbooks take it as a row; a zip
- * carries it in every part). Returns a new object; an unknown or unparsable text is returned unchanged.
- *
- * @param {{ filename?: string, content?: any, encoding?: string }} out
- * @param {string} line
- */
-export function withTrace(out, line) {
-  if (!out || !line || out.encoding || typeof out.content !== 'string') return out;
-  const name = String(out.filename || '').toLowerCase();
-  const ext = name.slice(name.lastIndexOf('.') + 1);
-  const text = out.content;
-  const tail = text.replace(/\s+$/, '');
-  let content;
-  switch (ext) {
-    case 'md': case 'txt':
-      content = `${tail}\n\n${line}\n`; break;
-    case 'html': {
-      const p = `<p class="qaw-trace" style="margin:24px 0 8px;font-size:11px;color:#595959;text-align:center">${escHtml(line)}</p>`;
-      const at = text.toLowerCase().lastIndexOf('</body>');
-      content = at >= 0 ? `${text.slice(0, at)}${p}\n${text.slice(at)}` : `${tail}\n${p}\n`;
-      break;
-    }
-    case 'json': case 'har': {
-      try {
-        const doc = JSON.parse(text);
-        if (!doc || typeof doc !== 'object' || Array.isArray(doc)) return out;
-        if (ext === 'har' && doc.log && typeof doc.log === 'object') doc.log = { ...doc.log, comment: line };
-        else doc._trace = line;
-        content = JSON.stringify(doc, null, 2);
-      } catch { return out; }
-      break;
-    }
-    case 'csv': case 'yaml': case 'yml': case 'ts':
-      content = `${tail}\n${ext === 'ts' ? '//' : '#'} ${line.replace(/[\r\n]+/g, ' ')}\n`; break;
-    case 'xml': case 'svg':
-      content = `${tail}\n<!-- ${inComment(line)} -->\n`; break;
-    default:
-      return out;
-  }
-  return { ...out, content };
 }

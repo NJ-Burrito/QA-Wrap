@@ -21,7 +21,6 @@
  * nothing else is forgiven. Pure: WebCrypto only, no chrome.*, no storage.
  */
 
-export const SEAL_VERSION = 1;
 const HEAD = 'QA-WRAP-SEAL v1';
 const MARK = '<!-- qaw-seal -->';
 const TITLE = '## Seal · الختم';
@@ -122,7 +121,9 @@ export async function verifyMarkdown(raw, { ownFingerprint = '' } = {}) {
     const pub = await crypto.subtle.importKey('jwk', jwk, ECDSA, false, ['verify']);
     if (kv['Key fingerprint'] !== await fingerprintOf(jwk)) reasons.push('fingerprint');
     const payload = payloadOf({ sha: kv['Body SHA-256'], name: kv['Signed by'], date: kv.Date, tool: kv.Tool, fp: kv['Key fingerprint'] });
-    keyOk = await crypto.subtle.verify(SIGN, pub, unb64(kv.Signature), enc.encode(payload));
+    const sig = unb64(kv.Signature);
+    // base64 is malleable: the last character carries unused bits, so a different string can decode to the same bytes. Only the canonical spelling is accepted.
+    keyOk = b64(sig) === kv.Signature && await crypto.subtle.verify(SIGN, pub, sig, enc.encode(payload));
   } catch { /* a malformed key or signature is not a valid seal */ }
   if (!keyOk) reasons.push('signature');
   const rebuilt = renderSeal({ name: kv['Signed by'], date: kv.Date, tool: kv.Tool, sha: kv['Body SHA-256'], fp: kv['Key fingerprint'], pub: kv['Public key'], sig: kv.Signature });

@@ -56,7 +56,7 @@ const SURFACES = ['popup', 'options', 'report', 'welcome', 'whatsnew', 'tutorial
  * `tools` for the nineteen cards keyed by the id the session's usage log uses,
  * `press` for what a press says, `fix` for the one action a refusal has.
  */
-const PREFIXES = new Set(['popup', 'options', 'report', 'welcome', 'tutorials', 'panel', 'annotate', 'diagram', 'videoedit', 'replay', 'api', 'common', 'tools', 'press', 'fix', 'overlay', 'buffer', 'bridge', 'aiwrite', 'update']);
+const PREFIXES = new Set(['popup', 'options', 'report', 'welcome', 'tutorials', 'panel', 'annotate', 'diagram', 'videoedit', 'replay', 'api', 'common', 'tools', 'press', 'fix', 'overlay', 'buffer', 'bridge', 'aiwrite', 'update', 'profile', 'seal', 'verify']);
 
 let fail = 0;
 let checks = 0;

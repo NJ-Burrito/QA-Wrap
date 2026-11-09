@@ -176,6 +176,29 @@ Saved cookie profiles and the variables you keep in the API tool are sealed the 
 
 Chrome sync, when you have it on, carries only your preference settings: the recording, retention, sound, keyboard and layout choices and the interface language. Your tester name, the workspace you joined and the save-folder name are kept in `chrome.storage.local` on this machine, and credentials stay in the vault. Three of them are text you type: the "Save into" download folder, the extra mask pattern and the extra redaction words. They sync with the rest, so keep secrets and client names out of them, or switch Chrome sync off. Session data, screenshots and recordings stay on this machine.
 
+### Your name on exports, and the sealed timeline
+
+You can set a name, and a small picture if you like, in Settings > Sessions. Both stay on this machine (the picture never syncs).
+The name is the one the team folder already shows on a session card; QA Wrap adds nothing to it.
+
+- **Every export carries one line of fine print** with your name, the date and the QA Wrap version, for example
+  `Prepared by Layla Haddad · 2026-11-09 · QA Wrap 3.8.4`. It is a closing line in Markdown and text, a small footer in HTML, a
+  `_trace` field in JSON (`log.comment` in a HAR), a comment line in CSV, YAML and TypeScript, a comment in XML and SVG, and a
+  row in the workbooks. Leave the name empty and the line says only the date and the version.
+- **The sealed timeline** (Markdown, "Timeline (sealed)" in the popup and in the report's Save sheet, and in the one-zip option)
+  lists every recorded event as readable text, with your profile in it, and ends with a seal block: the signer's name, the date, the
+  tool version, the SHA-256 of the text above, and an ECDSA P-256 signature with the public key and its fingerprint. The signing key is
+  made once per install, kept non-extractable in the browser's own storage, and never leaves this machine.
+- **Verify file** (Settings > Sessions) reads a sealed file you choose and says **intact** or **altered**, who signed it, the key's
+  fingerprint, and whether that key is this install's. The file is read and checked here; nothing is uploaded.
+
+**What the seal is, and is not.** It is tamper-evidence, not secrecy: the text is readable on purpose, and anyone who has the file can
+read it. It shows that the text and the signer's details are exactly what the key signed, so changing one character makes Verify say
+*altered*. It does not prove who the signer is, because the name is whatever was typed. It cannot stop someone from editing the file and
+sealing it again with their own key; that file verifies as intact, but with a different fingerprint, so compare the fingerprint with one
+you trust. Removing the extension or clearing the browser's site data removes the key; files sealed earlier still verify, but are no
+longer "this install's". Line endings are normalised before the check, so an editor that rewrites CRLF does not trigger a false alarm.
+
 ## Retention and deletion
 
 **Finished sessions are deleted after 30 days by default.** The session record,

@@ -175,6 +175,8 @@ export const FORMATS = {
   sbtm: { category: 'sheet', ext: 'md', label: 'Session sheet (SBTM)', audience: 'human', order: 5, part: 'Session sheet' },
   'sheet-xlsx': { category: 'sheet', ext: 'xlsx', label: 'Session sheet (Excel)', audience: 'human', order: 5, part: 'Session sheet' },
   'timeline-xlsx': { category: 'sheet', ext: 'xlsx', label: 'Timeline (Excel)', audience: 'human', order: 6, part: 'Timeline' },
+  // R5: the whole timeline as readable Markdown, signed with this install's key; "Verify file" in Settings checks it.
+  'timeline-md': { category: 'sheet', ext: 'md', label: 'Timeline (Markdown, sealed)', audience: 'human', order: 6, part: 'Timeline, sealed' },
   suite: { category: 'test', ext: 'md', label: 'Test suite (parent + sub-cases)', audience: 'human', order: 7, part: 'Test suite' },
   'suite-csv': { category: 'test', ext: 'csv', label: 'Test suite (CSV)', audience: 'human', order: 7, part: 'Test suite, CSV' },
   jira: { category: 'ticket', ext: 'txt', label: 'Jira ticket (wiki markup)', audience: 'human', order: 8, part: 'Jira ticket' },
@@ -242,7 +244,7 @@ export const FORMATS = {
  */
 export const KEEP_FORMATS = ['markdown', 'html', 'json', 'har', 'jira', 'github', 'junit', 'playwright', 'sheet-xlsx', 'postman'];
 // features-1010 R5: session.json is the owner-requested AI file, a picker entry of its own: not the keep-list ten, and not "More (not maintained)" either.
-export const isMoreFormat = (id) => id in FORMATS && id !== 'session-manifest' && id !== 'bundle' && id !== 'session-json' && !KEEP_FORMATS.includes(id);
+export const isMoreFormat = (id) => id in FORMATS && id !== 'session-manifest' && id !== 'bundle' && id !== 'session-json' && id !== 'timeline-md' && !KEEP_FORMATS.includes(id);
 
 /**
  * Characters no filesystem or download API will take, plus the ones that are

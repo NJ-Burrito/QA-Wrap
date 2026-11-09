@@ -540,13 +540,13 @@ test('the contract ids S6 handed on are still there', () => {
   assert.match(html, /data-awake=/, 'data-awake is gone from <body>');
 });
 
-test('the review pane (§4.5): a focusable heading, 4 export buttons, both open-report keys', () => {
+test('the review pane (§4.5): a focusable heading, 5 export buttons, both open-report keys', () => {
   const done = html.slice(html.indexOf('id="step-done"'), html.indexOf('</section>', html.indexOf('id="step-done"')));
   assert.match(done, /id="review-heading"[^>]*tabindex="-1"/, '#review-heading is missing or is not a focus target');
   assert.match(done, /id="done-summary"/, 'done-summary is gone — refreshNow()/the stop handler write the dynamic summary into it');
 
   const formats = [...done.matchAll(/data-format="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(formats.sort(), ['json', 'markdown', 'playwright', 'sbtm'], 'the review pane does not offer exactly the 4 existing export formats');
+  assert.deepEqual(formats.sort(), ['json', 'markdown', 'playwright', 'sbtm', 'timeline-md'], 'the review pane does not offer exactly the 4 existing export formats and the sealed timeline');
 
   assert.match(done, /id="stat-duration"/, 'the duration stat tile is gone');
   assert.match(done, /id="stat-steps"/, 'the steps stat tile is gone');

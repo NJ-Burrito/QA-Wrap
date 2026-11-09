@@ -1006,3 +1006,19 @@ annotation on screenshots, named and shareable rule sets, full-page capture, and
 real Lighthouse run, the last of which an extension cannot do at all.
 `ARCHITECTURE.md` carries the build guidance; `npm test` is the sanity check
 for adding anything new.
+
+## Your name, the fine-print line and the sealed timeline (R3, R5)
+
+Set a name (and an optional picture) in Settings > Sessions. Every export then ends with one line of fine print (`Prepared by <name> ·
+<date> · QA Wrap <version>`; in Arabic `إعداد: <name> · <date> · QA Wrap <version>`), in the form each format can carry: a last line in
+Markdown and text, a footer in HTML, `_trace` in JSON, a comment in CSV, YAML, TypeScript, XML and SVG, a row in the workbooks. The code
+is `core/profile.js` (`loadProfile()`, `traceLine({ lang, date, version })`) and `core/trace-export.js`.
+
+"Timeline (sealed)" exports the whole timeline as Markdown with the profile in it, ending in a seal block (`core/seal.js`): name, date,
+version, the SHA-256 of the text, and an ECDSA P-256 signature from a non-extractable per-install key (`platform/seal-key.js`). "Verify
+file" in Settings reports intact or altered, the signer, the key fingerprint and whether the key is this install's.
+
+Be honest about it: this is **tamper-evidence, not secrecy**. Changing one character makes Verify say altered, but anyone can edit the
+file and seal it again with their own key; it then verifies as intact with a different fingerprint, so compare the fingerprint with one you
+trust. The name is whatever was typed, so the seal proves what was signed, not who signed it. Tests: `tools/test-profile.mjs`,
+`tools/test-seal.mjs`.
