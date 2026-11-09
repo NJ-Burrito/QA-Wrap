@@ -24,7 +24,7 @@ export const PICTURE_MAX = 60_000;
 
 const PICTURE_RE = /^data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/;
 /* C0 and C1 controls, line and paragraph separators, and the bidi overrides/embeddings that could flip the line a reader sees. Isolates are added by us, never accepted. */
-const UNSAFE = /[\u0000-\u001F\u007F-\u009F  ‪-‮⁦-⁩‎‏﻿]/g;
+const UNSAFE = /[\u0000-\u001F\u007F-\u009F\u2028\u2029\u202A-\u202E\u2066-\u2069\u200E\u200F\uFEFF]/g;
 
 /** A name as it may be printed: one line, no control or bidi characters, trimmed, at most NAME_MAX characters. */
 export function cleanName(raw) {
@@ -78,8 +78,8 @@ export function dayOf(date) {
   return `${x.getFullYear()}-${p(x.getMonth() + 1)}-${p(x.getDate())}`;
 }
 
-const FSI = '⁨';
-const PDI = '⁩';
+const FSI = '\u2068';
+const PDI = '\u2069';
 const iso = (s) => `${FSI}${s}${PDI}`;
 
 /**
