@@ -1,0 +1,79 @@
+{
+  "id": "qa-wrap-40",
+  "kind": "trailer",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 20,
+  "seconds": 40.0,
+  "sampleRate": 48000,
+  "source": "derived from qa-wrap.cues.json: same bed engine, sections re-cut to the 40 s film (no poster card, no 52 s shot table)",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "targetLufs": -26.9,
+    "sections": [
+      {
+        "name": "intro",
+        "fromBar": 1,
+        "toBar": 3,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 3,
+        "toBar": 18,
+        "note": "kick + bass + 16th hats"
+      },
+      {
+        "name": "lift",
+        "fromBar": 18,
+        "toBar": 19,
+        "note": "plucks up an octave"
+      },
+      {
+        "name": "out",
+        "fromBar": 19,
+        "toBar": 21,
+        "note": "single hit, ring out under the end card"
+      }
+    ],
+    "swells": [
+      {
+        "endSec": 36.0,
+        "dur": 1,
+        "gain": 0.45,
+        "note": "reverse swell into the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 18,
+      "singleHitBar": 19,
+      "ringOut": true
+    },
+    "padGain": 0.126,
+    "padSections": [
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band."
+  },
+  "voice": {
+    "voice": "Kore",
+    "lines": []
+  },
+  "seed": 20260908,
+  "rests": [],
+  "revision": "c40-1"
+}

@@ -1,0 +1,399 @@
+<!doctype html>
+<!-- QA Wrap 40 s commercial, rebuilt from the shipped MP4 (the original HyperFrames source is lost; see
+     work/sdlc/build-film/DETAIL.md). One file, two languages, two aspects: build.mjs fills the __X__ markers.
+     Deterministic: one paused GSAP timeline, no Math.random at run time (seeded below). -->
+<html lang="__LANG__" dir="ltr">
+<head>
+<meta charset="utf-8">
+<script src="./assets/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyahsans-Regular.woff2") format("woff2");font-weight:400}
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyahsans-Medium.woff2") format("woff2");font-weight:500}
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyahsans-Bold.woff2") format("woff2");font-weight:700}
+@font-face{font-family:"Thmanyah Sans";src:url("./assets/fonts/thmanyahsans-Black.woff2") format("woff2");font-weight:900}
+@font-face{font-family:"Thmanyah Serif Display";src:url("./assets/fonts/thmanyahserifdisplay-Bold.woff2") format("woff2");font-weight:700}
+@font-face{font-family:"Thmanyah Serif Display";src:url("./assets/fonts/thmanyahserifdisplay-Black.woff2") format("woff2");font-weight:900}
+@font-face{font-family:"Thmanyah Serif Text";src:url("./assets/fonts/thmanyahseriftext-Medium.woff2") format("woff2");font-weight:500}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:__W__px;height:__H__px;overflow:hidden;background:#171a1d}
+:root{--ink:#ecebe7;--dim:#8a9096;--card:#25292e;--card2:#2c3137;--line:#3a4047;--salmon:#ff7d63;--amber:#f0b94a;--green:#7bd389;--bg:#171a1d}
+#stage{position:relative;width:__W__px;height:__H__px;overflow:hidden;background:var(--bg);font-family:"Thmanyah Sans",sans-serif;color:var(--ink)}
+.abs{position:absolute}
+#glowR,#glowG{position:absolute;border-radius:50%;filter:blur(40px)}
+#glowR{width:1500px;height:1500px;background:radial-gradient(circle,rgba(190,80,50,.34) 0,rgba(190,80,50,.12) 40%,transparent 68%)}
+#glowG{width:1500px;height:1500px;background:radial-gradient(circle,rgba(70,150,85,.30) 0,rgba(70,150,85,.10) 42%,transparent 68%);opacity:0}
+.ghost{position:absolute;background:#262d38;border-radius:10px;filter:blur(7px);opacity:.42}
+.bokeh{position:absolute;border-radius:50%;background:#aeb6bf;filter:blur(5px);opacity:.28}
+#world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 540px}
+.v #world{left:-420px;top:420px}
+.card{position:absolute;left:600px;top:340px;width:720px;height:440px;border-radius:18px;background:linear-gradient(#2a2e33,#24282c);border:1px solid #343a41;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.card .hd{position:absolute;left:0;right:0;top:0;height:76px;border-bottom:1px solid #343a41}
+.card .id{position:absolute;left:32px;top:24px;font:700 24px "Thmanyah Sans";letter-spacing:.06em;color:#aeb3b8;direction:ltr}
+.tag{position:absolute;right:30px;top:22px;height:34px;padding:0 20px;border-radius:17px;font:900 17px/34px "Thmanyah Sans";letter-spacing:.08em;direction:rtl}
+.tag.open{border:1.5px solid #4b525a;color:#aeb3b8}
+.tag.closed{background:var(--salmon);color:#2a1410;opacity:0}
+.tag.fixed{background:var(--green);color:#123018;opacity:0}
+.tbar{position:absolute;left:32px;top:104px;width:420px;height:12px;border-radius:6px;background:#5a6068}
+.row{position:absolute;left:32px;width:660px;height:34px}
+.row svg{position:absolute;left:0;top:2px;width:36px;height:30px}
+.pills{position:absolute;left:78px;top:8px;right:0;height:18px;display:flex;gap:8px}
+.pills i{flex:1;border-radius:9px;background:#464c53}
+.pb{position:absolute;left:78px;top:11px;right:0;height:14px;border-radius:7px}
+.stamp{position:absolute;left:560px;top:497px;width:800px;text-align:center;font:900 70px/1 "Thmanyah Sans";letter-spacing:.02em;color:var(--salmon);border:6px solid var(--salmon);border-radius:14px;padding:22px 20px;transform:rotate(-9deg);white-space:nowrap;direction:__DIR__}
+.stamp.sm{font-size:48px;padding:12px 16px;border-width:4px;width:auto}
+.stamp.g{color:var(--green);border-color:var(--green)}
+.chip{position:absolute;width:60px;height:60px;border-radius:14px;background:linear-gradient(#2d3238,#23272c);box-shadow:0 10px 22px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.chip svg{width:44px;height:44px}
+.ic{fill:none;stroke:#eceae6;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sal{stroke:var(--salmon)}.amb{stroke:var(--amber)}
+.btn{position:absolute;border-radius:20px;background:var(--amber);color:#2a2008;font:900 24px/1 "Thmanyah Sans";display:flex;align-items:center;justify-content:center;box-shadow:0 8px 0 #c08a25,0 18px 30px rgba(0,0,0,.4);letter-spacing:.04em}
+.pill{position:absolute;height:34px;padding:0 18px;border-radius:17px;background:#272b30;border:1px solid #3a4047;font:700 17px/32px "Thmanyah Sans";letter-spacing:.08em;white-space:nowrap}
+.dot{position:absolute;width:14px;height:14px;border-radius:50%;margin:-7px 0 0 -7px}
+.ttl{font:700 70px/1.15 "Thmanyah Serif Display";color:#d8d6d1;letter-spacing:.01em}
+.cap{position:absolute;font:500 40px/1.3 "Thmanyah Sans";color:#eeede9;white-space:nowrap}
+.v .cap{white-space:normal;width:940px}
+.mono{font-family:"Thmanyah Sans";letter-spacing:.06em;font-weight:700}
+.v .cap{width:840px}
+/* Arabic cut: the ticket is Arabic UI, so its layout mirrors (treatment commercial-ar.md, "Mirror direction") */
+.ar .card .id{left:auto;right:32px}
+.ar .card .hd .tag{right:auto;left:30px}
+.ar #card .tbar{left:auto;right:32px}
+.ar .row{left:auto;right:32px}
+.ar .row svg{left:auto;right:0}
+.ar .pills,.ar .pb{left:0;right:78px}
+.br{border-left:2px solid transparent;border-right:2px solid transparent;padding:0 4px;margin:0 2px}
+bdi{unicode-bidi:isolate}
+/* 9:16 (director note 3): every on-screen label at least 28 px on the 1080-wide frame. World labels are sized for the
+   beat's world scale (0.9 card beats: >= 32 px; 0.66 wide beats: >= 43 px); screen-space pills 30 px. */
+.v .card .id{font-size:32px!important}
+.v .card .hd .tag{font-size:32px!important;height:48px!important;line-height:48px!important}
+.v .pill{font-size:44px!important;height:auto!important;line-height:1.3!important;padding:4px 22px!important;border-radius:32px!important}
+.v #ui .pill{font-size:30px!important}
+.v .btn{font-size:44px!important}
+.v #f500{font-size:46px!important;width:110px!important;height:76px!important;line-height:72px!important;margin-left:-15px;margin-top:-8px}
+.v .day{font-size:44px!important}
+.v #tokC{font-size:44px!important;height:auto!important}
+.v #f403{font-size:44px!important}
+.v #made{font-size:34px!important}
+.v #url{font-size:36px!important}
+.v #gh{font-size:32px!important}
+.v #dlB{font-size:34px!important;width:400px!important;left:760px!important}
+.v #dlI>div{font-size:40px!important;width:56px!important;height:56px!important;line-height:56px!important;right:-20px!important;top:-24px!important}
+.v #msP{left:770px!important}
+/* 9:16 end card: the lockup reads at >= 60 % of the frame width (director note 3 check at 38.5 s) */
+.v #lock{top:250px!important}
+.v #lock span:first-child{width:140px!important;height:140px!important;vertical-align:-22px!important}
+.v #lock span:last-child{font-size:160px!important}
+.v #made{top:495px!important}
+.v #tagRow{top:555px!important}
+.v #dlB{top:645px!important}
+.v #url{top:735px!important}
+.v #gh{top:790px!important}
+</style>
+</head>
+<body class="__ASPECT__ __LANG__">
+<div id="stage" data-composition-id="qaw-c40-__LANG__-__ASPECT__" data-start="0" data-duration="40" data-fps="30" data-width="__W__" data-height="__H__">
+  <div id="bg"></div>
+  <div id="world"></div>
+  <div id="ui"></div>
+</div>
+<script>
+const LANG="__LANG__", AR=LANG==="ar", V=document.body.classList.contains("v");
+const ID="qaw-c40-__LANG__-__ASPECT__";
+const S={
+en:{cap:["Cannot reproduce. Closed.","Your bug was real.","The proof was gone.",null,"Press Start.","QA Wrap records while you test.","Every failure links to the click","that caused it.","Press once.","It's in Jira, proof attached.","In Jira, Arabic reads","right to left.","English keeps its order.","Data Center sign-in works.","Errors read as plain sentences.","Updates are checked daily.","After one-time setup,","one press installs.","Your next bug comes with proof.","Download QA Wrap.","It's free and open source."],
+ stamp:"CANNOT REPRODUCE",fixed:"FIXED",open:"OPEN",closed:"CLOSED",start:"START",file:"FILE",high:"HIGH",ms:"+212 ms",update:"UPDATE",newt:"NEW",
+ t1:"STEPS? · REQUEST? · CONSOLE?",clicks:["CLICKS","REQUESTS","CONSOLE"],traced:["TRACED",""],filed:["FILED",""],since:["ASKED FOR SINCE ","2008"],dc:"DATA CENTER",kept:["SESSIONS ","KEPT"],
+ days:["M","T","W","T","F","S","S"],tok:"The token works but is not allowed to do this.",
+ made:"Made by Nader Alzghoul (NJ-Burrito)",tags:["Free","MIT","English and Arabic"],dl:"Download free"},
+ar:{cap:["تعذر تكراره. مغلق.","كان الخلل حقيقيا.","لكن الدليل ضاع.","الخطوات والطلبات ووحدة التحكم، تبعثرت كلها.","اضغط ابدأ.","كيو إيه راب (QA Wrap) يسجل أثناء اختبارك.","كل خطأ يرتبط بالنقرة","التي سببته.","اضغط مرة.","وهو في جيرا (Jira) بدليله.","العربية في جيرا","من اليمين إلى اليسار.","والإنجليزية بترتيبها.","دخول مركز البيانات (Data Center) يعمل.","والأخطاء جمل واضحة.","التحديثات تفحص يوميا.","وبعد الإعداد الأول","تثبتها بضغطة.","الخلل القادم يأتي بدليله.","احصل على كيو إيه راب.","مجاني ومفتوح المصدر."],
+ stamp:"تعذر التكرار",fixed:"تم الإصلاح",open:"مفتوح",closed:"مغلق",start:"ابدأ",file:"ارفع",high:"عالية",ms:'<bdi dir="ltr">+212</bdi> مللي ثانية',update:"تحديث",newt:"جديد",
+ t1:"الخطوات؟ · الطلب؟ · وحدة التحكم؟",clicks:["النقرات","الطلبات","وحدة التحكم"],traced:["تم ",""],filed:["تم الرفع",""],since:["مطلوب منذ ","2008"],dc:"مركز البيانات (Data Center)",kept:["الجلسات ","محفوظة"],
+ days:["ن","ث","ر","خ","ج","س","ح"],tok:"الرمز يعمل لكنه غير مصرح له بهذا الإجراء.",
+ made:"من صنع نادر الزغول (NJ-Burrito)",tags:["مجاني","MIT","عربي وإنجليزي"],dl:"احصل عليه مجانا"}};
+S.ar.traced=["تم تتبعه",""];
+const L=S[LANG];
+// Latin runs inside Arabic lines are isolated (QA Wrap, Jira, Data Center, NJ-Burrito, MIT)
+const iso=s=>AR&&s?s.replace(/[A-Za-z][A-Za-z .\-]*[A-Za-z]/g,m=>`<bdi dir="ltr">${m}</bdi>`):s;
+// mirror helpers for the Arabic cut: mx(left,width) mirrors a box, MX(x) a point, SG(n) a horizontal offset
+const mx=(x,w)=>AR?1920-x-w:x, MX=(x)=>AR?1920-x:x, SG=(n)=>AR?-n:n;
+// caption windows [start,end] seconds, measured from the shipped EN film
+// index 3 is the Arabic bridge caption 3b (bible §8); the EN cut has no line there (null)
+const CAPT=[[.37,2.07],[2.47,4.0],[4.03,5.9],[6.0,8.0],[8.2,9.27],[10.37,13.0],[13.07,15.47],[15.47,16.9],[16.97,17.7],[17.77,20.0],[20.07,21.6],[21.6,22.65],[22.7,24.7],[24.77,26.35],[26.4,28.6],[28.67,30.05],[30.1,31.5],[31.5,32.9],[33.07,35.7],[36.37,37.4],[37.43,39.27]];
+let seed=20261109;const rnd=()=>{seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296};
+const $=(h)=>{const d=document.createElement("div");d.innerHTML=h.trim();return d.firstChild};
+const world=document.getElementById("world"),bg=document.getElementById("bg"),ui=document.getElementById("ui");
+const add=(h,p=world)=>{const e=$(h);p.appendChild(e);return e};
+const SVG={
+ burst:'<svg viewBox="0 0 24 24" class="ic __c"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>',
+ bars:'<svg viewBox="0 0 24 24" class="ic"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
+ alert:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 8v5M12 16v.5"/></svg>',
+ bug:'<svg viewBox="0 0 24 24" class="ic sal"><path d="M9 7a3 3 0 016 0v1H9zM7 9h10v5a5 5 0 01-10 0zM3 8l3 2M21 8l-3 2M2 14h4M18 14h4M4 20l3-3M20 20l-3-3M12 9v10"/></svg>',
+ timer:'<svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="13" r="7"/><path d="M12 9v4l2 2M9 2h6"/></svg>',
+ code:'<svg viewBox="0 0 24 24" class="ic"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>',
+ cols:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M15 4v16"/></svg>',
+ input:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="8" width="18" height="8" rx="3"/><path d="M7 12h6"/></svg>',
+ cam:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="7" width="18" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>',
+ key:'<svg viewBox="0 0 24 24" class="ic amb" style="width:34px;height:34px"><circle cx="8" cy="8" r="4"/><path d="M11 11l9 9M16 16l-2 2M19 19l-2 2"/></svg>',
+ dl:'<svg viewBox="0 0 24 24" class="ic" style="width:34px;height:34px"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>',
+ check:'<svg viewBox="0 0 24 24" width="100%" height="100%"><circle cx="12" cy="12" r="12" fill="#7bd389"/><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#10331a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ mark:'<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M62 18A36 36 0 1 0 82 56" fill="none" stroke="#ecebe7" stroke-width="13" stroke-linecap="round"/><path id="mk" d="M44 54l12 13 28-36" fill="none" stroke="#ff7d63" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+const ico=(k,c="")=>SVG[k].replace("__c",c);
+// ---------- background
+const glowR=add('<div id="glowR"></div>',bg),glowG=add('<div id="glowG"></div>',bg);
+gsap.set(glowR,{x:-300,y:-250});gsap.set(glowG,{x:560,y:-180});
+const ghosts=[];for(let i=0;i<14;i++){const w=60+rnd()*110,h=26+rnd()*50;const g=add(`<div class="ghost" style="width:${w}px;height:${h}px"></div>`,bg);const x0=rnd()*(V?1000:1800),y0=rnd()*(V?1800:1000);gsap.set(g,{x:x0,y:y0,rotation:rnd()*30-15});ghosts.push([g,x0,y0,rnd()*40+20,rnd()*6.28])}
+const boks=[];for(let i=0;i<10;i++){const s=8+rnd()*12;const b=add(`<div class="bokeh" style="width:${s}px;height:${s}px"></div>`,bg);const x0=rnd()*(V?1040:1880),y0=rnd()*(V?1880:1040);gsap.set(b,{x:x0,y:y0});boks.push([b,x0,y0,rnd()*30+10,rnd()*6.28])}
+// ---------- UI text (screen space)
+// 9:16: captions near 66 % height and 170 px clear of the right-edge button column (review-checklist B10)
+const MARG=V?70:112, CAPY=V?1268:880, TTLY=V?430:128, CAPM=V&&AR?170:MARG;
+const capEls=L.cap.map((t,i)=>{if(!t)return null;const e=add(`<div class="cap" style="opacity:0;${AR?`right:${CAPM}px;direction:rtl;text-align:right`:`left:${MARG}px`};top:${CAPY}px">${iso(t)}</div>`,ui);return e});
+function title(html){const w=add(`<div style="position:absolute;top:${TTLY}px;${AR?`right:${MARG}px;direction:rtl`:`left:${MARG}px`};width:${V?940:1500}px;overflow:hidden;padding:6px 0;${AR?"text-align:right":""}"><div class="ttl" style="opacity:0">${html}</div></div>`,ui);return w.firstChild}
+const tT1=title(L.t1),tTr=title(AR?`<span style="color:#7bd389">${L.traced[0]}</span>`:`<span style="color:#7bd389">${L.traced[0]}</span>`),tFi=title(`<span style="color:#7bd389">${L.filed[0]}</span>`),
+ tSi=title(`${L.since[0]}<span style="background:#ff7d63;color:#2a1410;padding:0 8px;border-radius:5px;direction:ltr;display:inline-block">${L.since[1]}</span>`),tDc=title(iso(L.dc)),
+ tKe=title(`${L.kept[0]}<span style="color:#7bd389">${L.kept[1]}</span>`);
+// ---------- scene 1: ticket
+const cardHTML=(open,rowsHTML)=>`<div class="card" id="card"><div class="hd"><div class="id">BUG-1042</div><div class="tag open" id="tOpen">${L.open}</div><div class="tag closed" id="tClosed">${L.closed}</div><div class="tag fixed" id="tFixed">${L.fixed}</div></div><div class="tbar"></div>${rowsHTML}</div>`;
+const rowY=[150,188,226];const rowIcons=["burst","bars","alert"];
+let rows="";rowIcons.forEach((k,i)=>{rows+=`<div class="row r${i}" style="top:${rowY[i]}px">${ico(k)}<div class="pills">${'<i></i>'.repeat(i==1?7:i==0?8:7)}</div><div class="pb" style="background:${["#f0b94a","#a7adb3","#f1efea"][i]};opacity:0"></div></div>`});
+const card=add(cardHTML(1,rows));
+const stamp0=0;const stamp=add(`<div class="stamp" id="stamp" >${L.stamp}</div>`);if(AR)stamp.style.fontSize="84px";
+// s12 bookend (director note 1): the FIXED stamp rhymes with s01 (same box, centred on the card, -9 deg) and sits above
+// the evidence rows, on a card-coloured fill so no bar runs through the word
+const stamp2=add(`<div class="stamp g" id="stamp2" style="opacity:0;z-index:5;background:rgba(37,41,46,.94)">${L.fixed}</div>`);if(AR)stamp2.style.fontSize="84px";
+const bugBadge=add(`<div class="chip" id="bugBadge" style="width:36px;height:36px;border-radius:50%;left:${mx(1240,36)}px;top:444px;opacity:0;background:#1d2024;border:2px solid #ecebe7">${ico("bug")}</div>`);
+const bugBig=add(`<div class="chip" id="bugBig" style="left:${mx(690,70)}px;top:700px;opacity:0;background:none;box-shadow:none;width:70px;height:70px">${ico("bug")}</div>`);
+bugBig.firstChild.style.cssText="width:56px;height:56px";
+// ---------- scene 2/3: chips
+const names=["burst","bars","alert","timer","code","cols","input","cam","burst","alert","code","cols","input","bars","timer"];
+const chips=names.map((k,i)=>{const sz=70+Math.round(rnd()*30);const e=add(`<div class="chip" style="opacity:0;width:${sz}px;height:${sz}px">${ico(k)}</div>`);return {e,x:300+rnd()*1360,y:120+rnd()*600,r:rnd()*40-20}});
+const startBtn=add(`<div class="btn" id="startBtn" style="left:888px;top:490px;width:144px;height:144px;opacity:0">${L.start}</div>`);
+const bugFly=add(`<div class="chip" id="bugFly" style="opacity:0;background:none;box-shadow:none">${ico("bug")}</div>`);
+// ---------- scene 4-6: mark + timeline
+const mark=add(`<div class="abs" id="mark" style="left:910px;top:506px;width:100px;height:100px;opacity:0">${SVG.mark}</div>`);
+const TLY=560, TLX0=268, TLX1=1700, TLW=TLX1-TLX0;
+// Arabic cut: time flows right to left; the line draws from its right end, dots land right to left
+const tline=add(`<div class="abs" id="tline" style="left:${mx(TLX0,TLW)}px;top:${TLY-1}px;width:${TLW}px;height:2px;background:#8d9399;transform-origin:${AR?"100%":"0"} 50%;opacity:0"></div>`);
+const dots=[];const dx=[0,.04,.08,.14,.19,.25,.31,.37,.43,.5,.56,.61,.68,.76,.88];
+dx.forEach((f,i)=>{const e=add(`<div class="dot" style="left:${MX(TLX0+f*TLW)}px;top:${TLY}px;background:${i%3==1?"#eceae6":"#f0b94a"};opacity:0"></div>`);dots.push(e)});
+const CLX=MX(TLX0+.2*TLW), F5X=MX(TLX0+.7*TLW);
+const clk=add(`<div class="abs" id="clk" style="left:${CLX-30}px;top:${TLY-30}px;width:60px;height:60px;border-radius:12px;background:#2a2e33;display:flex;align-items:center;justify-content:center;opacity:0">${ico("burst","amb")}</div>`);
+const ring=add(`<div class="abs" id="ring" style="left:${CLX-47}px;top:${TLY-47}px;width:94px;height:94px;border-radius:50%;border:2px solid #b8913d;opacity:0"></div>`);
+const f500=add(`<div class="abs" id="f500" style="left:${F5X-40}px;top:${TLY-30}px;width:80px;height:60px;border-radius:10px;border:2px solid #ff7d63;background:#2a2227;font:500 38px/56px 'Thmanyah Serif Text';color:#ff7d63;text-align:center;opacity:0;direction:ltr">500</div>`);
+const arc=add(`<svg class="abs" id="arc" style="left:0;top:0;opacity:0" width="1920" height="1080"><path id="arcp" d="${AR?"M1270 520 Q960 340 650 520":"M650 520 Q960 340 1270 520"}" fill="none" stroke="#e8e6e1" stroke-width="2"/></svg>`);
+const msP=add(`<div class="pill" id="msP" style="left:900px;top:385px;opacity:0;background:#2b2f35;direction:${AR?"rtl":"ltr"}">${L.ms}</div>`);
+const tlabel=add(`<div class="pill mono" id="tlabel" style="left:${AR?210:1620}px;top:482px;opacity:0;direction:ltr">00:00</div>`);
+let kp;
+if(AR){const row=add(`<div style="position:absolute;top:${V?500:80}px;right:${MARG}px;display:flex;gap:12px;direction:rtl"></div>`,ui);kp=L.clicks.map(t=>add(`<div class="pill" style="position:static;opacity:0;background:#2a2e33">${t}</div>`,row))}
+else kp=L.clicks.map((t,i)=>add(`<div class="pill" style="top:${V?500:80}px;left:${(V?90:112)+[0,92,200][i]}px;opacity:0;background:#2a2e33">${t}</div>`,ui));
+const high=add(`<div class="pill" id="high" style="left:${F5X}px;top:612px;background:#7bd389;color:#10331a;border:0;opacity:0;font-weight:900">${L.high}</div>`);
+// ---------- scene 7/8: report + jira
+const barCard=add(`<div class="abs" id="repWrap" style="left:0;top:0;opacity:0"></div>`);
+const fileBtn=add(`<div class="btn" id="fileBtn" style="left:${mx(1292,112)}px;top:722px;width:112px;height:112px;border-radius:18px;opacity:0;font-size:20px">${L.file}</div>`);
+// J chip: in 9:16 (world 0.9) it moves inward so it is not on the frame edge
+const JX=V?(AR?470:1366):mx(1470,84);
+const jira=add(`<div class="chip" id="jira" style="left:${JX}px;top:356px;width:84px;height:84px;border-radius:16px;opacity:0"><span style="font:700 52px 'Thmanyah Serif Display';color:#eceae6;direction:ltr">J</span></div>`);
+const jchk=add(`<div class="abs" id="jchk" style="left:${JX+64}px;top:338px;width:36px;height:36px;opacity:0">${ico("check")}</div>`);
+const jatt=add(`<div class="pill" id="jatt" style="left:${AR?JX+152:JX-140}px;top:420px;height:30px;font-size:16px;line-height:28px;padding:0 14px;opacity:0;direction:ltr">&#128206; 3</div>`);
+jatt.innerHTML='<svg viewBox="0 0 24 24" style="width:16px;height:16px;vertical-align:-3px" class="ic"><path d="M21 12l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/></svg> 3';
+// ---------- scene 9: Arabic RTL typing
+const AT="زر Login لا يستجيب بعد استدعاء API.";
+const doc=add(`<div class="card" id="doc" style="left:400px;top:376px;width:1120px;height:368px;opacity:0;border-radius:16px"><div class="tbar" style="width:285px;top:34px;left:56px;height:10px;background:#555b62"></div><div class="pill" id="rtl" style="right:46px;left:auto;top:28px;background:#f0b94a;color:#2a2008;border:0;font-weight:900;direction:ltr">RTL ı LTR</div><div id="atext" style="position:absolute;left:56px;right:56px;top:112px;font:400 40px/1.4 'Thmanyah Serif Text';white-space:nowrap;color:#f1efea;direction:ltr;text-align:left"></div><div id="caret" style="position:absolute;left:56px;top:104px;width:2px;height:70px;background:#eceae6"></div><div id="uline" style="position:absolute;right:56px;top:166px;width:0;height:3px;background:#7bd389;border-radius:2px"></div></div>`);
+// ---------- scene 10: data center
+const fields=[0,1,2].map(i=>add(`<div class="abs fld" style="left:${mx(620,280)}px;top:${400+i*112}px;width:280px;height:96px;border-radius:14px;border:2px solid #3b4249;background:#262b30;opacity:0;direction:ltr"><span style="position:absolute;left:24px;top:36px;letter-spacing:7px;color:#9aa0a6;font-size:24px">•••</span></div>`));
+const keyI=add(`<div class="abs" id="keyI" style="left:${mx(760,60)}px;top:540px;width:60px;height:60px;opacity:0">${ico("key")}</div>`);
+const fchk=add(`<div class="abs" id="fchk" style="left:${mx(872,44)}px;top:384px;width:44px;height:44px;opacity:0">${ico("check")}</div>`);
+const f403=add(`<div class="abs" id="f403" style="left:${mx(1224,120)}px;top:534px;width:120px;height:62px;border-radius:10px;border:2px solid #b85b49;background:#2a2227;font:500 40px/58px 'Thmanyah Serif Text';color:#e0765f;text-align:center;opacity:0;direction:ltr">403</div>`);
+const tokC=add(`<div class="abs" id="tokC" style="left:${mx(960,650)}px;top:450px;width:650px;height:220px;border-radius:16px;background:#2a2e33;box-shadow:0 20px 40px rgba(0,0,0,.4);padding:46px 40px;font:500 34px/1.5 'Thmanyah Sans';color:#e8e6e1;opacity:0;${AR?"direction:rtl;text-align:right":""}">${iso(L.tok)}</div>`);
+// ---------- scene 11: update
+const ring2=add(`<div class="abs" id="ring2" style="left:892px;top:500px;width:136px;height:136px;opacity:0">${SVG.mark.replace('id="mk"','id="mk2"')}</div>`);
+const bars3=add(`<div class="abs" id="bars3" style="left:${mx(690,70)}px;top:520px;width:70px;height:48px;opacity:0;display:flex;gap:5px;align-items:center"><i style="width:18px;height:28px;border:2px solid #5a6068;border-radius:5px"></i><i style="width:18px;height:36px;border:2px solid #5a6068;border-radius:5px"></i><i style="width:18px;height:28px;border:2px solid #5a6068;border-radius:5px"></i></div>`);
+const dayEls=L.days.map((d,i)=>{const x=AR?1400-i*146:520+i*146;return add(`<div class="abs day" style="left:${x-30}px;top:774px;width:60px;height:60px;border-radius:14px;background:#262b30;border:1px solid #343a41;font:900 24px/58px 'Thmanyah Sans';color:#c9cdd1;text-align:center;opacity:0;border-color:#4b525a">${d}<div class="dchk" style="position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:50%;background:#eceae6;opacity:0"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#1d2024" stroke-width="3.5" stroke-linecap="round"/></svg></div></div>`)});
+const arrowD=add(`<div class="abs" id="arrowD" style="left:${AR?1400-6*146-14:520+6*146-14}px;top:690px;width:28px;height:36px;opacity:0"><svg viewBox="0 0 24 24" class="ic amb" style="width:28px;height:36px"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>`);
+const newP=add(`<div class="pill" id="newP" style="left:${AR?1400-6*146-34:520+6*146-34}px;top:852px;height:28px;line-height:28px;background:#7bd389;color:#10331a;border:0;font-weight:900;font-size:14px;padding:0 12px;opacity:0">${L.newt}</div>`);
+const dlI=add(`<div class="chip" id="dlI" style="left:${mx(1580,64)}px;top:526px;width:64px;height:64px;opacity:0;background:#23272c">${ico("dl")}<div style="position:absolute;right:-8px;top:-10px;width:30px;height:30px;border-radius:50%;background:#eceae6;color:#1d2024;font:900 17px/30px 'Thmanyah Sans';text-align:center;direction:ltr">1</div></div>`);
+const updB=add(`<div class="btn" id="updB" style="left:888px;top:740px;width:144px;height:120px;border-radius:20px;font-size:22px;opacity:0;outline:3px solid #c08a25;outline-offset:8px">${L.update}</div>`);
+// ---------- end card
+const lock=add(`<div class="abs" id="lock" style="left:0;top:300px;width:1920px;text-align:center;opacity:0;direction:ltr"><span style="display:inline-block;width:92px;height:92px;vertical-align:-14px;margin-right:16px">${SVG.mark.replace('id="mk"','id="mk3"')}</span><span style="font:700 104px 'Thmanyah Serif Display';color:#f1efea">QA Wrap</span></div>`);
+const made=add(`<div class="abs" id="made" style="left:0;top:432px;width:1920px;text-align:center;font:500 28px 'Thmanyah Sans';color:#a5abb0;opacity:0;${AR?"direction:rtl":""}">${iso(L.made)}</div>`);
+const tagRow=add(`<div class="abs" id="tagRow" style="left:0;top:500px;width:1920px;display:flex;justify-content:center;gap:12px;opacity:0;${AR?"direction:rtl":""}">${L.tags.map(t=>`<span class="pill" style="position:static;background:#272b30;font-size:21px;height:42px;line-height:40px;border-radius:21px">${t}</span>`).join("")}</div>`);
+const dlB=add(`<div class="abs" id="dlB" style="top:584px;width:340px;height:64px;left:790px;border-radius:32px;background:#7bd389;color:#10331a;font:700 28px/64px 'Thmanyah Sans';text-align:center;opacity:0">${L.dl}</div>`);
+const url=add(`<div class="abs" id="url" style="left:0;top:676px;width:1920px;text-align:center;font:400 32px 'Thmanyah Sans';color:#e8e6e1;direction:ltr;opacity:0">https://nj-burrito.github.io/QA-Wrap/</div>`);
+const gh=add(`<div class="abs" id="gh" style="left:0;top:732px;width:1920px;text-align:center;font:400 22px 'Thmanyah Sans';color:#9aa0a6;direction:ltr;opacity:0">github.com/NJ-Burrito/QA-Wrap</div>`);
+// ---------- report card for scenes 7 and 12 (reuses #card)
+// ---------- timeline
+const tl=gsap.timeline({paused:true});
+const set=(t,v,at)=>tl.set(t,v,at), to=(t,v,at)=>tl.to(t,Object.assign({ease:"power2.out"},v),at), fr=(t,a,b,at)=>tl.fromTo(t,a,Object.assign({ease:"power2.out",immediateRender:false},b),at);
+// ambient
+ghosts.forEach(([g,x0,y0,A,ph])=>tl.to(g,{x:x0+A,y:y0+A*.6,duration:40,ease:"none"},0));
+boks.forEach(([b,x0,y0,A,ph])=>tl.to(b,{x:x0-A,y:y0-A*.8,duration:40,ease:"none"},0));
+to(glowR,{opacity:0,duration:1.6},9);to(glowG,{opacity:1,duration:1.6},9.4);to(glowG,{x:V?-200:560,duration:1,ease:"none"},0);
+tl.to(glowG,{x:V?-300:300,y:V?200:-120,duration:3,ease:"power2.inOut"},35.5);
+// captions
+// a line that hands over to the next one at the same instant (15.47, 31.5) is fully out one frame before the next is in
+CAPT.forEach(([a,b],i)=>{if(!capEls[i])return;const n=CAPT[i+1],abut=n&&L.cap[i+1]&&n[0]-b<.05;
+ fr(capEls[i],{opacity:0,y:6},{opacity:1,y:0,duration:.1},a);
+ if(abut)to(capEls[i],{opacity:0,duration:.08,ease:"none"},n[0]-.12);else to(capEls[i],{opacity:0,duration:.1},b-.1)});
+// beat titles: EN rises from a mask; AR wipes in from the inline start (right)
+const tIn=(el,at,d)=>AR?fr(el,{opacity:1,clipPath:"inset(0% 0% 0% 100%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:d+.1,ease:"power2.inOut"},at):fr(el,{opacity:0,yPercent:110},{opacity:1,yPercent:0,duration:d},at);
+// world scale: 1 in 16:9, .66 in 9:16; the scatter pulls the world out (WS to EWS) and the turn brings it back
+// 9:16 (director note 3): card beats at 0.9 with the world centre at 45 % height (y -96), wide beats at 0.66,
+// changed on existing beat changes with power2.inOut 0.5 s (a move, never a cut). 16:9 stays at 1.
+const WS=V?[[0,.9,-96],[5.5,.66,0],[16.9,.9,-96],[24.4,.66,0],[32.85,.9,-96]]:[[0,1,0]];
+tl.fromTo(world,{scale:WS[0][1],y:WS[0][2]},{scale:WS[0][1],y:WS[0][2],duration:.01,ease:"none"},0);
+for(let i=1;i<WS.length;i++)tl.fromTo(world,{scale:WS[i-1][1],y:WS[i-1][2]},{scale:WS[i][1],y:WS[i][2],duration:.5,ease:"power2.inOut",immediateRender:false},WS[i][0]);
+const W0=V?.66:1, PUSH=V?6.0:5.9;
+tl.fromTo(world,{scale:W0},{scale:W0*.93,duration:8.0-PUSH,ease:"sine.inOut",immediateRender:false},PUSH);
+tl.fromTo(world,{scale:W0*.93},{scale:W0,duration:.8,ease:"power2.inOut",immediateRender:false},9.4);
+// S1 stamp 0-4
+set(["#tOpen"],{opacity:1},0);
+gsap.set(stamp,{rotation:-9,scale:1.4,opacity:.4});
+fr(stamp,{scale:1.4,opacity:.4,rotation:-9,color:"#8a3f33",borderColor:"#8a3f33",x:-40,y:10},{rotation:-9,scale:.86,opacity:1,color:"#ff7d63",borderColor:"#ff7d63",x:0,y:0,duration:.95,ease:"power4.in"},0);
+fr(card,{y:0},{y:-4,duration:.15,yoyo:true,repeat:1},.92);
+set("#stamp",{x:0},.7);
+to("#tOpen",{opacity:0,duration:.1},.95);to("#tClosed",{opacity:1,duration:.1},.95);
+// stamp resting geometry: width 800 scaled to fit the card (matches the shipped frame)
+fr(bugBadge,{opacity:0,scale:.2},{opacity:0,duration:0},0);
+fr(bugBig,{opacity:0,scale:.3,x:0,y:0},{opacity:1,scale:1,duration:.3,ease:"back.out(2)"},2.5);
+to(bugBig,{x:SG(540),y:-120,duration:1.4,ease:"power1.inOut"},3.1);
+// S2 4-8: proof gone, title, rows fade
+tIn(tT1,4.2,.5);
+to(".pills i",{opacity:0,duration:.8,stagger:.03},4.2);
+to(bugBig,{opacity:0,duration:.4},4.9);
+to(stamp,{opacity:0,y:60,scale:.8,duration:.7},5.2);
+to(card,{opacity:0,duration:.8},5.6);to("#tClosed",{opacity:0,duration:.4},5.6);
+chips.forEach((c,i)=>{const t0=5.9+i*.07;fr(c.e,{opacity:0,x:960,y:540,scale:.3,rotation:0},{opacity:1,x:c.x,y:c.y,scale:1,rotation:c.r,duration:1.1,ease:"back.out(1.4)"},t0);
+ tl.to(c.e,{x:c.x+24,y:c.y-18,rotation:c.r+5,duration:3,ease:"sine.inOut"},t0+1.1)});
+fr(bugFly,{opacity:0,x:MX(800),y:420},{opacity:1,x:MX(1280),y:640,duration:2.4,ease:"sine.inOut"},5.8);
+to(tT1,{opacity:0,yPercent:-100,duration:.5},7.4);
+// S3 8-10: Press Start
+fr(startBtn,{opacity:0,scale:.4,y:20},{opacity:1,scale:1,y:0,duration:.45,ease:"back.out(2)"},8.0);
+tl.to(startBtn,{scale:.95,duration:.15,ease:"power2.in"},8.9);tl.to(startBtn,{scale:1,duration:.12,ease:"power2.out"},9.05);
+tl.to(startBtn,{y:6,duration:.12,yoyo:true,repeat:1},9.1);
+to(bugFly,{opacity:0,duration:.3},9.0);
+// S4 10-13: chips converge to mark
+chips.forEach((c,i)=>to(c.e,{x:960,y:540,scale:.1,opacity:0,duration:.8,ease:"power3.in"},9.4+i*.03));
+to(startBtn,{opacity:0,scale:.4,duration:.4},9.5);
+fr(mark,{opacity:0,scale:.4},{opacity:1,scale:1,duration:.5,ease:"back.out(1.6)"},10.0);
+fr("#mk",{strokeDasharray:80,strokeDashoffset:80},{strokeDashoffset:0,duration:.5,ease:"power2.out"},10.2);
+to(mark,{x:SG(-610),duration:.6,ease:"power2.inOut"},10.9);
+fr(tline,{opacity:0,scaleX:0},{opacity:1,scaleX:1,duration:2.4,ease:"none"},11.0);
+dots.forEach((d,i)=>fr(d,{opacity:0,scale:.2},{opacity:1,scale:1,duration:.2},11.0+dx[i]*2.4));
+fr(tlabel,{opacity:0},{opacity:1,duration:.3},11.0);
+tlabel.innerHTML=[0,1,2,3,4,5,6,7].map(n=>`<span class="clk" style="display:none">00:0${n}</span>`).join("");
+[...tlabel.children].forEach((c,n)=>{tl.set(c,{display:"inline"},11.0+n*.34);if(n<7)tl.set(c,{display:"none"},11.0+(n+1)*.34)});
+kp.forEach((p,i)=>fr(p,{opacity:0,y:10},{opacity:1,y:0,duration:.3},11.8+i*.12));
+to(kp,{opacity:0,duration:.3},13.05);
+to(mark,{opacity:0,duration:.3},12.7);
+// S5 13-16: focus click -> 500
+to(tline,{x:0,duration:0},0);
+to(dots,{opacity:.35,duration:.4},13.2);
+fr(clk,{opacity:0,scale:.5},{opacity:1,scale:1.5,duration:.5,ease:"back.out(1.5)"},13.2);
+fr(ring,{opacity:0,scale:.5},{opacity:1,scale:1.4,duration:.5},13.3);
+fr(f500,{opacity:0,scale:.5},{opacity:1,scale:1.45,duration:.4,ease:"back.out(1.7)"},13.9);
+to(ring,{opacity:0,duration:.3},15.0);
+to(clk,{scale:1.1,duration:.4},15.0);to(f500,{scale:1.1,duration:.4},15.0);
+fr(arc,{opacity:0},{opacity:1,duration:.4},15.0);fr("#arcp",{strokeDasharray:800,strokeDashoffset:800},{strokeDashoffset:0,duration:.7,ease:"power2.inOut"},15.0);
+fr(msP,{opacity:0,y:8},{opacity:1,y:0,duration:.3},15.5);
+// S6 16-17 traced: slide left
+tIn(tTr,16.0,.4);
+to(tline,{opacity:0,duration:.3},16.1);to(dots,{opacity:0,duration:.3},16.1);to(tlabel,{opacity:0,duration:.3},16.1);
+to(msP,{opacity:0,duration:.3},16.1);
+// director note 2: the click slides toward the 500 (centre gap 220 px) and the arc re-draws between them, held to the hand-over
+to(clk,{x:SG(496),scale:1,duration:.5,ease:"power2.inOut"},16.0);to(f500,{scale:1,duration:.5,ease:"power2.inOut"},16.0);
+tl.to("#arcp",{attr:{d:`M${MX(1050)} 520 Q${MX(1160)} 446 ${MX(1270)} 520`},duration:.5,ease:"power2.inOut"},16.0);
+fr(high,{opacity:0,scale:.5,xPercent:-50},{opacity:1,scale:1,xPercent:-50,duration:.3,ease:"back.out(2)"},16.4);
+to([clk,f500,high,arc],{opacity:0,duration:.3},16.95);to(tTr,{opacity:0,duration:.3},16.9);
+// S7 17-18: report + FILE (card repainted with bars)
+to(card,{opacity:1,y:0,duration:.01},17.0);
+set("#tOpen",{opacity:1},17.0);set(".pills i",{opacity:0},17.0);set(".pb",{opacity:1},17.0);set(stamp,{opacity:0},17.0);
+fr(card,{opacity:0,y:30},{opacity:1,y:0,duration:.4},17.0);
+fr(bugBadge,{opacity:0,scale:.2},{opacity:1,scale:1,duration:.3},17.3);
+fr(".pb",{scaleX:0,transformOrigin:AR?"100% 50%":"0 50%"},{scaleX:1,duration:.6,stagger:.1},17.1);
+fr(fileBtn,{opacity:0,scale:.4},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},17.5);
+tl.to(fileBtn,{y:6,duration:.12,yoyo:true,repeat:1},17.9);
+// S8 18-20 Jira
+if(AR){
+ // the card flies on an arc, leftward, into the Jira chip (x eases in, y eases out: a curved path), then resets off-screen time
+ const jx=JX+42-960, jy=356+42-560;
+ to([bugBadge,fileBtn],{opacity:0,duration:.2},18.15);
+ tl.to(card,{x:jx,duration:.45,ease:"power2.in"},18.2);tl.to(card,{y:jy,duration:.45,ease:"power2.out"},18.2);
+ tl.to(card,{scale:.12,duration:.45,ease:"power2.in"},18.2);to(card,{opacity:0,duration:.1},18.55);
+ set(card,{x:0,y:0,scale:1},20.0);
+}else to([card,bugBadge,fileBtn],{opacity:0,x:-40,duration:.4},18.1);
+fr(jira,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.45,ease:"back.out(2)"},18.3);
+fr(jchk,{opacity:0,scale:.1},{opacity:1,scale:1,duration:.3,ease:"back.out(3)"},19.2);fr(jatt,{opacity:0,y:6},{opacity:1,y:0,duration:.3},19.3);
+tIn(tFi,19.2,.4);
+to([jira,jchk,jatt],{opacity:0,duration:.3},19.9);to(tFi,{opacity:0,duration:.3},19.9);
+// S9 20-24 RTL typing
+fr(doc,{opacity:0,y:30},{opacity:1,y:0,duration:.4},20.0);
+const aT=document.getElementById("atext"),aR=add(`<div id="atextR" style="position:absolute;left:56px;right:56px;top:112px;font:400 40px/1.4 'Thmanyah Serif Text';white-space:nowrap;color:#f1efea;direction:rtl;text-align:right;opacity:0"></div>`,doc);
+const brAT=AT.replace(/(Login|API)/g,'<bdi dir="ltr" class="br">$1</bdi>');
+if(AR){
+ // Arabic cut: the line is laid out right to left from the first frame; a linear wipe from the right reveals it
+ // with the caret riding the wipe's edge (shaping stays intact: no letter-by-letter Arabic). Login and API keep their order.
+ document.getElementById("caret").style.display="none";document.getElementById("uline").style.display="none";
+ aR.style.opacity=1;
+ aR.innerHTML=`<span class="tw" style="position:relative;display:inline-block"><span class="tx" style="display:inline-block;clip-path:inset(0% 0% 0% 100%)">${brAT}</span><i class="cr" style="position:absolute;left:0;top:-3px;width:100%;height:62px;border-left:2px solid #eceae6;opacity:0;pointer-events:none"></i><i class="ul" style="position:absolute;left:0;right:0;bottom:-8px;height:3px;border-radius:2px;background:#7bd389;transform:scaleX(0);transform-origin:100% 50%"></i></span>`;
+ fr(aR.querySelector(".tx"),{clipPath:"inset(0% 0% 0% 100%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:1.4,ease:"none"},20.3);
+ fr(aR.querySelector(".cr"),{opacity:1,xPercent:100},{xPercent:0,duration:1.4,ease:"none"},20.3);
+ to(aR.querySelector(".cr"),{opacity:0,duration:.1},21.8);
+ fr(aR.querySelector(".ul"),{scaleX:0},{scaleX:1,duration:.5},22.0);
+}else{
+ aT.innerHTML=[...AT].map(c=>`<span class="tc" style="opacity:0">${c===" "?"&nbsp;":c}</span>`).join("");
+ aR.innerHTML=brAT;
+ tl.to(".tc",{opacity:1,duration:.01,stagger:1.0/AT.length},20.3);
+ fr("#caret",{opacity:1,x:0},{x:560,duration:1.0,ease:"none"},20.3);
+ to("#caret",{opacity:0,duration:.1},21.7);
+ to(aT,{opacity:0,duration:.15},21.9);to(aR,{opacity:1,duration:.15},21.9);
+ fr("#uline",{width:0},{width:560,duration:.5},22.0);
+}
+tl.to(".br",{borderLeftColor:"#f0b94a",borderRightColor:"#f0b94a",duration:.2},21.9);
+tIn(tSi,22.7,.45);
+to(tSi,{opacity:0,duration:.3},24.2);
+// S10 24-28 data center
+to(doc,{x:SG(-700),opacity:0,duration:.6,ease:"power2.in"},24.5);
+tIn(tDc,24.9,.4);
+fields.forEach((f,i)=>fr(f,{opacity:0,x:SG(60)},{opacity:1,x:0,duration:.4},24.7+i*.12));
+fr(keyI,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},25.4);
+fr(fchk,{opacity:0,scale:.1},{opacity:1,scale:1,duration:.3,ease:"back.out(3)"},26.2);
+fr(f403,{opacity:0,scale:.6},{opacity:1,scale:1,duration:.3},26.5);
+to(f403,{opacity:0,duration:.25},27.0);
+fr(tokC,{opacity:0,x:SG(40)},{opacity:1,x:0,duration:.4},27.1);
+to([...fields,keyI,fchk,tokC,tDc],{opacity:0,duration:.4},28.3);
+// S11 28-33 update
+fr(ring2,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.5},28.6);
+fr(bars3,{opacity:0},{opacity:1,duration:.4},29.0);
+dayEls.forEach((d,i)=>{fr(d,{opacity:0,y:20},{opacity:1,y:0,duration:.3},28.7+i*.12);if(i<6)fr(d.querySelector(".dchk"),{opacity:0,scale:.2},{opacity:1,scale:1,duration:.2},29.4+i*.18)});
+fr(arrowD,{opacity:0,y:-10},{opacity:1,y:0,duration:.3},29.4);
+fr(newP,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.3},30.3);
+fr(dlI,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.4},30.3);
+to([...dayEls,arrowD,newP],{opacity:0,duration:.4},31.0);
+fr(updB,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},31.0);
+tl.to(updB,{y:6,duration:.12,yoyo:true,repeat:1},31.6);
+tIn(tKe,32.1,.45);
+to(ring2,{y:0,duration:0},0);
+to(ring2,{opacity:1,duration:.01},31.6);
+tl.fromTo("#mk2",{strokeDasharray:80,strokeDashoffset:80,opacity:0},{strokeDashoffset:0,opacity:1,duration:.5},31.7);
+to(updB,{y:-60,duration:.01},0);
+to([ring2,bars3,dlI,tKe],{opacity:0,duration:.4},32.9);to(updB,{opacity:0,duration:.3},32.7);
+// S12 33-36 fixed
+set(".pb",{opacity:1},33.0);set("#tClosed",{opacity:0},33.0);set("#tFixed",{opacity:0},33.0);set(stamp,{opacity:0},33.0);
+
+fr(card,{opacity:0,y:30},{opacity:1,y:0,duration:.4},33.1);
+set("#tOpen",{opacity:1},33.1);
+fr(bugBadge,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.3},33.5);
+to("#tOpen",{opacity:0,duration:.1},34.4);to("#tFixed",{opacity:1,duration:.15},34.4);
+fr(stamp2,{opacity:0,scale:1.4,rotation:-9},{opacity:1,scale:.86,rotation:-9,duration:.25,ease:"power4.in"},34.4);
+fr(card,{y:0},{y:-4,duration:.12,yoyo:true,repeat:1},34.64);
+to([card,bugBadge,stamp2],{opacity:0,duration:.4},35.7);
+// S13 end card
+fr(lock,{opacity:0,y:20},{opacity:1,y:0,duration:.6},36.2);
+fr("#mk3",{strokeDasharray:80,strokeDashoffset:80},{strokeDashoffset:0,duration:.5},36.5);
+fr(made,{opacity:0,y:10},{opacity:1,y:0,duration:.4},37.1);fr(tagRow,{opacity:0,y:10},{opacity:1,y:0,duration:.4},37.25);
+fr(dlB,{opacity:0,scale:.8},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},37.4);fr(url,{opacity:0},{opacity:1,duration:.4},37.6);fr(gh,{opacity:0},{opacity:1,duration:.4},37.9);
+window.__timelines=window.__timelines||{};window.__timelines[ID]=tl;
+</script>
+</body>
+</html>
