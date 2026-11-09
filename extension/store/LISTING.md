@@ -21,6 +21,12 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, the accessibility and speed findings, and a timeline you can scrub.
 - Hand over: a record of the session you can hand over, filed to Jira with the project's own fields, or to nine other trackers and seven chat destinations, or saved as files in a folder you choose.
 
+New in 3.9.0
+- Your profile: set a name and, if you like, a picture. Every file you export ends with one small line (name, date, QA Wrap version) so the work can be traced to you. The name and picture stay on your computer.
+- Sealed timeline: both download options can include the whole timeline as a readable Markdown file with your profile in it and a seal at the end. Verify file says whether it is intact or altered, and whose it is. The seal is tamper-evidence, not secrecy: the text stays readable, and anyone can edit a file and seal it again with their own key (the key fingerprint then differs).
+- Performance indicators (KPI): a dashboard of time spent testing, page coverage and bugs filed per day and week, counted only from your own sessions on this device and only from notes you filed as a bug. Export it as a PDF.
+- Films: an Arabic cut of the 40-second film and six short tutorials in English and Arabic, hosted on the website. Nothing loads until you press a link.
+
 What that looks like in numbers
 - No time cap on a recording: it is bounded by your disk, not by a plan.
 - Jira and nine other trackers (GitHub, GitLab, Azure DevOps, Linear, Trello, ClickUp, Asana, Shortcut, YouTrack), and seven chat destinations (Slack, Microsoft Teams, Mattermost, Discord, Google Chat, Telegram, a custom webhook), each only when you set it up and press the button.
@@ -127,3 +133,44 @@ For a managed deployment, `managed-schema.json` carries `hostPermissionsPolicy` 
 Screenshots, in order (T-058, `node tools/ui-shots.mjs` then `node tools/store-shots.mjs`, one run per release): the report with a real failure and the click before it (the hero, never "Passed"); the popup mid-session; the bar with the problems chip; the value palette on a form; the filing dialog. English set shot 1 Oct 2026; the Arabic set is shot after the Arabic listing pass (T-076 promotion gate).
 
 Website: https://nj-burrito.github.io/QA-Wrap/ · Contact: naderalzghoulbusiness@gmail.com
+
+## Arabic listing (second language)
+
+Paste into the Arabic listing once the terminology vote (T-076) has passed, as the checklist says. Same text as the Edge Arabic pack (`store/edge/listing.ar.md`), so the stores say one thing. Arabic is written without visible tashkeel.
+
+**Summary:**
+`مسجّل تقارير أخطاء مجاني ومحلي للمختبرين: يُربط كل إخفاق بالنقرة التي سبّبته، ثم يُرفع إلى Jira بضغطة واحدة.`
+
+**What's new in 3.9.0:**
+`ملف شخصي وسطر صغير في كل تصدير، وجدول زمني مختوم مع التحقق من الملف، ولوحة مؤشرات أداء (KPI) تصدَّر بصيغة PDF، والفيلم وستة دروس بالعربية والإنجليزية.`
+
+**Description:**
+
+```
+تجد خللا في الموقع، ثم تقضي وقتا في إعادة بناء الطريق إليه: الخطوات ولقطة الشاشة وسجل وحدة التحكم والطلب الذي فشل. QA Wrap يتولى هذا الجزء أثناء اختبارك.
+
+سجّل، فسّر، سلّم.
+- سجّل: أيقظه على الموقع الذي تختبره، سمِّ ما تختبره، ثم اضغط «ابدأ». يحفظ نقراتك وكتابتك وتنقّلك وطلبات الصفحة وسجل وحدة التحكم في خط زمني واحد.
+- فسّر: عندما يفشل شيء يريك النقرة التي سبّبته. اضغط «أوقف» فيجهز التقرير: عنوان وسلسلة السبب والنتيجة ولقطات الشاشة ونتائج إمكانية الوصول والسرعة وخط زمني تتنقل فيه.
+- سلّم: انسخ التقرير بصيغة Markdown، أو احفظه ملفات في مجلد تختاره، أو ارفعه إلى Jira بحقول مشروعك نفسها. وهناك تسع أدوات تتبّع أخرى وسبع وجهات محادثة، ولا يعمل أيّ منها إلا بعد أن تعدّه أنت وتضغط الزر.
+
+الجديد في 3.9.0
+- ملفك الشخصي: اكتب اسمك وأضف صورة إن شئت. ينتهي كل ملف تصدّره بسطر صغير واحد (الاسم والتاريخ وإصدار QA Wrap) ليُنسب العمل إليك. يبقى الاسم والصورة على حاسوبك.
+- جدول زمني مختوم: يمكن لخياري التنزيل أن يضمّا الجدول الزمني كاملا في ملف Markdown (نص منسّق) مقروء، وفيه ملفك الشخصي وختم في آخره. ويقول «تحقق من ملف مختوم» إن كان الملف سليما أو معدّلا ولمن هو. الختم كاشف للتعديل وليس سرّية: يبقى النص مقروءا، ويستطيع أي شخص تعديل الملف وختمه من جديد بمفتاحه (فتختلف بصمة المفتاح).
+- مؤشرات الأداء (KPI): لوحة للوقت الذي قضيته في الاختبار وتغطية الصفحات والأخطاء المسجّلة في اليوم والأسبوع، محسوبة من جلساتك أنت على هذا الجهاز فقط، ومن الملاحظات التي سجّلتها كخلل فقط. وتصدَّر بصيغة PDF.
+- أفلام: نسخة عربية من الفيلم القصير (40 ثانية) وستة دروس قصيرة بالإنجليزية والعربية، على الموقع. لا يُحمَّل شيء قبل أن تضغط رابطا.
+
+ما لا يفعله
+- لا يرفع شيئا من تلقاء نفسه. لا خادم ولا تحليلات ولا شيفرة بعيدة. لا تخرج البيانات إلا حين تضغط زرا يسمّي وجهتها.
+- لا يسجّل حقول كلمات المرور ولا قيم ملفات تعريف الارتباط في الجلسة ولا في أي تصدير.
+- يستطيع قراءة كل المواقع منذ التثبيت (والمتصفح يذكر ذلك في نافذة التثبيت)، لكنه لا يسجّل إلا بعد أن توقظ النافذة وتضغط «ابدأ»، ولا يسجّل إلا التبويب الذي عليه التركيز.
+- تُحذف الجلسات المنتهية بعد 30 يوما افتراضيا، ويمكنك اختيار يوم واحد إلى سنة، أو عدم الحذف.
+
+وفي الصندوق أيضا: جمع عناصر الصفحة بمحدِّدات موثَّقة وكائن صفحة لـ Playwright، وفحص الروابط، وقيم نماذج مصمَّمة، وكسر الطلبات، وفحص إمكانية الوصول (axe-core مضمَّن)، ومؤشرات Core Web Vitals، واختبار الاتجاه من اليمين إلى اليسار وتمدّد النص (العربية حالة أساسية)، ولقطات وتسجيلات مع تعليم وإخفاء، ومحرِّر ملفات تعريف الارتباط، وتصدير إلى Markdown وJSON وHAR وPostman وJUnit وExcel.
+
+مجاني ومفتوح المصدر بترخيص MIT. الواجهة بالعربية والإنجليزية. المصدر: https://github.com/NJ-Burrito/QA-Wrap
+```
+
+## What's new in 3.9.0 (English, for the Chrome "what's new" or release note)
+
+`Profile and fine print on every export, a sealed Markdown timeline with Verify file, a KPI dashboard with PDF export, and the film and six tutorials in Arabic and English.`

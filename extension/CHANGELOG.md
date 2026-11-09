@@ -6,6 +6,20 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.9.0, 2026-11-10
+
+### Added
+
+- Your profile. Set a name, and a picture if you like, in Settings > Sessions. Every file you export now ends with one small line (your name, the date and the QA Wrap version) so the work can be traced to you: a closing line in Markdown and text, a footer in HTML, a `_trace` field in JSON, a comment in CSV and YAML, a row in the workbooks. The name and the picture stay on your computer and are never sent anywhere.
+- The whole timeline as a Markdown file, in both download options and in the popup ("Timeline (sealed)"). It is readable text with your profile in it, and it ends with a seal block: your name, the date, the tool version, a SHA-256 hash of the text and a signature made with a key that this install keeps and cannot export.
+- Verify file. Choose a sealed file and QA Wrap says whether it is intact or altered, who sealed it, the key fingerprint and whether the key is this install's. The seal is tamper-evidence, not secrecy: the text stays readable, and anyone can edit a file and seal it again with their own key, which shows a different fingerprint.
+- Performance indicators (KPI), a dashboard worked out on your device from your own sessions: time spent testing per day, week and site, page coverage (tested against not tested), bugs filed per day and week (only notes you filed as a bug), bugs by severity, sessions per day and average session length. Export it as a PDF that carries your profile line. English and Arabic, right to left where it should be.
+- An Arabic version of the 40-second film (Arabic narration and on-screen words, 16:9 and vertical) and six short tutorials, each in English and Arabic: record a session, trace a failure to the click, notes and bugs, export and seal, profile and fine print, and the KPI dashboard. They are hosted on the website, and the tutorials page opens them in a new tab only when you press one.
+
+### Changed
+
+- The website and both READMEs describe all of the above, and the store listings for Chrome, Edge, Firefox and Opera carry the new text in English and Arabic.
+
 ## 3.8.4, 2026-10-27
 
 ### Fixed

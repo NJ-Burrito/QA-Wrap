@@ -182,7 +182,7 @@ You can set a name, and a small picture if you like, in Settings > Sessions. Bot
 The name is the one the team folder already shows on a session card; QA Wrap does not ask for another.
 
 - **Every export carries one line of fine print** with your name, the date and the QA Wrap version, for example
-  `Prepared by Layla Haddad · 2026-11-09 · QA Wrap 3.8.4`. It is a closing line in Markdown and text, a small footer in HTML, a
+  `Prepared by Layla Haddad · 2026-11-09 · QA Wrap 3.9.0`. It is a closing line in Markdown and text, a small footer in HTML, a
   `_trace` field in JSON (`log.comment` in a HAR), a comment line in CSV, YAML and TypeScript, a comment in XML and SVG, and a
   row in the workbooks. Leave the name empty and the line says only the date and the version.
 - **The sealed timeline** (Markdown, "Timeline (sealed)" in the popup and in the report's Save sheet, and in the one-zip option)
@@ -198,6 +198,10 @@ read it. It shows that the text and the signer's details are exactly what the ke
 sealing it again with their own key; that file verifies as intact, but with a different fingerprint, so compare the fingerprint with one
 you trust. Removing the extension or clearing the browser's site data removes the key; files sealed earlier still verify, but are no
 longer "this install's". Line endings are normalised before the check, so an editor that rewrites CRLF does not trigger a false alarm.
+
+### Performance indicators (KPI)
+
+The dashboard (Settings > Performance indicators) is worked out on this device from your own saved sessions. It is built from the data your sessions already hold on this device, without a request to any server. Bugs are counted only from notes you filed as a bug. "Export as PDF" opens your browser's own print window; the file is made by the browser on your machine, and it carries the same one line of fine print as any other export. Deleting a session removes it from the dashboard too.
 
 ## Retention and deletion
 

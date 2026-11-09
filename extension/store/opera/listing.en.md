@@ -1,4 +1,4 @@
-# Opera add-ons: listing text (English) for QA Wrap 3.8.4
+# Opera add-ons: listing text (English) for QA Wrap 3.9.0
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 
@@ -26,6 +26,12 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
 
+New in 3.9.0
+- Your profile: set a name and, if you like, a picture. Every file you export ends with one small line (name, date, QA Wrap version) so the work can be traced to you. The name and picture stay on your computer.
+- Sealed timeline: both download options can include the whole timeline as a readable Markdown file with your profile in it and a seal at the end. Verify file says whether it is intact or altered, and whose it is. The seal is tamper-evidence, not secrecy: the text stays readable, and anyone can edit a file and seal it again with their own key (the key fingerprint then differs).
+- Performance indicators (KPI): a dashboard of time spent testing, page coverage and bugs filed per day and week, counted only from your own sessions on this device and only from notes you filed as a bug. Export it as a PDF.
+- Films: an Arabic cut of the 40-second film and six short tutorials in English and Arabic, hosted on the website. Nothing loads until you press a link.
+
 What it does not do
 - It never uploads anything of its own. No server, no analytics, no remote code. Data leaves only when you press a button that names where it goes.
 - It does not record password fields or cookie values into a session or an export.
@@ -35,6 +41,12 @@ What it does not do
 Also in the box: page harvest with verified locators and a Playwright page object, link checking, designed form values, request breaking, an accessibility scan (axe-core, bundled), Core Web Vitals, right-to-left and text-expansion stress (Arabic is a first-class case), screenshots and recordings with mark-up and redaction, a cookie editor, and exports to Markdown, JSON, HAR, Postman, JUnit and Excel.
 
 Free and open source under the MIT licence. Interface in English and Arabic. Source: https://github.com/NJ-Burrito/QA-Wrap
+```
+
+## What's new in this version (short field, if the form has one)
+
+```
+Profile and fine print on every export, a sealed Markdown timeline with Verify file, a KPI dashboard with PDF export, and the film and six tutorials in Arabic and English.
 ```
 
 ## Notes for the moderators (if the form has a free-text box)
