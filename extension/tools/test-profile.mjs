@@ -183,6 +183,19 @@ await test('the line is added after the secret scan, so a name that looks like a
   assert.ok(text(out).trimEnd().endsWith('QA Wrap 3.8.4'));
 });
 
+await test('the offscreen path: the worker sends the profile with the request and the build never touches chrome.storage (the offscreen document has none)', async () => {
+  const media = fs.readFileSync(path.join(EXT, 'background/media.js'), 'utf8');
+  assert.match(media, /profile: { name: s.testerName, picture: s.profilePicture }/, 'exportOp must send the profile');
+  const real = globalThis.chrome;
+  globalThis.chrome = { runtime: real.runtime }; // what an offscreen document has
+  try {
+    const out = await buildExport({ sessionId: SID, format: 'markdown', version: '3.8.4', profile: { name: 'Omar Saleh', picture: '' } });
+    assert.ok(out.content.includes('Prepared by Omar Saleh · '), 'the name the worker sent is used');
+    const card = await buildExport({ sessionId: SID, format: 'session-manifest', version: '3.8.4', profile: { name: 'Omar Saleh' } });
+    assert.equal(JSON.parse(card.content).tester, 'Omar Saleh', 'the session card names the same person');
+  } finally { globalThis.chrome = real; }
+});
+
 await test('with no name set the export still says when and with what, and never an invented name', async () => {
   await setSettings({ testerName: '' });
   const out = await buildExport({ sessionId: SID, format: 'markdown', version: '3.8.4' });

@@ -36,7 +36,7 @@ import { stampDocument } from '../core/provenance-stamp.js';
 import { getSettings } from '../platform/settings.js';
 import { scanOutbound } from '../core/secret-scan-text.js';
 import { loadDocFonts, sessionIsArabic } from '../core/docshell.js';
-import { loadProfile, traceLine } from '../core/profile.js';
+import { loadProfile, normaliseProfile, traceLine } from '../core/profile.js';
 import { withTrace } from '../core/trace-export.js';
 import { sealMarkdown } from '../core/seal.js';
 import { buildTimelineMarkdown } from '../core/timeline-md.js';
@@ -143,7 +143,7 @@ const lastOfKind = (events, kind, what) => {
  * text — attaching to a Jira issue, where the far end wants a readable file —
  * can ask for it without going round the gzip.
  */
-async function buildExportRaw({ sessionId, format, withImages = true, files, version, shotPaths }, ctx = {}) {
+async function buildExportRaw({ sessionId, format, withImages = true, files, version, shotPaths, profile }, ctx = {}) {
   /*
    * The build number is passed in, not read here.
    *
@@ -160,7 +160,8 @@ async function buildExportRaw({ sessionId, format, withImages = true, files, ver
    * R3: who is on this export. The profile is read once here; `ctx` carries it (and the trace line built from it) back to
    * buildExport(), which adds the line to every text format and seals the timeline, and into the workbooks as a row.
    */
-  ctx.profile = await loadProfile();
+  // The offscreen document has no chrome.storage, so the worker sends the profile with the request; a caller without one (a test, the worker) reads it here.
+  ctx.profile = profile ? normaliseProfile(profile) : await loadProfile();
   ctx.lang = sessionIsArabic(stored, events) ? 'ar' : 'en';
   ctx.version = build;
   ctx.trace = traceLine({ lang: ctx.lang, date: Date.now(), version: build, profile: ctx.profile });
@@ -358,7 +359,7 @@ async function buildExportRaw({ sessionId, format, withImages = true, files, ver
         filename: `qaw-session-${slug}-${stamp}.json`,
         mime: 'application/json',
         content: buildSessionManifest(session, events, {
-          tester: settings.testerName || '', version: build, files: files || [],
+          tester: ctx.profile.name || settings.testerName || '', version: build, files: files || [],
           checksums: await shotHashes(events),
         }),
       };
@@ -376,7 +377,7 @@ async function buildExportRaw({ sessionId, format, withImages = true, files, ver
 /** `{captureId: sha256}` for the session's stored screenshots (T-066; a legacy record is hashed from its blob). */
 const shotHashes = async (events) => captureHashes(await getCaptures(events.filter((e) => e.kind === 'screenshot' && e.captureId).map((e) => e.captureId)));
 
-async function buildBundle({ sessionId, parts, version }) {
+async function buildBundle({ sessionId, parts, version, profile }) {
   const ids = bundleIds(parts);
   const { session, events } = await loadSession(sessionId);
   // r10-11-2: the picture names come first, so each document links an omitted picture to its zip entry.
@@ -392,7 +393,7 @@ async function buildBundle({ sessionId, parts, version }) {
   // completion review 3: each part carries the same checksum footer or `checksums` it would as a single export (the zip's own hash is the result's sha256).
   const hashes = await shotHashes(events);
   for (const format of ids) {
-    const part = await buildExport({ sessionId, format, withImages: format !== 'json', version, shotPaths });
+    const part = await buildExport({ sessionId, format, withImages: format !== 'json', version, shotPaths, profile });
     built.push(['markdown', 'manual', 'srs', 'sbtm', 'json'].includes(format) ? await stampDocument(part, { format, hashes }) : part);
   }
   return {
@@ -414,6 +415,7 @@ export async function buildExport(request) {
   // T-067: control characters out of every text, here, once (they are not valid XML and mean nothing in a report).
   out.content = stripControl(out.content);
   const { findings, redacted } = scanOutbound({ content: out.content });
+  /** @type {any} */
   let done = findings.length ? { ...out, content: redacted.content, secretScan: findings } : out;
   // R3: the fine-print trace line (name, date, tool version) on every text export, after the secret scan so it is never redacted.
   done = withTrace(done, ctx.trace);

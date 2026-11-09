@@ -49,10 +49,10 @@ lower one, never up:
   │  ui/         tokens, fonts, and the globals a page needs      │  rank 3
   └────────────────────────────┬─────────────────────────────────┘
   ┌────────────────────────────┴─────────────────────────────────┐
-  │  platform/   the shared chrome.* adapters. 10 files + i18n/    │  rank 2
+  │  platform/   the shared chrome.* adapters. 12 files + i18n/    │  rank 2
   └────────────────────────────┬─────────────────────────────────┘
   ┌────────────────────────────┴─────────────────────────────────┐
-  │  core/       the product's ideas. Zero chrome.*. 77 files     │  rank 1
+  │  core/       the product's ideas. Zero chrome.*. 81 files     │  rank 1
   └──────────────────────────────────────────────────────────────┘
      vendor/ icons/ brand/   assets and third-party code           rank 0
 ```

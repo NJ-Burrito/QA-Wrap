@@ -178,8 +178,8 @@ Chrome sync, when you have it on, carries only your preference settings: the rec
 
 ### Your name on exports, and the sealed timeline
 
-You can set a name, and a small picture if you like, in Settings > Sessions. Both stay on this machine (the picture never syncs).
-The name is the one the team folder already shows on a session card; QA Wrap adds nothing to it.
+You can set a name, and a small picture if you like, in Settings > Sessions. Both are kept on this machine, and the picture is not synced.
+The name is the one the team folder already shows on a session card; QA Wrap does not ask for another.
 
 - **Every export carries one line of fine print** with your name, the date and the QA Wrap version, for example
   `Prepared by Layla Haddad · 2026-11-09 · QA Wrap 3.8.4`. It is a closing line in Markdown and text, a small footer in HTML, a
@@ -188,9 +188,9 @@ The name is the one the team folder already shows on a session card; QA Wrap add
 - **The sealed timeline** (Markdown, "Timeline (sealed)" in the popup and in the report's Save sheet, and in the one-zip option)
   lists every recorded event as readable text, with your profile in it, and ends with a seal block: the signer's name, the date, the
   tool version, the SHA-256 of the text above, and an ECDSA P-256 signature with the public key and its fingerprint. The signing key is
-  made once per install, kept non-extractable in the browser's own storage, and never leaves this machine.
+  made once per install, kept non-extractable in the browser's own storage, and stays in this browser profile.
 - **Verify file** (Settings > Sessions) reads a sealed file you choose and says **intact** or **altered**, who signed it, the key's
-  fingerprint, and whether that key is this install's. The file is read and checked here; nothing is uploaded.
+  fingerprint, and whether that key is this install's. The file is read and checked here, and is not uploaded.
 
 **What the seal is, and is not.** It is tamper-evidence, not secrecy: the text is readable on purpose, and anyone who has the file can
 read it. It shows that the text and the signer's details are exactly what the key signed, so changing one character makes Verify say

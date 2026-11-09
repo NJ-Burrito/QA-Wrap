@@ -272,11 +272,8 @@ export async function jiraOp(fn, args) {
 
 /** Exports and documents, built behind the same door. */
 export async function exportOp(op, request) {
-  // The build number travels with the request: getManifest() is not available in the offscreen document.
-  return offscreen('UQA_OFF_EXPORT', {
-    op,
-    request: { ...request, version: chrome.runtime.getManifest().version },
-  });
+  const s = await getSettings();
+  return offscreen('UQA_OFF_EXPORT', { op, request: { ...request, version: chrome.runtime.getManifest().version, profile: { name: s.testerName, picture: s.profilePicture } } });
 }
 
 export async function mediaPermissions() {
