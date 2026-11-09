@@ -174,6 +174,23 @@
           <span data-i18n="options.sessions.nameLabel">Your name, as the team folder shows it</span>
           <input type="text" id="testerName" maxlength="60" data-i18n-placeholder="options.sessions.namePlaceholder" placeholder="e.g. Layla Haddad" autocomplete="off" />
         </label>
+        <div class="profile-block" id="profile-block" style="margin-bottom:12px">
+          <p class="muted" id="profile-note" data-i18n="profile.note">This name and the date go in a small line at the foot of every file you export, and in the sealed timeline, so your work can be traced to you. Nothing is sent anywhere.</p>
+          <div class="profile-picture" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <img id="profile-picture-preview" alt="" width="48" height="48" hidden style="border-radius:50%;object-fit:cover" />
+            <input type="file" id="profile-picture-file" accept="image/png,image/jpeg,image/webp" hidden />
+            <button type="button" class="btn btn-sm" id="profile-picture-pick" data-i18n="profile.pictureChoose">Choose a picture</button>
+            <button type="button" class="btn btn-sm" id="profile-picture-remove" data-i18n="profile.pictureRemove" hidden>Remove the picture</button>
+            <span class="muted" id="profile-picture-status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="muted" data-i18n="profile.pictureNote">The picture is optional. It stays on this machine and appears only inside a sealed timeline.</p>
+          <div class="profile-verify" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px">
+            <input type="file" id="verify-file" accept=".md,text/markdown,text/plain" hidden />
+            <button type="button" class="btn btn-sm" id="verify-pick" data-i18n="verify.pick">Verify a sealed file</button>
+            <span class="muted" data-i18n="verify.hint">Choose a timeline you exported; QA Wrap tells you whether it is intact or altered and whose it is.</span>
+          </div>
+          <div id="verify-result" role="status" aria-live="polite" tabindex="-1" hidden style="margin-top:8px"></div>
+        </div>
         <label class="text-field" style="margin-bottom:12px">
           <span data-i18n="options.sessions.launchLabel">When the toolbar icon is clicked, open</span>
           <select id="launchSurface">

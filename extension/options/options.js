@@ -13,6 +13,7 @@ import {
 // out with the same module the client uses, so the sentence on screen and the
 // header on the wire cannot disagree.
 import { wireVault } from './vault-ui.js';
+import { wireProfile } from './profile-ui.js'; // R3/R5: the optional picture and Verify file
 import { normaliseArabic } from '../core/fingerprint.js'; // r3-10-3: the settings search folds spelling variants
 import { erasedText } from '../core/store-registry.js'; // T-054: the confirm sentences come from the registry, not a hand list
 import { wireIntegrations } from './integrations.js';
@@ -1171,7 +1172,9 @@ function wireMaskPattern() {
 
 /* --------------------------------------------------------------------- boot */
 
+let profileUi = { paint() {} };
 function paintAll() {
+  profileUi.paint();
   for (const name of Object.keys(RANGES)) {
     const input = $(name);
     if (!input) continue;
@@ -1239,6 +1242,7 @@ function paintAll() {
 function paintWords() {
   if (!booted) return;
   QAWi18n.apply();
+  profileUi.paint();
   paintDownloadHelp();
   paintSaveIntoLabel();
   for (const name of Object.keys(RANGES)) $(name)?.__paint?.();
@@ -1454,6 +1458,7 @@ async function wireWelcome() {
     },
   });
   wireEgress(document, t); // T-070
+  profileUi = wireProfile({ $, t, save, getSettings: () => settings });
   paintAll();
   renderCommands();
   await wireOutput();

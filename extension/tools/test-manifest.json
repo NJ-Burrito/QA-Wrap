@@ -2268,6 +2268,48 @@
    "assertMode": "counted"
   },
   {
+   "id": "test-profile",
+   "path": "tools/test-profile.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
+   "id": "test-seal",
+   "path": "tools/test-seal.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "contract",
+   "features": [
+    "exporters-formats"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "contract",
+    "stage:contract"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
    "id": "test-exporters",
    "path": "tools/test-exporters.mjs",
    "kind": "test",

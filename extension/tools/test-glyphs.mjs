@@ -37,6 +37,7 @@ const EXEMPT = {
   'core/istqb-render.js': 'ISTQB export', 'core/suite.js': 'suite export', 'core/locatorplan.js': 'export text',
   'core/agent.js': 'agent prompt text', 'core/blackbox.js': 'map key, not shown', 'core/provenance.js': 'stamp written into exports',
   'core/flow.js': 'Arabic regex ranges and test text', 'core/artifact.js': 'Arabic regex ranges',
+  'core/profile.js': 'control-character regex', 'core/seal.js': 'control-character regex', 'core/timeline-md.js': 'timeline export text and the Arabic range regex',
 };
 const BS = String.fromCharCode(92);
 const NL = String.fromCharCode(10);

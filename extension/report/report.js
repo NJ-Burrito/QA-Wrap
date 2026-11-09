@@ -2464,7 +2464,7 @@ function saveParts() {
       ['html', t('report.part.html'), t('report.part.htmlNote')],
       ['sbtm', t('report.part.sbtm'), t('report.part.sbtmNote')],
       ['sheet-xlsx', t('report.part.sheetXlsx'), t('report.part.sheetXlsxNote')],
-      ['timeline-xlsx', t('report.part.timelineXlsx'), t('report.part.timelineXlsxNote')],
+      ['timeline-xlsx', t('report.part.timelineXlsx'), t('report.part.timelineXlsxNote')], ['timeline-md', t('seal.part.timelineMd'), t('seal.part.timelineMdNote')],
       ['srs-html', t('report.part.srsHtml'), t('report.part.srsHtmlNote')],
       ['srs', t('report.part.srs'), t('report.part.srsNote')],
       ['manual-html', t('report.part.manualHtml'), t('report.part.manualHtmlNote')],
