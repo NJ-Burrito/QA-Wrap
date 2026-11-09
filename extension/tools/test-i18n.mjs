@@ -45,7 +45,7 @@ const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TABLES = path.join(EXT, 'platform', 'i18n');
 
 /** The pages a tester reads. `core/`, `platform/` and `background/` are not surfaces. */
-const SURFACES = ['popup', 'options', 'report', 'welcome', 'whatsnew', 'tutorials', 'devtools', 'annotate', 'diagram', 'videoedit', 'replay', 'api', 'practice'];
+const SURFACES = ['popup', 'options', 'report', 'welcome', 'whatsnew', 'tutorials', 'devtools', 'annotate', 'diagram', 'videoedit', 'replay', 'api', 'practice', 'kpi'];
 
 /**
  * The key prefixes, which are not quite the directories.
@@ -56,7 +56,7 @@ const SURFACES = ['popup', 'options', 'report', 'welcome', 'whatsnew', 'tutorial
  * `tools` for the nineteen cards keyed by the id the session's usage log uses,
  * `press` for what a press says, `fix` for the one action a refusal has.
  */
-const PREFIXES = new Set(['popup', 'options', 'report', 'welcome', 'tutorials', 'panel', 'annotate', 'diagram', 'videoedit', 'replay', 'api', 'common', 'tools', 'press', 'fix', 'overlay', 'buffer', 'bridge', 'aiwrite', 'update']);
+const PREFIXES = new Set(['popup', 'options', 'report', 'welcome', 'tutorials', 'panel', 'annotate', 'diagram', 'videoedit', 'replay', 'api', 'common', 'tools', 'press', 'fix', 'overlay', 'buffer', 'bridge', 'aiwrite', 'update', 'kpi']);
 
 let fail = 0;
 let checks = 0;

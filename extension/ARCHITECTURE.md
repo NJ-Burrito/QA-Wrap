@@ -52,7 +52,7 @@ lower one, never up:
   │  platform/   the shared chrome.* adapters. 10 files + i18n/    │  rank 2
   └────────────────────────────┬─────────────────────────────────┘
   ┌────────────────────────────┴─────────────────────────────────┐
-  │  core/       the product's ideas. Zero chrome.*. 77 files     │  rank 1
+  │  core/       the product's ideas. Zero chrome.*. 78 files     │  rank 1
   └──────────────────────────────────────────────────────────────┘
      vendor/ icons/ brand/   assets and third-party code           rank 0
 ```

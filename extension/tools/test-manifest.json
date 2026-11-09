@@ -8398,6 +8398,51 @@
    "timeout": null,
    "timeoutSource": "guess",
    "assertMode": "counted"
+  },
+  {
+   "id": "test-kpi",
+   "path": "tools/test-kpi.mjs",
+   "kind": "test",
+   "features": [
+    "report",
+    "a11y"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "lane": "node",
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "stage": "unit"
+  },
+  {
+   "id": "test-kpi-page",
+   "path": "tools/test-kpi-page.mjs",
+   "kind": "test",
+   "features": [
+    "report"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ]
   }
  ]
 }
