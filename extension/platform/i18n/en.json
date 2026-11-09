@@ -3451,8 +3451,6 @@
   "tutorials.theme.ariaLabel": "Theme: {label}. {next}",
   "tutorials.theme.titleDefault": "Light, night, or follow your machine",
   "tutorials.tools.perGroup": "One tool at a time",
-  "tutorials.trust.body": "Each one is produced by a script that drives the extension, so a film can only be made if the product still does what it shows. When a film stops recording, the product has changed and the film is already wrong. That is the point of making them this way.",
-  "tutorials.trust.heading": "How the films stay true",
   "update.available": "Version {version} is available",
   "update.noNotes": "The release page lists what changed.",
   "update.notNow": "Not now",

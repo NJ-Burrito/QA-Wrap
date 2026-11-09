@@ -64,8 +64,8 @@ for (const lang of ['en', 'ar']) {
     for (const n of needles) assert.ok(html.includes(n), `${lang}/${view}: ${n}`);
     assert.doesNotMatch(html, /undefined|NaN|\[object|\bkpi\.[a-z]+\.[a-z]/, `${lang}/${view}: no hole, no raw key`);
     assert.equal((out.charts.match(/<table class="data"/g) || []).length, 6, `${lang}/${view}: every chart has its table`);
-    assert.match(out.charts, lang === 'ar' ? /الأخطاء حسب الخطورة/ : /Bugs by severity/);
-    assert.match(out.charts, lang === 'ar' ? /غير مصنّفة/ : /Not rated/, 'the unrated severity row is stated, not invented');
+    assert.match(out.charts, lang === 'ar' ? /الخلل حسب الخطورة/ : /Bugs by severity/);
+    assert.match(out.charts, lang === 'ar' ? /غير مصنفة/ : /Not rated/, 'the unrated severity row is stated, not invented');
     assert.match(out.charts, /shop\.example\.com/);
   }
 }
@@ -176,6 +176,21 @@ try {
   assert.match(trace.seen, /\|SCOPE LINE$/);
   assert.ok(trace.seen.split('|')[0].length > 0, 'a trace line is printed (the profile line, or the plain tool line while no profile exists)');
   assert.equal(trace.after, '', 'and cleared again');
+
+  /* the fine print carries the REAL profile name: Settings stores it, kpi/pdf.js reads it back through core/profile.js (R14) */
+  await page.evaluate(async () => { const { setSettings } = await import('../platform/settings.js'); await setSettings({ testerName: 'Layla Haddad' }); });
+  for (const lang of ['ar', 'en']) {
+    const named = await page.evaluate(async (l) => {
+      const { exportPdf } = await import('./pdf.js');
+      const line = await exportPdf({ lang: l, date: '2026-11-09', version: '0.0.0', fallback: 'FALLBACK LINE', heading: 'h', scope: 's' }, { print: () => {} });
+      window.dispatchEvent(new Event('afterprint'));
+      return line;
+    }, lang);
+    assert.ok(named.includes('Layla Haddad'), `${lang}: the fine print carries the profile name (got: ${named})`);
+    assert.notEqual(named, 'FALLBACK LINE', `${lang}: the profile line, not the plain fallback`);
+    assert.ok(lang === 'ar' ? named.includes('إعداد') : named.startsWith('Prepared by Layla Haddad'), `${lang}: the line is in the page language`);
+  }
+  await page.evaluate(async () => { const { setSettings } = await import('../platform/settings.js'); await setSettings({ testerName: '' }); });
 
   if (process.env.QAW_KPI_SHOTS) {
     const dir = process.env.QAW_KPI_SHOTS;
