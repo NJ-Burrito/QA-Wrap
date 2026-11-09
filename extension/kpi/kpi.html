@@ -1,0 +1,75 @@
+<!doctype html>
+<!-- QA Wrap — local-first QA toolkit in the ISTQB shape. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="kpi.page.title">QA Wrap · Performance indicators</title>
+    <link rel="icon" href="../brand/favicon.svg" />
+    <link rel="stylesheet" href="../ui/fonts.css" />
+    <link rel="stylesheet" href="../ui/identity-tokens.css" />
+    <link rel="stylesheet" href="../ui/tokens.css" />
+    <link rel="stylesheet" href="kpi.css" />
+    <script src="../ui/theme.js"></script>
+    <script src="../ui/dom.js"></script>
+    <script src="../ui/icons.js"></script>
+    <script src="../platform/i18n.js"></script>
+  </head>
+  <body>
+    <header class="app-bar no-print">
+      <div class="brand">
+        <img class="brand-mark" src="../brand/mark.svg" alt="" width="22" height="22" />
+        <span class="brand-name">QA Wrap</span>
+        <span class="muted" data-i18n="kpi.header.subtitle">KPIs</span>
+      </div>
+      <div class="bar-actions">
+        <button id="theme" class="btn btn-sm" type="button" title="Light, night, or follow your machine" aria-label="Theme" data-i18n-title="tutorials.theme.titleDefault" data-i18n-aria="tutorials.theme.ariaDefault"></button>
+        <button id="open-options" class="btn btn-sm" type="button" data-i18n="kpi.header.back">Back to settings</button>
+      </div>
+    </header>
+
+    <main id="kpi-root">
+      <section class="hero">
+        <p class="eyebrow" data-i18n="kpi.eyebrow">YOUR OWN WORK</p>
+        <h1 data-i18n="kpi.hero.title">Performance indicators</h1>
+        <p class="lede" data-i18n="kpi.hero.lede">Time, coverage and bugs, counted only from your own sessions and worked out on this device.</p>
+        <p id="print-scope" class="print-only scope"></p>
+      </section>
+
+      <form class="filters no-print" id="filters">
+        <label>
+          <span data-i18n="kpi.filter.range">Period</span>
+          <select id="f-range">
+            <option value="7" data-i18n="kpi.range.7">Last 7 days</option>
+            <option value="30" data-i18n="kpi.range.30" selected>Last 30 days</option>
+            <option value="90" data-i18n="kpi.range.90">Last 90 days</option>
+            <option value="0" data-i18n="kpi.range.all">All time</option>
+          </select>
+        </label>
+        <label>
+          <span data-i18n="kpi.filter.site">Site</span>
+          <select id="f-site"></select>
+        </label>
+        <fieldset class="seg" aria-label="Group by" data-i18n-aria="kpi.filter.view">
+          <label><input type="radio" name="view" value="day" checked /><span data-i18n="kpi.view.day">Day</span></label>
+          <label><input type="radio" name="view" value="week" /><span data-i18n="kpi.view.week">Week</span></label>
+        </fieldset>
+        <button id="export-pdf" class="btn" type="button" data-i18n="kpi.export.pdf">Export as PDF</button>
+      </form>
+      <p class="hint no-print" data-i18n="kpi.export.hint">Opens your browser's print window. Choose "Save as PDF".</p>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div id="empty" class="card empty" hidden>
+        <h2 data-i18n="kpi.empty.title">No sessions in this period yet</h2>
+        <p data-i18n="kpi.empty.body">Record a session and it appears here.</p>
+      </div>
+      <div id="content" hidden>
+        <div id="tiles"></div>
+        <div id="charts" class="charts"></div>
+        <div id="notes"></div>
+      </div>
+      <footer id="print-trace" class="print-only trace"></footer>
+    </main>
+    <script type="module" src="kpi.js"></script>
+  </body>
+</html>
