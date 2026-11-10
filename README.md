@@ -59,6 +59,12 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 
 <a id="new"></a>
 
+## ✨ New in 3.9.2
+
+- 🏷️ **The report names itself.** Its headline is the session name you typed; the failure moves to a "What broke" row.
+- ⏪ **Replay across pages.** A session that moved between pages replays the page as it was, with its real length and the red marks on the track.
+- 🎬 **Six new films**, each in English and Arabic, played in the page on the [website](https://nj-burrito.github.io/QA-Wrap/#films).
+
 ## ✨ New in 3.9.1
 
 - 🪪 **Profile tab and top-bar chip.** Profile has its own tab in Settings, with your name in English and in Arabic. Your picture and name show at the end of the top bar, in the language you use QA-Wrap in. The picture stays on your computer.

@@ -6,6 +6,22 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.9.2, 2026-11-10
+
+### Fixed
+
+- The report's headline is now the session name you typed. The failure moves to a "What broke" row under it; a session with no name keeps the failure as its headline.
+- Replay of a session that moved across several pages. The video frame was blank, the length read 0:12 instead of 2:54 and the red marks sat off the track. Every recorded step now carries its time on the session clock and its page, the replay shows the page as it was at that time, and the scrubber runs from the start to the last step.
+
+### Added
+
+- Six short films about QA Wrap, each in English and Arabic, on the website: Every Moment, Kept; One Report, Every Desk; Show It, Don't Describe It; The Whole Toolbox; Yours, and Sealed; Your Language, Your Numbers, Your Agent.
+
+### Changed
+
+- The Arabic 40-second film is rebuilt to match the English one: same pictures, animation, background and sound effects, with Arabic narration and captions, in 16:9 and vertical.
+- The website plays every film in the page, in one dialog, instead of opening the raw file on another page. A press anywhere on the 40-second film starts it.
+
 ## 3.9.1, 2026-11-10
 
 ### Added
