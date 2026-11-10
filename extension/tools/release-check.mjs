@@ -526,8 +526,8 @@ if (vendored.length) {
  * state and the written tutorials stand in. This gate asserts the new shape:
  * the opposite of what it asserted when all twenty-two were packaged.
  */
-// 3.6.8: the hosted film's banner (tutorials/qa-wrap-film.webp) is the one packaged image: a local thumbnail, not a film.
-const media = names.filter((n) => (/^tutorials\/.*\.(mp4|webm|webp|png|jpe?g|srt)$/i.test(n) || /^tutorials\/media\//.test(n)) && n !== 'tutorials/qa-wrap-film.webp');
+// 3.6.8: the hosted film's banner (tutorials/qa-wrap-film.webp) is the one packaged image: a local thumbnail, not a film. 3.9.1: its Arabic twin (qa-wrap-film-ar.webp, picked by UI language) is the same kind of thumbnail.
+const media = names.filter((n) => (/^tutorials\/.*\.(mp4|webm|webp|png|jpe?g|srt)$/i.test(n) || /^tutorials\/media\//.test(n)) && n !== 'tutorials/qa-wrap-film.webp' && n !== 'tutorials/qa-wrap-film-ar.webp');
 check(!media.length, 'no film, poster or caption file is in the package (the film banner aside)',
   media.length ? `packaged: ${media.slice(0, 5).join(', ')}` : '0 media files under tutorials/ besides the film banner');
 {
