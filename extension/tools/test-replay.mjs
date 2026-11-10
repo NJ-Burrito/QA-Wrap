@@ -364,6 +364,21 @@ test('text is escaped, so a page that contains markup cannot become markup', () 
   assert.ok(html.includes('&lt;img'));
 });
 
+test('a session that crosses pages replays each page at its own time (2026-11-10)', () => {
+  const doc = (word) => ({ t: 1, id: 1, n: 'HTML', a: {}, c: [{ t: 1, id: 2, n: 'BODY', a: {}, c: [{ t: 1, id: 3, n: 'P', a: {}, c: [{ t: 3, v: word }] }] }] });
+  const log = [
+    { k: 'snapshot', t: 15000, p: 'a', doc: doc('first page') },
+    { k: 'text', t: 16000, p: 'a', id: 3, v: 'first page, changed' },
+    { k: 'snapshot', t: 146000, p: 'b', doc: doc('second page') },
+    { k: 'text', t: 147000, p: 'b', id: 3, v: 'second page, changed' },
+  ];
+  assert.ok(toDocument(stateAt(log, 20000)).includes('first page, changed'));
+  assert.ok(toDocument(stateAt(log, 146500)).includes('second page<'));
+  assert.ok(toDocument(stateAt(log, 150000)).includes('second page, changed'));
+  assert.ok(toDocument(stateAt(log, 0)).includes('first page<'), 'before any page: the first one');
+  assert.equal(span(log).to, 147000, 'the scrubber runs on the session clock');
+});
+
 /* ── the numbers the page prints ────────────────────────────────────────── */
 
 test('the span is the first and last stamps in the log', () => {

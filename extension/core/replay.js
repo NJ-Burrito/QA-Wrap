@@ -92,8 +92,18 @@ export function indexNodes(root, into = new Map(), parents = new Map()) {
  */
 export function stateAt(entries, at) {
   const log = entries || [];
-  const first = log.find((e) => e.k === 'snapshot');
+  // A session crosses pages: show the page whose snapshot is the latest at `at`
+  // (or the first, before any), and apply only that page's own changes after it.
+  let first = null;
+  let from = 0;
+  for (let i = 0; i < log.length; i++) {
+    const e = log[i];
+    if (e.k !== 'snapshot') continue;
+    if (!first || (e.t || 0) <= at) { first = e; from = i; }
+    if ((e.t || 0) > at) break;
+  }
   if (!first) return null;
+  const pageOf = first.p;
 
   const doc = clone(first.doc);
   let { byId, parentOf } = indexNodes(doc);
@@ -108,8 +118,10 @@ export function stateAt(entries, at) {
     skipped: 0,
   };
 
-  for (const e of log) {
+  for (let i = from + 1; i < log.length; i++) {
+    const e = log[i];
     if ((e.t || 0) > at) break;
+    if (e.p !== pageOf) continue; // another page's change: its ids mean other nodes
     switch (e.k) {
       case 'snapshot':
         break;
@@ -227,7 +239,7 @@ export function toDocument(state) {
 export function span(entries) {
   const log = entries || [];
   if (!log.length) return { from: 0, to: 0, ms: 0 };
-  const from = log[0].t || 0;
+  const from = 0; // the session clock starts at 0; the first page may open later
   const to = log.reduce((n, e) => Math.max(n, e.t || 0), from);
   return { from, to, ms: to - from };
 }
