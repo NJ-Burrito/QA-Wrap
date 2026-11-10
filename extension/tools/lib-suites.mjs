@@ -8,7 +8,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(__dirname, '..', '..'); // extension/tools -> repo root
 export const DEFAULT_EXT = path.resolve(__dirname, '..'); // the extension/ folder this file sits in
