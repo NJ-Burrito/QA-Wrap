@@ -45,7 +45,9 @@
 - 📝 **تكتب التقرير**: ضغطة واحدة تنسخ تقرير خلل جاهزًا (العنوان والخطوات وما حدث والأدلة). والإرسال إلى Jira وغيره زر واحد.
 - 🌍 **عربي وإنجليزي** معًا، والاتجاه من اليمين إلى اليسار حيث يلزم.
 
-🎞️ شاهد الفيلم في 40 ثانية: [بالعربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4) · [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
+🎞️ شاهد QA-Wrap وهو يعمل · 40 ثانية: [بالعربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4) · [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
+
+🎬 ستة أفلام أخرى، كل منها بالعربية والإنجليزية، على [الموقع](https://nj-burrito.github.io/QA-Wrap/#films): كل لحظة محفوظة · تقرير واحد لكل مكتب · أره ولا تصفه · عدة الاختبار كاملة · عملك، مختوم · بلغتك، وبأرقامك، ومع وكيلك.
 
 <a id="الجديد"></a>
 

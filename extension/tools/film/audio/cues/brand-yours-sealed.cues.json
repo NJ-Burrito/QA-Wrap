@@ -1,0 +1,213 @@
+{
+  "id": "brand-yours-sealed",
+  "kind": "trailer",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 24,
+  "seconds": 47.0,
+  "sampleRate": 48000,
+  "source": "brand film Sound section (work/film/brand/films.json) on the bed character of qa-wrap-40-ar.cues.json; worker bv 2026-11-10",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1.5,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "sections": [
+      {
+        "name": "intro",
+        "fromBar": 1,
+        "toBar": 3,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 3,
+        "toBar": 17,
+        "note": "kick + bass + 16th hats"
+      },
+      {
+        "name": "intro",
+        "fromBar": 17,
+        "toBar": 20,
+        "note": "the honest beat: back to pluck + hats, no kick (32-38 s), so the line sits in a quieter bed"
+      },
+      {
+        "name": "lift",
+        "fromBar": 20,
+        "toBar": 21,
+        "note": "plucks up an octave into the payoff"
+      },
+      {
+        "name": "out",
+        "fromBar": 21,
+        "toBar": 25,
+        "note": "single hit, ring out under the end card"
+      }
+    ],
+    "padGain": 0.06,
+    "padSections": [
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band.",
+    "lowPad": {
+      "gain": 0.085,
+      "sections": [
+        "intro",
+        "drive",
+        "lift",
+        "out"
+      ],
+      "note": "EN bed carries a sustained 60-400 Hz body; measured in the 5.5-7.5 s bed-only gap"
+    },
+    "swells": [
+      {
+        "endSec": 42.0,
+        "dur": 0.75,
+        "gain": 0.45,
+        "note": "reverse swell into the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 17,
+      "singleHitBar": 21,
+      "ringOut": true
+    },
+    "drop": {
+      "fromSec": 31.9,
+      "toSec": 32.2,
+      "note": "the one deliberate silence (films.json bed.silence)"
+    }
+  },
+  "voice": {
+    "voice": "Kore",
+    "lines": []
+  },
+  "seed": 20260913,
+  "rests": [],
+  "revision": "brand-yours-sealed-1",
+  "sfx": [
+    {
+      "cue": "swish",
+      "atSec": 0.3,
+      "gainDb": 0,
+      "event": "the card begins its drift"
+    },
+    {
+      "cue": "swish",
+      "atSec": 5.1,
+      "gainDb": 0,
+      "event": "the browser frame draws"
+    },
+    {
+      "cue": "reveal",
+      "atSec": 5.6,
+      "gainDb": 0,
+      "event": "Asleep lands (the turn)"
+    },
+    {
+      "cue": "tick",
+      "atSec": 8.0,
+      "gainDb": 4,
+      "event": "Wake up pressed"
+    },
+    {
+      "cue": "swish",
+      "atSec": 10.6,
+      "gainDb": 0,
+      "event": "values wipe to bullets"
+    },
+    {
+      "cue": "tick",
+      "atSec": 12.2,
+      "gainDb": 4,
+      "event": "Mask real data pressed",
+      "docSec": 12.8,
+      "moved": "b3-notes: Mask real data is pressed at 12.2 s; 12.8 s is the key frame showing the result"
+    },
+    {
+      "cue": "tick",
+      "atSec": 16.2,
+      "gainDb": 4,
+      "event": "arrows stop at the frame (one tick on the first bounce only)"
+    },
+    {
+      "cue": "tick",
+      "atSec": 18.2,
+      "gainDb": 4,
+      "event": "File to Jira pressed"
+    },
+    {
+      "cue": "swish",
+      "atSec": 21.4,
+      "gainDb": 0,
+      "event": "hover card lifts"
+    },
+    {
+      "cue": "sting",
+      "atSec": 26.6,
+      "gainDb": -3,
+      "event": "the seal block slams"
+    },
+    {
+      "cue": "success",
+      "atSec": 27.6,
+      "gainDb": 0,
+      "event": "INTACT"
+    },
+    {
+      "cue": "sting",
+      "atSec": 30.8,
+      "gainDb": -3,
+      "event": "ALTERED slams"
+    },
+    {
+      "cue": "success",
+      "atSec": 40.0,
+      "gainDb": 0,
+      "event": "INTACT on the bookend"
+    },
+    {
+      "cue": "logo",
+      "atSec": 42.6,
+      "gainDb": 0,
+      "event": "the mark draws its check"
+    }
+  ],
+  "tail": {
+    "envelopeDb": [
+      [
+        46.0,
+        0
+      ],
+      [
+        46.1,
+        -9
+      ],
+      [
+        46.6,
+        -14
+      ],
+      [
+        46.9,
+        -30
+      ],
+      [
+        46.95,
+        -70
+      ]
+    ],
+    "fadeToSec": 46.95,
+    "note": "tail fade from films.json bed.tailFadeSec, the commercial's envelope shape"
+  }
+}

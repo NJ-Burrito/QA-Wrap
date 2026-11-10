@@ -11,7 +11,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(path.resolve(here, "../../../package.json"));
 const { chromium } = require("playwright");
 const proj = process.argv[2];
-const browser = await chromium.launchPersistentContext("O:/Temp/qaw1109/chrome-qaw-1109-gate", { headless: true, viewport: { width: 1920, height: 1920 } });
+const browser = await chromium.launchPersistentContext(process.env.GATE_PROFILE || path.resolve(here, "../../../../work/film/tmp", process.env.SNAP_TAG || "gate", "chrome-gate"), /* O:/Temp is not mounted (common.md rule 7) */ { headless: true, viewport: { width: 1920, height: 1920 } });
 const page = await browser.newPage();
 await page.goto(pathToFileURL(path.join(proj, "index.html")).href);
 await page.evaluate(() => document.fonts.ready);

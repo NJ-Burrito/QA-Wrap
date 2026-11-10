@@ -1,0 +1,208 @@
+{
+  "id": "brand-the-toolbox",
+  "kind": "trailer",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 22,
+  "seconds": 43.0,
+  "sampleRate": 48000,
+  "source": "brand film Sound section (work/film/brand/films.json) on the bed character of qa-wrap-40-ar.cues.json; worker bv 2026-11-10",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1.5,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "sections": [
+      {
+        "name": "intro",
+        "fromBar": 1,
+        "toBar": 3,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 3,
+        "toBar": 19,
+        "note": "kick + bass + 16th hats from the turn"
+      },
+      {
+        "name": "lift",
+        "fromBar": 19,
+        "toBar": 20,
+        "note": "plucks up an octave"
+      },
+      {
+        "name": "out",
+        "fromBar": 20,
+        "toBar": 23,
+        "note": "single hit, ring out under the end card"
+      }
+    ],
+    "padGain": 0.06,
+    "padSections": [
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band.",
+    "lowPad": {
+      "gain": 0.085,
+      "sections": [
+        "intro",
+        "drive",
+        "lift",
+        "out"
+      ],
+      "note": "EN bed carries a sustained 60-400 Hz body; measured in the 5.5-7.5 s bed-only gap"
+    },
+    "swells": [
+      {
+        "endSec": 37.5,
+        "dur": 0.75,
+        "gain": 0.45,
+        "note": "reverse swell into the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 19,
+      "singleHitBar": 20,
+      "ringOut": true
+    }
+  },
+  "voice": {
+    "voice": "Kore",
+    "lines": []
+  },
+  "seed": 20260912,
+  "rests": [],
+  "revision": "brand-the-toolbox-1",
+  "sfx": [
+    {
+      "cue": "swish",
+      "atSec": 0.4,
+      "gainDb": 0,
+      "event": "the scatter drifts in"
+    },
+    {
+      "cue": "swish",
+      "atSec": 4.6,
+      "gainDb": 0,
+      "event": "windows fly together"
+    },
+    {
+      "cue": "reveal",
+      "atSec": 6.0,
+      "gainDb": 0,
+      "event": "the popup opens (the turn)"
+    },
+    {
+      "cue": "tick",
+      "atSec": 10.4,
+      "gainDb": 4,
+      "event": "Check accessibility pressed"
+    },
+    {
+      "cue": "swish",
+      "atSec": 12.9,
+      "gainDb": 0,
+      "event": "Show me scroll"
+    },
+    {
+      "cue": "tick",
+      "atSec": 13.6,
+      "gainDb": 4,
+      "event": "the ring closes"
+    },
+    {
+      "cue": "tick",
+      "atSec": 16.4,
+      "gainDb": 4,
+      "event": "Check page speed pressed"
+    },
+    {
+      "cue": "swish",
+      "atSec": 17.2,
+      "gainDb": 0,
+      "event": "gauges draw"
+    },
+    {
+      "cue": "sting",
+      "atSec": 24.4,
+      "gainDb": -3,
+      "event": "dead click ring turns coral"
+    },
+    {
+      "cue": "tick",
+      "atSec": 27.4,
+      "gainDb": 4,
+      "event": "locator chip"
+    },
+    {
+      "cue": "tick",
+      "atSec": 28.8,
+      "gainDb": 4,
+      "event": "nasty value"
+    },
+    {
+      "cue": "tick",
+      "atSec": 30.2,
+      "gainDb": 4,
+      "event": "layout stress"
+    },
+    {
+      "cue": "tick",
+      "atSec": 31.4,
+      "gainDb": 4,
+      "event": "break a request"
+    },
+    {
+      "cue": "success",
+      "atSec": 35.4,
+      "gainDb": 0,
+      "event": "coverage meter fills",
+      "docSec": 35.6,
+      "moved": "b2-notes: the coverage meter fills 34.7-35.4 s; the success lands as it completes"
+    },
+    {
+      "cue": "logo",
+      "atSec": 38.1,
+      "gainDb": 0,
+      "event": "the mark draws its check"
+    }
+  ],
+  "tail": {
+    "envelopeDb": [
+      [
+        42.0,
+        0
+      ],
+      [
+        42.1,
+        -9
+      ],
+      [
+        42.6,
+        -14
+      ],
+      [
+        42.9,
+        -30
+      ],
+      [
+        42.95,
+        -70
+      ]
+    ],
+    "fadeToSec": 42.95,
+    "note": "tail fade from films.json bed.tailFadeSec, the commercial's envelope shape"
+  }
+}
