@@ -79,7 +79,7 @@ await test('traceLine: a hostile name cannot add a line or flip the line', () =>
 await test('loadProfile reads the name and picture Settings stored, through the real source (platform/profile-source.js)', async () => {
   await setSettings({ testerName: '  Layla Haddad ', profilePicture: PIC });
   const p = await P.loadProfile();
-  assert.deepEqual(p, { name: 'Layla Haddad', picture: PIC, named: true });
+  assert.deepEqual(p, { name: 'Layla Haddad', nameAr: '', nameEn: 'Layla Haddad', picture: PIC, named: true }, 'an older single name is migrated into the English field (Latin script)');
   assert.equal(bag.local.settingsLocal.profilePicture, PIC, 'the picture is stored on this machine only (settingsLocal), never in sync');
   assert.equal(JSON.stringify(bag.sync).includes('base64'), false);
 });
@@ -185,7 +185,7 @@ await test('the line is added after the secret scan, so a name that looks like a
 
 await test('the offscreen path: the worker sends the profile with the request and the build never touches chrome.storage (the offscreen document has none)', async () => {
   const media = fs.readFileSync(path.join(EXT, 'background/media.js'), 'utf8');
-  assert.match(media, /profile: { name: s.testerName, picture: s.profilePicture }/, 'exportOp must send the profile');
+  assert.match(media, /profile: { name: s.testerName, nameAr: s.profileNameAr, nameEn: s.profileNameEn, picture: s.profilePicture }/, 'exportOp must send the profile');
   const real = globalThis.chrome;
   globalThis.chrome = { runtime: real.runtime }; // what an offscreen document has
   try {
@@ -200,6 +200,58 @@ await test('with no name set the export still says when and with what, and never
   await setSettings({ testerName: '' });
   const out = await buildExport({ sessionId: SID, format: 'markdown', version: '3.8.4' });
   assert.ok(out.content.includes('Prepared with QA Wrap 3.8.4 · '));
+  await setSettings({ testerName: NAME });
+});
+
+/* ── R3b: the name in Arabic and in English ── */
+await test('migration: the single older name goes to the field for its script; nothing else is touched', () => {
+  const ar = P.normaliseProfile({ name: 'ليلى حداد' });
+  assert.deepEqual([ar.nameAr, ar.nameEn, ar.name], ['ليلى حداد', '', 'ليلى حداد']);
+  const en = P.normaliseProfile({ name: 'Layla Haddad' });
+  assert.deepEqual([en.nameAr, en.nameEn], ['', 'Layla Haddad']);
+  const mixed = P.normaliseProfile({ name: 'ليلى Haddad' });
+  assert.equal(mixed.nameAr, 'ليلى Haddad', 'any Arabic letter makes it the Arabic name');
+  const both = P.normaliseProfile({ name: 'Old', nameAr: 'ليلى', nameEn: 'Layla' });
+  assert.deepEqual([both.nameAr, both.nameEn], ['ليلى', 'Layla'], 'a profile with the new fields is never re-migrated');
+  assert.equal(P.normaliseProfile({ name: '', nameAr: '', nameEn: '' }).named, false);
+});
+
+await test('pickName: the interface language first, else the other one, else the fallback', () => {
+  const both = { nameAr: 'ليلى حداد', nameEn: 'Layla Haddad' };
+  assert.equal(P.pickName(both, 'ar'), 'ليلى حداد');
+  assert.equal(P.pickName(both, 'en'), 'Layla Haddad');
+  assert.equal(P.pickName(both, 'ar-JO'), 'ليلى حداد');
+  assert.equal(P.pickName({ nameEn: 'Layla' }, 'ar'), 'Layla', 'only English set: the Arabic UI shows it');
+  assert.equal(P.pickName({ nameAr: 'ليلى' }, 'en'), 'ليلى', 'only Arabic set: the English UI shows it');
+  assert.equal(P.pickName({ name: 'Omar' }, 'ar'), 'Omar');
+  assert.equal(P.pickName({}, 'en'), '');
+});
+
+await test('initials: first letters of the first two words, in either script', () => {
+  assert.equal(P.initials('Layla Haddad'), 'LH');
+  assert.equal(P.initials('layla'), 'L');
+  assert.equal(P.initials('ليلى حداد'), 'لح');
+  assert.equal(P.initials('  '), '');
+  assert.equal(P.initials('(Dr) Omar Saleh Ali'), 'DO');
+});
+
+await test('traceLine uses the name for the export language and falls back to the other one', () => {
+  const profile = { nameAr: 'ليلى حداد', nameEn: 'Layla Haddad' };
+  assert.equal(P.traceLine({ lang: 'en', date: NOON, version: '3.9.1', profile }), `Prepared by Layla Haddad · ${day} · QA Wrap 3.9.1`);
+  assert.match(P.traceLine({ lang: 'ar', date: NOON, version: '3.9.1', profile }), /^إعداد: ⁨ليلى حداد⁩ · /);
+  assert.ok(P.traceLine({ lang: 'ar', date: NOON, version: '3.9.1', profile: { nameEn: 'Layla Haddad' } }).includes('⁨Layla Haddad⁩'), 'Arabic export, only an English name');
+  assert.match(P.traceLine({ lang: 'en', date: NOON, version: '3.9.1', profile: { nameAr: 'ليلى حداد' } }), /^Prepared by ليلى حداد · /, 'English export, only an Arabic name');
+  assert.match(P.traceLine({ lang: 'en', date: NOON, version: '3.9.1', profile: { name: 'Omar' } }), /^Prepared by Omar · /, 'the older single name still works');
+});
+
+await test('through the real caller: Settings names in both languages reach the export in its own language', async () => {
+  await setSettings({ testerName: 'Layla Haddad', profileNameEn: 'Layla Haddad', profileNameAr: 'ليلى حداد' });
+  const en = await buildExport({ sessionId: SID, format: 'markdown', version: '3.9.1' });
+  assert.ok(en.content.includes('Prepared by Layla Haddad · '), 'English export, English name');
+  const ar = await buildExport({ sessionId: 'qaw-ar', format: 'markdown', version: '3.9.1' });
+  assert.ok(ar.content.includes('إعداد: ⁨ليلى حداد⁩'), 'Arabic export, Arabic name');
+  await setSettings({ profileNameEn: '', profileNameAr: '' });
+  assert.equal((await P.loadProfile()).nameEn, 'Layla Haddad', 'cleared language fields fall back to the older name, migrated');
   await setSettings({ testerName: NAME });
 });
 

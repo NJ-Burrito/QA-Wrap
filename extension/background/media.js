@@ -261,10 +261,10 @@ export const runCommand = cb('runCommand');
 // T-012 text secret scan; the engine stays offscreen
 export const scanOutbound = pureCall('UQA_OFF_SCAN')('scanOutbound');
 
-/** The cookie file formats (core/cookie-formats.js), behind the same door. JSON in, JSON out; `fn` may name FORMATS. */
+/** The cookie file formats (core/cookie-formats.js), behind the same door. JSON in and out. */
 export const cookieFormatsOp = (fn, args = []) => offscreen('UQA_OFF_COOKIEFMT', { fn, args });
 
-/** Jira, behind the same door. `fn` and `args` are JSON; attachments do not come this way (see background/jira-door.js). */
+/** Jira, behind the same door. `fn` and `args` are JSON; attachments go by background/jira-door.js. */
 export async function jiraOp(fn, args) {
   await assertPolicy('integrations', (await getSettings()).jira?.baseUrl); // T-068 last line (with the host list)
   return offscreen('UQA_OFF_JIRA', { fn, args });
@@ -273,7 +273,7 @@ export async function jiraOp(fn, args) {
 /** Exports and documents, built behind the same door. */
 export async function exportOp(op, request) {
   const s = await getSettings();
-  return offscreen('UQA_OFF_EXPORT', { op, request: { ...request, version: chrome.runtime.getManifest().version, profile: { name: s.testerName, picture: s.profilePicture } } });
+  return offscreen('UQA_OFF_EXPORT', { op, request: { ...request, version: chrome.runtime.getManifest().version, profile: { name: s.testerName, nameAr: s.profileNameAr, nameEn: s.profileNameEn, picture: s.profilePicture } } });
 }
 
 export async function mediaPermissions() {

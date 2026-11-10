@@ -13,7 +13,7 @@ import {
 // out with the same module the client uses, so the sentence on screen and the
 // header on the wire cannot disagree.
 import { wireVault } from './vault-ui.js';
-import { wireProfile } from './profile-ui.js'; // R3/R5: the optional picture and Verify file
+import { wireProfile, wireOpenSection } from './profile-ui.js'; // R3/R5: the optional picture and Verify file
 import { normaliseArabic } from '../core/fingerprint.js'; // r3-10-3: the settings search folds spelling variants
 import { erasedText } from '../core/store-registry.js'; // T-054: the confirm sentences come from the registry, not a hand list
 import { wireIntegrations } from './integrations.js';
@@ -838,7 +838,7 @@ async function wireOutput() {
   if (!hasSidePanel()) $('launchSurface')?.querySelector('option[value="panel"]')?.remove(); // no side panel (no API, or Opera where the API exists and fails): do not offer it
   fill($('videoFormat'), probe?.videoTypes, 'mp4'); fill($('imageFormat'), probe?.imageTypes, 'png');
 
-  for (const name of ['imageFormat', 'videoFormat', 'videoQuality', 'webcamPosition', 'clock', 'launchSurface', 'testerName']) {
+  for (const name of ['imageFormat', 'videoFormat', 'videoQuality', 'webcamPosition', 'clock', 'launchSurface']) {
     const input = $(name);
     if (input) input.addEventListener('change', () => {
       save({ [name]: input.value }, { immediate: true });
@@ -1219,7 +1219,7 @@ function paintAll() {
     }
     input.value = settings.jira?.[f] || (f === 'authMode' ? DEFAULTS.jira.authMode : '');
   }
-  for (const name of ['imageFormat', 'videoFormat', 'videoQuality', 'webcamPosition', 'clock', 'launchSurface', 'testerName']) {
+  for (const name of ['imageFormat', 'videoFormat', 'videoQuality', 'webcamPosition', 'clock', 'launchSurface']) {
     const input = $(name);
     if (input && settings[name]) input.value = settings[name];
   }
@@ -1459,12 +1459,14 @@ async function wireWelcome() {
   });
   wireEgress(document, t); // T-070
   profileUi = wireProfile({ $, t, save, getSettings: () => settings });
+  wireOpenSection();
   paintAll();
   renderCommands();
   await wireOutput();
   paintAll();       // repaint: the format list only existed after wireOutput
   paintFolder();
   booted = true;
+  document.body.dataset.optionsReady = '1'; // the page has wired every control (tests wait for it)
 })();
 
 /* ── About: the identity a support thread quotes ───────────────────────── */
@@ -1574,6 +1576,7 @@ function paintFilms() {
 (() => {
   const GROUPS = {
     appearance: ['sec-appearance'],
+    profile: ['sec-profile'],
     recording: ['sec-sessions', 'sec-timeline'],
     tools: ['sec-shortcuts', 'sec-stress', 'sec-break'],
     files: ['sec-files'],

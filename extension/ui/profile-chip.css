@@ -1,0 +1,103 @@
+/* QA Wrap — local-first QA toolkit in the ISTQB shape. */
+/*
+ * The profile chip in the top bar (ui/profile-chip.js): the person's picture next to their name, at the inline-end of the
+ * bar in both directions. Hover or keyboard focus lifts a card with the larger picture, the name in both languages and
+ * an Edit profile action. Logical properties only, so Arabic mirrors it without a second set of rules.
+ * Motion is opacity and a few pixels of transform; under reduced motion the card just appears.
+ */
+.pchip-slot { display: inline-flex; flex: 0 1 auto; align-items: center; min-inline-size: 0; }
+.pchip-slot:empty { display: none; }
+.pchip-wrap { position: relative; display: inline-flex; align-items: center; }
+
+.pchip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  max-inline-size: 190px;
+  min-block-size: 36px;
+  padding-inline: 3px var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-small);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--dur-tap) var(--ease), border-color var(--dur-tap) var(--ease);
+}
+.pchip:hover, .pchip-wrap.is-open .pchip { background: var(--surface-sunken); border-color: var(--border-strong); }
+.pchip-name { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* No profile yet: a quiet chip, no picture slot, the same height. */
+.pchip-empty { padding-inline: var(--sp-2); color: var(--text-muted); border-style: dashed; gap: 6px; }
+.pchip-empty:hover { color: var(--text); }
+
+.pchip-av, .pcard-av {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+.pchip-av { inline-size: 28px; block-size: 28px; font-size: var(--t-micro); }
+.pcard-av { inline-size: 64px; block-size: 64px; font-size: 22px; }
+.pchip-av img, .pcard-av img { inline-size: 100%; block-size: 100%; object-fit: cover; display: block; }
+
+.pcard {
+  position: absolute;
+  inset-block-start: calc(100% + 6px);
+  inset-inline-end: 0;
+  z-index: 40;
+  inline-size: 248px;
+  max-inline-size: calc(100vw - 16px);
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-2);
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, -4px, 0) scale(0.98);
+  transform-origin: top;
+  pointer-events: none;
+  /* leaving is quicker than arriving; visibility waits for the fade so the card never snaps away */
+  transition: opacity 120ms var(--motion-ease, ease-out), transform 120ms var(--motion-ease, ease-out), visibility 0s linear 120ms;
+}
+[dir='rtl'] .pcard { transform-origin: top; }
+/* a bridge over the 6px gap, so moving the pointer from the chip to the card does not close it */
+.pcard::before { content: ''; position: absolute; inset-inline: 0; inset-block-end: 100%; block-size: 8px; }
+.pchip-wrap.is-open .pcard {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+  transition: opacity 180ms var(--motion-ease, ease-out), transform 180ms var(--motion-ease, ease-out), visibility 0s;
+}
+.pcard-names { display: grid; gap: 2px; min-inline-size: 0; max-inline-size: 100%; }
+.pcard-names span { display: block; overflow-wrap: anywhere; font-weight: 600; line-height: 1.3; }
+.pcard-names span + span { color: var(--text-muted); font-weight: 500; }
+.pcard-edit { inline-size: 100%; justify-content: center; }
+@media (prefers-reduced-motion: reduce) {
+  .pcard, .pchip-wrap.is-open .pcard { transition: none; transform: none; }
+  .pchip { transition: none; }
+}
+/* The popup header is a size container: the toolbar popup (348 px) keeps the picture and drops the name text, the float and the
+   side panel (from about 385 px) show both. The name stays in the button's label and in the card. */
+.app-head { container: apphead / inline-size; }
+@container apphead (max-width: 360px) {
+  .pchip .pchip-name { display: none; }
+  .pchip:not(.pchip-empty) { padding-inline-end: 3px; }
+  .pchip-empty { padding-inline: var(--sp-2); }
+}
+
+/* The report bar: the actions hug the chip, which stays the last item in both directions. */
+.app-bar > .bar-actions { margin-inline-start: auto; }

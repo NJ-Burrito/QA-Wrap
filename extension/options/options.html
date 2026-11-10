@@ -49,6 +49,7 @@
              keeps working exactly as before — options.js reads the hash,
              opens the tab that owns it, and scrolls to it. -->
         <a href="#sec-appearance" id="tab-appearance" data-rail="appearance" role="tab" aria-controls="sec-appearance" aria-selected="false" tabindex="-1" data-i18n="options.rail.appearance">Appearance and language</a>
+        <a href="#sec-profile" id="tab-profile" data-rail="profile" role="tab" aria-controls="sec-profile" aria-selected="false" tabindex="-1" data-i18n="options.rail.profile">Profile</a>
         <a href="#sec-sessions" id="tab-recording" data-rail="recording" role="tab" aria-controls="sec-sessions" aria-selected="false" tabindex="-1" data-i18n="options.rail.recording">Recording</a>
         <a href="#sec-shortcuts" id="tab-tools" data-rail="tools" role="tab" aria-controls="sec-shortcuts" aria-selected="false" tabindex="-1" data-i18n="options.rail.tools">In-page tools</a>
         <a href="#sec-files" id="tab-files" data-rail="files" role="tab" aria-controls="sec-files" aria-selected="false" tabindex="-1" data-i18n="options.rail.files">Files and capture</a>
@@ -166,24 +167,31 @@
         </div>
       </section>
 
-      <!-- ============================================ session -->
-      <section class="card" id="sec-sessions" role="tabpanel" aria-labelledby="h-sec-sessions" tabindex="0" hidden>
+      <!-- ============================================ profile -->
+      <section class="card" id="sec-profile" role="tabpanel" aria-labelledby="h-sec-profile" tabindex="0" hidden>
         <header class="card-head">
-          <h2 id="h-sec-sessions" data-i18n="options.sessions.title">Sessions</h2>
-        <label class="text-field" style="margin-bottom:12px">
-          <span data-i18n="options.sessions.nameLabel">Your name, as the team folder shows it</span>
-          <input type="text" id="testerName" maxlength="60" data-i18n-placeholder="options.sessions.namePlaceholder" placeholder="e.g. Layla Haddad" autocomplete="off" />
-        </label>
-        <div class="profile-block" id="profile-block" style="margin-bottom:12px">
+          <h2 id="h-sec-profile" data-i18n="options.profile.title">Profile</h2>
           <p class="muted" id="profile-note" data-i18n="profile.note">This name and the date go in a small line at the foot of every file you export, and in the sealed timeline, so your work can be traced to you. Nothing is sent anywhere.</p>
-          <div class="profile-picture" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        </header>
+        <div class="profile-block" id="profile-block" style="margin-bottom:12px">
+          <div class="profile-picture" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
             <img id="profile-picture-preview" alt="" width="48" height="48" hidden style="border-radius:50%;object-fit:cover" />
             <input type="file" id="profile-picture-file" accept="image/png,image/jpeg,image/webp" hidden />
             <button type="button" class="btn btn-sm" id="profile-picture-pick" data-i18n="profile.pictureChoose">Choose a picture</button>
             <button type="button" class="btn btn-sm" id="profile-picture-remove" data-i18n="profile.pictureRemove" hidden>Remove the picture</button>
             <span class="muted" id="profile-picture-status" role="status" aria-live="polite"></span>
           </div>
-          <p class="muted" data-i18n="profile.pictureNote">The picture is optional. It stays on this machine and appears only inside a sealed timeline.</p>
+          <p class="muted" data-i18n="profile.pictureNote">The picture is optional. It stays on this machine. It shows beside your name in the top bar and inside a sealed timeline.</p>
+          <label class="text-field" style="margin-bottom:12px">
+            <span data-i18n="profile.nameEn">Name in English</span>
+            <input type="text" id="profileNameEn" maxlength="60" lang="en" dir="ltr" data-i18n-placeholder="profile.nameEnPlaceholder" placeholder="e.g. Layla Haddad" autocomplete="off" />
+          </label>
+          <label class="text-field" style="margin-bottom:12px">
+            <span data-i18n="profile.nameAr">Name in Arabic</span>
+            <input type="text" id="profileNameAr" maxlength="60" lang="ar" dir="rtl" data-i18n-placeholder="profile.nameArPlaceholder" placeholder="Your name in Arabic letters" autocomplete="off" />
+          </label>
+          <p class="muted" data-i18n="profile.namesNote">The top bar and each export use the name for their own language. If you fill in only one, that one is used everywhere.</p>
+
           <div class="profile-verify" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px">
             <input type="file" id="verify-file" accept=".md,text/markdown,text/plain" hidden />
             <button type="button" class="btn btn-sm" id="verify-pick" data-i18n="verify.pick">Verify a sealed file</button>
@@ -191,6 +199,12 @@
           </div>
           <div id="verify-result" role="status" aria-live="polite" tabindex="-1" hidden style="margin-top:8px"></div>
         </div>
+      </section>
+
+      <!-- ============================================ session -->
+      <section class="card" id="sec-sessions" role="tabpanel" aria-labelledby="h-sec-sessions" tabindex="0" hidden>
+        <header class="card-head">
+          <h2 id="h-sec-sessions" data-i18n="options.sessions.title">Sessions</h2>
         <label class="text-field" style="margin-bottom:12px">
           <span data-i18n="options.sessions.launchLabel">When the toolbar icon is clicked, open</span>
           <select id="launchSurface">

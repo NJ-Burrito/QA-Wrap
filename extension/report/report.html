@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../ui/vfx.css" />
     <link rel="stylesheet" href="../ui/motion.css" />
     <link rel="stylesheet" href="report.css" />
+    <link rel="stylesheet" href="../ui/profile-chip.css" />
     <script src="../ui/theme.js"></script>
     <script src="../platform/i18n.js"></script>
     <title data-i18n="report.page.title">QA Wrap report</title>
@@ -64,6 +65,8 @@
         <span id="bar-sep" class="bar-sep" role="separator" aria-orientation="vertical"></span>
         <button id="session-delete" class="btn btn-sm btn-quiet" data-i18n-title="report.bar.deleteTitle" title="Delete this session and everything in it" data-i18n="report.bar.delete" disabled>Delete this session</button>
       </div>
+      <!-- The person's picture and name, at the inline-end of the bar (ui/profile-chip.js). -->
+      <span class="pchip-slot" id="profile-chip" data-profile-chip></span>
     </header>
 
     <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -743,6 +746,7 @@
     <script src="filing.js"></script>
     <script src="quality.js"></script>
     <script src="sizes.js"></script>
+    <script type="module" src="../ui/profile-chip.js"></script>
     <script src="report.js"></script>
     <script src="notes-export.js"></script>
     <script src="istqb.js"></script>

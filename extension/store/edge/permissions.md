@@ -1,4 +1,4 @@
-# Microsoft Edge Add-ons: permission justifications for QA Wrap 3.9.0
+# Microsoft Edge Add-ons: permission justifications for QA Wrap 3.9.1
 
 Read from the built `dist/edge/manifest.json`; every permission the package declares has a row. Copy a row into the store's per-permission box.
 

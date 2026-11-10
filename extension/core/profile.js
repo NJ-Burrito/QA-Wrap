@@ -37,21 +37,48 @@ export function cleanPicture(raw) {
   return s.length <= PICTURE_MAX && PICTURE_RE.test(s) ? s : '';
 }
 
-/**
- * @typedef {{ name: string, picture: string, named: boolean }} Profile
- * `named` is true when the person has set a name; an unnamed profile still produces a trace line (date and tool).
- */
+const ARABIC_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
 
-/** @returns {Profile} */
-export function normaliseProfile(raw) {
-  const name = cleanName(raw?.name);
-  return { name, picture: cleanPicture(raw?.picture), named: name !== '' };
+/** True when the text holds Arabic script. */
+export function hasArabic(text) {
+  return ARABIC_RE.test(String(text ?? ''));
 }
 
-/** @type {null | (() => Promise<{name?: string, picture?: string} | null | undefined>)} */
+/**
+ * @typedef {{ name: string, nameAr: string, nameEn: string, picture: string, named: boolean }} Profile
+ * `name` is the single fallback name; `named` is true when any name is set (an unnamed profile still gets a trace line).
+ */
+
+/**
+ * The profile in the one shape everything reads. A profile with only the older single name (`testerName`) has neither
+ * language field, so that name migrates into the field for its script: Arabic letters to `nameAr`, else `nameEn`.
+ * @returns {Profile}
+ */
+export function normaliseProfile(raw) {
+  let nameAr = cleanName(raw?.nameAr ?? raw?.profileNameAr);
+  let nameEn = cleanName(raw?.nameEn ?? raw?.profileNameEn);
+  const legacy = cleanName(raw?.name ?? raw?.testerName);
+  if (!nameAr && !nameEn && legacy) { if (hasArabic(legacy)) nameAr = legacy; else nameEn = legacy; }
+  const name = legacy || nameEn || nameAr;
+  return { name, nameAr, nameEn, picture: cleanPicture(raw?.picture ?? raw?.profilePicture), named: name !== '' };
+}
+
+/** The name for a language: its own, else the other one's, else the fallback ('' when none). */
+export function pickName(profile, lang = 'en') {
+  const p = normaliseProfile(profile);
+  return String(lang).slice(0, 2).toLowerCase() === 'ar' ? (p.nameAr || p.nameEn || p.name) : (p.nameEn || p.nameAr || p.name);
+}
+
+/** One or two letters for an avatar with no picture ('' for no name). */
+export function initials(name) {
+  const words = cleanName(name).split(' ').filter((w) => /[\p{L}\p{N}]/u.test(w));
+  return words.slice(0, 2).map((w) => Array.from(w.replace(/^[^\p{L}\p{N}]+/u, ''))[0] || '').join('').toUpperCase();
+}
+
+/** @type {null | (() => Promise<{name?: string, nameAr?: string, nameEn?: string, picture?: string} | null | undefined>)} */
 let source = null;
 /** @type {Profile} */
-let last = { name: '', picture: '', named: false };
+let last = { name: '', nameAr: '', nameEn: '', picture: '', named: false };
 
 /** A test (or a page with its own storage) may register where the profile lives; the default is platform/profile-source.js. */
 export function setProfileSource(fn) {
@@ -92,12 +119,13 @@ const iso = (s) => `${FSI}${s}${PDI}`;
  *
  * With no name set the name part is dropped rather than invented ("Prepared with QA Wrap 3.8.4 · 2026-11-09").
  * In Arabic the name, date and tool are wrapped in bidi isolates so the Latin parts and digits keep their own order.
- * `profile` (from loadProfile()) or `name` may be passed; with neither, the last loaded profile is used.
+ * `profile` (from loadProfile()) or `name` may be passed; with neither, the last loaded profile is used. The name is the
+ * one for `lang`, else the other language's, else the fallback; an explicit `name` wins.
  *
- * @param {{ lang?: string, date?: any, version?: string, name?: string, profile?: {name?: string} }} [o]
+ * @param {{ lang?: string, date?: any, version?: string, name?: string, profile?: {name?: string, nameAr?: string, nameEn?: string} }} [o]
  */
 export function traceLine({ lang = 'en', date, version = '', name, profile } = {}) {
-  const who = cleanName(name ?? profile?.name ?? last.name);
+  const who = name !== undefined && name !== null ? cleanName(name) : pickName(profile ?? last, lang);
   const day = dayOf(date);
   const tool = `QA Wrap${version ? ` ${String(version).replace(UNSAFE, '').slice(0, 24)}` : ''}`;
   if (String(lang).slice(0, 2).toLowerCase() === 'ar') {

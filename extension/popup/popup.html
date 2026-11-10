@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="../ui/live.css" />
     <link rel="stylesheet" href="../ui/visuals.css" />
     <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="../ui/profile-chip.css" />
     <link rel="stylesheet" href="../ui/update-card.css" />
     <!-- Before the stylesheet paints: a popup that opens light and flips to
          night is worse than one that simply opens night. -->
@@ -54,6 +55,8 @@
         <button id="open-options" class="icon-btn" type="button" data-icon="settings" data-i18n-title="popup.header.settingsTitle" data-i18n-aria="popup.header.settingsAria" title="Settings" aria-label="Settings"></button>
         <button id="more" class="icon-btn" type="button" data-icon="more" aria-haspopup="menu" aria-expanded="false" aria-controls="more-menu" data-i18n-title="popup.header.more" data-i18n-aria="popup.header.more" title="More" aria-label="More"></button>
       </span>
+      <!-- The person's picture and name, at the inline-end of the bar (ui/profile-chip.js). -->
+      <span class="pchip-slot" id="profile-chip" data-profile-chip></span>
     </header>
 
     <div class="app-body" id="app-body">
@@ -784,6 +787,7 @@
     <script defer src="../ui/update-card.js"></script>
     <script defer src="guards.js"></script>
     <script defer src="interrupted.js"></script>
+    <script type="module" src="../ui/profile-chip.js"></script>
     <script type="module" src="action-stack.js"></script>
     <script type="module" src="note-slider.js"></script>
     <script defer src="updates-menu.js"></script>

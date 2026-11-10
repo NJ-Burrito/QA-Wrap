@@ -178,7 +178,7 @@ Chrome sync, when you have it on, carries only your preference settings: the rec
 
 ### Your name on exports, and the sealed timeline
 
-You can set a name, and a small picture if you like, in Settings > Sessions. Both are kept on this machine, and the picture is not synced.
+You can set a name, and a small picture if you like, in Settings > Profile. Both are kept on this machine, and the picture is not synced.
 The name is the one the team folder already shows on a session card; QA Wrap does not ask for another.
 
 - **Every export carries one line of fine print** with your name, the date and the QA Wrap version, for example
@@ -189,7 +189,7 @@ The name is the one the team folder already shows on a session card; QA Wrap doe
   lists every recorded event as readable text, with your profile in it, and ends with a seal block: the signer's name, the date, the
   tool version, the SHA-256 of the text above, and an ECDSA P-256 signature with the public key and its fingerprint. The signing key is
   made once per install, kept non-extractable in the browser's own storage, and stays in this browser profile.
-- **Verify file** (Settings > Sessions) reads a sealed file you choose and says **intact** or **altered**, who signed it, the key's
+- **Verify file** (Settings > Profile) reads a sealed file you choose and says **intact** or **altered**, who signed it, the key's
   fingerprint, and whether that key is this install's. The file is read and checked here, and is not uploaded.
 
 **What the seal is, and is not.** It is tamper-evidence, not secrecy: the text is readable on purpose, and anyone who has the file can

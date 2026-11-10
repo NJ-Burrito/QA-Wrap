@@ -2,7 +2,7 @@
 
 > Every failure, traced.
 
-**v3.9.0** · A local-first, session-aware Chrome MV3 extension, built to the
+**v3.9.1** · A local-first, session-aware Chrome MV3 extension, built to the
 ISTQB CTFL shape. Amman edition: the QA Wrap mark, the
 owner's seal, Thmanyah (Sans and Serif Display) embedded, three theme states, and the workbench in a side
 panel that stays open. Privacy policy in `PRIVACY.md`, security notes in `SECURITY.md`. Supported browsers: **Chrome and Edge**.
@@ -1009,7 +1009,7 @@ for adding anything new.
 
 ## Your name, the fine-print line and the sealed timeline (R3, R5)
 
-Set a name (and an optional picture) in Settings > Sessions. Every export then ends with one line of fine print (`Prepared by <name> ·
+Set a name in English and in Arabic (and an optional picture) in Settings > Profile; the top bar shows them (`ui/profile-chip.js`), and the fine print uses the name for the export's language. Every export then ends with one line of fine print (`Prepared by <name> ·
 <date> · QA Wrap <version>`; in Arabic `إعداد: <name> · <date> · QA Wrap <version>`), in the form each format can carry: a last line in
 Markdown and text, a footer in HTML, `_trace` in JSON, a comment in CSV, YAML, TypeScript, XML and SVG, a row in the workbooks. The code
 is `core/profile.js` (`loadProfile()`, `traceLine({ lang, date, version })`) and `core/trace-export.js`.

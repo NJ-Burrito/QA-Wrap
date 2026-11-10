@@ -1,9 +1,6 @@
 /* QA Wrap — local-first QA toolkit in the ISTQB shape. */
 // @ts-check
-/** The one place the profile is read from: the Settings record (name = `testerName`, picture = `profilePicture`). core/profile.js loads this on first use. */
+/** The one place the profile is read from: the Settings record (`testerName`, `profileNameAr`, `profileNameEn`, `profilePicture`). core/profile.js loads this on first use and normalises it. */
 import { getSettings } from './settings.js';
 
-export async function readProfile() {
-  const s = await getSettings();
-  return { name: s.testerName, picture: s.profilePicture };
-}
+export const readProfile = () => getSettings();

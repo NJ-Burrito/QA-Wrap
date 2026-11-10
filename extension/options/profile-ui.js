@@ -1,14 +1,16 @@
 /* QA Wrap — local-first QA toolkit in the ISTQB shape. */
 // @ts-check
 /**
- * The Profile block on the Settings page (Sessions card): the optional picture and the Verify file action.
- * The name is the existing "Your name" field (`testerName`); core/profile.js reads it, with this picture, for every export.
+ * The Profile tab on the Settings page: the optional picture, the name in English and in Arabic, and the Verify file action.
+ * The names are `profileNameEn` and `profileNameAr`; `testerName` stays as the single fallback name (English one, else Arabic)
+ * and, for a profile that has only that, is migrated into the field matching its script (core/profile.js normaliseProfile).
+ * core/profile.js reads all of them, with this picture, for every export and for the top bar.
  *
  * Verify file reads a sealed timeline the person chooses and shows intact or altered, who signed it, the key's
  * fingerprint, and whether that key is this install's. It never uploads anything: the file is read here and checked here.
  */
 import { verifyMarkdown, shortFingerprint } from '../core/seal.js';
-import { cleanPicture } from '../core/profile.js';
+import { cleanPicture, cleanName, normaliseProfile } from '../core/profile.js';
 import { ownFingerprint } from '../platform/seal-key.js';
 
 const AVATAR = 128;
@@ -57,13 +59,29 @@ export function wireProfile({ $, t, save, getSettings }) {
   const preview = /** @type {HTMLImageElement} */ ($('profile-picture-preview'));
   const status = /** @type {HTMLElement} */ ($('profile-picture-status'));
 
+  const nameEn = /** @type {HTMLInputElement} */ ($('profileNameEn'));
+  const nameAr = /** @type {HTMLInputElement} */ ($('profileNameAr'));
+
   const paint = () => {
+    // The names show what the profile resolves to, so an older single name appears in the field for its script.
+    // A field being typed in is never overwritten (a language change repaints the words, not the values).
+    const p = normaliseProfile({ name: getSettings()?.testerName, nameAr: getSettings()?.profileNameAr, nameEn: getSettings()?.profileNameEn });
+    if (nameEn && document.activeElement !== nameEn) nameEn.value = p.nameEn;
+    if (nameAr && document.activeElement !== nameAr) nameAr.value = p.nameAr;
     const pic = cleanPicture(getSettings()?.profilePicture);
     preview.hidden = !pic;
     if (pic) preview.src = pic; else preview.removeAttribute('src');
     remove.hidden = !pic;
     pick.textContent = t(pic ? 'profile.pictureChange' : 'profile.pictureChoose');
   };
+
+  /** Saves both names together, and the single fallback name beside them, so the three never disagree. */
+  const saveNames = () => {
+    const en = cleanName(nameEn.value), ar = cleanName(nameAr.value);
+    save({ profileNameEn: en, profileNameAr: ar, testerName: en || ar }, { immediate: true });
+  };
+  nameEn?.addEventListener('change', saveNames);
+  nameAr?.addEventListener('change', saveNames);
 
   pick.addEventListener('click', () => file.click());
   file.addEventListener('change', async () => {
@@ -100,4 +118,24 @@ export function wireProfile({ $, t, save, getSettings }) {
     out.focus();
   });
   return { paint };
+}
+
+/**
+ * The top bar's profile chip (ui/profile-chip.js) asks an open Settings tab, over a BroadcastChannel, to show a section
+ * ("#sec-profile") and come forward; the tab answers so the chip does not open a second one. The tab bar already follows
+ * the address, so setting the hash is the whole job.
+ */
+/** Held for the life of the page: a channel nobody references can be collected, and then it stops listening. */
+let openSection = null;
+export function wireOpenSection() {
+  try {
+    const bc = (openSection = new BroadcastChannel('qaw-open-section'));
+    bc.onmessage = (e) => {
+      const hash = e.data?.hash;
+      if (typeof hash !== 'string' || !/^#sec-[a-z-]{1,30}$/.test(hash)) return;
+      bc.postMessage({ ack: true });
+      if (location.hash === hash) window.dispatchEvent(new HashChangeEvent('hashchange')); else location.hash = hash;
+      chrome.tabs.getCurrent?.((tab) => { if (tab?.id) { chrome.tabs.update(tab.id, { active: true }); chrome.windows.update(tab.windowId, { focused: true }); } });
+    };
+  } catch { /* no BroadcastChannel: the chip opens a new tab */ }
 }

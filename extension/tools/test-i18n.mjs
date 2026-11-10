@@ -177,7 +177,7 @@ function walk(dir, rel = '') {
 }
 
 // r9-10-1: platform/i18n.js owns impactWord(), which asks for four keys, so it is read as a source too.
-const files = [...SURFACES.flatMap((s) => (fs.existsSync(path.join(EXT, s)) ? walk(path.join(EXT, s), s) : [])), 'platform/i18n.js', 'ui/dom.js', 'ui/update-card.js'];
+const files = [...SURFACES.flatMap((s) => (fs.existsSync(path.join(EXT, s)) ? walk(path.join(EXT, s), s) : [])), 'platform/i18n.js', 'ui/dom.js', 'ui/update-card.js', 'ui/profile-chip.js'];
 
 /** What a key looks like, and nothing else does: `popup.header.simple`. */
 const KEY_SHAPE = /^[a-z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+$/;

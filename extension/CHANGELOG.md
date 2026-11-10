@@ -6,6 +6,19 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.9.1, 2026-11-10
+
+### Added
+
+- Profile is now its own tab in Settings, named Profile (الملف الشخصي), with your picture, your name in English, your name in Arabic and Verify file. It used to sit inside the Sessions tab.
+- Your picture and name now show in the top bar, at the end of the bar in both English and Arabic: in the toolbar popup, the floating window, the side panel and the report. The name follows the language of QA Wrap, and if you filled in only one name, that one is shown. With no picture you get an avatar with your initials, and with no profile yet a quiet "Set up profile" chip opens the Profile tab.
+- Hover over the chip, or reach it with the keyboard, and a small card lifts with the larger picture, your name in both languages and an "Edit profile" button. Escape closes it, and it stays still if your system asks for reduced motion.
+
+### Changed
+
+- The small line at the foot of each export now uses the name for the language of that export, and the other name if only one is set.
+- A name you saved before this version is kept: it moves into the English or Arabic field by the script it was typed in, and stays as the fallback name.
+
 ## 3.9.0, 2026-11-10
 
 ### Added

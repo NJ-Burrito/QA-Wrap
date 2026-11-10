@@ -78,8 +78,8 @@ try {
     // T-074 flake: an unrelated setting written from the worker repaints the page while this form is open (focus is on a chip, not an input).
     // The half-filled form must survive it, or Save answers "Give the channel a name first".
     const before = await ext.evaluate(() => [...document.querySelectorAll('.svc-form [data-ev]')].map((b) => b.getAttribute('aria-pressed')).join());
-    await call({ type: 'UQA_SET_SETTINGS', patch: { testerName: `repaint-${svc}` } });
-    await ext.waitForFunction((n) => document.getElementById('testerName')?.value === n, `repaint-${svc}`); // paintAll() ran: it writes this field, then repaints the integrations
+    await call({ type: 'UQA_SET_SETTINGS', patch: { profileNameEn: `repaint-${svc}` } });
+    await ext.waitForFunction((n) => document.getElementById('profileNameEn')?.value === n, `repaint-${svc}`); // paintAll() ran: it writes this field, then repaints the integrations
     const after = await ext.evaluate(() => ({ name: document.querySelector('#f-name')?.value, url: document.querySelector('#f-url')?.value, ev: [...document.querySelectorAll('.svc-form [data-ev]')].map((b) => b.getAttribute('aria-pressed')).join() }));
     check(after.name === name && after.url === `${BASE}${path}` && after.ev === before, `${svc}: an unrelated setting saved from the worker leaves the open form as filled`, JSON.stringify({ before, after }));
     await ext.click('.svc-form [type=submit]');

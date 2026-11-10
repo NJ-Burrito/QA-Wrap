@@ -59,7 +59,7 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 
 ## ✨ New in 3.9.0
 
-- 🪪 **Your profile.** Set your name, and a picture if you like. Every file you export ends with one small line (name, date, QA-Wrap version) so the work can be traced to you. The name and the picture stay on your computer; nothing is sent anywhere.
+- 🪪 **Your profile.** It has its own **Profile** tab in Settings: your picture and your name in English and in Arabic. They show in the top bar (the name in the language you use, and a small card with both names and Edit profile when you hover or tab to it). Every file you export ends with one small line (name, date, QA-Wrap version) so the work can be traced to you, with the name for that file's language. The name and the picture stay on your computer; nothing is sent anywhere.
 - 📄 **Sealed timeline (Markdown).** Both download options can now include the whole timeline as a readable `.md` file with your profile in it and a seal block at the end.
 - 🔎 **Verify file.** Pick a sealed file and QA-Wrap says whether it is **intact** or **altered**, who sealed it, and the key fingerprint, and whether that key belongs to this install.
 - 📊 **Performance indicators (KPI dashboard).** Time spent testing per day, week and site, page coverage (tested against not tested), bugs filed per day and week, bugs by severity, sessions and average session length. Counted only from your own sessions on this device, and bugs are only the notes you filed as a bug. **Export as PDF** carries your profile line. Arabic and English, right to left where it should be.
