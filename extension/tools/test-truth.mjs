@@ -143,7 +143,8 @@ try {
     const onDisk = JSON.parse(fs.readFileSync(path.join(extDir, 'manifest.json'), 'utf8'));
     const keys = new Set([...Object.keys(onDisk), ...Object.keys(zipManifest)]);
     const differ = [...keys].filter((k) => JSON.stringify(onDisk[k]) !== JSON.stringify(zipManifest[k])).sort();
-    ok(differ.join() === '', // ui-1019: the shipped manifest already holds <all_urls> `manifest differs from the zip in: ${differ.join()}`);
+    // ui-1019: the shipped manifest already holds <all_urls>
+    ok(differ.join() === '', `manifest differs from the zip in: ${differ.join()}`);
     // Settings, About reads the same ID from the running extension.
     const opt = await ctx.newPage();
     await opt.goto(`chrome-extension://${id}/options/options.html`);
