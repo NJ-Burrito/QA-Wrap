@@ -181,7 +181,7 @@ html[dir=rtl] .tl-line{transform-origin:100% 50%}
     .odo .col span{height:110px;line-height:110px;font-family:var(--serif);font-size:92px;white-space:nowrap}
     .tileK{position:relative;width:360px;height:240px;border-radius:24px;background:var(--ground2);border:2px solid var(--line);box-shadow:0 30px 60px rgba(0,0,0,.45);padding:26px 30px;opacity:0}
     .tileK .l{font-size:28px;color:var(--muted);font-weight:700;white-space:nowrap}
-    .mk{position:absolute;display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 18px;border-radius:25px;background:var(--raise);border:2px solid var(--line);color:var(--dim);font-size:22px;direction:ltr;opacity:0}
+    .mk{position:absolute;display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 18px;border-radius:25px;background:var(--raise);border:2px solid var(--line);color:var(--dim);font-size:22px;opacity:0}
     .flag{position:absolute;width:64px;height:64px;border-radius:50%;background:var(--fail);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(0,0,0,.45);opacity:0}
     html[lang=en] #cap-L4-0{max-width:860px} /* break after "tested": bottom-heavy (review note 6) */
   </style>
@@ -274,9 +274,9 @@ html[dir=rtl] .tl-line{transform-origin:100% 50%}
       <div class="flag" id="f3" style="inset-inline-start:706px;top:356px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
       <div class="flag" id="f4" style="inset-inline-start:706px;top:284px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
       <div class="flag" id="f5" style="inset-inline-start:1110px;top:356px"><svg class="i" style="color:#1D2024;stroke-width:2.4;width:36px;height:36px"><use href="#ic-bug"/></svg></div>
-      <div class="mk" id="m1" style="inset-inline-start:1200px;top:180px"><svg class="i" style="width:26px;height:26px"><use href="#ic-err"/></svg>TypeError</div>
-      <div class="mk" id="m2" style="inset-inline-start:1200px;top:250px"><svg class="i" style="width:26px;height:26px"><use href="#ic-req"/></svg>POST /cart 500</div>
-      <div class="mk" id="m3" style="inset-inline-start:1200px;top:180px"><svg class="i" style="width:26px;height:26px"><use href="#ic-err"/></svg>ReferenceError</div>
+      <div class="mk" id="m1" style="inset-inline-start:1200px;top:180px"><svg class="i" style="width:26px;height:26px"><use href="#ic-err"/></svg><span class="ltr">TypeError</span></div>
+      <div class="mk" id="m2" style="inset-inline-start:1200px;top:250px"><svg class="i" style="width:26px;height:26px"><use href="#ic-req"/></svg><span class="ltr">POST /cart 500</span></div>
+      <div class="mk" id="m3" style="inset-inline-start:1200px;top:180px"><svg class="i" style="width:26px;height:26px"><use href="#ic-err"/></svg><span class="ltr">ReferenceError</span></div>
       <div class="abs" id="bnote" style="inset-inline-start:90px;top:520px;font-size:32px;color:var(--ink)">Only notes you filed as a bug are counted.</div>
     </div>
   </div>
