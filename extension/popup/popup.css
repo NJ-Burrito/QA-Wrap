@@ -1727,7 +1727,7 @@ input[type='text'], select, textarea { min-height: var(--sz-hit); }
 .note-echo-row + .note-echo-row { border-top: 1px solid var(--border); }
 
 .note-echo-tag {
-  font: 700 9.5px/1.6 var(--mono);
+  font: 700 7.5px/1.6 var(--mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -2790,7 +2790,7 @@ html[data-surface='panel'] #step-live > .meta { display: none; }
 .action-stack li { padding: var(--sp-1) var(--sp-2); border-radius: 6px; font-size: var(--t-small); overflow-wrap: anywhere; }
 .action-stack li.is-ok { background: var(--ok-soft); color: var(--text); border-inline-start: 3px solid var(--ok); }
 .action-stack li.is-err { background: var(--fail-soft); color: var(--fail-ink); border-inline-start: 3px solid var(--fail); }
-.action-badge { position: absolute; inset-block-start: -9px; inset-inline-end: -7px; min-inline-size: 20px; block-size: 20px; padding-inline: 5px; box-sizing: border-box; border-radius: 10px; background: var(--fail); color: #fff; font: 700 11px/20px var(--font); text-align: center; font-variant-numeric: tabular-nums; }
+.action-badge { position: absolute; inset-block-start: -9px; inset-inline-end: -7px; min-inline-size: 20px; block-size: 20px; padding-inline: 5px; box-sizing: border-box; border-radius: 10px; background: var(--fail); color: #fff; font: 700 9px/20px var(--font); text-align: center; font-variant-numeric: tabular-nums; }
 
 /* The tool panel shows no paragraph: what it does, why, its technique and principle sit behind this one disclosure. */
 .tool-about { margin-block: var(--sp-2); }

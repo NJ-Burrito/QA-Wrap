@@ -79,7 +79,7 @@ let tool = 'arrow';
 let shape = 'rect'; // which geometry the Shapes button is holding
 let colour = '#B5432B';
 let width = 4;
-let fontSize = 22;
+let fontSize = 20;
 let blurStrength = 12;
 let stepCounter = 0;
 

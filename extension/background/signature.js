@@ -76,7 +76,7 @@ export function tagCalls({ version, sessionId, armedWindows, live } = {}) {
   calls.push(['groupCollapsed', `\u200E%c\u2066qaw\u2069 · ${L.helpers} (${HELPERS.length}) `, pill(C.basalt, C.coral)]);
   HELPERS.forEach(([cmd, isAsync, en, ar2]) => calls.push(['log', `\u200E%c\u2066${isAsync ? 'await ' : ''}qaw.${cmd}\u2069%c  ${ar ? ar2 : en}`,
     pill(C.basalt, C.coral, 'font-weight:700;padding:0 2px 0 8px;'), `background:${C.basalt};color:${C.gloss};font:400 ${fs}px/1.9 ${SANS};padding:0 8px 0 0`]));
-  calls.push(['log', `\u200E%c${L.rights}`, `background:${C.basalt};color:${C.mist};font:400 10px/1.9 ${SANS};padding:0 8px`]);
+  calls.push(['log', `\u200E%c${L.rights}`, `background:${C.basalt};color:${C.mist};font:400 8px/1.9 ${SANS};padding:0 8px`]);
   calls.push(['groupEnd']);
   return calls;
 }

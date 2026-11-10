@@ -358,12 +358,12 @@ export function buildStoryboardHtml(session, events, captures = {}, assets = {})
   const body = `<style>
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
   .scene{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;break-inside:avoid}
-  .scene header{display:flex;gap:8px;align-items:center;padding:8px 12px;font-size:12px;color:var(--soft);border-bottom:1px solid var(--line)}
+  .scene header{display:flex;gap:8px;align-items:center;padding:8px 12px;font-size:10px;color:var(--soft);border-bottom:1px solid var(--line)}
   .scene .n{font-weight:800;color:var(--ink)} .scene .t{margin-inline-start:auto}
   .scene.failure header{background:color-mix(in srgb,var(--bad) 12%,transparent)} .scene.title header,.scene.outro header{background:var(--band)}
   .scene img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;margin:0;border:0;border-radius:0}
-  .blank{aspect-ratio:16/10;display:grid;place-items:center;color:var(--soft);background:var(--band);font-size:12px}
-  .scene p{margin:0;padding:8px 12px;font-size:13px;line-height:1.45} .on{font-weight:600} .say,.do{color:var(--soft);border-top:1px solid var(--line)}
+  .blank{aspect-ratio:16/10;display:grid;place-items:center;color:var(--soft);background:var(--band);font-size:10px}
+  .scene p{margin:0;padding:8px 12px;font-size:11px;line-height:1.45} .on{font-weight:600} .say,.do{color:var(--soft);border-top:1px solid var(--line)}
 </style>
 <h2 id="scenes">Scenes</h2>
 <p>${scenes.length} scenes · about ${Math.round(totalSec)} s · the JSON beside this file carries the same scenes for a video generator.</p>

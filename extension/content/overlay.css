@@ -184,7 +184,7 @@
 /* ── the face, for every layer the tool draws ─────────────────────────────── */
 .uqa-bar, .uqa-pill, .uqa-bar-tip, .uqa-chip, .uqa-toast, .uqa-palette, .uqa-quicknote,
 .uqa-copy-fallback, .uqa-field-bar, .uqa-mask-tip, .uqa-pick-chip, .uqa-credname, .uqa-buffer {
-  font: 400 13px/1.45 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
+  font: 400 11px/1.45 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
   letter-spacing: 0;
   color: var(--uqa-text);
 }
@@ -255,7 +255,7 @@
   min-block-size: 36px;
   padding-inline: 12px;
   border-radius: var(--uqa-r-md);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
   transition: transform var(--uqa-motion-fast) var(--uqa-motion-ease);
@@ -279,7 +279,7 @@
   padding-inline: 4px;
   border: 1px solid var(--uqa-border-strong);
   border-radius: var(--uqa-r-sm);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   direction: ltr;
   unicode-bidi: isolate;
@@ -292,7 +292,7 @@
   border-color: var(--uqa-border);
   border-radius: var(--uqa-r-sm);
   background: var(--uqa-surface-raised);
-  font: 500 13px/26px "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums;
+  font: 500 11px/26px "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums;
   direction: ltr;
   unicode-bidi: isolate;
   text-align: start;
@@ -363,10 +363,10 @@
 .uqa-record { display: flex; align-items: center; gap: 6px; padding-inline: 8px; flex: none; }
 .uqa-bar.is-vertical .uqa-record { flex-direction: column; gap: 2px; padding: 6px 0; }
 .uqa-dot { inline-size: 8px; block-size: 8px; flex: none; border-radius: var(--uqa-r-pill); background: var(--uqa-live); }
-.uqa-timer { display: inline-flex; font-size: 14px; font-weight: 500; direction: ltr; unicode-bidi: isolate; }
+.uqa-timer { display: inline-flex; font-size: 12px; font-weight: 500; direction: ltr; unicode-bidi: isolate; }
 .uqa-timer > span { display: inline-block; inline-size: 0.68em; text-align: center; }
 .uqa-timer > .sep { inline-size: 0.28em; }
-.uqa-bar.is-vertical .uqa-timer { font-size: 12px; }
+.uqa-bar.is-vertical .uqa-timer { font-size: 10px; }
 .uqa-bar.is-vertical .uqa-stop, .uqa-bar.c5 .uqa-stop { inline-size: 36px; padding: 0; }
 .uqa-bar.is-vertical .uqa-stop-label, .uqa-bar.c5 .uqa-stop-label { display: none; }
 .uqa-idle { display: inline-flex; align-items: center; white-space: nowrap; color: var(--uqa-text-muted); }
@@ -374,9 +374,9 @@
 .uqa-bar.is-vertical .uqa-idle-ring, .uqa-bar.c3 .uqa-idle-ring { display: block; }
 .uqa-bar.is-vertical .uqa-idle-txt, .uqa-bar.c3 .uqa-idle-txt { display: none; }
 .uqa-bar.is-vertical .uqa-idle, .uqa-bar.c3 .uqa-idle { padding: 14px; }
-.uqa-problems { display: inline-flex; align-items: center; gap: 3px; flex: none; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; border-radius: var(--uqa-r-pill); padding: 1px 4px; outline: 2px solid transparent; outline-offset: 1px; }
+.uqa-problems { display: inline-flex; align-items: center; gap: 3px; flex: none; font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; border-radius: var(--uqa-r-pill); padding: 1px 4px; outline: 2px solid transparent; outline-offset: 1px; }
 /* 1015: the chip is a button (one tap opens the problems list): reset, a 32 px target, hover and focus like the other controls. */
-button.uqa-problems { position: relative; margin: 0; border: 1px solid transparent; background: transparent; font: inherit; font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; min-block-size: 32px; padding-inline: 8px; gap: 4px; }
+button.uqa-problems { position: relative; margin: 0; border: 1px solid transparent; background: transparent; font: inherit; font-size: 11px; font-weight: 500; white-space: nowrap; cursor: pointer; min-block-size: 32px; padding-inline: 8px; gap: 4px; }
 @media (hover: hover) { button.uqa-problems:hover { background: color-mix(in srgb, currentColor 12%, transparent); } }
 button.uqa-problems:active { background: color-mix(in srgb, currentColor 20%, transparent); }
 button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-offset: 2px; }
@@ -387,7 +387,7 @@ button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-off
 .uqa-problems .icon { inline-size: 12px; block-size: 12px; }
 .uqa-problems.is-zero { color: var(--uqa-text-muted); }
 /* f1022: the evidence counter, an icon and a number (the words are its name and tooltip) */
-.uqa-evidence { display: inline-flex; align-items: center; gap: 4px; flex: none; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; padding-inline: 6px; }
+.uqa-evidence { display: inline-flex; align-items: center; gap: 4px; flex: none; font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; padding-inline: 6px; }
 .uqa-evidence .icon { inline-size: 12px; block-size: 12px; }
 .uqa-problems.tier-error { color: var(--uqa-tone-error); }
 .uqa-problems.tier-warning { color: var(--uqa-tone-warn); }
@@ -419,7 +419,7 @@ button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-off
   padding-inline: 8px;
   border-radius: calc(var(--uqa-r-md) - 2px);
   color: var(--uqa-text);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -438,7 +438,7 @@ button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-off
 .uqa-bar.c1 .uqa-code { max-inline-size: 20ch; }
 /* 1015: pick controls only while picking; the words on the quick buttons are the first thing the ladder drops (c1). */
 .uqa-bar:not(.is-picking) .uqa-pickonly { display: none; }
-.uqa-icon-btn.has-label { display: inline-flex; align-items: center; justify-content: center; gap: 6px; inline-size: auto; min-inline-size: 36px; padding-inline: 8px; font-size: 14px; font-weight: 500; white-space: nowrap; }
+.uqa-icon-btn.has-label { display: inline-flex; align-items: center; justify-content: center; gap: 6px; inline-size: auto; min-inline-size: 36px; padding-inline: 8px; font-size: 12px; font-weight: 500; white-space: nowrap; }
 .uqa-bar.c1 .uqa-lbl, .uqa-bar.is-vertical .uqa-lbl { display: none; }
 .uqa-bar.c1 .uqa-icon-btn.has-label, .uqa-bar.is-vertical .uqa-icon-btn.has-label { inline-size: 36px; padding: 0; }
 .uqa-bar.c6 .uqa-kbd,.uqa-bar.c6 .uqa-locator,.uqa-bar.c7 .uqa-purpose,.uqa-bar.c7 .uqa-pin,.uqa-bar.c7 .uqa-div,.uqa-bar.c8 .uqa-quick{display:none}
@@ -492,8 +492,8 @@ button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-off
 }
 .uqa-bar-tip.is-visible { opacity: 1; transform: none; }
 .uqa-bar-tip strong { display: block; font-weight: 500; }
-.uqa-bar-tip span { display: block; font-size: 12px; font-weight: 500; color: var(--uqa-text-muted); }
-.uqa-bar-tip code { font: 500 13px/1.45 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+.uqa-bar-tip span { display: block; font-size: 10px; font-weight: 500; color: var(--uqa-text-muted); }
+.uqa-bar-tip code { font: 500 11px/1.45 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
 
 /* ── pick rings and the name chip (DESIGN-SPEC §5.5) ──────────────────────
    Two crisp rings in the purpose colour, a white halo between: one edge
@@ -530,7 +530,7 @@ button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-off
   border-radius: var(--uqa-r-pill);
   background: var(--p, var(--uqa-p-any));
   color: var(--uqa-on-purpose);
-  font: 500 12px/1 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
+  font: 500 10px/1 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
   animation: uqa-badge-in var(--uqa-motion-fast) var(--uqa-motion-ease);
 }
 @keyframes uqa-badge-in { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: none; } }
@@ -573,7 +573,7 @@ button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-off
   border-radius: var(--uqa-r-sm);
   background: var(--p, var(--uqa-p-any));
   color: var(--uqa-on-purpose);
-  font-size: 12px;
+  font-size: 10px;
 }
 .uqa-chip-role { flex: none; color: var(--uqa-text-muted); }
 .uqa-chip-name { overflow: hidden; text-overflow: ellipsis; }
@@ -590,7 +590,7 @@ button.uqa-problems:focus-visible { outline-color: var(--uqa-focus); outline-off
   gap: 8px;
   padding: 4px 4px 4px 12px;
   border-radius: var(--uqa-r-pill);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
 }
 .uqa-pick-chip b { font-weight: 500; }
@@ -694,7 +694,7 @@ html.uqa-injecting [contenteditable="true"] {
   max-inline-size: calc(100vw - 32px);
   padding: 4px 4px 4px 12px;
   border-radius: var(--uqa-r-pill);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
   pointer-events: auto;
 }
@@ -731,8 +731,8 @@ html.uqa-injecting [contenteditable="true"] {
   padding: 12px;
   border-bottom: 1px solid var(--uqa-border);
 }
-.uqa-palette-head strong { font-size: 14px; font-weight: 500; }
-.uqa-palette-head span { font-size: 12px; font-weight: 500; color: var(--uqa-text-muted); }
+.uqa-palette-head strong { font-size: 12px; font-weight: 500; }
+.uqa-palette-head span { font-size: 10px; font-weight: 500; color: var(--uqa-text-muted); }
 .uqa-palette-search {
   width: 100%;
   min-height: 32px;
@@ -747,7 +747,7 @@ html.uqa-injecting [contenteditable="true"] {
 .uqa-palette-list { overflow-y: auto; padding: 6px; }
 .uqa-palette-group {
   padding: 8px 6px 4px;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   color: var(--uqa-text-muted);
 }
@@ -775,13 +775,13 @@ html.uqa-injecting [contenteditable="true"] {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--uqa-accent-ink);
-  font: 500 12px/1.4 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums;
+  font: 500 10px/1.4 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums;
   direction: ltr;
   unicode-bidi: embed;
 }
 .uqa-palette-item em {
   grid-column: 1 / -1;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   font-style: normal;
   color: var(--uqa-warn-ink);
@@ -814,7 +814,7 @@ html.uqa-injecting [contenteditable="true"] {
   color: var(--uqa-text);
   font: inherit;
 }
-.uqa-copy-fallback textarea { min-height: 56px; resize: vertical; font: 500 13px/1.5 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums; }
+.uqa-copy-fallback textarea { min-height: 56px; resize: vertical; font: 500 11px/1.5 "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif; font-variant-numeric: tabular-nums; }
 .uqa-quicknote input:focus { outline: 2px solid var(--uqa-focus); outline-offset: 1px; }
 .uqa-copy-fallback button, .uqa-quicknote-tags button {
   min-height: 32px;
@@ -931,7 +931,7 @@ html.uqa-masking, html.uqa-masking * { cursor: crosshair !important; }
   border-radius: var(--uqa-r-md);
   background: var(--uqa-surface-inverse);
   color: var(--uqa-text-inverse);
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1.4;
   opacity: 0.9;
   pointer-events: none;

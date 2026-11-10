@@ -89,24 +89,24 @@ const html = `<!doctype html><html lang="en"><meta charset="utf-8"><title>QA Wra
 <style>
  :root{color-scheme:light dark}
  body{margin:0;padding:40px;background:#F1EFE9;color:#1D2024;font-family:Thmanyah Sans,system-ui,sans-serif}
- h1{font-size:30px;margin:0 0 4px}
+ h1{font-size:28px;margin:0 0 4px}
  .sub{color:#5D646B;margin:0 0 6px;max-width:70ch;line-height:1.6}
- .note{color:#7A8188;margin:0 0 30px;font-size:13px}
+ .note{color:#7A8188;margin:0 0 30px;font-size:11px}
  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(520px,1fr));gap:24px;max-width:1400px}
  figure{margin:0;background:#FAF8F4;border:1px solid #DAD6CD;border-radius:14px;overflow:hidden;padding:16px}
- figcaption{padding:0 2px 14px;font-size:14px;line-height:1.5}
- .kind{margin:0 0 4px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#B5432B}
- figcaption b{font-size:17px} figcaption span{display:block;color:#5D646B;margin-top:4px}
+ figcaption{padding:0 2px 14px;font-size:12px;line-height:1.5}
+ .kind{margin:0 0 4px;font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#B5432B}
+ figcaption b{font-size:15px} figcaption span{display:block;color:#5D646B;margin-top:4px}
  bdi{color:#5D646B;font-weight:600;margin-inline-start:8px}
  .takes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
- .lang{margin:0 0 5px;font-size:11.5px;font-weight:600;color:#5D646B}
+ .lang{margin:0 0 5px;font-size:9.5px;font-weight:600;color:#5D646B}
  .lang small{font-weight:500;color:#8A9096;margin-inline-start:6px}
  video{width:100%;display:block;border-radius:8px;background:#1D2024}
- .gone{color:#B5432B;font-size:12px}
- .chapters{margin:8px 0 0;padding-inline-start:0;list-style:none;columns:2;font-size:12px;color:#5D646B}
+ .gone{color:#B5432B;font-size:10px}
+ .chapters{margin:8px 0 0;padding-inline-start:0;list-style:none;columns:2;font-size:10px;color:#5D646B}
  .chapters li{margin:0 0 2px;break-inside:avoid}
  .chapters b{color:#B5432B;font-variant-numeric:tabular-nums;margin-inline-end:6px}
- footer{margin-top:34px;color:#7A8188;font-size:12px}
+ footer{margin-top:34px;color:#7A8188;font-size:10px}
  @media (max-width:720px){.takes{grid-template-columns:1fr}}
 </style>
 <h1>QA Wrap — the films</h1>

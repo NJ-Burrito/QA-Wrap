@@ -40,10 +40,10 @@ body {
 }
 
 .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-h1 { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.25; }
+h1 { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.25; }
 
 .field { display: grid; gap: 8px; }
-.label { font-size: 14px; color: var(--text-muted); }
+.label { font-size: 12px; color: var(--text-muted); }
 
 textarea {
   width: 100%;
@@ -54,7 +54,7 @@ textarea {
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.5;
   resize: vertical;
 }
@@ -68,20 +68,20 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   border-radius: var(--r-md);
   background: var(--surface-sunken);
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 11px;
   line-height: 1.5;
 }
 
 .actions { display: flex; gap: 10px; flex-wrap: wrap; }
 /* Every target clears 44px, on a page whose whole audience is in a hurry. */
-.actions .btn { min-height: 44px; padding: 0 20px; font-size: 15px; flex: 1 1 auto; }
+.actions .btn { min-height: 44px; padding: 0 20px; font-size: 13px; flex: 1 1 auto; }
 .head .btn { min-height: 44px; min-width: 44px; }
 
-.status { margin: 0; min-height: 1.2em; font-size: 14px; }
+.status { margin: 0; min-height: 1.2em; font-size: 12px; }
 .status.ok { color: var(--ok); }
 .status.err { color: var(--danger); }
 
-.fine { margin: 0; font-size: 12px; line-height: 1.55; color: var(--text-muted); }
+.fine { margin: 0; font-size: 10px; line-height: 1.55; color: var(--text-muted); }
 
 /* Arabic, when the page is switched: the whole sheet turns, rather than the
    text being poured into a left-to-right shape. */

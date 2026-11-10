@@ -98,12 +98,12 @@ export const FAULTS = [
 const PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>Permits portal</title>
 <style>
- body{font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;color:#1f2328;background:#fff}
+ body{font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;color:#1f2328;background:#fff}
  header{background:#0f2436;color:#fff;padding:15px 34px;font-weight:700;display:flex;gap:22px;align-items:center}
- header nav a{color:#fff;opacity:.75;text-decoration:none;font-weight:500;font-size:14px;margin-inline-start:14px}
+ header nav a{color:#fff;opacity:.75;text-decoration:none;font-weight:500;font-size:12px;margin-inline-start:14px}
  main{max-width:600px;margin:40px auto;padding:0 24px}
- h1{font-size:27px;margin:0 0 6px} p.sub{color:#666;margin:0 0 24px}
- label{display:block;font-weight:600;margin:15px 0 4px;font-size:14px}
+ h1{font-size:25px;margin:0 0 6px} p.sub{color:#666;margin:0 0 24px}
+ label{display:block;font-weight:600;margin:15px 0 4px;font-size:12px}
  input,select{width:100%;padding:11px 12px;border:1px solid #c9ced6;border-radius:8px;font:inherit;background:#fff;color:inherit}
  button{margin-top:22px;background:#0f2436;color:#fff;border:0;border-radius:8px;padding:13px 22px;font:inherit;font-weight:700;cursor:pointer}
  /* Kept only so the form's height does not jump when a submit settles. It is
@@ -111,10 +111,10 @@ const PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8">
  .note{margin-top:14px;color:#a11;font-weight:600;min-height:22px}
  /* The promise the page makes at the top, kept. Its own style, not an alert. */
  .receipt{margin-top:16px;padding:14px 16px;border:1px solid #c9ced6;border-radius:8px;background:#f6f8fa}
- .receipt b{display:block;font-size:15px;margin-bottom:3px}
- .receipt span{color:#555;font-size:14px}
+ .receipt b{display:block;font-size:13px;margin-bottom:3px}
+ .receipt span{color:#555;font-size:12px}
  /* Deliberately below 4.5:1 on white. One of the three faults in FAULTS. */
- .faint{color:#b9bec6;font-size:13px;margin:6px 0 0}
+ .faint{color:#b9bec6;font-size:11px;margin:6px 0 0}
 </style></head><body>
 <header><b>Permits portal</b><nav><a href="/help">Help</a><a href="/status">Status</a><a href="/forms/2019.pdf">Downloads</a></nav></header>
 <main>

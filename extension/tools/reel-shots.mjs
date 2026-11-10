@@ -28,13 +28,13 @@ const PROFILE = profile('.reel-shots-profile' + (process.env.UQA_PROFILE_SUFFIX 
 
 const PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Northwind: sign in</title>
 <style>
-  body{margin:0;background:#0f1216;color:#e8eaed;font:16px/1.4 system-ui,sans-serif;display:grid;place-items:center;min-height:100vh}
+  body{margin:0;background:#0f1216;color:#e8eaed;font:14px/1.4 system-ui,sans-serif;display:grid;place-items:center;min-height:100vh}
   main{width:400px;padding:36px;background:#181c22;border:1px solid #2a2f37;border-radius:16px}
-  h1{margin:0 0 6px;font-size:28px} p{margin:0 0 24px;color:#9aa3ad}
-  label{display:block;margin:16px 0 6px;font-size:14px;color:#c3c9d0}
-  input{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:10px;border:1px solid #343a43;background:#0f1216;color:#e8eaed;font-size:16px}
-  button{margin-top:26px;width:100%;padding:14px;border:0;border-radius:10px;background:#3b82f6;color:#fff;font-size:16px;font-weight:600}
-  #secret{margin-top:22px;padding:12px 14px;border-radius:10px;background:#0f1216;border:1px dashed #343a43;font-family:ui-monospace,monospace;font-size:14px}
+  h1{margin:0 0 6px;font-size:26px} p{margin:0 0 24px;color:#9aa3ad}
+  label{display:block;margin:16px 0 6px;font-size:12px;color:#c3c9d0}
+  input{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:10px;border:1px solid #343a43;background:#0f1216;color:#e8eaed;font-size:14px}
+  button{margin-top:26px;width:100%;padding:14px;border:0;border-radius:10px;background:#3b82f6;color:#fff;font-size:14px;font-weight:600}
+  #secret{margin-top:22px;padding:12px 14px;border-radius:10px;background:#0f1216;border:1px dashed #343a43;font-family:ui-monospace,monospace;font-size:12px}
 </style></head>
 <body><main>
 <h1 id="welcome">Welcome back</h1><p>Sign in to your Northwind account.</p>
@@ -44,7 +44,7 @@ const PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
 <button id="signin" type="button">Sign in</button>
 <div id="secret" aria-label="Recovery code">Recovery code: 4417-2290-ALFA</div>
 <p id="result" role="status" style="margin:16px 0 0;color:#ff6b6b;font-weight:600;min-height:22px"></p>
-<p style="margin:10px 0 0;font-size:13px"><a href="/help/reset" style="color:#7fb0ff">Forgot your password?</a> <img src="/logo.png" width="1" height="1"></p>
+<p style="margin:10px 0 0;font-size:11px"><a href="/help/reset" style="color:#7fb0ff">Forgot your password?</a> <img src="/logo.png" width="1" height="1"></p>
 <script>document.getElementById("signin").onclick=async()=>{const r=await fetch("/api/login",{method:"POST",body:"{}"});document.getElementById("result").textContent=r.ok?"":"Something went wrong ("+r.status+"). Try again.";};</script>
 </main></body></html>`;
 

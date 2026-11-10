@@ -6,7 +6,7 @@ body {
   background: var(--backdrop);
   background-attachment: fixed;
   color: var(--text);
-  font: 14px/1.55 var(--font);
+  font: 12px/1.55 var(--font);
 }
 
 .app-bar {

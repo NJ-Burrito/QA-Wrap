@@ -57,7 +57,7 @@
   }
 
   const LAYER = 'position:fixed;z-index:2147483646;inset-inline-end:10px;padding:3px 8px;border-radius:var(--uqa-r-md);' +
-    'background:var(--uqa-surface-inverse);color:var(--uqa-text-inverse);font:12px/1.4 "QAW Thmanyah Sans",system-ui,sans-serif;pointer-events:none;';
+    'background:var(--uqa-surface-inverse);color:var(--uqa-text-inverse);font:10px/1.4 "QAW Thmanyah Sans",system-ui,sans-serif;pointer-events:none;';
   let dot = null;
   let label = null;
   let toast = null;

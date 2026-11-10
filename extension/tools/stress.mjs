@@ -67,7 +67,7 @@ async function stress(name, fn) {
 
 const BIG_ROWS = 800;
 const PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>stress fixture</title>
-<style>body{font:14px "Thmanyah Sans",sans-serif;margin:0;padding:12px}
+<style>body{font:12px "Thmanyah Sans",sans-serif;margin:0;padding:12px}
 .row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;border-bottom:1px solid #eee;padding:3px 0}
 .clip{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 input,select{width:100%}</style></head>

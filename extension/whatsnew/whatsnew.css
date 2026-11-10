@@ -26,7 +26,7 @@ body { margin: 0; min-height: 100vh; background: var(--backdrop); color: var(--t
 
 .wn-notes { display: grid; gap: .75rem; margin-block-start: 1rem; }
 .wn-sec { border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); padding: .9rem 1rem 1rem; }
-.wn-sec h2 { display: flex; align-items: center; gap: .6rem; margin: 0 0 .5rem; font-size: 1.05rem; font-weight: 600; }
+.wn-sec h2 { display: flex; align-items: center; gap: .6rem; margin: 0 0 .5rem; font-size: 0.925rem; font-weight: 600; }
 .wn-sec h2 .wn-ico { inline-size: 1.9rem; block-size: 1.9rem; border-radius: var(--r-md); background: var(--accent-soft); color: var(--accent-ink); }
 .wn-sec[data-k="added"] h2 .wn-ico { background: var(--pass-soft); color: var(--pass-ink); }
 .wn-sec[data-k="fixed"] h2 .wn-ico { background: var(--warn-soft); color: var(--warn-ink); }
@@ -45,10 +45,10 @@ a.btn { text-decoration: none; }
 .wn-link { color: var(--accent-ink); font-weight: 600; text-underline-offset: 3px; }
 
 .wn-panel { border: 1.5px solid var(--accent); border-radius: var(--r-lg); background: var(--surface); padding: 1.1rem 1.15rem; display: grid; gap: .8rem; margin-block-start: .75rem; }
-.wn-panel h2 { margin: 0; font-size: 1.15rem; font-family: var(--display); font-weight: 600; }
+.wn-panel h2 { margin: 0; font-size: 1.025rem; font-family: var(--display); font-weight: 600; }
 .wn-panel p { margin: 0; line-height: 1.6; color: var(--text-muted); }
 .wn-file { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; padding: .6rem .8rem; border-radius: var(--r-md); background: var(--surface-sunken); border: 1px dashed var(--border-strong); }
-.wn-file code { direction: ltr; unicode-bidi: isolate; font-family: var(--mono); font-weight: 700; font-size: 1rem; color: var(--accent-ink); }
+.wn-file code { direction: ltr; unicode-bidi: isolate; font-family: var(--mono); font-weight: 700; font-size: 0.875rem; color: var(--accent-ink); }
 .wn-file span { color: var(--text-muted); font-size: .9rem; }
 .wn-panel ol { margin: 0; padding-inline-start: 1.3rem; display: grid; gap: .3rem; line-height: 1.55; }
 .wn-note { min-block-size: 1.2em; font-size: .9rem; color: var(--warn-ink); }

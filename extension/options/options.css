@@ -138,7 +138,7 @@ main > .card { scroll-margin-top: 76px; }
 .range-head label { font-size: var(--t-body); font-weight: 600; letter-spacing: var(--track-body); line-height: var(--lead-body); }
 
 .range-head output {
-  font: 600 13px/1 var(--mono);
+  font: 600 11px/1 var(--mono);
   color: var(--accent-ink);
   background: var(--accent-soft);
   padding: var(--sp-1) var(--sp-2);
@@ -226,7 +226,7 @@ input[type='range']::-webkit-slider-runnable-track {
 .key-label em { font-style: normal; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); }
 
 .key-btn {
-  font: 600 12px/1 var(--mono);
+  font: 600 10px/1 var(--mono);
   padding: var(--sp-2) var(--sp-3);
   min-width: 110px;
   border: 1px solid var(--border-strong);
@@ -339,7 +339,7 @@ input[type='range']::-webkit-slider-runnable-track {
   border-radius: var(--r-pill);
   background: var(--accent-soft);
   color: var(--accent-ink);
-  font: 500 9.5px/1.6 var(--mono);
+  font: 500 7.5px/1.6 var(--mono);
   letter-spacing: 0.04em;
 }
 
@@ -446,7 +446,7 @@ dl.about .mono { font-family: inherit; letter-spacing: 0.02em; }
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--text-muted);
-  font: 600 12px/1 var(--font);
+  font: 600 10px/1 var(--font);
   cursor: pointer;
   transition: background-color var(--dur-tap) var(--ease), color var(--dur-tap) var(--ease), border-color var(--dur-tap) var(--ease);
 }
@@ -506,7 +506,7 @@ dl.about .mono { font-family: inherit; letter-spacing: 0.02em; }
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
   background: var(--surface-sunken);
-  font: 11px/1.4 var(--mono);
+  font: 9px/1.4 var(--mono);
   overflow-wrap: anywhere;
 }
 

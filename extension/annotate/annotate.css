@@ -90,13 +90,13 @@ body {
   cursor: pointer;
 }
 
-.tool-btn span { font-size: 18px; /* scale-exception: tool icon glyph, 2px from every step (research/90) */ line-height: 1; }
+.tool-btn span { font-size: 16px; /* scale-exception: tool icon glyph, 2px from every step (research/90) */ line-height: 1; }
 .tool-btn em { font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); }
 .tool-btn:hover { background: var(--surface-raised); color: var(--text); }
 
 /* The one rail button that opens something rather than only arming something,
    so it says so before it is pressed. */
-.tool-btn .caret { font-style: normal; font-size: 8px; line-height: 1; margin-top: -1px; }
+.tool-btn .caret { font-style: normal; font-size: 6px; line-height: 1; margin-top: -1px; }
 
 /* `--accent-ink`, not `--accent-text`: the ground here is the accent TINT, not
    a solid accent fill, and corn on that tint measures about 1.2:1 — so the one
@@ -146,7 +146,7 @@ body {
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-size: 17px; /* scale-exception: shape icon glyph, 2px from every step (research/90) */
+  font-size: 15px; /* scale-exception: shape icon glyph, 2px from every step (research/90) */
   line-height: 1;
   cursor: pointer;
 }

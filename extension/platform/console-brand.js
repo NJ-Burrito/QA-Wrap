@@ -56,7 +56,7 @@
       `background:${PLATE_URL};background-size:100% 100%;background-repeat:no-repeat;padding:28px 280px;line-height:56px;font-size:0`,
       chip(C.petra, C.limestone, ar ? 'padding:0 14px;' : 'letter-spacing:.14em;padding:0 14px;'),
       chip(C.basalt, C.limestone, `font-size:${fs + 2}px;`), chip(C.lift, C.gloss, 'font-weight:400;'), '',
-      `background:${C.basalt};color:${C.mist};font:400 10px/1.9 ${SANS};padding:0 10px`];
+      `background:${C.basalt};color:${C.mist};font:400 8px/1.9 ${SANS};padding:0 10px`];
   }
 
   const done = new Set();

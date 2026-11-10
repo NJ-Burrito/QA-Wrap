@@ -76,11 +76,11 @@ const BUDGET = {
 /* ── a page heavy enough to be worth measuring ───────────────────────── */
 const HEAVY = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>Heavy fixture</title><style>
- body{font:14px "Thmanyah Sans",sans-serif;margin:0;padding:16px}
+ body{font:12px "Thmanyah Sans",sans-serif;margin:0;padding:16px}
  .card{border:1px solid #ddd;padding:8px;margin:4px 0;border-radius:6px}
  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
  .clip{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;height:20px}
- label{display:block;font-size:12px;margin-top:6px}
+ label{display:block;font-size:10px;margin-top:6px}
  input,select{width:100%;padding:5px}
 </style></head><body>
 <h1>Heavy fixture</h1><div id="root"></div>

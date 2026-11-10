@@ -56,11 +56,11 @@ const BOARDS_AR = [
 const board = ({ title, caption, image, width }) => `<!doctype html><html lang="${AR ? 'ar' : 'en'}" dir="${AR ? 'rtl' : 'ltr'}"><meta charset="utf-8">
 <link rel="stylesheet" href="${fonts}"><link rel="stylesheet" href="${tokens}">
 <style>
-  html,body{margin:0;width:1280px;height:800px;overflow:hidden;background:var(--surface-sunken);color:var(--text);font:15px/1.5 var(--font)}
+  html,body{margin:0;width:1280px;height:800px;overflow:hidden;background:var(--surface-sunken);color:var(--text);font:13px/1.5 var(--font)}
   .top{display:flex;align-items:center;gap:14px;padding:34px 56px 0}
   .top img{height:36px}
-  h1{margin:22px 56px 6px;font:800 30px/1.15 var(--display);letter-spacing:${AR ? 0 : -0.3}px;max-width:900px}
-  p{margin:0 56px;color:var(--text-muted);max-width:760px;font-size:15.5px}
+  h1{margin:22px 56px 6px;font:800 28px/1.15 var(--display);letter-spacing:${AR ? 0 : -0.3}px;max-width:900px}
+  p{margin:0 56px;color:var(--text-muted);max-width:760px;font-size:13.5px}
   .stage{position:absolute;left:0;right:0;bottom:0;top:196px;display:flex;justify-content:center;align-items:flex-start;overflow:hidden}
   .shot{width:${width}px;border-radius:10px;box-shadow:0 18px 48px rgba(20,35,42,.22), 0 0 0 1px var(--border);overflow:hidden;background:var(--surface)}
   .shot img{display:block;width:100%}
@@ -72,7 +72,7 @@ const board = ({ title, caption, image, width }) => `<!doctype html><html lang="
 const promo = ({ w, h }) => `<!doctype html><meta charset="utf-8">
 <link rel="stylesheet" href="${fonts}"><link rel="stylesheet" href="${tokens}">
 <style>
-  html,body{margin:0;width:${w}px;height:${h}px;overflow:hidden;background:#F1EFE9;color:#1D2024;font:15px/1.4 var(--font)}
+  html,body{margin:0;width:${w}px;height:${h}px;overflow:hidden;background:#F1EFE9;color:#1D2024;font:13px/1.4 var(--font)}
   body::before{content:"";position:absolute;inset:0 0 auto 0;height:${h > 400 ? 10 : 6}px;background:repeating-linear-gradient(90deg,#B5432B 0 22px,#F1EFE9 22px 30px,#1D2024 30px 52px,#F1EFE9 52px 60px)}
   .wrap{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:${h > 400 ? 22 : 10}px;text-align:center;padding:0 40px}
   .lockup{height:${h > 400 ? 150 : 76}px;width:auto}

@@ -36,7 +36,7 @@ export function htmlWatermark({ session, version } = {}) {
     padding: 3px 8px 3px 7px;
     border-radius: 999px;
     color: color-mix(in srgb, currentColor 70%, transparent);
-    font: 400 10.5px/1 "Thmanyah Sans", "Segoe UI", Tahoma, Arial, sans-serif;
+    font: 400 8.5px/1 "Thmanyah Sans", "Segoe UI", Tahoma, Arial, sans-serif;
     letter-spacing: 0.02em;
     pointer-events: none;
     user-select: none;

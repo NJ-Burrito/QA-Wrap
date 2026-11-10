@@ -156,12 +156,12 @@ const probe = (f) => Number(execFileSync('ffprobe', ['-v', 'error', '-show_entri
 /* ── the page under test ─────────────────────────────────────────────────── */
 const FIXTURE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Permits portal</title>
 <style>
- body{font:16px/1.55 system-ui,sans-serif;margin:0;color:#1f2328;background:#fff}
+ body{font:14px/1.55 system-ui,sans-serif;margin:0;color:#1f2328;background:#fff}
  header{background:#0f2436;color:#fff;padding:15px 34px;font-weight:700;display:flex;gap:22px;align-items:center}
- header nav a{color:#fff;opacity:.75;text-decoration:none;font-weight:500;font-size:14px;margin-inline-start:14px}
+ header nav a{color:#fff;opacity:.75;text-decoration:none;font-weight:500;font-size:12px;margin-inline-start:14px}
  main{max-width:600px;margin:40px auto;padding:0 24px}
- h1{font-size:27px;margin:0 0 6px} p.sub{color:#666;margin:0 0 24px}
- label{display:block;font-weight:600;margin:15px 0 4px;font-size:14px}
+ h1{font-size:25px;margin:0 0 6px} p.sub{color:#666;margin:0 0 24px}
+ label{display:block;font-weight:600;margin:15px 0 4px;font-size:12px}
  input,select{width:100%;padding:11px 12px;border:1px solid #c9ced6;border-radius:8px;font:inherit}
  button{margin-top:22px;background:#0f2436;color:#fff;border:0;border-radius:8px;padding:13px 22px;font:inherit;font-weight:700;cursor:pointer}
  .note{margin-top:14px;color:#a11;font-weight:600;min-height:22px}
@@ -212,8 +212,8 @@ const OVERLAY = String.raw`(() => {
       // read. The dark is now held to the top of the text box and only the
       // last sliver fades, so a caption is legible whatever its length.
       '<div id="qaw-cap" style="position:absolute;left:0;right:0;bottom:0;padding:34px 40px 24px;background:linear-gradient(to top,rgba(18,21,24,.98) 0%,rgba(18,21,24,.95) 70%,rgba(18,21,24,.74) 88%,rgba(18,21,24,0) 100%);color:#F5F3EE;text-align:center"></div>' +
-      '<div id="qaw-chip" style="position:absolute;left:34px;top:30px;display:flex;align-items:center;gap:9px;padding:11px 20px 11px 15px;border-radius:999px;background:#B5432B;color:#fff;font-size:19px;font-weight:800;letter-spacing:-.2px;box-shadow:0 12px 34px rgba(0,0,0,.34);opacity:0;transform:translateX(-26px)"></div>' +
-      '<div id="qaw-note" style="position:absolute;opacity:0;transition:opacity .25s ease;padding:7px 13px;border-radius:999px;background:#1D2024;color:#fff;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.28)"></div>';
+      '<div id="qaw-chip" style="position:absolute;left:34px;top:30px;display:flex;align-items:center;gap:9px;padding:11px 20px 11px 15px;border-radius:999px;background:#B5432B;color:#fff;font-size:17px;font-weight:800;letter-spacing:-.2px;box-shadow:0 12px 34px rgba(0,0,0,.34);opacity:0;transform:translateX(-26px)"></div>' +
+      '<div id="qaw-note" style="position:absolute;opacity:0;transition:opacity .25s ease;padding:7px 13px;border-radius:999px;background:#1D2024;color:#fff;font-size:12px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.28)"></div>';
     document.documentElement.appendChild(root);
     const style = document.createElement('style');
     style.textContent =
@@ -229,11 +229,11 @@ const OVERLAY = String.raw`(() => {
     // Big enough to read on a phone, in a feed, muted — which is how most of
     // this will actually be watched.
     cap.innerHTML = EN
-      ? '<div style="font-size:29px;font-weight:800;line-height:1.24;letter-spacing:-.4px;max-width:26ch;margin:0 auto;text-shadow:0 2px 10px rgba(0,0,0,.85);animation:qaw-cap-in .3s cubic-bezier(.2,.8,.2,1)">' + EN + '</div>'
+      ? '<div style="font-size:27px;font-weight:800;line-height:1.24;letter-spacing:-.4px;max-width:26ch;margin:0 auto;text-shadow:0 2px 10px rgba(0,0,0,.85);animation:qaw-cap-in .3s cubic-bezier(.2,.8,.2,1)">' + EN + '</div>'
       : '';
   } else if (KIND === 'feature') {
     if (!EN) { chip.style.opacity = '0'; chip.style.animation = 'none'; return; }
-    chip.innerHTML = '<span style="font-size:15px;opacity:.9">●</span><span>' + EN + '</span>';
+    chip.innerHTML = '<span style="font-size:13px;opacity:.9">●</span><span>' + EN + '</span>';
     chip.style.animation = 'none';
     void chip.offsetWidth;              // restart the animation on a re-entry
     chip.style.animation = 'qaw-chip-in .34s cubic-bezier(.2,.9,.2,1) forwards';
@@ -800,15 +800,15 @@ async function card(inner, file, extraCss = '') {
     body{margin:0;width:1280px;height:800px;background:#F1EFE9;color:#1D2024;font-family:Thmanyah Sans,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:96px 90px 132px}
     body::before{content:"";position:absolute;top:0;left:0;right:0;height:9px;background:repeating-linear-gradient(90deg,#B5432B 0 22px,#F1EFE9 22px 30px,#1D2024 30px 52px,#F1EFE9 52px 60px)}
     .mark{width:88px;height:88px;margin:0 0 24px}
-    .kind{font-size:13px;letter-spacing:.28em;font-weight:700;color:#8B9097;margin:0 0 12px}
-    h1{font-size:54px;margin:0;font-weight:800;letter-spacing:-1px;line-height:1.05}
-    h2{font-size:28px;margin:12px 0 0;font-weight:700;direction:rtl;color:#5D646B}
-    p.lede{margin:22px 0 0;font-size:19px;color:#5D646B;max-width:740px;line-height:1.5}
+    .kind{font-size:11px;letter-spacing:.28em;font-weight:700;color:#8B9097;margin:0 0 12px}
+    h1{font-size:52px;margin:0;font-weight:800;letter-spacing:-1px;line-height:1.05}
+    h2{font-size:26px;margin:12px 0 0;font-weight:700;direction:rtl;color:#5D646B}
+    p.lede{margin:22px 0 0;font-size:17px;color:#5D646B;max-width:740px;line-height:1.5}
     /* The ask. Bigger than the tagline it follows, because it is the one thing
        the whole film exists to get someone to do. */
-    p.cta{margin:24px 0 0;padding:13px 30px;border-radius:999px;background:#B5432B;color:#fff;font-size:25px;font-weight:800;letter-spacing:-.3px}
+    p.cta{margin:24px 0 0;padding:13px 30px;border-radius:999px;background:#B5432B;color:#fff;font-size:23px;font-weight:800;letter-spacing:-.3px}
     .by{position:absolute;left:0;right:0;bottom:44px;display:flex;flex-direction:column;align-items:center;gap:9px}
-    .by span{font-size:12px;letter-spacing:.22em;color:#8B9097;font-weight:700}
+    .by span{font-size:10px;letter-spacing:.22em;color:#8B9097;font-weight:700}
     .by img{height:36px}
     ${extraCss}
   </style>${inner}`, { waitUntil: 'load' });

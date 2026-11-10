@@ -42,7 +42,7 @@ html[data-qaw-jira-dir] [data-qaw-dir="ltr"] { direction: ltr !important; text-a
   border: 0;
   background: none;
   color: var(--qaw-text);
-  font: 600 11px/20px "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
+  font: 600 9px/20px "QAW Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
   cursor: grab;
   touch-action: none;
   user-select: none;

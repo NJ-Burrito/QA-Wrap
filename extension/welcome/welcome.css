@@ -37,9 +37,9 @@ body {
 
 .head .shemagh { max-width: 120px; }
 
-.head h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.2px; line-height: 1.25; }
+.head h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.2px; line-height: 1.25; }
 
-.lede { margin-top: var(--sp-half); font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+.lede { margin-top: var(--sp-half); font-size: 12px; line-height: 1.6; color: var(--text-muted); }
 
 .head-pair { border-bottom: 1px solid var(--border); padding-bottom: 22px; }
 
@@ -74,9 +74,9 @@ body {
 
 .side { min-width: 0; }
 
-.point h2 { font-size: 14px; font-weight: 700; line-height: 1.4; }
+.point h2 { font-size: 12px; font-weight: 700; line-height: 1.4; }
 
-.point p { margin-top: 5px; font-size: 13.5px; line-height: 1.75; color: var(--text); }
+.point p { margin-top: 5px; font-size: 11.5px; line-height: 1.75; color: var(--text); }
 
 /* ── the answer ───────────────────────────────────────────────────────── */
 
@@ -93,7 +93,7 @@ body {
 /* r7 F1 carry: the three link buttons carry a bilingual label each; at 320-440 px they wrap inside the sheet instead of running past it. */
 .actions .btn { max-width: 100%; white-space: normal; text-align: start; }
 
-.note { flex: 1 0 100%; font-size: 12px; line-height: 1.6; }
+.note { flex: 1 0 100%; font-size: 10px; line-height: 1.6; }
 
 /* Both states are one line of type on a tinted ground: they replace a row of
    buttons, so they need to be findable without being an alarm. */
@@ -102,7 +102,7 @@ body {
   padding: var(--sp-3h) 18px;
   border-radius: var(--r-md);
   border: 1px solid var(--border);
-  font-size: 13.5px;
+  font-size: 11.5px;
   line-height: 1.6;
 }
 
@@ -165,7 +165,7 @@ body {
 /* Shorter welcome: three facts, the button, the rest under a disclosure; then the pin hint. */
 .key-facts { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
 .key { background: var(--surface-raised); padding: var(--sp-3) clamp(var(--sp-3h), 3vw, 22px); }
-.key p { font-size: 14px; line-height: 1.7; }
+.key p { font-size: 12px; line-height: 1.7; }
 .all-facts { margin-top: 18px; }
 .all-facts > summary { cursor: pointer; font-weight: 700; padding: var(--sp-2h) 0; }
 .all-facts .points { margin-top: var(--sp-2h); }
@@ -176,6 +176,6 @@ body {
 .pin-glyph { fill: var(--text-muted); }
 .pin-ring { fill: none; stroke: var(--pass); stroke-width: 3; stroke-dasharray: 126; animation: qaw-draw-on var(--motion-slow) var(--motion-ease) var(--motion-base) both; stroke-dashoffset: 126; } /* one-shot draw, on the page's own answer */
 .pin-block[hidden], .pin-steps li[hidden] { display: none; }
-.pin-num { fill: var(--text); font-size: 14px; font-weight: 800; text-anchor: middle; }
+.pin-num { fill: var(--text); font-size: 12px; font-weight: 800; text-anchor: middle; }
 .pin-steps { margin: var(--sp-half) 0 var(--sp-3); padding-inline-start: 22px; line-height: 1.8; }
 .done { display: grid; gap: var(--sp-2); }

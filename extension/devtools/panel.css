@@ -108,7 +108,7 @@ body {
   color: var(--text-muted);
 }
 
-.stat .v { font-size: 17px; /* scale-exception: display numeral in a stat, 2px from every step, same pattern as the report metrics (research/90) */ font-weight: 650; line-height: 1.2; }
+.stat .v { font-size: 15px; /* scale-exception: display numeral in a stat, 2px from every step, same pattern as the report metrics (research/90) */ font-weight: 650; line-height: 1.2; }
 .stat .v.small { font-size: var(--t-small); font-weight: 500; line-height: 1.4; }
 .stat.bad .v { color: var(--danger); }
 .stat.good .v { color: var(--ok); }
@@ -191,7 +191,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
   overflow-x: auto;
-  font: 11.5px/1.5 var(--mono);
+  font: 9.5px/1.5 var(--mono);
   max-height: 170px;
 }
 
@@ -259,7 +259,7 @@ body {
 .ev .t { font-family: var(--mono); color: var(--text-muted); font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); padding-top: 1px; }
 
 .ev .k {
-  font-size: 9.5px;
+  font-size: 7.5px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -604,7 +604,7 @@ body {
 
 .flag {
   font-family: var(--mono);
-  font-size: 9.5px;
+  font-size: 7.5px;
   padding: 1px var(--sp-1);
   border-radius: var(--r-sm);
   border: 1px solid var(--border-strong);

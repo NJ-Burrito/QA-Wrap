@@ -45,7 +45,7 @@ const SITE = {
 };
 const page = (theme, body) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>fixture</title>
 <style>
-  html,body{margin:0;height:100%} body{${SITE[theme].css};font-family:"Segoe UI", Arial, sans-serif;font-size:14px}
+  html,body{margin:0;height:100%} body{${SITE[theme].css};font-family:"Segoe UI", Arial, sans-serif;font-size:12px}
   main{position:absolute;inset:150px;display:grid;gap:12px;align-content:start}
   input,button{font:inherit;padding:8px 12px} iframe{width:420px;height:160px;border:1px solid #888}
   #near{position:fixed;left:50%;bottom:72px;transform:translateX(-50%)}

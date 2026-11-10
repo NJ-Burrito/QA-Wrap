@@ -46,13 +46,13 @@ if (process.argv.includes('--icons')) {
   const errs = [];
   page.on('pageerror', e => errs.push(String(e)));
   const sheet = path.join(DIST, '_sheet.html');
-  fs.writeFileSync(sheet, `<body style="margin:0;padding:22px;background:#EAEFF0;font:12px system-ui;color:#22333A">
+  fs.writeFileSync(sheet, `<body style="margin:0;padding:22px;background:#EAEFF0;font:10px system-ui;color:#22333A">
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:18px">${cards}</div>
     <style>
       figure{margin:0;display:flex;flex-direction:column;gap:7px;align-items:center;
              background:#F7F9F9;border:1px solid rgba(20,35,42,.14);border-radius:12px;padding:12px}
       img{width:150px;height:150px;object-fit:contain}
-      figcaption{font:10px ui-monospace,monospace;color:#5B6E76;text-align:center;word-break:break-all}
+      figcaption{font:8px ui-monospace,monospace;color:#5B6E76;text-align:center;word-break:break-all}
     </style></body>`);
   await page.goto(pathToFileURL(sheet).href);
   await page.waitForTimeout(1600);

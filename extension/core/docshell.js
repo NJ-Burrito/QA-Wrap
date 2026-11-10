@@ -122,57 +122,57 @@ export const SHELL_CSS = `
         --bad:#FF8A6E;--ok:#7ED08A;--warn:#F1BE5C;--corn:#FFD166;--tortilla:#6F5C40}}
   *{box-sizing:border-box}
   @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
-  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 'Thmanyah Sans',-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums}
+  body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.65 'Thmanyah Sans',-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums}
   main{max-width:960px;margin:0 auto;padding:0 20px 64px}
   .cover{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px 28px 22px;margin:28px 0 22px;position:relative;overflow:hidden}
   .cover::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:repeating-linear-gradient(90deg,var(--bad) 0 22px,var(--bg) 22px 30px,var(--ink) 30px 52px,var(--bg) 52px 60px)}
   .cover .lockup{height:34px;margin:6px 0 16px;display:block}
   .cover .lockup svg{height:34px;width:auto}
-  .cover .kind{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:0 0 6px;font-weight:600}
-  .cover h1{font-family:'Thmanyah Serif Display','Thmanyah Sans',-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;font-size:30px;line-height:1.15;margin:0 0 8px;font-weight:800;letter-spacing:-.01em;text-wrap:balance}
-  .cover .sub{color:var(--soft);font-size:13.5px;margin:0}
-  .cover .verdict{position:absolute;top:26px;right:26px;padding:8px 14px;border-radius:999px;font-weight:700;font-size:13px;border:1.5px solid}
+  .cover .kind{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:0 0 6px;font-weight:600}
+  .cover h1{font-family:'Thmanyah Serif Display','Thmanyah Sans',-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;font-size:28px;line-height:1.15;margin:0 0 8px;font-weight:800;letter-spacing:-.01em;text-wrap:balance}
+  .cover .sub{color:var(--soft);font-size:11.5px;margin:0}
+  .cover .verdict{position:absolute;top:26px;right:26px;padding:8px 14px;border-radius:999px;font-weight:700;font-size:11px;border:1.5px solid}
   .verdict.bad{color:var(--bad);border-color:var(--bad)} .verdict.ok{color:var(--ok);border-color:var(--ok)}
-  .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 18px;background:var(--band);border-radius:12px;padding:14px 18px;margin:0 0 26px;font-size:12.5px}
-  .legend h2{grid-column:1/-1;margin:0 0 2px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);border:0;padding:0}
+  .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 18px;background:var(--band);border-radius:12px;padding:14px 18px;margin:0 0 26px;font-size:10.5px}
+  .legend h2{grid-column:1/-1;margin:0 0 2px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);border:0;padding:0}
   .legend div{display:flex;gap:9px;align-items:flex-start}
   .swatch{flex:none;width:14px;height:14px;border-radius:4px;margin-top:3px;border:1px solid rgba(0,0,0,.08)}
-  .contents{columns:2;column-gap:28px;font-size:13px;margin:0 0 26px;padding:0 0 0 18px}
+  .contents{columns:2;column-gap:28px;font-size:11px;margin:0 0 26px;padding:0 0 0 18px}
   .contents li{break-inside:avoid;margin:2px 0}
   .contents a{display:inline-block;min-block-size:24px;line-height:24px;color:inherit;text-decoration:none;border-bottom:1px dotted var(--line)}
-  h2{font-family:'Thmanyah Serif Display','Thmanyah Sans',-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;font-size:18px;margin:32px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);font-weight:700}
-  h3{font-size:15px;margin:20px 0 6px;font-weight:700}
+  h2{font-family:'Thmanyah Serif Display','Thmanyah Sans',-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;font-size:16px;margin:32px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line);font-weight:700}
+  h3{font-size:13px;margin:20px 0 6px;font-weight:700}
   p{margin:8px 0}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:18px 0}
   .card{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:11px 13px}
   .card.bad{border-left-color:var(--bad)} .card.ok{border-left-color:var(--ok)} .card.warn{border-left-color:var(--warn)}
-  .card b{display:block;font-size:22px;line-height:1.2;font-weight:800} .card span{font-size:11.5px;color:var(--soft)}
+  .card b{display:block;font-size:20px;line-height:1.2;font-weight:800} .card span{font-size:9.5px;color:var(--soft)}
   .chain{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:10px;padding:14px 16px;margin-bottom:12px}
   .chain h3{margin:0 0 10px}
   .flow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
   .step{flex:1 1 240px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;position:relative}
   .step.bad{border-color:var(--bad)}
   .step+.step::before{content:"→";position:absolute;left:-13px;top:50%;transform:translateY(-50%);color:var(--soft);font-weight:700}
-  .step em{font-style:normal;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--soft)}
-  .step p{margin:3px 0 0;font-size:13.5px}
-  code{font-family:'Thmanyah Sans',"Segoe UI",Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums;font-size:12.5px;background:var(--band);padding:1px 5px;border-radius:4px;word-break:break-all}
-  pre{background:var(--band);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:12.5px;white-space:pre-wrap;word-break:break-word}
+  .step em{font-style:normal;font-size:8px;letter-spacing:.09em;text-transform:uppercase;color:var(--soft)}
+  .step p{margin:3px 0 0;font-size:11.5px}
+  code{font-family:'Thmanyah Sans',"Segoe UI",Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums;font-size:10.5px;background:var(--band);padding:1px 5px;border-radius:4px;word-break:break-all}
+  pre{background:var(--band);border-radius:8px;padding:10px 12px;overflow-x:auto;font-size:10.5px;white-space:pre-wrap;word-break:break-word}
   pre code{background:none;padding:0}
   .table-wrap{overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:11.5px;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
   th,td{text-align:start;padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top}
   tr:last-child th,tr:last-child td{border-bottom:0}
   th{color:var(--soft);font-weight:600;background:var(--band)}
   ol,ul{padding-inline-start:22px} li{margin:3px 0}
   blockquote{margin:12px 0;padding:10px 14px;border-inline-start:4px solid var(--corn);background:var(--card);border-radius:0 8px 8px 0;color:var(--ink)}
   img{max-width:100%;border:1px solid var(--line);border-radius:8px;display:block;margin:10px 0}
-  .tag{font-size:10.5px;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--soft);white-space:nowrap}
+  .tag{font-size:8.5px;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--soft);white-space:nowrap}
   .tag.bad{color:var(--bad);border-color:var(--bad)} .tag.ok{color:var(--ok);border-color:var(--ok)} .tag.warn{color:var(--warn);border-color:var(--warn)}
   .status-OBSERVED{color:var(--ok)} .status-FAILED,.status-NOT{color:var(--bad)} .status-GAP{color:var(--warn);font-weight:700}
   /* MANUAL: measured by nobody. Not a pass, not a failure, so it borrows
      neither colour. Weight and a dotted rule set it apart, and survive a black-and-white print. */
   .status-MANUAL{color:var(--soft);font-weight:700;border-bottom:1px dotted var(--soft)}
-  footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--soft);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:10px;color:var(--soft);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   [dir=rtl] th,[dir=rtl] td{text-align:right}
   /* T-053: Latin runs (locators, URLs, verbs, hex) keep their own direction inside an Arabic page. */
   bdi{unicode-bidi:isolate}
@@ -180,7 +180,7 @@ export const SHELL_CSS = `
   [dir=rtl] .step+.step::before{left:auto;right:-13px;content:"←"}
   @page{size:A4;margin:16mm 14mm}
   @media print{
-    body{background:#fff;color:#1D2024;font-size:12.5px}
+    body{background:#fff;color:#1D2024;font-size:10.5px}
     main{max-width:none;padding:0}
     .cover{border:0;padding:0 0 12px;margin:0 0 14px;border-bottom:2px solid #1D2024;border-radius:0}
     .cover::before{display:none}
@@ -280,7 +280,7 @@ export function shell({ title, kind, subtitle, verdict, body, headings = [], leg
 <style>${fontsCache}
 ${SHELL_CSS}</style></head><body><main>
 <header class="cover">
-  <div class="lockup">${lockup || `<strong style="font-size:18px;font-weight:800">${esc(MAKER.product)}</strong> <span style="color:var(--soft);font-size:12px">${esc(L.by)} ${esc(MAKER.owner)}</span>`}</div>
+  <div class="lockup">${lockup || `<strong style="font-size:16px;font-weight:800">${esc(MAKER.product)}</strong> <span style="color:var(--soft);font-size:10px">${esc(L.by)} ${esc(MAKER.owner)}</span>`}</div>
   <p class="kind">${esc(kind)}</p>
   <h1>${esc(title)}</h1>
   ${subtitle ? `<p class="sub">${subtitle}</p>` : ''}

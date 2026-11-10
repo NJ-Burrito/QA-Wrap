@@ -28,18 +28,18 @@ const HOSTS = (process.env.QAW_LAUNCH_HOSTS || '').split(',').map((h) => h.trim(
 const DEMO = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>QA Wrap demo — application form</title>
 <style>
- body{font:15px/1.6 "Thmanyah Sans",sans-serif;margin:0;background:#f4f6f8;color:#1a1f27}
+ body{font:13px/1.6 "Thmanyah Sans",sans-serif;margin:0;background:#f4f6f8;color:#1a1f27}
  .wrap{max-width:620px;margin:40px auto;background:#fff;padding:28px 32px;border-radius:12px;
        box-shadow:0 1px 3px rgba(16,24,40,.12)}
- h1{margin:0 0 4px;font-size:20px} p.sub{margin:0 0 22px;color:#6b7684;font-size:13px}
- label{display:block;margin:14px 0 4px;font-weight:600;font-size:13px}
+ h1{margin:0 0 4px;font-size:18px} p.sub{margin:0 0 22px;color:#6b7684;font-size:11px}
+ label{display:block;margin:14px 0 4px;font-weight:600;font-size:11px}
  input,select,textarea{width:100%;padding:9px 11px;border:1px solid #c2cbd6;border-radius:8px;font:inherit}
  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
  button{margin-top:22px;padding:10px 18px;border:0;border-radius:8px;background:#3b5bdb;color:#fff;
         font:inherit;font-weight:600;cursor:pointer}
  .clip{margin-top:22px;padding:8px 10px;border:1px solid #dbe1e8;border-radius:8px;height:38px;
-       overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px;color:#55606d}
- #out{margin-top:16px;font-size:13px;min-height:20px}
+       overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:11px;color:#55606d}
+ #out{margin-top:16px;font-size:11px;min-height:20px}
  .bad{color:#c92a2a;font-weight:600}
 </style></head>
 <body><div class="wrap">

@@ -92,7 +92,7 @@ body::before {
 .brand-mark { width: 28px; height: 28px; }
 .brand-name {
   font-family: var(--display);
-  font-size: 21px;
+  font-size: 19px;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: #f1efe9; /* literal: brand-fixed masthead, same in both themes */
@@ -144,7 +144,7 @@ body::before {
 .block { position: relative; }
 .block-head h2 {
   font-family: var(--display);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.25;
@@ -192,7 +192,7 @@ body::before {
   background: radial-gradient(circle at 50% 50%, var(--surface) 0 3.5px, transparent 4px) 0 0 / 10px 14px repeat-y;
   opacity: 0.9;
 }
-.stat .v { font-family: var(--display); font-size: 26px; font-weight: 700; line-height: 1.1; }
+.stat .v { font-family: var(--display); font-size: 24px; font-weight: 700; line-height: 1.1; }
 .stat .v.small { font-family: var(--font); font-size: var(--t-small); font-weight: 600; }
 .stat.bad { border-inline-start-color: var(--danger); }
 .stat.good { border-inline-start-color: var(--ok); }
@@ -204,7 +204,7 @@ body::before {
   background: linear-gradient(100deg, var(--danger-soft) 0%, transparent 42%), var(--surface-raised);
   box-shadow: var(--shadow-1);
 }
-.chain h3 { font-family: var(--display); font-size: 17px; font-weight: 700; }
+.chain h3 { font-family: var(--display); font-size: 15px; font-weight: 700; }
 
 /* ---------------------------------------------------------------- timeline */
 
@@ -245,7 +245,7 @@ body::before {
   background: var(--surface-raised);
   box-shadow: var(--shadow-1);
 }
-.empty-card h2 { font-family: var(--display); font-size: 26px; font-weight: 700; }
+.empty-card h2 { font-family: var(--display); font-size: 24px; font-weight: 700; }
 .how-to { list-style: none; counter-reset: st; padding-inline-start: 0; gap: 10px; }
 .how-to li {
   counter-increment: st;
@@ -264,7 +264,7 @@ body::before {
   display: grid;
   place-items: center;
   font-family: var(--display);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--accent-text);
   background: var(--accent);
