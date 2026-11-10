@@ -1,1 +1,1 @@
-The 40-second QA Wrap film and its poster live here and deploy with the website.
+The 40-second QA Wrap film (English and Arabic, 16:9 and vertical), the six brand films (qa-wrap-<slug>-en|ar.mp4, 16:9) and their posters live here and deploy with the website. The tutorials are in tutorials/.

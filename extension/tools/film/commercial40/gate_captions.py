@@ -1,14 +1,17 @@
 """Caption-window gate: measure caption on-sets in a rendered MP4 (ink in the caption band) and compare them with the
-treatment's windows (bible section 8). Usage: uv run --with numpy python gate_captions.py <mp4> --aspect 16x9|9x16
+language's own windows, read from composition.template.html (EN: CAPT = bible section 8; AR: CAPT_AR, which follows the Arabic
+voice, work/film/c40/final/caption-sync-ar.md). Usage: uv run --with numpy python gate_captions.py <mp4> --aspect 16x9|9x16 [--lang ar|en]
 Exit 1 if any on-set is more than 2 frames from its window start, or the count differs."""
 import subprocess, sys, json, argparse
 import numpy as np
 
-STARTS = [.37, 2.47, 4.03, 6.0, 8.2, 10.37, 13.07, 15.47, 16.97, 17.77, 20.07, 21.6, 22.7, 24.77, 26.4, 28.67, 30.1,
-          31.5, 33.07, 36.37, 37.43]  # 21 AR captions incl. bridge 3b at 6.0
-ap = argparse.ArgumentParser(); ap.add_argument("mp4"); ap.add_argument("--aspect", default="16x9"); a = ap.parse_args()
+ap = argparse.ArgumentParser(); ap.add_argument("mp4"); ap.add_argument("--aspect", default="16x9"); ap.add_argument("--lang", default="ar", choices=["ar", "en"]); a = ap.parse_args()
+import os, re
+_t = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "composition.template.html"), encoding="utf-8").read()
+_w = json.loads(re.sub(r"(?<![\d])\.(?=\d)", "0.", re.search(r"const %s=(\[\[.*?\]\]);" % ("CAPT_AR" if a.lang == "ar" else "CAPT"), _t).group(1)))
+STARTS = [w[0] for k, w in enumerate(_w) if k != 3]  # 20 captions; index 3 (bridge 3b) has no caption in either film (Director, round 3)
 # caption band (x, y, w, h) at the composition's caption position, inline start = right for Arabic
-x, y, w, h = (1000, 884, 808, 58) if a.aspect == "16x9" else (70, 1272, 840, 120)
+x, y, w, h = ((1000 if a.lang == "ar" else 112), 884, 808, 58) if a.aspect == "16x9" else (70, 1425, 840, 70)  # 9:16 band follows CAPY_V 1432 (v1)
 cmd = ["ffmpeg", "-v", "error", "-i", a.mp4, "-vf", f"crop={w}:{h}:{x}:{y},format=gray", "-f", "rawvideo", "-"]
 raw = subprocess.run(cmd, capture_output=True, check=True).stdout
 fr = np.frombuffer(raw, np.uint8).reshape(-1, h, w)

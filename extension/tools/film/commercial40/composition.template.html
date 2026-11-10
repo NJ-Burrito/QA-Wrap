@@ -15,31 +15,41 @@
 @font-face{font-family:"Thmanyah Serif Display";src:url("./assets/fonts/thmanyahserifdisplay-Black.woff2") format("woff2");font-weight:900}
 @font-face{font-family:"Thmanyah Serif Text";src:url("./assets/fonts/thmanyahseriftext-Medium.woff2") format("woff2");font-weight:500}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:__W__px;height:__H__px;overflow:hidden;background:#171a1d}
-:root{--ink:#ecebe7;--dim:#8a9096;--card:#25292e;--card2:#2c3137;--line:#3a4047;--salmon:#ff7d63;--amber:#f0b94a;--green:#7bd389;--bg:#171a1d}
+html,body{width:__W__px;height:__H__px;overflow:hidden;background:#181c20}
+:root{--ink:#ecebe7;--dim:#8a9096;--card:#25292e;--card2:#2c3137;--line:#3a4047;--salmon:#ff7d63;--amber:#f0b94a;--green:#7bd389;--bg:#181c20}
+/* v1 (2026-11-10), measured on the shipped EN: ground #171b1f at the corners rising about +5 levels toward the centre
+   (a soft vignette), and a fine film grain (frame-to-frame std 0.7-1.0 levels on flat ground in the shipped encode) */
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse 62% 62% at 50% 50%,rgba(255,255,255,.024) 0,rgba(255,255,255,.016) 45%,transparent 100%)}
+#grain{position:absolute;inset:0;pointer-events:none;z-index:50;mix-blend-mode:overlay;background-repeat:repeat;background-size:384px 384px;image-rendering:pixelated}
 #stage{position:relative;width:__W__px;height:__H__px;overflow:hidden;background:var(--bg);font-family:"Thmanyah Sans",sans-serif;color:var(--ink)}
+/* ai: the shipped 9:16 ground is about 2 levels lighter than the 16:9 one (rendered master at 3 s: corners luma 25.3 vs ref 28.1) */
+.v #stage{background:#1a1e22}
 .abs{position:absolute}
 #glowR,#glowG{position:absolute;border-radius:50%;filter:blur(40px)}
-#glowR{width:1500px;height:1500px;background:radial-gradient(circle,rgba(190,80,50,.34) 0,rgba(190,80,50,.12) 40%,transparent 68%)}
-#glowG{width:1500px;height:1500px;background:radial-gradient(circle,rgba(70,150,85,.30) 0,rgba(70,150,85,.10) 42%,transparent 68%);opacity:0}
+#glowR{width:1500px;height:1500px;background:radial-gradient(circle,rgba(196,112,91,.34) 0,rgba(196,112,91,.12) 40%,transparent 68%)}
+#glowG{width:1500px;height:1500px;background:radial-gradient(circle,rgba(106,164,114,.30) 0,rgba(106,164,114,.10) 37%,transparent 56%);opacity:0} /* ai: falloff measured on the ref (G excess 0 by ~550 px from the centre) */
 .ghost{position:absolute;background:#262d38;border-radius:10px;filter:blur(7px);opacity:.42}
 .bokeh{position:absolute;border-radius:50%;background:#aeb6bf;filter:blur(5px);opacity:.28}
 #world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 540px}
 .v #world{left:-420px;top:420px}
 .card{position:absolute;left:600px;top:340px;width:720px;height:440px;border-radius:18px;background:linear-gradient(#2a2e33,#24282c);border:1px solid #343a41;box-shadow:0 30px 60px rgba(0,0,0,.45)}
 .card .hd{position:absolute;left:0;right:0;top:0;height:76px;border-bottom:1px solid #343a41}
-.card .id{position:absolute;left:32px;top:24px;font:700 24px "Thmanyah Sans";letter-spacing:.06em;color:#aeb3b8;direction:ltr}
-.tag{position:absolute;right:30px;top:22px;height:34px;padding:0 20px;border-radius:17px;font:900 17px/34px "Thmanyah Sans";letter-spacing:.08em;direction:rtl}
-.tag.open{border:1.5px solid #4b525a;color:#aeb3b8}
+.card .id{position:absolute;left:33px;top:23px;font:700 25px "Thmanyah Sans";letter-spacing:.06em;color:#aeb3b8;direction:ltr}
+/* card internals measured on the shipped EN at 0.4 s and 17.5 s (card 600,340 720x440): 150x40 tags, 420x18 bar,
+   rows centred 178/255/331 px down the card, 41 px grey icons, a 584x28 outlined track of seven pills */
+.tag{position:absolute;right:29px;top:19px;width:150px;height:40px;border-radius:20px;font:900 20px/40px "Thmanyah Sans";letter-spacing:.08em;text-align:center;direction:rtl}
+.tag.open{border:1.5px solid #3f454c;color:#aeb3b8;line-height:37px}
 .tag.closed{background:var(--salmon);color:#2a1410;opacity:0}
 .tag.fixed{background:var(--green);color:#123018;opacity:0}
-.tbar{position:absolute;left:32px;top:104px;width:420px;height:12px;border-radius:6px;background:#5a6068}
-.row{position:absolute;left:32px;width:660px;height:34px}
-.row svg{position:absolute;left:0;top:2px;width:36px;height:30px}
-.pills{position:absolute;left:78px;top:8px;right:0;height:18px;display:flex;gap:8px}
-.pills i{flex:1;border-radius:9px;background:#464c53}
-.pb{position:absolute;left:78px;top:11px;right:0;height:14px;border-radius:7px}
-.stamp{position:absolute;left:560px;top:497px;width:800px;text-align:center;font:900 70px/1 "Thmanyah Sans";letter-spacing:.02em;color:var(--salmon);border:6px solid var(--salmon);border-radius:14px;padding:22px 20px;transform:rotate(-9deg);white-space:nowrap;direction:__DIR__}
+.tbar{position:absolute;left:33px;top:107px;width:420px;height:18px;border-radius:9px;background:#53575d}
+.row{position:absolute;left:34px;width:656px;height:42px}
+.row svg{position:absolute;left:0;top:0;width:42px;height:42px}
+.row .ic{stroke:#a3a7ab;stroke-width:3.3}
+.chip .ic{stroke-width:3}
+.pills{position:absolute;left:70px;top:7px;right:0;height:28px;display:flex;gap:4px;padding:3px 4px;border-radius:14px;border:1px solid #393d43;background:#25292e}
+.pills i{flex:1;border-radius:11px;background:#45494f}
+.pb{position:absolute;left:74px;top:10px;right:4px;height:22px;border-radius:11px}
+.stamp{position:absolute;left:560px;top:497px;width:800px;text-align:center;font:900 70px/1 "Thmanyah Sans";letter-spacing:.02em;color:var(--salmon);border:6px solid var(--salmon);border-radius:14px;padding:8px 20px;transform:rotate(-9deg);white-space:nowrap;direction:__DIR__}
 .stamp.sm{font-size:48px;padding:12px 16px;border-width:4px;width:auto}
 .stamp.g{color:var(--green);border-color:var(--green)}
 .chip{position:absolute;width:60px;height:60px;border-radius:14px;background:linear-gradient(#2d3238,#23272c);box-shadow:0 10px 22px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
@@ -49,46 +59,60 @@ html,body{width:__W__px;height:__H__px;overflow:hidden;background:#171a1d}
 .btn{position:absolute;border-radius:20px;background:var(--amber);color:#2a2008;font:900 24px/1 "Thmanyah Sans";display:flex;align-items:center;justify-content:center;box-shadow:0 8px 0 #c08a25,0 18px 30px rgba(0,0,0,.4);letter-spacing:.04em}
 .pill{position:absolute;height:34px;padding:0 18px;border-radius:17px;background:#272b30;border:1px solid #3a4047;font:700 17px/32px "Thmanyah Sans";letter-spacing:.08em;white-space:nowrap}
 .dot{position:absolute;width:14px;height:14px;border-radius:50%;margin:-7px 0 0 -7px}
-.ttl{font:700 70px/1.15 "Thmanyah Serif Display";color:#d8d6d1;letter-spacing:.01em}
+.ttl{font:700 70px/1.15 "Thmanyah Serif Display";color:#d8d6d1;letter-spacing:.01em;display:inline-block;vertical-align:top} /* ai: shrink-wrapped so a clip-path wipe runs across the words, not across a 1500 px box */
 .cap{position:absolute;font:500 40px/1.3 "Thmanyah Sans";color:#eeede9;white-space:nowrap}
 .v .cap{white-space:normal;width:940px}
 .mono{font-family:"Thmanyah Sans";letter-spacing:.06em;font-weight:700}
 .v .cap{width:840px}
 /* Arabic cut: the ticket is Arabic UI, so its layout mirrors (treatment commercial-ar.md, "Mirror direction") */
-.ar .card .id{left:auto;right:32px}
-.ar .card .hd .tag{right:auto;left:30px}
-.ar #card .tbar{left:auto;right:32px}
-.ar .row{left:auto;right:32px}
+.ar .card .id{left:auto;right:33px}
+.ar .card .hd .tag{right:auto;left:29px}
+.ar #card .tbar{left:auto;right:33px}
+.ar .row{left:auto;right:34px}
 .ar .row svg{left:auto;right:0}
-.ar .pills,.ar .pb{left:0;right:78px}
+.ar .pills{left:0;right:70px}
+.ar .pb{left:4px;right:74px}
 .br{border-left:2px solid transparent;border-right:2px solid transparent;padding:0 4px;margin:0 2px}
 bdi{unicode-bidi:isolate}
 /* 9:16 (director note 3): every on-screen label at least 28 px on the 1080-wide frame. World labels are sized for the
    beat's world scale (0.9 card beats: >= 32 px; 0.66 wide beats: >= 43 px); screen-space pills 30 px. */
-.v .card .id{font-size:32px!important}
-.v .card .hd .tag{font-size:32px!important;height:48px!important;line-height:48px!important}
+/* v1, 9:16 card header measured on the shipped 9:16 (card at world .8): ID and tags drawn about 1.38x larger */
+.v .card .id{font-size:34px!important;top:5px!important}
+.v .card .hd .tag{font-size:28px!important;width:230px!important;height:56px!important;line-height:56px!important;top:11px!important;border-radius:28px!important}
 .v .pill{font-size:44px!important;height:auto!important;line-height:1.3!important;padding:4px 22px!important;border-radius:32px!important}
 .v #ui .pill{font-size:30px!important}
-.v .btn{font-size:44px!important}
-.v #f500{font-size:46px!important;width:110px!important;height:76px!important;line-height:72px!important;margin-left:-15px;margin-top:-8px}
-.v .day{font-size:44px!important}
-.v #tokC{font-size:44px!important;height:auto!important}
-.v #f403{font-size:44px!important}
-.v #made{font-size:34px!important}
-.v #url{font-size:36px!important}
-.v #gh{font-size:32px!important}
-.v #dlB{font-size:34px!important;width:400px!important;left:760px!important}
-.v #dlI>div{font-size:40px!important;width:56px!important;height:56px!important;line-height:56px!important;right:-20px!important;top:-24px!important}
-.v #msP{left:770px!important}
-/* 9:16 end card: the lockup reads at >= 60 % of the frame width (director note 3 check at 38.5 s) */
-.v #lock{top:250px!important}
-.v #lock span:first-child{width:140px!important;height:140px!important;vertical-align:-22px!important}
-.v #lock span:last-child{font-size:160px!important}
-.v #made{top:495px!important}
-.v #tagRow{top:555px!important}
-.v #dlB{top:645px!important}
-.v #url{top:735px!important}
-.v #gh{top:790px!important}
+/* v1, 9:16: FILE is drawn at screen size 1.04 on the .8 world (measured 17.5 s) */
+.v #fileBtn{width:174px!important;height:163px!important;font-size:34px!important;border-radius:30px!important}
+.v #fileRing{width:202px!important;height:199px!important;border-radius:40px!important}
+.v #msP,.v #high{scale:1.25}
+/* V2 (s09-s13, 20-40 s): own classes, sizes measured on the shipped film (work/film/c40/an/v2-measure.md) */
+.v2card{position:absolute;border-radius:16px;background:linear-gradient(#2b2f35,#272b30);border:1px solid #343a41;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.v2bar{position:absolute;border-radius:8px;background:#4b4f55}
+.v2txt{position:absolute;left:0;top:148px;width:100%;font:500 44px/70px "Thmanyah Serif Text";color:#eeece8;white-space:nowrap}
+.v2br{position:absolute;top:159px;height:54px}
+.v2br i{position:absolute;width:18px;height:16px;border:0 solid #f0b94a}
+.v2fld{position:absolute;width:280px;height:96px;border-radius:14px;border:1.5px solid #3b4249;background:linear-gradient(#2a2e34,#262a2f);box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.v2dot{position:absolute;top:42px;width:12px;height:12px;border-radius:50%;background:#5d6268}
+.v2slot{position:absolute;top:35px;width:95px;height:26px;border-radius:13px;background:#16191c}
+.v2tok{position:absolute;left:41px;right:41px;top:42px;font:700 36px/47px "Thmanyah Sans";color:#e8e6e1;white-space:normal}
+#tokC .wa{opacity:0}
+#bars3 i{position:absolute;width:29px;height:44px;border:2px solid #5a6068;border-radius:6px}
+.v2day{position:absolute;width:65px;height:64px;border-radius:14px;background:linear-gradient(#2c3036,#272b30);border:1.5px solid #3e444b;font:900 26px/62px "Thmanyah Sans";color:#a9adb3;text-align:center}
+.v2day .dchk{position:absolute;top:-12px;width:24px;height:24px;border-radius:50%;background:#ecebe7;line-height:0}
+.v2day .dchk svg{display:block}
+.v2tag{position:absolute;top:18px;width:153px;height:41px;border-radius:21px;font:900 20px/38px "Thmanyah Sans";letter-spacing:.1em;text-align:center}
+.e2{left:0;width:1920px;text-align:center;opacity:0;white-space:nowrap}
+.v2tg{height:54px;padding:0 22px;border-radius:27px;background:#272b30;border:1px solid #3a4047;font:700 27px/52px "Thmanyah Sans";letter-spacing:.04em;color:#e8e6e1}
+.v #rtl{transform:scale(1.3);transform-origin:100% 0}
+/* 9:16 labels on world objects read larger than the 0.8 world scale (measured on the shipped 9:16) */
+.v #card12 .id12{transform:scale(1.36);transform-origin:0 50%}
+.v.ar #card12 .id12{transform-origin:100% 50%}
+.v #card12 .v2tag{transform:scale(1.45);transform-origin:100% 0}
+.v.ar #card12 .v2tag{transform-origin:0 0}
+.v .v2tg{font-size:36px;height:64px;line-height:62px;padding:0 29px;border-radius:32px}
+.v #gh{font-size:28px}
+.v #updB{left:872px!important;top:727px!important;width:175px!important;height:150px!important;border-radius:27px!important;font-size:35px!important;line-height:150px!important}
+.v #updO{left:834px!important;top:676px!important;width:252px!important;height:252px!important;border-radius:50px!important}
 </style>
 </head>
 <body class="__ASPECT__ __LANG__">
@@ -106,10 +130,10 @@ en:{cap:["Cannot reproduce. Closed.","Your bug was real.","The proof was gone.",
  t1:"STEPS? · REQUEST? · CONSOLE?",clicks:["CLICKS","REQUESTS","CONSOLE"],traced:["TRACED",""],filed:["FILED",""],since:["ASKED FOR SINCE ","2008"],dc:"DATA CENTER",kept:["SESSIONS ","KEPT"],
  days:["M","T","W","T","F","S","S"],tok:"The token works but is not allowed to do this.",
  made:"Made by Nader Alzghoul (NJ-Burrito)",tags:["Free","MIT","English and Arabic"],dl:"Download free"},
-ar:{cap:["تعذر تكراره. مغلق.","كان الخلل حقيقيا.","لكن الدليل ضاع.","الخطوات والطلبات ووحدة التحكم، تبعثرت كلها.","اضغط ابدأ.","كيو إيه راب (QA Wrap) يسجل أثناء اختبارك.","كل خطأ يرتبط بالنقرة","التي سببته.","اضغط مرة.","وهو في جيرا (Jira) بدليله.","العربية في جيرا","من اليمين إلى اليسار.","والإنجليزية بترتيبها.","دخول مركز البيانات (Data Center) يعمل.","والأخطاء جمل واضحة.","التحديثات تفحص يوميا.","وبعد الإعداد الأول","تثبتها بضغطة.","الخلل القادم يأتي بدليله.","احصل على كيو إيه راب.","مجاني ومفتوح المصدر."],
+ar:{cap:["تعذر تكراره. مغلق.","كان الخلل حقيقيا.","لكن الدليل ضاع.",null,"اضغط ابدأ.","QA Wrap يسجل أثناء اختبارك.","كل خطأ يرتبط بالنقرة","التي سببته.","اضغط مرة.","وهو في جيرا (Jira) بدليله.","العربية في جيرا","من اليمين إلى اليسار.","والإنجليزية بترتيبها.","دخول مركز البيانات (Data Center) يعمل.","والأخطاء جمل واضحة.","التحديثات تفحص يوميا.","وبعد الإعداد الأول","تثبتها بضغطة.","الخلل القادم يأتي بدليله.","احصل على QA Wrap.","مجاني ومفتوح المصدر."],
  stamp:"تعذر التكرار",fixed:"تم الإصلاح",open:"مفتوح",closed:"مغلق",start:"ابدأ",file:"ارفع",high:"عالية",ms:'<bdi dir="ltr">+212</bdi> مللي ثانية',update:"تحديث",newt:"جديد",
  t1:"الخطوات؟ · الطلب؟ · وحدة التحكم؟",clicks:["النقرات","الطلبات","وحدة التحكم"],traced:["تم ",""],filed:["تم الرفع",""],since:["مطلوب منذ ","2008"],dc:"مركز البيانات (Data Center)",kept:["الجلسات ","محفوظة"],
- days:["ن","ث","ر","خ","ج","س","ح"],tok:"الرمز يعمل لكنه لا يملك صلاحية هذا الإجراء.",
+ days:["ن","ث","ر","خ","ج","س","ح"],tok:"الرمز يعمل لكنه لا يملك صلاحية هذا الإجراء",
  made:"من صنع نادر الزغول (NJ-Burrito)",tags:["مجاني","MIT","عربي وإنجليزي"],dl:"احصل عليه مجانا"}};
 S.ar.traced=["تم تتبعه",""];
 const L=S[LANG];
@@ -118,15 +142,18 @@ const iso=s=>AR&&s?s.replace(/[A-Za-z][A-Za-z .\-]*[A-Za-z]/g,m=>`<bdi dir="ltr"
 // mirror helpers for the Arabic cut: mx(left,width) mirrors a box, MX(x) a point, SG(n) a horizontal offset
 const mx=(x,w)=>AR?1920-x-w:x, MX=(x)=>AR?1920-x:x, SG=(n)=>AR?-n:n;
 // caption windows [start,end] seconds, measured from the shipped EN film
-// index 3 is the Arabic bridge caption 3b (bible §8); the EN cut has no line there (null)
+// index 3 was the Arabic bridge caption 3b; removed (Director, round 3): both films show no caption and no voice at 6.0-8.0 s
 const CAPT=[[.37,2.07],[2.47,4.0],[4.03,5.9],[6.0,8.0],[8.2,9.27],[10.37,13.0],[13.07,15.47],[15.47,16.9],[16.97,17.7],[17.77,20.0],[20.07,21.6],[21.6,22.65],[22.7,24.7],[24.77,26.35],[26.4,28.6],[28.67,30.05],[30.1,31.5],[31.5,32.9],[33.07,35.7],[36.37,37.4],[37.43,39.27]];
+// af (2026-11-10): AR caption windows follow the Arabic voice (word groups from energy pauses in the fitted takes,
+// work/film/c40/final/caption-sync-ar.md): in = words start - 0.10 s, out = words end + 0.25 s or the next in; EN windows untouched
+const CAPT_AR=[[.15,2.62],[2.62,4.3],[4.52,6.11],[6,8],[8.12,9.41],[10.06,13.03],[13.03,15.11],[15.11,16.56],[16.77,17.95],[17.95,20.01],[20.01,21.28],[21.28,23.08],[23.08,24.71],[24.71,26.8],[26.8,28.6],[28.6,30.56],[30.56,31.7],[31.7,33.03],[33.03,35.48],[35.94,37.55],[37.55,39.83]];
 let seed=20261109;const rnd=()=>{seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296};
 const $=(h)=>{const d=document.createElement("div");d.innerHTML=h.trim();return d.firstChild};
 const world=document.getElementById("world"),bg=document.getElementById("bg"),ui=document.getElementById("ui");
 const add=(h,p=world)=>{const e=$(h);p.appendChild(e);return e};
 const SVG={
  burst:'<svg viewBox="0 0 24 24" class="ic __c"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>',
- bars:'<svg viewBox="0 0 24 24" class="ic"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
+ bars:'<svg viewBox="0 0 24 24" class="ic"><path d="M4.5 20v-10M11.5 20V4.5"/><path d="M18.5 20.5v-11.5" style="stroke:#ef8d76"/></svg>',
  alert:'<svg viewBox="0 0 24 24" class="ic"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M12 8v5M12 16v.5"/></svg>',
  bug:'<svg viewBox="0 0 24 24" class="ic sal"><path d="M9 7a3 3 0 016 0v1H9zM7 9h10v5a5 5 0 01-10 0zM3 8l3 2M21 8l-3 2M2 14h4M18 14h4M4 20l3-3M20 20l-3-3M12 9v10"/></svg>',
  timer:'<svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="13" r="7"/><path d="M12 9v4l2 2M9 2h6"/></svg>',
@@ -142,261 +169,395 @@ const SVG={
 const ico=(k,c="")=>SVG[k].replace("__c",c);
 // ---------- background
 const glowR=add('<div id="glowR"></div>',bg),glowG=add('<div id="glowG"></div>',bg);
-gsap.set(glowR,{x:-300,y:-250});gsap.set(glowG,{x:560,y:-180});
-const ghosts=[];for(let i=0;i<14;i++){const w=60+rnd()*110,h=26+rnd()*50;const g=add(`<div class="ghost" style="width:${w}px;height:${h}px"></div>`,bg);const x0=rnd()*(V?1000:1800),y0=rnd()*(V?1800:1000);gsap.set(g,{x:x0,y:y0,rotation:rnd()*30-15});ghosts.push([g,x0,y0,rnd()*40+20,rnd()*6.28])}
-const boks=[];for(let i=0;i<10;i++){const s=8+rnd()*12;const b=add(`<div class="bokeh" style="width:${s}px;height:${s}px"></div>`,bg);const x0=rnd()*(V?1040:1880),y0=rnd()*(V?1880:1040);gsap.set(b,{x:x0,y:y0});boks.push([b,x0,y0,rnd()*30+10,rnd()*6.28])}
+gsap.set(glowR,{x:-334,y:-214,opacity:0});gsap.set(glowG,{x:210,y:-230});
+add('<div id="vig"></div>',bg);bg.insertBefore(document.getElementById("vig"),bg.firstChild);
+// v1: the 14 ghost blocks where the shipped EN has them at 0 s ([x,y,w,h] on 1920x1080), drifting up about 3.6 px/s
+// (measured 0 s vs 19.9 s vs 39.9 s); 9:16 places the same set on its own frame. No small bokeh dots: the shipped film has none.
+const GH=[[340,230,146,60],[560,356,128,36],[384,400,148,96],[516,490,108,94],[766,600,70,100],[820,660,90,56],[1096,640,104,96],[624,746,138,48],[1324,716,120,34],[144,804,122,40],[114,892,144,52],[514,856,126,88],[830,880,130,90],[1616,866,84,50]];
+const GHV=[[166,353,122,56],[294,587,112,51],[184,683,130,93],[267,846,133,89],[403,1067,85,94],[606,1139,95,92],[440,1185,87,59],[746,1287,102,35],[327,1339,121,53],[51,1459,99,37],[267,1559,105,74],[918,1583,67,39],[451,1603,111,77],[35,1626,114,49]]; // 9:16, measured at 0 s
+const ghosts=(V?GHV:GH).map(([x,y,w,h],i)=>{const g=add(`<div class="ghost" style="width:${w}px;height:${h}px"></div>`,bg);const x0=x,y0=y;gsap.set(g,{x:x0,y:y0,rotation:[-3,2,0,-2,4,-4,1,3,-1,2,-3,0,2,-2][i]});return [g,x0,y0,[8,-6,4,10,-4,6,0,12,-8,15,2,-6,5,0][i],-138-(i%4)*6]});
+// film grain: one seeded 256 px grey-noise tile (overlay blend, so the mean level is kept) whose offset jumps every frame
+// by a stepped tween (seek-safe, no run-time randomness)
+const grain=add(`<div id="grain" data-layout-ignore></div>`,document.getElementById("stage")), GRAIN=2.5; /* ai round 2 (masters measured at 3: temporal +49 % / +38 %, so scaled once to 2.5): the shipped grain alternates strong/weak frame-to-frame (encoder B-frames), so each pattern is held 2 frames (steps(600)); 5 s test encode at 3.5 confirmed the alternation (strong 1.2-1.4 / weak 0.2-0.5 vs ref 1.3 / 0.0-0.6) */ if(location.hash==="#nograin")grain.style.display="none"; // measurement only (snap.mjs SNAP_HASH) // grey std in levels (calibrated, see v1-measure.md)
+{const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d"),d=x.createImageData(256,256);for(let p=0;p<d.data.length;p+=4){const v=Math.max(0,Math.min(255,Math.round(128+GRAIN*1.73*(rnd()+rnd()+rnd()+rnd()-2))));d.data[p]=d.data[p+1]=d.data[p+2]=v;d.data[p+3]=255}x.putImageData(d,0,0);grain.style.backgroundImage=`url(${c.toDataURL()})`}
 // ---------- UI text (screen space)
 // 9:16: captions near 66 % height and 170 px clear of the right-edge button column (review-checklist B10)
-const MARG=V?70:112, CAPY=V?1268:880, TTLY=V?430:128, CAPM=V&&AR?170:MARG;
+// v1: 9:16 captions measured at glyph top 1445 px, 44 px Sans (shipped 9:16); titles' glyph top 418 px
+const CAPY_V=1432; if(V)document.head.appendChild(Object.assign(document.createElement("style"),{textContent:".v .cap{font-size:44px}"}));
+const MARG=V?70:112, CAPY=V?CAPY_V:880, TTLY=V?395:132 /* ai round 2: title glyph tops measured 154 (16:9) / 417 (9:16) on the ref */, CAPM=V&&AR?170:MARG;
 const capEls=L.cap.map((t,i)=>{if(!t)return null;const e=add(`<div class="cap" style="opacity:0;${AR?`right:${CAPM}px;direction:rtl;text-align:right`:`left:${MARG}px`};top:${CAPY}px">${iso(t)}</div>`,ui);return e});
-function title(html){const w=add(`<div style="position:absolute;top:${TTLY}px;${AR?`right:${MARG}px;direction:rtl`:`left:${MARG}px`};width:${V?940:1500}px;overflow:hidden;padding:6px 0;${AR?"text-align:right":""}"><div class="ttl" style="opacity:0">${html}</div></div>`,ui);return w.firstChild}
-const tT1=title(L.t1),tTr=title(AR?`<span style="color:#7bd389">${L.traced[0]}</span>`:`<span style="color:#7bd389">${L.traced[0]}</span>`),tFi=title(`<span style="color:#7bd389">${L.filed[0]}</span>`),
- tSi=title(`${L.since[0]}<span style="background:#ff7d63;color:#2a1410;padding:0 8px;border-radius:5px;direction:ltr;display:inline-block">${L.since[1]}</span>`),tDc=title(iso(L.dc)),
+function title(html){const w=add(`<div style="position:absolute;top:${TTLY}px;${AR?`right:${MARG+(V?2:0)}px;direction:rtl`:`left:${MARG+(V?2:0)}px`};width:${V?940:1500}px;overflow:hidden;padding:6px 0;${AR?"text-align:right":""}"><div class="ttl" style="opacity:0">${html}</div></div>`,ui);return w.firstChild}
+const tT1=title(L.t1.split(" · ").map((w,i,a)=>`<span class="tw" style="display:inline-block;color:#aaabb2;${i<a.length-1?"padding-inline-end:4px":""}">${w}${i<a.length-1?"&nbsp;·&nbsp;":""}</span>`).join("")),tTr=title(`<span style="color:#96c19f">${L.traced[0]}</span>`),tFi=title(`<span style="color:#96c19f">${L.filed[0]}</span>`), // v1: title inks sampled on the shipped EN (STEPS? grey #a9aab1, TRACED/FILED soft green #95c09e)
+ tSi=title(`${L.since[0]}<span class="y2008" style="background:linear-gradient(#ff7d63,#ff7d63) no-repeat ${AR?"100%":"0"} 0/0% 100%;color:#d8d6d1;padding:0 8px;border-radius:5px;direction:ltr;display:inline-block">${L.since[1]}</span>`),tDc=title(iso(L.dc)),
  tKe=title(`${L.kept[0]}<span style="color:#7bd389">${L.kept[1]}</span>`);
 // ---------- scene 1: ticket
 const cardHTML=(open,rowsHTML)=>`<div class="card" id="card"><div class="hd"><div class="id">BUG-1042</div><div class="tag open" id="tOpen">${L.open}</div><div class="tag closed" id="tClosed">${L.closed}</div><div class="tag fixed" id="tFixed">${L.fixed}</div></div><div class="tbar"></div>${rowsHTML}</div>`;
-const rowY=[150,188,226];const rowIcons=["burst","bars","alert"];
-let rows="";rowIcons.forEach((k,i)=>{rows+=`<div class="row r${i}" style="top:${rowY[i]}px">${ico(k)}<div class="pills">${'<i></i>'.repeat(i==1?7:i==0?8:7)}</div><div class="pb" style="background:${["#f0b94a","#a7adb3","#f1efea"][i]};opacity:0"></div></div>`});
-const card=add(cardHTML(1,rows));
-const stamp0=0;const stamp=add(`<div class="stamp" id="stamp" >${L.stamp}</div>`);if(AR)stamp.style.fontSize="84px";
+const rowY=[157,234,310];const rowIcons=["burst","bars","alert"];
+let rows="";rowIcons.forEach((k,i)=>{rows+=`<div class="row r${i}" style="top:${rowY[i]}px">${ico(k)}<div class="pills">${'<i></i>'.repeat(7)}</div><div class="pb" style="background:${["#f0b94a","#a7adb3","#f1efea"][i]};opacity:0"></div></div>`});
+// v1: card, stamp and the card-bound bug live in one group (cardG) so the s01 impact shake, the 1.2-5.3 s breathing
+// (scale to 1.038) and the 5.45 s defocus move them together, as in the shipped film
+const cardG=add(`<div class="abs" id="cardG" style="left:0;top:0;width:1920px;height:1080px;transform-origin:960px 560px"></div>`);
+const card=add(cardHTML(1,rows),cardG);
+const stamp0=0;const stamp=add(`<div class="stamp" id="stamp" style="opacity:0;top:505px;font-size:65px">${L.stamp}</div>`,cardG);if(AR)stamp.style.fontSize="78px";
+const STAMP_S=.86; // resting scale of the 800 px stamp box (shipped EN bbox 622-1297 x 468-651 at 0.5-17 s)
 // s12 bookend (director note 1): the FIXED stamp rhymes with s01 (same box, centred on the card, -9 deg) and sits above
 // the evidence rows, on a card-coloured fill so no bar runs through the word
 const stamp2=add(`<div class="stamp g sm" id="stamp2" style="opacity:0;z-index:5;left:960px;top:560px;background:rgba(37,41,46,.94)">${L.fixed}</div>`);
 const bugBadge=add(`<div class="chip" id="bugBadge" style="width:36px;height:36px;border-radius:50%;left:${mx(1240,36)}px;top:444px;opacity:0;background:#1d2024;border:2px solid #ecebe7">${ico("bug")}</div>`);
-const bugBig=add(`<div class="chip" id="bugBig" style="left:-45px;top:-45px;opacity:0;background:none;box-shadow:none;width:90px;height:90px;z-index:6">${ico("bug")}</div>`);
+const bugBig=add(`<div class="chip" id="bugBig" style="left:-45px;top:-45px;opacity:0;background:none;box-shadow:none;width:90px;height:90px;z-index:6">${ico("bug")}</div>`,cardG);
 bugBig.firstChild.style.cssText="width:84px;height:84px";
+// the bug's exit (3.8 s) leaves a coral dashed trail from the card's right edge to the frame edge (mirrored in AR)
+const bugTrail=add(`<div class="abs" id="bugTrail" style="left:${mx(1300,620)}px;top:474px;width:620px;height:3px;opacity:0;background:repeating-linear-gradient(90deg,#c8604e 0 22px,transparent 22px 40px);transform-origin:${AR?"100%":"0"} 50%"></div>`);
 // ---------- scene 2/3: chips
-const names=["burst","bars","alert","timer","code","cols","input","cam","burst","alert","code","cols","input","bars","timer"];
-const chips=names.map((k,i)=>{const sz=70+Math.round(rnd()*30);const e=add(`<div class="chip" style="opacity:0;width:${sz}px;height:${sz}px">${ico(k)}</div>`);return {e,x:300+rnd()*1360,y:120+rnd()*600,r:rnd()*40-20}});
-const startRing=add(`<div class="abs" id="startRing" style="left:876px;top:478px;width:168px;height:168px;border-radius:28px;border:3px solid #f0b94a;opacity:0"></div>`);
-const startBtn=add(`<div class="btn" id="startBtn" style="left:888px;top:490px;width:144px;height:144px;opacity:0">${L.start}</div>`);
+// v1: the scattered evidence as the shipped film lays it out (measured at 9.0 s): [cx,cy,size,icon,blur px,appear s].
+// 97 px chips are sharp (near), 75 px chips are defocused (far); far blobs are tiny chips lost in depth.
+const CH=[[841,254,75,"code",1.6,6.35],[891,173,75,"input",1.6,6.75],[905,241,75,"alert",.9,7.0],[620,394,97,"burst",1.6,6.75],[1448,616,75,"cam",1.6,7.0],[1550,625,75,"timer",1.6,7.0],[410,731,75,"burst",1.6,6.75],[498,738,75,"cam",1.6,6.15],[1362,779,75,"input",1.6,6.15],[1380,814,75,"alert",1.6,7.2],
+ [566,373,97,"bars",0,7.2],[698,373,97,"timer",0,6.35],[1281,446,97,"cols",0,7.4],[1399,398,97,"alert",0,6.75],[1358,489,97,"input",.7,6.35],[1503,576,97,"burst",0,6.15],[721,785,97,"alert",0,6.15],[804,740,97,"cols",0,6.75],[836,798,97,"code",0,7.2]];
+// 9:16 re-lays the scatter (measured at 9.0 s): screen x = .55x + 13, y = 1.075y + 359, chips at .73 size, on a world of scale 1
+const VX=x=>V?.55*x+13+420:x, VY=y=>V?1.075*y+359-420:y, VS=V?.73:1;
+const chips=CH.map(([x0,y0,s0,k,b,t])=>{const x=VX(x0),y=VY(y0),s=Math.round(s0*VS);const e=add(`<div class="chip" style="left:${-s/2}px;top:${-s/2}px;opacity:0;width:${s}px;height:${s}px;border-radius:${s*.2}px;${b?`filter:blur(${b}px);`:""}">${ico(k).replace("<svg ",`<svg style="width:${Math.round(s*.47)}px;height:${Math.round(s*.47)}px" `)}</div>`);return {e,x:MX(x),y,t,r:0}});
+const FAR=[[1235,181],[1397,196],[1201,229],[220,463],[166,485],[1647,845],[1110,890]];
+const farB=FAR.map(([x,y],i)=>add(`<div class="abs" style="left:${MX(VX(x))-17}px;top:${VY(y)-17}px;width:34px;height:34px;border-radius:9px;background:${i==2?"#a0635a":"#8e959c"};filter:blur(6px);opacity:0"></div>`));
+const startRing=add(`<div class="abs" id="startRing" style="left:876px;top:${V?456:478}px;width:168px;height:168px;border-radius:30px;border:3px solid #f0c55c;opacity:0"></div>`);
+const startBtn=add(`<div class="btn" id="startBtn" style="left:888px;top:${V?468:490}px;width:144px;height:144px;opacity:0">${L.start}</div>`);
 const bugFly=add(`<div class="chip" id="bugFly" style="left:-45px;top:-45px;opacity:0;background:none;box-shadow:none;width:90px;height:90px;z-index:6">${ico("bug")}</div>`);
 bugFly.firstChild.style.cssText="width:84px;height:84px";
 // the click on START (white dot) and the paper plane that carries the report to Jira (points along its flight; mirrored in AR)
-const tapDot=add(`<div class="abs" id="tapDot" style="left:${MX(980)-11}px;top:572px;width:22px;height:22px;border-radius:50%;background:#f4f2ee;opacity:0;z-index:7"></div>`);
+const tapDot=add(`<div class="abs" id="tapDot" style="left:${MX(1005)-11}px;top:${V?532:554}px;width:22px;height:22px;border-radius:50%;background:#f4f2ee;opacity:0;z-index:7"></div>`);
 const plane=add(`<div class="abs" id="plane" style="left:-55px;top:-55px;width:110px;height:110px;opacity:0;z-index:7"><svg viewBox="0 0 24 24" width="110" height="110" style="transform:scaleX(${AR?-1:1})"><path d="M2 11.5L22 3l-6.5 18-3.8-7.2z" fill="#f1efea"/><path d="M11.7 13.8L22 3" stroke="#9aa0a6" stroke-width="1.2" fill="none"/></svg></div>`);
 // ---------- scene 4-6: mark + timeline
-const mark=add(`<div class="abs" id="mark" style="left:910px;top:506px;width:100px;height:100px;opacity:0">${SVG.mark}</div>`);
-const TLY=560, TLX0=268, TLX1=1700, TLW=TLX1-TLX0;
+// v1 MARK1: the QA mark as the shipped film draws it at the turn (measured at 10.8-11 s: box 186x156 around the ring
+// r 61.5 / stroke 27 and the coral check leaving it; the logo is never mirrored)
+const MARK1='<svg viewBox="0 0 190 160" width="190" height="160" style="overflow:visible"><path id="mkR" d="M133.8 58A61.5 61.5 0 1 0 97 136.8" fill="none" stroke="#ecebe7" stroke-width="27" stroke-linecap="round"/><path id="mk" d="M96 100L126 134L171 37" fill="none" stroke="#ff7d63" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const mark=add(`<div class="abs" id="mark" style="left:${MX(V?1004:960)-95}px;top:${V?476:478}px;width:190px;height:160px;opacity:0;z-index:5">${MARK1}</div>`);
+// the turn (10.0-10.37 s): a white and a coral stroke sweep in from opposite corners, cross over the START button and
+// collapse into the mark (mirrored in AR)
+const barW=add(`<div class="abs" id="barW" style="left:${MX(930)-430}px;top:466px;width:860px;height:90px;border-radius:45px;background:#e9e7e2;opacity:0;z-index:4"></div>`);
+const barC=add(`<div class="abs" id="barC" style="left:${MX(1000)-425}px;top:525px;width:850px;height:90px;border-radius:45px;background:#f4846a;opacity:0;z-index:3"></div>`);
+// timeline (EN line 267..1701 at y 559 once settled; until 12.8 s the group sits 121 px further along, as measured)
+const TLY=559, TLX0=267, TLX1=1701, TLW=TLX1-TLX0;
+const tlg=add(`<div class="abs" id="tlg" style="left:0;top:0;width:1920px;height:1080px"></div>`);
 // Arabic cut: time flows right to left; the line draws from its right end, dots land right to left
-const tline=add(`<div class="abs" id="tline" style="left:${mx(TLX0,TLW)}px;top:${TLY-1}px;width:${TLW}px;height:3px;background:#c9cdd1;transform-origin:${AR?"100%":"0"} 50%;opacity:0"></div>`);
-const dots=[];const dx=[0,.04,.08,.14,.19,.25,.31,.37,.43,.5,.56,.61,.68,.76,.88];
-dx.forEach((f,i)=>{const e=add(`<div class="dot" style="left:${MX(TLX0+f*TLW)}px;top:${TLY}px;background:${i%3==1?"#eceae6":"#f0b94a"};opacity:0"></div>`);dots.push(e)});
-const CLX=MX(TLX0+.2*TLW), F5X=MX(TLX0+.7*TLW);
-const clk=add(`<div class="abs" id="clk" style="left:${CLX-30}px;top:${TLY-30}px;width:60px;height:60px;border-radius:12px;background:#2a2e33;display:flex;align-items:center;justify-content:center;opacity:0">${ico("burst","amb")}</div>`);
-const ring=add(`<div class="abs" id="ring" style="left:${CLX-47}px;top:${TLY-47}px;width:94px;height:94px;border-radius:50%;border:2px solid #b8913d;opacity:0"></div>`);
-const f500=add(`<div class="abs" id="f500" style="left:${F5X-40}px;top:${TLY-30}px;width:80px;height:60px;border-radius:10px;border:2px solid #ff7d63;background:#2a2227;font:500 38px/56px 'Thmanyah Serif Text';color:#ff7d63;text-align:center;opacity:0;direction:ltr">500</div>`);
-const arc=add(`<svg class="abs" id="arc" style="left:0;top:0;opacity:0" width="1920" height="1080"><path id="arcp" d="${AR?"M1270 520 Q960 340 650 520":"M650 520 Q960 340 1270 520"}" fill="none" stroke="#e8e6e1" stroke-width="2"/></svg>`);
-const msP=add(`<div class="pill" id="msP" style="left:900px;top:385px;opacity:0;background:#2b2f35;direction:${AR?"rtl":"ltr"}">${L.ms}</div>`);
-const tlabel=add(`<div class="pill mono" id="tlabel" style="left:${AR?210:1620}px;top:482px;opacity:0;direction:ltr">00:00</div>`);
+const tline=add(`<div class="abs" id="tline" style="left:${mx(TLX0,TLW)}px;top:${TLY-1.5}px;width:${TLW}px;height:3px;background:#dddbd6;transform-origin:${AR?"100%":"0"} 50%;opacity:0"></div>`,tlg);
+// 15 events at measured offsets along the line (amber = clicks, white = requests); 24 px dots
+const DOTS=[[52.5,"a"],[132,"w"],[190.5,"a"],[304.5,"a"],[367,"w"],[456.5,"a"],[540,"w"],[620.5,"a"],[713,"w"],[784,"w"],[906.5,"a"],[968.5,"a"],[1080,"w"],[1161.5,"a"],[1273,"w"]];
+const dx=DOTS.map(d=>d[0]);
+const dots=DOTS.map(([r,c])=>add(`<div class="dot" style="width:24px;height:24px;margin:-12px 0 0 -12px;left:${MX(TLX0+r)}px;top:${TLY}px;background:${c=="w"?"#ebe9e4":"#f0bb4f"};opacity:0"></div>`,tlg));
+const CLX=MX(636), F5X=MX(1281);
+// 9:16: the click/500 focus group sits 51 px (screen) further along than the dimmed line (measured 15.5-16.5 s)
+const FGV=V?`margin-left:${SG(64)}px;`:"";
+const clk=add(`<div class="abs" id="clk" style="${FGV}left:${CLX-60}px;top:${TLY-60}px;width:120px;height:120px;border-radius:18px;background:linear-gradient(#2c3036,#24282d);border:1px solid #3a3f46;box-shadow:0 12px 26px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;opacity:0">${ico("burst","amb").replace("<svg ",'<svg style="width:72px;height:72px;stroke-width:2.4" ')}<i id="ringIn" style="position:absolute;left:3px;top:3px;width:112px;height:112px;border-radius:50%;border:2.5px solid #c99d45;opacity:0"></i></div>`);
+const ring=add(`<div class="abs" id="ring" style="${FGV}left:${CLX-62}px;top:${TLY-62}px;width:124px;height:124px;border-radius:50%;border:3px solid #a8853f;opacity:0"></div>`);
+const f500=add(`<div class="abs" id="f500" style="${FGV}left:${F5X-80}px;top:${TLY-59}px;width:160px;height:120px;border-radius:18px;border:2.5px solid #f2876d;background:#2a2b30;box-shadow:0 12px 26px rgba(0,0,0,.35);font:500 70px/114px 'Thmanyah Serif Text';color:#f48a70;text-align:center;opacity:0;direction:ltr">500</div>`);
+// the arc is drawn from the 500 back to the click, behind an amber spark that runs ahead of the stroke
+const ARC0=AR?`M${MX(1197)} 540 Q${MX(960)} 310 ${MX(722)} 540`:"M1197 540 Q960 310 722 540", ARC1=AR?`M${MX(1003)} 515 Q${MX(951)} 452 ${MX(895)} 515`:"M1003 515 Q951 452 895 515";
+const arc=add(`<svg class="abs" id="arc" style="${FGV}left:0;top:0;opacity:0;overflow:visible" width="1920" height="1080"><path id="arcp" d="${ARC0}" fill="none" stroke="#e8e6e1" stroke-width="3" stroke-linecap="round"/></svg>`);
+const spark=add(`<div class="abs" id="spark" style="${FGV}left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:#f3be55;opacity:0;box-shadow:0 0 10px rgba(240,185,74,.6)"></div>`);
+const msP=add(`<div class="abs" id="msP" style="${FGV}left:${MX(960)-75}px;top:376px;width:150px;height:53px;border-radius:27px;background:#272b30;border:1px solid #3a4047;font:700 26px/51px 'Thmanyah Sans';color:#ecebe7;text-align:center;white-space:nowrap;opacity:0;direction:${AR?"rtl":"ltr"}"></div>`);
+// the +N ms counter: one span per frame value (seek-safe), counting 0 -> 212 with power4.out from 14.93 s
+const MSV=[...Array(15)].map((_,k)=>Math.round(212*(1-Math.pow(1-Math.min(1,k/14),4))));
+msP.innerHTML=MSV.map(v=>`<span style="display:none">${AR?`<bdi dir="ltr">+${v}</bdi> مللي ثانية`:`+${v} ms`}</span>`).join("");
+const tlabel=add(`<div class="abs" id="tlabel" style="left:${MX(V?1471:1646)-69}px;top:473px;${V?"transform-origin:50% 50%;scale:1.25;":""}width:138px;height:54px;border-radius:27px;background:#292e32;border:1px solid #3a4047;font:700 28px/52px 'Thmanyah Sans';letter-spacing:.06em;color:#e9e7e2;text-align:center;opacity:0;direction:ltr"></div>`,tlg);
 let kp;
-if(AR){const row=add(`<div style="position:absolute;top:${V?500:80}px;right:${MARG}px;display:flex;gap:12px;direction:rtl"></div>`,ui);kp=L.clicks.map(t=>add(`<div class="pill" style="position:static;opacity:0;background:#2a2e33">${t}</div>`,row))}
-else kp=L.clicks.map((t,i)=>add(`<div class="pill" style="top:${V?500:80}px;left:${(V?90:112)+[0,92,200][i]}px;opacity:0;background:#2a2e33">${t}</div>`,ui));
-const high=add(`<div class="pill" id="high" style="left:${MX(1160)}px;top:543px;background:#7bd389;color:#10331a;border:0;opacity:0;font-weight:900">${L.high}</div>`);
+// 9:16 pills measured at 400 px, 64 px high, 34 px caps (12.5 s)
+const KPS=V?`opacity:0;height:64px;padding:0 25px;border-radius:32px;background:#272b30;border:1px solid #3a4047;font:700 33px/62px 'Thmanyah Sans';`:`opacity:0;height:54px;padding:0 25px;border-radius:27px;background:#272b30;border:1px solid #3a4047;font:700 25px/52px 'Thmanyah Sans';`;
+const KPS2=`letter-spacing:.08em;color:#ecebe7;white-space:nowrap`;
+{const row=add(`<div style="position:absolute;top:${V?400:150}px;${AR?"right":"left"}:${V?72:MARG}px;display:flex;gap:16px;direction:${AR?"rtl":"ltr"}"></div>`,ui);kp=L.clicks.map(t=>add(`<div style="${KPS}${KPS2}">${t}</div>`,row))}
+const high=add(`<div class="abs" id="high" style="${FGV}left:${MX(1235)-58}px;top:538px;width:116px;height:50px;border-radius:25px;background:#7bd389;color:#10331a;font:900 22px/50px 'Thmanyah Sans';letter-spacing:.1em;text-align:center;opacity:0">${L.high}</div>`);
 // ---------- scene 7/8: report + jira
 const barCard=add(`<div class="abs" id="repWrap" style="left:0;top:0;opacity:0"></div>`);
-const fileBtn=add(`<div class="btn" id="fileBtn" style="left:${mx(1292,112)}px;top:722px;width:112px;height:112px;border-radius:18px;opacity:0;font-size:20px">${L.file}</div>`);
-// J chip: in 9:16 (world 0.9) it moves inward so it is not on the frame edge
-const JX=V?(AR?470:1366):mx(1462,112);
-const jira=add(`<div class="chip" id="jira" style="left:${JX}px;top:356px;width:112px;height:112px;border-radius:20px;opacity:0"><span style="font:700 68px 'Thmanyah Serif Display';color:#eceae6;direction:ltr">J</span></div>`);
-const jchk=add(`<div class="abs" id="jchk" style="left:${JX+88}px;top:334px;width:36px;height:36px;opacity:0">${ico("check")}</div>`);
-const jatt=add(`<div class="pill" id="jatt" style="left:${AR?JX+180:JX-140}px;top:440px;height:30px;font-size:16px;line-height:28px;padding:0 14px;opacity:0;direction:ltr">&#128206; 3</div>`);
-jatt.innerHTML='<svg viewBox="0 0 24 24" style="width:16px;height:16px;vertical-align:-3px" class="ic"><path d="M21 12l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/></svg> 3';
-// ---------- scene 9: Arabic RTL typing
-const AT="زر Login لا يستجيب بعد استدعاء API.";
-const doc=add(`<div class="card" id="doc" style="left:400px;top:376px;width:1120px;height:368px;opacity:0;border-radius:16px"><div class="tbar" style="width:285px;top:34px;left:56px;height:10px;background:#555b62"></div><div class="pill" id="rtl" style="right:46px;left:auto;top:28px;background:#f0b94a;color:#2a2008;border:0;font-weight:900;direction:ltr">RTL ı LTR</div><div id="atext" style="position:absolute;left:56px;right:56px;top:112px;font:400 40px/1.4 'Thmanyah Serif Text';white-space:nowrap;color:#f1efea;direction:ltr;text-align:left"></div><div id="caret" style="position:absolute;left:56px;top:104px;width:2px;height:70px;background:#eceae6"></div><div id="uline" style="position:absolute;right:56px;top:166px;width:0;height:3px;background:#7bd389;border-radius:2px"></div></div>`);
-// ---------- scene 10: data center
-const fields=[0,1,2].map(i=>add(`<div class="abs fld" style="left:${mx(620,280)}px;top:${400+i*112}px;width:280px;height:96px;border-radius:14px;border:2px solid #3b4249;background:#262b30;opacity:0;direction:ltr"><span style="position:absolute;left:24px;top:36px;letter-spacing:7px;color:#9aa0a6;font-size:24px">•••</span></div>`));
-const keyI=add(`<div class="abs" id="keyI" style="left:${mx(760,60)}px;top:540px;width:60px;height:60px;opacity:0">${ico("key")}</div>`);
-const fchk=add(`<div class="abs" id="fchk" style="left:${mx(872,44)}px;top:384px;width:44px;height:44px;opacity:0">${ico("check")}</div>`);
-const f403=add(`<div class="abs" id="f403" style="left:${mx(1224,120)}px;top:534px;width:120px;height:62px;border-radius:10px;border:2px solid #b85b49;background:#2a2227;font:500 40px/58px 'Thmanyah Serif Text';color:#e0765f;text-align:center;opacity:0;direction:ltr">403</div>`);
-const tokC=add(`<div class="abs" id="tokC" style="left:${mx(960,650)}px;top:450px;width:650px;height:220px;border-radius:16px;background:#2a2e33;box-shadow:0 20px 40px rgba(0,0,0,.4);padding:46px 40px;font:500 34px/1.5 'Thmanyah Sans';color:#e8e6e1;opacity:0;${AR?"direction:rtl;text-align:right":""}">${iso(L.tok)}</div>`);
-// ---------- scene 11: update
-const ring2=add(`<div class="abs" id="ring2" style="left:892px;top:500px;width:136px;height:136px;opacity:0">${SVG.mark.replace('id="mk"','id="mk2"')}</div>`);
-const bars3=add(`<div class="abs" id="bars3" style="left:${mx(690,70)}px;top:520px;width:70px;height:48px;opacity:0;display:flex;gap:5px;align-items:center"><i style="width:18px;height:28px;border:2px solid #5a6068;border-radius:5px"></i><i style="width:18px;height:36px;border:2px solid #5a6068;border-radius:5px"></i><i style="width:18px;height:28px;border:2px solid #5a6068;border-radius:5px"></i></div>`);
-const dayEls=L.days.map((d,i)=>{const x=AR?1400-i*146:520+i*146;return add(`<div class="abs day" style="left:${x-30}px;top:774px;width:60px;height:60px;border-radius:14px;background:#262b30;border:1px solid #343a41;font:900 24px/58px 'Thmanyah Sans';color:#c9cdd1;text-align:center;opacity:0;border-color:#4b525a">${d}<div class="dchk" style="position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:50%;background:#eceae6;opacity:0"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#1d2024" stroke-width="3.5" stroke-linecap="round"/></svg></div></div>`)});
-const arrowD=add(`<div class="abs" id="arrowD" style="left:${AR?1400-6*146-14:520+6*146-14}px;top:690px;width:28px;height:36px;opacity:0"><svg viewBox="0 0 24 24" class="ic amb" style="width:28px;height:36px"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>`);
-const newP=add(`<div class="pill" id="newP" style="left:${AR?1400-6*146-34:520+6*146-34}px;top:852px;height:28px;line-height:28px;background:#7bd389;color:#10331a;border:0;font-weight:900;font-size:14px;padding:0 12px;opacity:0">${L.newt}</div>`);
-const dlI=add(`<div class="chip" id="dlI" style="left:${mx(1580,64)}px;top:526px;width:64px;height:64px;opacity:0;background:#23272c">${ico("dl")}<div style="position:absolute;right:-8px;top:-10px;width:30px;height:30px;border-radius:50%;background:#eceae6;color:#1d2024;font:900 17px/30px 'Thmanyah Sans';text-align:center;direction:ltr">1</div></div>`);
-const updB=add(`<div class="btn" id="updB" style="left:888px;top:740px;width:144px;height:120px;border-radius:20px;font-size:22px;opacity:0;outline:3px solid #c08a25;outline-offset:8px">${L.update}</div>`);
-// ---------- end card
-const lock=add(`<div class="abs" id="lock" style="left:0;top:300px;width:1920px;text-align:center;opacity:0;direction:ltr"><span style="display:inline-block;width:92px;height:92px;vertical-align:-14px;margin-right:16px">${SVG.mark.replace('id="mk"','id="mk3"')}</span><span style="font:700 104px 'Thmanyah Serif Display';color:#f1efea">QA Wrap</span></div>`);
-const made=add(`<div class="abs" id="made" style="left:0;top:432px;width:1920px;text-align:center;font:500 28px 'Thmanyah Sans';color:#a5abb0;opacity:0;${AR?"direction:rtl":""}">${iso(L.made)}</div>`);
-const tagRow=add(`<div class="abs" id="tagRow" style="left:0;top:500px;width:1920px;display:flex;justify-content:center;gap:12px;opacity:0;${AR?"direction:rtl":""}">${L.tags.map(t=>`<span class="pill" style="position:static;background:#272b30;font-size:21px;height:42px;line-height:40px;border-radius:21px">${t}</span>`).join("")}</div>`);
-const dlB=add(`<div class="abs" id="dlB" style="top:584px;width:340px;height:64px;left:790px;border-radius:32px;background:#7bd389;color:#10331a;font:700 28px/64px 'Thmanyah Sans';text-align:center;opacity:0">${L.dl}</div>`);
-const url=add(`<div class="abs" id="url" style="left:0;top:676px;width:1920px;text-align:center;font:400 32px 'Thmanyah Sans';color:#e8e6e1;direction:ltr;opacity:0">https://nj-burrito.github.io/QA-Wrap/</div>`);
-const gh=add(`<div class="abs" id="gh" style="left:0;top:732px;width:1920px;text-align:center;font:400 22px 'Thmanyah Sans';color:#9aa0a6;direction:ltr;opacity:0">github.com/NJ-Burrito/QA-Wrap</div>`);
+// v1: FILE sits on the card's bottom inline-end corner (113 px, centre 1320,782 in EN), with a press ring
+const fileBtn=add(`<div class="btn" id="fileBtn" style="left:${V?MX(1310)-87:MX(1321)-57}px;top:${V?698:726}px;width:113px;height:106px;border-radius:20px;opacity:0;font-size:22px">${L.file}</div>`);
+const fileRing=add(`<div class="abs" id="fileRing" style="left:${V?MX(1310)-101:MX(1321)-66}px;top:${V?680:717}px;width:131px;height:129px;border-radius:27px;border:3px solid #f0c55c;opacity:0"></div>`);
+// J chip 163 px (centre 1513,396 in EN), check badge 62 px at its top inline-end corner, attachment pill at its bottom inline-start
+const JX=mx(V?1310:1432,163), JY=V?326:315; // 9:16: J at screen (885,825) on the .8 world (19.5 s)
+const jira=add(`<div class="chip" id="jira" style="left:${JX}px;top:${JY}px;width:163px;height:163px;border-radius:26px;border:1px solid #3a3f46;opacity:0"><span style="font:700 92px 'Thmanyah Serif Display';color:#e9e5dd;direction:ltr">J</span></div>`);
+const jchk=add(`<div class="abs" id="jchk" style="left:${AR?JX-44:JX+125}px;top:${JY-24}px;width:62px;height:62px;opacity:0">${ico("check")}</div>`);
+const jatt=add(`<div class="abs" id="jatt" style="left:${AR?JX+163-56+30:JX-30}px;top:${JY+130}px;width:86px;height:57px;border-radius:29px;background:#272b30;border:1px solid #3a4047;font:700 26px/55px 'Thmanyah Sans';color:#ecebe7;text-align:center;opacity:0;direction:ltr"></div>`);
+jatt.innerHTML='<svg viewBox="0 0 24 24" style="width:24px;height:24px;vertical-align:-4px" class="ic"><path d="M21 12l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8-8"/></svg> 3';
+// the arrival burst: eight sparks around the J chip
+const JCX=JX+81.5, JCY=JY+81.5;
+const sparks=[...Array(8)].map((_,i)=>add(`<div class="abs" style="left:${JCX-4}px;top:${JCY-4}px;width:8px;height:8px;border-radius:50%;background:${["#f0b94a","#ff7d63","#ecebe7"][i%3]};opacity:0"></div>`));
+// ================= V2 (beats s09-s13, 20-40 s): rebuilt from measurements of the shipped EN film
+// (work/film/c40/an/v2-measure.md). Coordinates are 16:9 world pixels; AR mirrors positions with mx/MX/SG.
+// The s09 RTL demonstration is the same Arabic sentence in both films (not mirrored). Own classes (v2*) only.
+// MARK2: the QA mark as drawn in s11 and on the end card: ring open at the lower right, coral check leaving it (box 180x150)
+const MARK2=(cid)=>`<svg viewBox="0 0 180 150" width="100%" height="100%" style="overflow:visible"><path d="M125.3 90.9A52.5 52.5 0 1 0 81.4 128.1" fill="none" stroke="#ecebe7" stroke-width="23" stroke-linecap="round"/><path ${cid?`id="${cid}"`:""} d="M92 93L115 122L160 42" fill="none" stroke="#ff7d63" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+// ---------- s09: the Jira document (wrong LTR line, then the caret sweeps it into RTL)
+const AT_LTR=["زر.","Login","لا","يستجيب","بعد","استدعاء","API"].map(w=>`<bdi>${w}</bdi>`).join(" ");
+const AT_RTL=`زر <bdi dir="ltr">Login</bdi> لا يستجيب بعد استدعاء <bdi dir="ltr">API</bdi>.`;
+const brk=(id,x0,x1)=>`<div id="${id}" class="v2br" style="left:${x0}px;width:${x1-x0}px;opacity:0"><i style="left:0;top:0;border-left-width:3px;border-top-width:3px"></i><i style="right:0;top:0;border-right-width:3px;border-top-width:3px"></i><i style="left:0;bottom:0;border-left-width:3px;border-bottom-width:3px"></i><i style="right:0;bottom:0;border-right-width:3px;border-bottom-width:3px"></i></div>`;
+const doc=add(`<div class="v2card" id="doc" style="left:403px;top:377px;width:1112px;height:365px;opacity:0;--a:0px;--c:54px;--e:-300px;--r:-300px">
+<div class="v2bar" style="left:62px;top:59px;width:281px;height:16px"></div>
+<div id="rtl" style="position:absolute;left:889px;top:37px;width:180px;height:55px;border-radius:28px;background:#f0b94a;color:#2a2008;font:900 22px/55px 'Thmanyah Sans';letter-spacing:.08em;text-align:center;direction:ltr;white-space:nowrap">RTL ı LTR</div>
+<div class="v2txt" id="atL" style="padding-left:63px;direction:ltr;text-align:left;-webkit-mask-image:linear-gradient(90deg,transparent calc(var(--e) - 30px),#000 calc(var(--e) + 30px),#000 calc(var(--a) - 220px),transparent var(--a));mask-image:linear-gradient(90deg,transparent calc(var(--e) - 30px),#000 calc(var(--e) + 30px),#000 calc(var(--a) - 220px),transparent var(--a))">${AT_LTR}</div>
+<div class="v2txt" id="atR" style="padding-right:55px;direction:rtl;text-align:right;-webkit-mask-image:linear-gradient(90deg,#000 calc(var(--r) - 80px),transparent var(--r));mask-image:linear-gradient(90deg,#000 calc(var(--r) - 80px),transparent var(--r))">${AT_RTL}</div>
+<div id="caret" style="position:absolute;left:calc(var(--c) - 1px);top:113px;width:3px;height:153px;background:#d6d6d4;opacity:0"></div>
+<div id="uline" style="position:absolute;left:469px;top:215px;width:587px;height:4px;border-radius:2px;background:#7bd389;transform-origin:100% 50%;opacity:0"></div>
+${brk("brL",887,1013)}${brk("brA",395,489)}</div>`);
+// ---------- s10: Data Center sign-in (three fields, a key, 403 -> a plain sentence that turns Arabic / English)
+// 9:16 re-layout (measured): the fields group sits 57 world px further toward the inline start, the sentence card 69,
+// the download chip 198 (inside the frame); everything else follows the 0.8 world scale
+const VS10=V?SG(-57):0, VTOK=V?SG(-69):0, VDL=V?SG(-198):0;
+const FX=mx(617,280)+VS10;
+const fields=[0,1,2].map(i=>add(`<div class="v2fld" style="left:${FX}px;top:${399+i*113}px;opacity:0">${[0,1,2].map(k=>`<i class="v2dot" style="${AR?"right":"left"}:${28+k*26}px"></i>`).join("")}${i==1?`<div class="v2slot" style="${AR?"left":"right"}:34px"></div>`:""}</div>`));
+const keyW=add(`<div class="abs" id="keyW" style="left:${(AR?MX(799)-56:783)+VS10}px;top:544px;width:72px;height:32px;opacity:0;transform-origin:${AR?56:16}px 16px"><svg viewBox="0 0 72 32" width="72" height="32" style="${AR?"transform:scaleX(-1)":""}"><g fill="none" stroke="#f0b94a" stroke-width="6" stroke-linecap="round"><circle cx="16" cy="16" r="12"/><path d="M28 16H66M54 16v9M64 16v8"/></g></svg></div>`);
+const fchk=add(`<div class="abs" id="fchk" style="left:${mx(857,60)+VS10}px;top:375px;width:60px;height:60px;opacity:0">${ico("check")}</div>`);
+const f403=add(`<div class="abs" id="f403" style="left:${mx(1201,170)}px;top:497px;width:170px;height:126px;border-radius:18px;border:2px solid #f08068;background:#2a2d33;font:700 68px/122px 'Thmanyah Serif Display';color:#ff8a70;text-align:center;opacity:0;direction:ltr;box-shadow:0 14px 30px rgba(0,0,0,.35)">403</div>`);
+const TOK_EN="The token works but is not allowed to do this.", TOK_AR="الرمز يعمل لكنه لا يملك صلاحية هذا الإجراء"; // ai: both films end on the shipped EN film's Arabic (Director rules on item h)
+const words=(s,c)=>s.split(" ").map(w=>`<span class="${c}">${w}</span>`).join(" ");
+const tokC=add(`<div class="v2card" id="tokC" style="left:${mx(961,650)+VTOK}px;top:451px;width:650px;height:218px;border-radius:18px;opacity:0"><div class="v2tok" style="direction:ltr;text-align:left">${words(TOK_EN,"we")}</div><div class="v2tok" style="direction:rtl;text-align:right">${words(TOK_AR,"wa")}</div></div>`);
+// ---------- s11: daily update check (mark ring, week row, download chip, UPDATE, check)
+const ring2=add(`<div class="abs" id="ring2" style="left:${MX(947)-75}px;top:480px;width:180px;height:150px;opacity:0">${MARK2("mk2")}</div>`);
+const bars3=add(`<div class="abs" id="bars3" style="left:${mx(690,101)}px;top:532px;width:101px;height:50px;opacity:0"><i style="left:0;top:6px"></i><i style="left:36px;top:0"></i><i style="left:72px;top:6px"></i></div>`);
+const DAYX=i=>MX(524.5+i*145.2);
+const dayEls=L.days.map((d,i)=>add(`<div class="v2day" style="left:${DAYX(i)-32.5}px;top:770px;opacity:0">${d}<div class="dchk" style="${AR?"left":"right"}:-7px;opacity:0"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M7 12.5l3.5 3.5L17 9" fill="none" stroke="#1d2024" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>`));
+const arrowD=add(`<div class="abs" id="arrowD" style="left:${DAYX(0)-15}px;top:697px;width:30px;height:36px;opacity:0"><svg viewBox="0 0 30 36" width="30" height="36"><path d="M15 3v28M5 21l10 10 10-10" fill="none" stroke="#f0b94a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`);
+const newP=add(`<div class="abs" id="newP" style="left:${DAYX(6)-44.5}px;top:844px;width:89px;height:42px;border-radius:21px;background:#7bd389;color:#10331a;font:900 20px/42px 'Thmanyah Sans';letter-spacing:.1em;text-align:center;opacity:0">${L.newt}</div>`);
+const dlI=add(`<div class="abs" id="dlI" style="left:${mx(1553,120)+VDL}px;top:500px;width:120px;height:120px;border-radius:18px;background:linear-gradient(#2d3238,#23272c);border:1px solid #3a4047;box-shadow:0 14px 28px rgba(0,0,0,.4);opacity:0"><svg viewBox="0 0 120 120" width="120" height="120"><path d="M60 30v40M43 55l17 17 17-17M36 83h48" fill="none" stroke="#ecebe7" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="dlBadge" style="position:absolute;${AR?"left":"right"}:-22px;top:-22px;width:50px;height:50px;border-radius:50%;background:#ecebe7;color:#1d2024;font:700 30px/50px 'Thmanyah Serif Display';text-align:center;direction:ltr;opacity:0">1<span style="font:400 18px 'Thmanyah Sans'">×</span></div></div>`);
+const updO=add(`<div class="abs" id="updO" style="left:855px;top:705px;width:210px;height:210px;border-radius:42px;border:2px solid #9c7330;opacity:0"></div>`);
+const updB=add(`<div class="abs" id="updB" style="left:890px;top:742px;width:140px;height:120px;border-radius:22px;background:#f0be5c;box-shadow:0 10px 0 #b8862e,0 18px 30px rgba(0,0,0,.4);color:#2a2008;font:900 28px/120px 'Thmanyah Sans';letter-spacing:.04em;text-align:center;opacity:0">${L.update}</div>`);
+// ---------- s12: the BUG-1042 card returns OPEN with full evidence, FIXED slams (rhymes with s01)
+const cx=(x,w)=>AR?737-x-w:x;
+const ROWS=[["burst","#f0b94a"],["bars","#a9adb3"],["alert","#eceae6"]];
+const card12=add(`<div class="v2card" id="card12" style="left:${mx(592,737)}px;top:336px;width:737px;height:449px;border-radius:18px;opacity:0">
+<div style="position:absolute;left:0;right:0;top:76px;height:1px;background:#343a41"></div>
+<div class="id12" style="position:absolute;left:${cx(34,160)}px;top:24px;width:160px;font:700 26px/34px 'Thmanyah Sans';letter-spacing:.06em;color:#9aa0a6;direction:ltr;text-align:${AR?"right":"left"}">BUG-1042</div>
+<div class="v2tag" id="tag12o" style="left:${cx(554,153)}px;border:1.5px solid #4b525a;color:#aeb3b8">${L.open}</div>
+<div class="v2tag" id="tag12f" style="left:${cx(554,153)}px;background:#7bd389;color:#10331a;opacity:0">${L.fixed}</div>
+<div style="position:absolute;left:${cx(33,430)}px;top:109px;width:430px;height:17px;border-radius:9px;background:#55595f"></div>
+<div id="badge12" style="position:absolute;left:${cx(642,59)}px;top:100px;width:59px;height:59px;border-radius:50%;background:#1d2024;border:3px solid #ecebe7;display:flex;align-items:center;justify-content:center;opacity:0">${ico("bug").replace("<svg ",'<svg style="width:34px;height:34px" ')}</div>
+${ROWS.map(([k,c],i)=>`<div style="position:absolute;left:${cx(34,42)}px;top:${160+i*78}px;width:42px;height:42px">${ico(k).replace("<svg ",'<svg style="width:42px;height:42px;stroke:#9aa0a6" ').replace('d="M5 20V10M12 20V4M19 20v-7"','d="M5 20V12M12 20V6"/><path d="M19 20v-8" style="stroke:#ff7d63"')}</div><div style="position:absolute;left:${cx(108,595)}px;top:${168+i*78}px;width:595px;height:26px;border-radius:13px;background:#1d2125;padding:3px"><div style="width:100%;height:100%;border-radius:10px;background:${c}"></div></div>`).join("")}
+<div id="stamp12" style="position:absolute;left:368px;top:224px;padding:0 24px;border:5px solid #7bd389;border-radius:12px;background:rgba(37,41,46,.94);color:#7bd389;font:900 58px/66px 'Thmanyah Sans';letter-spacing:.04em;white-space:nowrap;direction:${AR?"rtl":"ltr"};opacity:0;z-index:2">${L.fixed}</div></div>`);
+// ---------- s13: end card (the card collapses into the mark; text blurs in)
+const lockM=add(`<div class="abs" id="lockM" style="left:678px;top:321px;width:115.2px;height:96px;opacity:0">${MARK2("")}</div>`);
+const lockT=add(`<div class="abs" id="lockT" style="left:818px;top:302px;font:700 93px/1 'Thmanyah Serif Display';color:#f1efea;white-space:nowrap;direction:ltr;clip-path:inset(0% 100% 0% 0%)">QA Wrap</div>`);
+const made=add(`<div class="abs e2" id="made" style="top:438px;font:500 30px/40px 'Thmanyah Sans';color:#a5abb0;${AR?"direction:rtl":""}">${iso(L.made)}</div>`);
+const tagRow=add(`<div class="abs e2" id="tagRow" style="top:493px;display:flex;justify-content:center;gap:13px;${AR?"direction:rtl":""}">${L.tags.map(t=>`<span class="v2tg">${t}</span>`).join("")}</div>`);
+const dlB=add(`<div class="abs" id="dlB" style="left:806px;top:577px;width:308px;height:65px;border-radius:33px;background:#7bd389;color:#10331a;font:700 30px/65px 'Thmanyah Sans';text-align:center;opacity:0">${L.dl}</div>`);
+const url=add(`<div class="abs e2" id="url" style="top:661px;font:400 35px/44px 'Thmanyah Sans';color:#e8e6e1;direction:ltr">https://nj-burrito.github.io/QA-Wrap/</div>`);
+const gh=add(`<div class="abs e2" id="gh" style="top:711px;font:400 26px/34px 'Thmanyah Sans';color:#9aa0a6;direction:ltr">github.com/NJ-Burrito/QA-Wrap</div>`);
 // ---------- report card for scenes 7 and 12 (reuses #card)
 // ---------- timeline
 const tl=gsap.timeline({paused:true});
 const set=(t,v,at)=>tl.set(t,v,at), to=(t,v,at)=>tl.to(t,Object.assign({ease:"power2.out"},v),at), fr=(t,a,b,at)=>tl.fromTo(t,a,Object.assign({ease:"power2.out",immediateRender:false},b),at);
 // ambient
-ghosts.forEach(([g,x0,y0,A,ph])=>tl.to(g,{x:x0+A,y:y0+A*.6,duration:40,ease:"none"},0));
-boks.forEach(([b,x0,y0,A,ph])=>tl.to(b,{x:x0-A,y:y0-A*.8,duration:40,ease:"none"},0));
-to(glowR,{opacity:0,duration:1.2},10.0);to(glowG,{opacity:1,duration:1.2},10.1);to(glowG,{x:V?-200:560,duration:1,ease:"none"},0);
-tl.to(glowG,{x:V?-300:300,y:V?200:-120,duration:3,ease:"power2.inOut"},35.5);
+ghosts.forEach(([g,x0,y0,dx,dy])=>tl.to(g,{x:x0+dx,y:y0+dy,duration:40,ease:"none"},0));
+tl.fromTo(grain,{backgroundPosition:"0px 0px"},{backgroundPosition:`${600*97}px ${600*61}px`,duration:40,ease:"steps(600)",immediateRender:true},0);
+// v1 light (measured): no glow until the stamp lands; warm glow centred (416,536) in 0.5-0.9 s, out 10.0-10.45 s;
+// green rises at the mark (960,520) 10.1-10.6 s and drifts to (1320,600) by 12.5 s, (1490,710) by 16 s, (1460,665) by 19.5 s
+// AR mirrors the light with the layout (GX: a 1500 px glow's x for the mirrored centre)
+const GX=x=>AR?(V?-420:420)-x:x;
+// ai: the 9:16 green glow is smaller and a little weaker than the 16:9 one (ref radial profile at 16 s: G excess 0 by ~300 px,
+// core +13 vs +15), so it is drawn at .72 scale (centre unchanged) and 93 % strength
+if(V){gsap.set(glowG,{scale:.72});glowG.style.background="radial-gradient(circle,rgba(106,164,114,.28) 0,rgba(106,164,114,.093) 37%,transparent 56%)"}
+if(V){gsap.set(glowR,{x:GX(-640),y:180});gsap.set(glowG,{x:GX(-220),y:190})}else if(AR){gsap.set(glowR,{x:GX(-334)});gsap.set(glowG,{x:GX(210)})} // 9:16 centres measured: warm (110,930); green (530,940) -> (820,990) -> (960,1075) -> (905,1050)
+fr(glowR,{opacity:0},{opacity:1,duration:.4,ease:"power1.out"},.5);to(glowR,{opacity:0,duration:.45},10.0);
+fr(glowG,{opacity:0},{opacity:1,duration:.5},10.1);
+tl.to(glowG,{x:GX(V?70:570),y:V?240:-150,duration:2,ease:"sine.inOut"},10.5);tl.to(glowG,{x:GX(V?210:740),y:V?325:-40,duration:3.5,ease:"sine.inOut"},12.5);tl.to(glowG,{x:GX(V?155:710),y:V?300:-85,duration:3.5,ease:"sine.inOut"},16.0);
+// ai (integration): green glow 20-40 s, measured against the shipped EN (G over (R+B)/2, objects median-filtered,
+// work/film/tmp/ai/glow.py): it drifts toward the doc in s09 (its strength holds: the doc only hides its core), swings right for s10-s11, settles for s12
+// and moves to the end card's centre by 36.4 s. [t, centre x, centre y, opacity]; AR mirrors x through GX.
+const GK=V?[[20,905,1050,1],[22.3,880,965,1],[24,877,970,1],[25,883,1019,1],[26,918,1043,1],[27,942,1044,1],[28.5,975,1097,1],[30,968,1088,1],[31,963,1078,1],[33,901,1001,1],[34.5,899,985,1],[35.3,899,985,1],[36.3,650,952,1]]
+ :[[20,1460,665,1],[22.3,1310,600,1],[24,1317,608,1],[25,1361,633,1],[26,1412,662,1],[27,1440,670,1],[28.5,1510,725,1],[30,1506,716,1],[31,1469,693,1],[33,1396,637,1],[34.5,1395,620,1],[35.3,1403,618,1],[36.4,1120,550,1]];
+for(let i=1;i<GK.length;i++)tl.to(glowG,{x:GX(GK[i][1]-750),y:GK[i][2]-750,opacity:GK[i][3],duration:GK[i][0]-GK[i-1][0],ease:"sine.inOut"},GK[i-1][0]);
 // captions
 // a line that hands over to the next one at the same instant (15.47, 31.5) is fully out one frame before the next is in
-CAPT.forEach(([a,b],i)=>{if(!capEls[i])return;const n=CAPT[i+1],abut=n&&L.cap[i+1]&&n[0]-b<.05;
- fr(capEls[i],{opacity:0,y:6},{opacity:1,y:0,duration:.1},a);
- if(abut)to(capEls[i],{opacity:0,duration:.08,ease:"none"},n[0]-.12);else to(capEls[i],{opacity:0,duration:.1},b-.1)});
+const CAPW=AR?CAPT_AR:CAPT;
+CAPW.forEach(([a,b],i)=>{if(!capEls[i])return;const n=CAPW[i+1],abut=n&&L.cap[i+1]&&n[0]-b<.05;
+ // ai round 2: the shipped captions cut in and out within one frame (ink measured frame by frame), at the bible windows
+ const F1=1/30;fr(capEls[i],{opacity:0},{opacity:1,duration:F1,ease:"none"},a-F1);
+ if(abut)to(capEls[i],{opacity:0,duration:F1,ease:"none"},n[0]-2*F1);else to(capEls[i],{opacity:0,duration:F1,ease:"none"},b-F1)});
 // beat titles: EN rises from a mask; AR wipes in from the inline start (right)
-const tIn=(el,at,d)=>AR?fr(el,{opacity:1,clipPath:"inset(0% 0% 0% 100%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:d+.1,ease:"power2.inOut"},at):fr(el,{opacity:0,yPercent:110},{opacity:1,yPercent:0,duration:d},at);
+const tIn=(el,at,d)=>AR?fr(el,{opacity:1,clipPath:"inset(0% 0% 0% 100%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:d,ease:"power2.out"},at) /* ai: same times and curve as the EN rise */:fr(el,{opacity:0,yPercent:110},{opacity:1,yPercent:0,duration:d},at);
 // world scale: 1 in 16:9, .66 in 9:16; the scatter pulls the world out (WS to EWS) and the turn brings it back
 // 9:16 (director note 3): card beats at 0.9 with the world centre at 45 % height (y -96), wide beats at 0.66,
 // changed on existing beat changes with power2.inOut 0.5 s (a move, never a cut). 16:9 stays at 1.
-const WS=V?[[0,.9,-96],[5.5,.66,0],[16.9,.9,-96],[24.4,.66,0],[32.85,.9,-96]]:[[0,1,0]];
-tl.fromTo(world,{scale:WS[0][1],y:WS[0][2]},{scale:WS[0][1],y:WS[0][2],duration:.01,ease:"none"},0);
-for(let i=1;i<WS.length;i++)tl.fromTo(world,{scale:WS[i-1][1],y:WS[i-1][2]},{scale:WS[i][1],y:WS[i][2],duration:.5,ease:"power2.inOut",immediateRender:false},WS[i][0]);
-const W0=V?.66:1, PUSH=V?6.0:5.9;
-tl.fromTo(world,{scale:W0},{scale:W0*.93,duration:8.0-PUSH,ease:"sine.inOut",immediateRender:false},PUSH);
-tl.fromTo(world,{scale:W0*.93},{scale:W0,duration:.8,ease:"power2.inOut",immediateRender:false},9.4);
-// S1 stamp 0-4
-set(["#tOpen"],{opacity:1},0);fr(card,{opacity:0},{opacity:1,duration:.4},0);
-gsap.set(stamp,{rotation:-9,scale:1.4,opacity:0});
-fr(stamp,{opacity:0},{opacity:.6,duration:.2,ease:"none"},.08);tl.to(stamp,{opacity:1,duration:.67,ease:"power4.in"},.28);
-fr(stamp,{scale:1.4,rotation:-9,color:"#8a3f33",borderColor:"#8a3f33",x:-40,y:10},{rotation:-9,scale:.86,color:"#ff7d63",borderColor:"#ff7d63",x:0,y:0,duration:.95,ease:"power4.in"},0);
-fr(card,{y:0},{y:-4,duration:.15,yoyo:true,repeat:1},.92);
-set("#stamp",{x:0},.7);
-to("#tOpen",{opacity:0,duration:.1},.95);to("#tClosed",{opacity:1,duration:.1},.95);
-// stamp resting geometry: width 800 scaled to fit the card (matches the shipped frame)
-fr(bugBadge,{opacity:0,scale:.2},{opacity:0,duration:0},0);
+// v1, measured on the shipped 9:16: card beats at world .8 (card centred at 540,960: y -16); the scatter at world 1 with
+// its own layout (chips placed below); the timeline at .8 shifted x -50 / y -15; the s08 card back at .8 / y -16
+const WS=V?[[0,.8,-16,0],[5.45,1,0,0],[10.3,.8,-15,SG(-50)],[16.8,.8,-16,0]]:[[0,1,0,0]]; // entries from 19.85 s on: V2 block (S9-S13)
+tl.fromTo(world,{scale:WS[0][1],y:WS[0][2],x:WS[0][3]},{scale:WS[0][1],y:WS[0][2],x:WS[0][3],duration:.01,ease:"none"},0);
+for(let i=1;i<WS.length;i++)tl.fromTo(world,{scale:WS[i-1][1],y:WS[i-1][2],x:WS[i-1][3]},{scale:WS[i][1],y:WS[i][2],x:WS[i][3],duration:i==3?.05:.5,ease:"power2.inOut",immediateRender:false},WS[i][0]);
+// ===== v1 timeline, s01-s08 (0-20 s): every time below is measured on the shipped EN (work/film/c40/an/v1-measure.md)
+// titles of s07/s08 wipe in from the inline start (TRACED, FILED); STEPS? rises word by word from a mask
+const tW=(el,at,d)=>fr(el,{opacity:1,clipPath:AR?"inset(0% 0% 0% 100%)":"inset(0% 100% 0% 0%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:d,ease:"power2.out"},at);
+const tWo=(el,at)=>to(el,{opacity:0,y:-8,duration:.15,ease:"power2.in"},at);
+// S1 0-2.45: the card rises in, CANNOT REPRODUCE lands at 0.5 s with a 5-frame shake, CLOSED pops at 1.1 s, the card breathes
+set(["#tOpen"],{opacity:1},0);fr(card,{opacity:.1,y:30},{opacity:1,y:0,duration:.35,immediateRender:true},0); // ai: frame 0 shows the start state (a seek to 0 renders nothing otherwise)
+fr(stamp,{opacity:0,rotation:-9,scale:STAMP_S,x:0,y:0},{opacity:1,rotation:-9,scale:STAMP_S,duration:.01,ease:"none"},.49);
+tl.to(cardG,{keyframes:[6,-5,3,-2,0].map(v=>({x:SG(v),duration:1/30})),ease:"none"},.5);
+to("#tOpen",{opacity:0,duration:.08},1.1);fr("#tClosed",{opacity:0,scale:.6},{opacity:1,scale:1,duration:.2,ease:"back.out(2)"},1.1);
+fr(cardG,{scale:1},{scale:1.038,duration:.7,ease:"power2.inOut"},1.2);to(cardG,{scale:1,duration:2.7,ease:"sine.inOut"},2.6);
+// S2 2.3-3.95: the bug pops on the stamp, crawls along it, then flies off the card leaving a dashed trail
 fr(bugBig,{opacity:0,scale:.3,x:MX(700),y:640,rotation:SG(-25)},{opacity:1,scale:1,duration:.3,ease:"back.out(2)"},2.3);
-tl.to(bugBig,{keyframes:[{x:MX(724),y:626,rotation:SG(-25),duration:.2},{x:MX(950),y:486,rotation:SG(15),duration:.5},{x:MX(1177),y:626,rotation:SG(35),duration:.5},{x:MX(1268),y:577,rotation:SG(10),duration:.5}],ease:"sine.inOut"},2.3);
-// S2 4-8: proof gone, title, rows fade
-tIn(tT1,4.2,.5);
-to(".pills i",{opacity:0,duration:.8,stagger:.03},4.2);
-to(bugBig,{opacity:0,duration:.3},4.05);
-to(stamp,{opacity:0,y:60,scale:.8,duration:.7},5.2);
-to(card,{opacity:0,duration:.8},5.6);to("#tClosed",{opacity:0,duration:.4},5.6);
-chips.forEach((c,i)=>{const t0=5.9+i*.07;fr(c.e,{opacity:0,x:960,y:540,scale:.3,rotation:0},{opacity:1,x:c.x,y:c.y,scale:1,rotation:c.r,duration:1.1,ease:"back.out(1.4)"},t0);
- tl.to(c.e,{x:c.x+24,y:c.y-18,rotation:c.r+5,duration:3,ease:"sine.inOut"},t0+1.1)});
-fr(bugFly,{opacity:0,scale:.5,x:MX(1268),y:577,rotation:SG(10)},{opacity:1,scale:1,duration:.3},5.85);
-tl.to(bugFly,{keyframes:[{x:MX(1286),y:566,duration:.3},{x:MX(1118),y:722,rotation:SG(-20),duration:1},{x:MX(637),y:503,rotation:SG(-40),duration:1},{x:MX(1156),y:404,rotation:SG(30),duration:1},{x:MX(1298),y:562,rotation:SG(5),duration:.5}],ease:"sine.inOut"},5.85);
-to(tT1,{opacity:0,yPercent:-100,duration:.4},5.6);
-// S3 8-10: Press Start
-fr(startBtn,{opacity:0,scale:.4,y:20},{opacity:1,scale:1,y:0,duration:.45,ease:"back.out(2)"},8.0);
-fr(startRing,{opacity:0,scale:1.08},{opacity:.9,scale:1,duration:.2},8.75);to(startRing,{opacity:0,duration:.2},9.25);
-fr(tapDot,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.12},9.85);to(tapDot,{opacity:0,duration:.15},10.15);
-tl.to(startBtn,{scale:.95,y:6,duration:.1,ease:"power2.in"},9.9);tl.to(startBtn,{scale:1,y:0,duration:.1,ease:"power2.out"},10.0);
-tl.to(bugFly,{x:960,y:540,scale:.1,opacity:0,duration:.45,ease:"power3.in"},10.2);
-// S4 10-13: chips converge to mark
-chips.forEach((c,i)=>to(c.e,{x:960,y:540,scale:.1,opacity:0,duration:.7,ease:"power3.in"},10.35+i*.03));
-to(startBtn,{opacity:0,scale:.4,duration:.25},10.15);
-fr(mark,{scale:6},{scale:1.5,duration:.4,ease:"power2.in"},10.1);fr(mark,{opacity:0},{opacity:1,duration:.08,ease:"none"},10.1);
-fr("#mk",{strokeDasharray:80,strokeDashoffset:80},{strokeDashoffset:0,duration:.3,ease:"power2.out"},10.05);
-to(mark,{x:SG(V?-650:-740),scale:1,duration:.6,ease:"power2.inOut"},10.9);
-fr(tline,{scaleX:0},{scaleX:1,duration:2.4,ease:"none"},11.0);fr(tline,{opacity:0},{opacity:1,duration:.2,ease:"none"},11.0);
-dots.forEach((d,i)=>fr(d,{opacity:0,scale:.2},{opacity:1,scale:1,duration:.2},11.0+dx[i]*2.4));
-fr(tlabel,{opacity:0},{opacity:1,duration:.3},11.0);
+tl.to(bugBig,{keyframes:[{x:MX(724),y:626,rotation:SG(-25),duration:.2},{x:MX(950),y:486,rotation:SG(15),duration:.5},{x:MX(1177),y:626,rotation:SG(35),duration:.5},{x:MX(1262),y:600,rotation:SG(60),duration:.2}],ease:"sine.inOut"},2.3);
+tl.to(bugBig,{x:MX(1960),y:468,rotation:SG(75),duration:.22,ease:"power2.in"},3.77);set(bugBig,{opacity:0},4.0);
+fr(bugTrail,{opacity:1,scaleX:0},{scaleX:1,duration:.22,ease:"power2.in"},3.79);to(bugTrail,{opacity:0,duration:.3},4.05);
+// S3 4.25-5.9: the evidence pills jump out of their tracks; STEPS? · REQUEST? · CONSOLE? rises word by word; the card defocuses
+card.querySelectorAll(".pills i").forEach((p,i)=>to(p,{y:((i*5)%3-1)*9,opacity:0,duration:.25,ease:"power2.in"},4.38+((i*7)%21)*.012)); // ai round 2: ref pills intact at 4.4 s, gone by 4.65
+to(card.querySelectorAll(".pills"),{opacity:.45,duration:.4},4.6);
+set(tT1.querySelectorAll(".tw"),{yPercent:115},0);set(tT1,{opacity:1},4.36);tT1.querySelectorAll(".tw").forEach((w,i)=>fr(w,{yPercent:115},{yPercent:0,duration:.3},[4.45,4.62,4.75][i])); // ai round 2: words rise 0.08 s later (ref 4.5-5.0 s)
+to(tT1,{opacity:0,y:-10,filter:"blur(10px)",duration:.28,ease:"none"},5.8); // ai round 2: still dim at 6.0 s in the ref
+// ai round 2: the ref card shrinks fast but stays readable and fades slowly (dim, small, still visible at 6.0-6.2 s)
+fr(cardG,{scale:1,y:0,filter:"blur(0px)"},{scale:.69,y:-10,filter:"blur(4px)",duration:.4,ease:"power2.out"},5.45);to(cardG,{filter:"blur(10px)",duration:.55,ease:"none"},5.85);fr(cardG,{opacity:1},{opacity:0,duration:.95,ease:"none"},5.5);
+// S4 6.15-7.4: the chips pop where they will stay (no burst travel), the far ones defocused; the bug roams among them
+chips.forEach(c=>{fr(c.e,{opacity:0,x:c.x,y:c.y,scale:.3},{opacity:1,scale:1,duration:.35,ease:"back.out(1.7)"},c.t);
+ tl.to(c.e,{x:c.x+SG(6),y:c.y-4,duration:10.25-c.t-.35,ease:"sine.inOut"},c.t+.35);
+ tl.to(c.e,{x:c.x+(MX(960)-c.x)*.35,y:c.y+(557-c.y)*.35,scale:.3,opacity:0,duration:.5,ease:"power2.in"},10.25)});
+farB.forEach(b=>{fr(b,{opacity:0},{opacity:.55,duration:.4},6.5);to(b,{opacity:0,duration:.4},10.3)});
+const BP=[[6.15,1279,562],[6.4,1261,626],[6.8,1089,734],[7.0,955,747],[7.2,864,713],[7.4,726,691],[7.6,665,639],[7.8,613,575],[8.0,635,501],[8.2,691,441],[8.4,790,380],[8.6,903,367],[8.8,1037,367],[9.0,1153,397],[9.2,1222,419],[9.4,1279,484],[9.6,1296,562]];
+if(V)BP.forEach(p=>{p[1]=VX(p[1]);p[2]=VY(p[2])});
+const hd=(a,b)=>Math.atan2(b[2]-a[2],b[1]-a[1])*180/Math.PI+90;
+fr(bugFly,{opacity:0,scale:.4,x:MX(BP[0][1]),y:BP[0][2],rotation:SG(hd(BP[0],BP[1]))},{opacity:1,scale:V?.8:1,duration:.25,ease:"back.out(2)"},6.15);
+tl.to(bugFly,{keyframes:BP.slice(1).map((p,i)=>({x:MX(p[1]),y:p[2],rotation:SG(hd(BP[i],p)),duration:p[0]-BP[i][0]})),ease:"none"},6.15);
+tl.to(bugFly,{rotation:SG(180),duration:.3,ease:"sine.inOut"},9.6);
+tl.to(bugFly,{x:MX(VX(1140)),y:VY(556),scale:.5,opacity:0,duration:.25,ease:"power1.in"},10.15); // ai round 2: gone by 10.4 s in the ref
+// S5 7.7-10.1: START pops (7.7), a ready ring flashes (8.93), the press and the tap land at 9.95-10.1
+fr(startBtn,{opacity:0,scale:.4,y:20},{opacity:1,scale:1,y:0,duration:.4,ease:"back.out(2)"},7.7);
+fr(startRing,{opacity:0,scale:1},{opacity:.95,scale:1,duration:.08},8.93);to(startRing,{scale:1.25,opacity:0,duration:.45,ease:"power1.out"},9.03);
+fr(tapDot,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.06},9.98);to(tapDot,{opacity:0,duration:.1},10.12);
+tl.to(startBtn,{scale:.95,y:6,duration:.08,ease:"power2.in"},9.95);tl.to(startBtn,{scale:1,y:0,duration:.1,ease:"power2.out"},10.03);
+to(startBtn,{opacity:0,scale:.5,duration:.3},10.1);
+// S6 10.0-13.2: two strokes cross and collapse into the mark (ring draws 10.05-10.45, check 10.5-10.7); the mark slides
+// to the line's start (11.0, power2.out .5); the line draws 11.2-12.0 (power3.out); dots land 11.4-12.9; clock 00:00-00:07
+// every 0.233 s; CLICKS/REQUESTS/CONSOLE pop 11.63/11.87/12.1 and leave 12.77; the whole timeline settles 121 px back at 12.8
+// ai round 2 (ref frames every 1/30 s, 10.0-10.4): nothing at 10.0; the strokes streak in faint at 10.033, are near the
+// centre by 10.067, cross on the mark at 10.233 (coral over white, the ring drawing on top), shrink and fade by 10.4.
+// 9:16 draws them at .78 length from nearer offsets so no stroke is ever cut by the frame edge.
+{const k=V?.35:1,BK=(dx,dy)=>[[10.033,dx*450,dy*180,.35],[10.067,dx*150,dy*70,.85],[10.133,dx*55,dy*25,1],[10.233,0,0,1]];
+ [[barW,-20,-1],[barC,32,1]].forEach(([b,rot,sg])=>{const K=BK(sg,sg);
+  fr(b,{opacity:0,x:SG(K[0][1]*k),y:K[0][2]*k,scaleX:V?.78:1,rotation:SG(rot)},{opacity:K[0][3],duration:.001,ease:"none"},10.032);
+  tl.to(b,{keyframes:K.slice(1).map((q,j)=>({x:SG(q[1]*k),y:q[2]*k,opacity:q[3],duration:q[0]-K[j][0]})),ease:"none"},10.033);
+  tl.to(b,{scaleX:(V?.78:1)*.75,opacity:.55,duration:.1,ease:"none"},10.233);tl.to(b,{opacity:0,duration:.067,ease:"none"},10.333)})}
+gsap.set(barW,{zIndex:3});gsap.set(barC,{zIndex:4});
+fr(mark,{opacity:0},{opacity:1,duration:.03,ease:"none"},10.04);
+fr("#mkR",{strokeDasharray:290,strokeDashoffset:290},{strokeDashoffset:0,duration:.3,ease:"power2.inOut"},10.04);
+set("#mk",{strokeDasharray:153,strokeDashoffset:153},0);fr("#mk",{strokeDasharray:153,strokeDashoffset:153},{strokeDashoffset:0,duration:.2,ease:"power2.out"},10.5); // ai: hidden until it draws
+// 9:16: the mark rises above the line's centre instead (world 1004,555 -> 1012,354, measured 11.0-11.5 s)
+tl.to(mark,{x:SG(V?8:-660.5),y:V?-201:1,scale:.586,duration:.5,ease:"power2.out"},11.0);if(!V)tl.to(mark,{x:SG(-668),duration:1.3,ease:"none"},11.5);
+to(mark,{opacity:0,x:SG(V?-90:-728),duration:.26,ease:"none"},12.82); // ai: the ref still shows the mark fading at 13.0 s, gone by 13.1
+set(tlg,{x:SG(121)},0);to(tlg,{x:0,duration:.4,ease:"power2.out"},12.8);
+fr(tline,{scaleX:0,opacity:1},{scaleX:1,opacity:1,duration:.8,ease:"power3.out"},11.2);
+dots.forEach((d,i)=>fr(d,{opacity:0,y:-18},{opacity:1,y:0,duration:.25},11.15+dx[i]*.00115));
+fr(tlabel,{opacity:0,y:12},{opacity:1,y:0,duration:.2},11.23);
 tlabel.innerHTML=[0,1,2,3,4,5,6,7].map(n=>`<span class="clk" style="display:none">00:0${n}</span>`).join("");
-[...tlabel.children].forEach((c,n)=>{tl.set(c,{display:"inline"},11.0+n*.34);if(n<7)tl.set(c,{display:"none"},11.0+(n+1)*.34)});
-kp.forEach((p,i)=>fr(p,{opacity:0,y:10},{opacity:1,y:0,duration:.3},11.8+i*.12));
-to(kp,{opacity:0,duration:.3},13.05);
-to(mark,{opacity:0,duration:.3},12.7);
-// S5 13-16: focus click -> 500
-to(tline,{x:0,duration:0},0);
-to(dots,{opacity:.35,duration:.4},13.6);
-fr(f500,{opacity:0,scale:.5},{opacity:1,scale:1.45,duration:.4,ease:"back.out(1.7)"},13.55);
-fr(clk,{opacity:0,scale:.5},{opacity:1,scale:1.5,duration:.5,ease:"back.out(1.5)"},14.1);
-fr(ring,{opacity:0,scale:.5},{opacity:1,scale:1.4,duration:.5},14.2);
-to(ring,{opacity:0,duration:.3},15.0);
-fr(arc,{opacity:0},{opacity:1,duration:.4},15.0);fr("#arcp",{strokeDasharray:800,strokeDashoffset:800},{strokeDashoffset:0,duration:.7,ease:"power2.inOut"},15.0);
-fr(msP,{opacity:0,y:8},{opacity:1,y:0,duration:.3},15.2);
-// S6 16-17 traced: slide left
-tIn(tTr,15.5,.4);
-to(tline,{opacity:.35,duration:.3},15.5);to(tlabel,{opacity:.35,duration:.3},15.5);
-to(msP,{y:V?30:80,duration:.4,ease:"power2.inOut"},15.5);
-// director note 2: the click slides toward the 500 (centre gap 220 px) and the arc re-draws between them, held to the hand-over
-to(clk,{x:SG(284),duration:.5,ease:"power2.inOut"},15.5);to(f500,{x:SG(-190),duration:.5,ease:"power2.inOut"},15.5);
-to(arc,{opacity:0,duration:.25},15.5);
-fr(high,{opacity:0,scale:.5,xPercent:AR?-100:0},{opacity:1,scale:1,xPercent:AR?-100:0,duration:.3,ease:"back.out(2)"},16.2);
-to([clk,f500,high,arc,msP,tline,dots,tlabel],{opacity:0,duration:.25},16.6);to(tTr,{opacity:0,duration:.25},16.6);
-// S7 17-18: report + FILE (card repainted with bars)
-set("#tClosed",{opacity:1},16.7);set("#tOpen",{opacity:0},16.7);set(".pills i",{opacity:0},16.7);set(".pb",{opacity:1},16.7);
-fr(card,{opacity:0,y:30},{opacity:1,y:0,duration:.3},16.7);fr(stamp,{opacity:0,x:0,y:30,scale:.86,rotation:-9},{opacity:1,y:0,duration:.3},16.7);
-to(stamp,{opacity:0,scale:.95,duration:.25},17.15);set("#tClosed",{opacity:0},17.25);set("#tOpen",{opacity:1},17.25);
-fr(bugBadge,{opacity:0,scale:.2},{opacity:1,scale:1,duration:.3},17.3);
-fr(".pb",{scaleX:0,transformOrigin:AR?"100% 50%":"0 50%"},{scaleX:1,duration:.6,stagger:.1},16.8);
-fr(fileBtn,{opacity:0,scale:.4},{opacity:1,scale:1,duration:.35,ease:"back.out(2)"},17.3);
-tl.to(fileBtn,{y:6,duration:.1,yoyo:true,repeat:1},17.75);
-// S8 18-20 Jira
-// the card folds into a paper plane that flies on an arc to the Jira chip (EN rightward; AR mirrored, leftward)
-to([card,bugBadge,fileBtn],{opacity:0,scale:.5,duration:.15},17.8);set([card,bugBadge,fileBtn],{scale:1},19.9);
-fr(jira,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},17.85);
-fr(plane,{opacity:0,x:960,y:600,scale:.6},{opacity:1,scale:1,duration:.12},17.82);
-tl.to(plane,{x:JX+56,duration:.45,ease:"power2.in"},17.9);tl.to(plane,{y:412,duration:.45,ease:"power2.out"},17.9);
-to(plane,{opacity:0,scale:.3,duration:.1},18.3);
-fr(jchk,{opacity:0,scale:.1},{opacity:1,scale:1,duration:.3,ease:"back.out(3)"},18.55);fr(jatt,{opacity:0,y:6},{opacity:1,y:0,duration:.3},18.65);
-tIn(tFi,18.55,.4);
-to([jira,jchk,jatt],{opacity:0,duration:.3},19.9);to(tFi,{opacity:0,duration:.3},19.9);
-// S9 20-24 RTL typing
-fr(doc,{opacity:0,y:30},{opacity:1,y:0,duration:.4},20.0);
-const aT=document.getElementById("atext"),aR=add(`<div id="atextR" style="position:absolute;left:56px;right:56px;top:112px;font:400 40px/1.4 'Thmanyah Serif Text';white-space:nowrap;color:#f1efea;direction:rtl;text-align:right;opacity:0"></div>`,doc);
-const brAT=AT.replace(/(Login|API)/g,'<bdi dir="ltr" class="br">$1</bdi>');
-if(AR){
- // Arabic cut: the line is laid out right to left from the first frame; a linear wipe from the right reveals it
- // with the caret riding the wipe's edge (shaping stays intact: no letter-by-letter Arabic). Login and API keep their order.
- document.getElementById("caret").style.display="none";document.getElementById("uline").style.display="none";
- aR.style.opacity=1;
- aR.innerHTML=`<span class="tw" style="position:relative;display:inline-block"><span class="tx" style="display:inline-block;clip-path:inset(0% 0% 0% 100%)">${brAT}</span><i class="cr" style="position:absolute;left:0;top:-3px;width:100%;height:62px;border-left:2px solid #eceae6;opacity:0;pointer-events:none"></i><i class="ul" style="position:absolute;left:0;right:0;bottom:-8px;height:3px;border-radius:2px;background:#7bd389;transform:scaleX(0);transform-origin:100% 50%"></i></span>`;
- fr(aR.querySelector(".tx"),{clipPath:"inset(0% 0% 0% 100%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:1.0,ease:"none"},20.3);
- fr(aR.querySelector(".cr"),{opacity:1,xPercent:100},{xPercent:0,duration:1.0,ease:"none"},20.3);
- to(aR.querySelector(".cr"),{opacity:0,duration:.1},21.8);
- fr(aR.querySelector(".ul"),{scaleX:0},{scaleX:1,duration:.5},22.0);
-}else{
- aT.innerHTML=[...AT].map(c=>`<span class="tc" style="opacity:0">${c===" "?"&nbsp;":c}</span>`).join("");
- aR.innerHTML=brAT;
- tl.to(".tc",{opacity:1,duration:.01,stagger:1.0/AT.length},20.3);
- fr("#caret",{opacity:1,x:0},{x:560,duration:1.0,ease:"none"},20.3);
- to("#caret",{opacity:0,duration:.1},21.7);
- to(aT,{opacity:0,duration:.15},21.9);to(aR,{opacity:1,duration:.15},21.9);
- fr("#uline",{width:0},{width:560,duration:.5},22.0);
-}
-tl.to(".br",{borderLeftColor:"#f0b94a",borderRightColor:"#f0b94a",duration:.2},21.9);
-tIn(tSi,22.7,.45);
-to(tSi,{opacity:0,duration:.3},24.2);
-// S10 24-28 data center
-to(doc,{x:SG(-700),opacity:0,duration:.6,ease:"power2.in"},24.5);
-tIn(tDc,24.9,.4);
-fields.forEach((f,i)=>fr(f,{opacity:0,x:SG(60)},{opacity:1,x:0,duration:.4},24.7+i*.12));
-fr(keyI,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},25.4);
-fr(fchk,{opacity:0,scale:.1},{opacity:1,scale:1,duration:.3,ease:"back.out(3)"},26.2);
-fr(f403,{opacity:0,scale:.6},{opacity:1,scale:1.35,duration:.3},26.5);
-to(f403,{opacity:0,duration:.25},27.0);
-fr(tokC,{opacity:0,x:SG(40)},{opacity:1,x:0,duration:.4},27.1);
-to([...fields,keyI,fchk,tokC,tDc],{opacity:0,duration:.4},28.3);
-// S11 28-33 update
-fr(ring2,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.5},28.6);
-fr(bars3,{opacity:0},{opacity:1,duration:.4},29.0);
-dayEls.forEach((d,i)=>{fr(d,{opacity:0,y:20},{opacity:1,y:0,duration:.3},28.7+i*.12);if(i<6)fr(d.querySelector(".dchk"),{opacity:0,scale:.2},{opacity:1,scale:1,duration:.2},29.4+i*.18)});
-fr(arrowD,{opacity:0,y:-10},{opacity:1,y:0,duration:.3},29.4);
-fr(newP,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.3},30.3);
-fr(dlI,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.4},30.3);
-to([...dayEls,arrowD,newP],{opacity:0,duration:.4},31.0);
-fr(updB,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},31.0);
-tl.to(updB,{y:6,duration:.12,yoyo:true,repeat:1},31.6);
-tIn(tKe,31.85,.4);
-to(ring2,{y:0,duration:0},0);
-to(ring2,{opacity:1,duration:.01},31.6);
-tl.fromTo("#mk2",{strokeDasharray:80,strokeDashoffset:80,opacity:0},{strokeDashoffset:0,opacity:1,duration:.5},31.7);
-to(updB,{y:-60,duration:.01},0);
-to([ring2,bars3,dlI,tKe],{opacity:.35,duration:.25},32.5);to([ring2,bars3,dlI,tKe],{opacity:0,duration:.25},32.8);to(updB,{opacity:0,duration:.3},32.6);
-// S12 33-36 fixed
-set(".pb",{opacity:1},33.0);set("#tClosed",{opacity:0},33.0);set("#tFixed",{opacity:0},33.0);set(stamp,{opacity:0},33.0);
-
-fr(card,{opacity:0,y:30},{opacity:1,y:0,duration:.35},32.95);
-set("#tOpen",{opacity:1},32.95);
-fr(bugBadge,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.3},33.25);
-fr(stamp2,{opacity:0,scale:1.6,rotation:-9,xPercent:-50,yPercent:-50},{opacity:1,scale:1,rotation:-9,xPercent:-50,yPercent:-50,duration:.25,ease:"power4.in"},33.6);
-fr(card,{y:0},{y:-4,duration:.12,yoyo:true,repeat:1},33.85);
-to("#tOpen",{opacity:0,duration:.1},34.15);to("#tFixed",{opacity:1,duration:.15},34.15);
-to([card,bugBadge,stamp2],{opacity:0,scale:.85,rotation:"-=4",y:-30,duration:.5,ease:"power2.in"},35.5);
-// S13 end card
-fr(lock,{opacity:0,y:20},{opacity:1,y:0,duration:.45},35.9);
-fr("#mk3",{strokeDasharray:80,strokeDashoffset:80},{strokeDashoffset:0,duration:.5},36.1);
-fr(made,{opacity:0,y:10},{opacity:1,y:0,duration:.4},36.6);fr(tagRow,{opacity:0,y:10},{opacity:1,y:0,duration:.4},36.8);
-fr(dlB,{opacity:0,scale:.8},{opacity:1,scale:1,duration:.4,ease:"back.out(2)"},36.95);fr(url,{opacity:0},{opacity:1,duration:.4},37.2);fr(gh,{opacity:0},{opacity:1,duration:.4},37.45);
+[...tlabel.children].forEach((c,n)=>{tl.set(c,{display:"inline"},n?11.2+n*.2333:0);if(n<7)tl.set(c,{display:"none"},11.2+(n+1)*.2333)});
+kp.forEach((p,i)=>fr(p,{opacity:0},{opacity:1,duration:.1,ease:"none"},11.63+i*.233));
+to(kp,{opacity:0,y:-14,duration:.17,ease:"power2.in"},12.77);
+// S7 13.47-16.85: the timeline dims (13.47) so the 500 (13.57) and the click tile (14.25) are the only things in focus;
+// a ring blooms off the click; an amber spark runs from the 500 back to the click and the arc is drawn behind it
+// (14.55-15.3); +N ms counts to 212 (14.93-15.4); the two close in (15.5, power2.out .43); TRACED wipes in (15.6); HIGH (16.02)
+to(tline,{opacity:.35,duration:.13,ease:"none"},13.47);to(dots,{opacity:.3,duration:.13,ease:"none"},13.47);to(tlabel,{opacity:.3,duration:.13,ease:"none"},13.47);
+fr(f500,{opacity:0,scale:.6},{opacity:1,scale:1,duration:.3,ease:"back.out(1.7)"},13.57);
+fr(clk,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.25,ease:"back.out(1.7)"},14.25);
+fr("#ringIn",{opacity:0},{opacity:1,duration:.1},14.3);to("#ringIn",{opacity:0,duration:.3},14.6);
+fr(ring,{opacity:0,scale:1},{opacity:.9,scale:1.25,duration:.25,ease:"power1.out"},14.3);to(ring,{scale:1.85,opacity:0,duration:.45,ease:"none"},14.55); // ai: the ref drops the outer ring by 15.0 s
+fr(arc,{opacity:0},{opacity:1,duration:.01,ease:"none"},14.6);fr("#arcp",{strokeDasharray:600,strokeDashoffset:600},{strokeDashoffset:0,duration:.55,ease:"power2.inOut"},14.6);
+{const P0=[MX(1197),540],P1=[MX(960),310],P2=[MX(722),540],B=u=>[(1-u)*(1-u)*P0[0]+2*u*(1-u)*P1[0]+u*u*P2[0],(1-u)*(1-u)*P0[1]+2*u*(1-u)*P1[1]+u*u*P2[1]],E=u=>u<.5?2*u*u:1-2*(1-u)*(1-u);
+ const p0=B(0);fr(spark,{opacity:0,x:p0[0],y:p0[1]},{opacity:1,duration:.05,ease:"none"},14.55);
+ tl.to(spark,{keyframes:[...Array(10)].map((_,k)=>{const p=B(E((k+1)/10));return {x:p[0],y:p[1],duration:.07}}),ease:"none"},14.55);
+ to(spark,{opacity:0,duration:.06},15.25)}
+fr(msP,{opacity:0},{opacity:1,duration:.15,ease:"none"},14.93);
+[...msP.children].forEach((c,k)=>{tl.set(c,{display:"inline"},k?14.933+k/30:0);if(k<14)tl.set(c,{display:"none"},14.933+(k+1)/30)});
+to(clk,{x:SG(202),duration:.43,ease:"power2.out"},15.5);to(f500,{x:SG(-201),duration:.43,ease:"power2.out"},15.5);
+to("#arcp",{attr:{d:ARC1},duration:.43,ease:"power2.out"},15.5);to(msP,{y:81,duration:.43,ease:"power2.out"},15.5);
+tW(tTr,15.6,.37);tWo(tTr,16.53);
+fr(high,{opacity:0,scale:.6},{opacity:1,scale:1,duration:.15,ease:"back.out(2)"},16.02);
+to([clk,f500,high,arc,msP,tline,dots,tlabel],{opacity:0,duration:.13,ease:"none"},16.82);
+// S8 16.85-20: the card returns (stamp and CLOSED still on it), the evidence bars fill (16.9-17.35), the stamp falls off
+// (17.05), OPEN; FILE pops (17.2), ring + press (17.47-17.75); the card folds (17.83) into a paper plane that flies to the
+// J chip (17.9-18.3); sparks (18.55), check (18.83), FILED (18.9), attachment 3 (19.12); all out at 19.85
+set(cardG,{scale:1,y:0,x:0,filter:"blur(0px)"},16.8);set(card.querySelectorAll(".pills"),{opacity:1},16.8);set(card.querySelectorAll(".pills i"),{opacity:0},16.8);
+set("#tClosed",{opacity:1,scale:1},16.8);set("#tOpen",{opacity:0},16.8);set(bugBig,{opacity:0},16.8);
+fr(cardG,{opacity:0,scale:.9},{opacity:1,scale:1,duration:.3},16.85);
+// ai round 2 (ref frames 16.85-17.4): the bars start at zero length; amber grows 16.9-17.03, grey 17.0-17.08, white 17.1-17.18
+set(".pb",{opacity:1,scaleX:0,transformOrigin:AR?"100% 50%":"0 50%"},16.85);[[16.9,.13],[17.0,.08],[17.1,.08]].forEach(([t,d],i)=>to(card.querySelectorAll(".pb")[i],{scaleX:1,duration:d,ease:"none"},t));
+to(stamp,{x:SG(60),y:-70,rotation:-22,duration:.3,ease:"power1.out"},17.02);to(stamp,{opacity:0,duration:.2,ease:"none"},17.05); // ai: the ref stamp lifts up and away (inline end), not down
+to("#tClosed",{scale:0,opacity:0,duration:.1,ease:"power2.out"},17.02);fr("#tOpen",{opacity:0},{opacity:1,duration:.1},17.15);
+fr(fileBtn,{opacity:0,scale:.4},{opacity:1,scale:1,duration:.22,ease:"back.out(2)"},17.12);
+fr(fileRing,{opacity:0,scale:1},{opacity:1,scale:1,duration:.05},17.47);to(fileRing,{scale:1.12,opacity:0,duration:.3,ease:"power1.out"},17.6);
+tl.to(fileBtn,{y:6,duration:.08,yoyo:true,repeat:1},17.55);to(fileBtn,{opacity:.6,duration:.1},17.75);
+to(cardG,{scale:.6,rotation:SG(-4),opacity:0,duration:.17,ease:"power2.in"},17.83);to(fileBtn,{opacity:0,scale:.6,duration:.15},17.83);
+fr(plane,{opacity:0,x:MX(960),y:548,scale:.4},{opacity:1,duration:.05,ease:"none"},17.88);
+tl.to(plane,{keyframes:[{x:MX(1020),y:460,scale:.95,duration:.1},{x:MX(1120),y:300,scale:1.3,duration:.1},{x:MX(1380),y:288,scale:1.1,duration:.1},{x:JCX,y:JCY,scale:.3,duration:.1}],ease:"none"},17.9);
+to(plane,{opacity:0,duration:.05,ease:"none"},18.27);
+fr(jira,{opacity:0,scale:.85},{opacity:1,scale:1,duration:.12},17.9);
+sparks.forEach((s,i)=>{const a=i/8*Math.PI*2,c=Math.cos(a),n=Math.sin(a);fr(s,{opacity:0,x:c*70,y:n*70},{opacity:1,x:c*95,y:n*95,duration:.12},18.55);to(s,{opacity:0,x:c*115,y:n*115,duration:.15},18.67)});
+fr(jchk,{opacity:0,scale:.1},{opacity:1,scale:1,duration:.15,ease:"back.out(3)"},18.83);
+tW(tFi,18.9,.37);tWo(tFi,19.77);
+fr(jatt,{opacity:0,scale:.5},{opacity:1,scale:1,duration:.15,ease:"back.out(2)"},19.12);
+to([jira,jchk,jatt],{opacity:0,duration:.15},19.85);
+// ================= V2 timeline: S9-S13 (20-40 s), times measured on the shipped EN film; every variant shares them
+// 9:16 camera for this range (measured: s09 .80, s10 .81, s11 .834, s12 .82, end card 1.0 with the 16:9 layout)
+if(V)[[19.85,.8,-16],[35.45,1,-26]].forEach(([t,s,y])=>tl.to(world,{scale:s,y,duration:.4,ease:"power2.inOut"},t));
+// S9 19.85-24.9: the document grows out of the J chip; a wrong LTR line types in (20.2), the caret sweeps it into RTL (21.0-22.0)
+fr(doc,{x:SG(561),y:-148},{x:0,y:0,duration:.35,ease:"power3.out"},19.85);
+fr(doc,{scale:.75},{scale:1,duration:.27,ease:"none"},19.85);fr(doc,{opacity:0},{opacity:1,duration:.3,ease:"none"},19.85);
+gsap.set([doc.querySelector("#rtl"),doc.querySelector(".v2bar")],{opacity:0});
+fr([doc.querySelector("#rtl"),doc.querySelector(".v2bar")],{opacity:0},{opacity:1,duration:.15},20.15);
+const caret=doc.querySelector("#caret"),uline=doc.querySelector("#uline");
+set(caret,{opacity:1},20.2);
+fr(doc,{"--a":"150px"},{"--a":"1500px",duration:.45,ease:"none"},20.2);
+// the caret sweeps right; words behind it fade out ~0.1 s after it passes (erase edge lags 100 px)
+fr(doc,{"--c":"54px","--e":"-46px"},{"--c":"1057px","--e":"957px",duration:1.0,ease:"none"},20.97);
+// the RTL line is revealed from its left end behind the caret: front 800 px at 21.55, ~1200 px/s, past its right end at 22.15
+fr(doc,{"--r":"437px"},{"--r":"1157px",duration:.6,ease:"none"},21.55);
+set(caret,{opacity:0},22.04);
+fr(uline,{opacity:1,scaleX:0},{scaleX:1,duration:.4,ease:"power2.out"},21.99);
+fr("#brL",{opacity:0,scale:1.12},{opacity:1,scale:1,duration:.08},22.92);fr("#brA",{opacity:0,scale:1.12},{opacity:1,scale:1,duration:.08},23.18);
+tIn(tSi,22.93,.4);
+// ai: the coral block arrives after the title lands (wipes from the inline start 23.21-23.45, the digits darken 23.3-23.5),
+// and the title fades slowly (still about half visible at 24.5 s), as in the ref
+fr(tSi.querySelector(".y2008"),{backgroundSize:"0% 100%"},{backgroundSize:"100% 100%",duration:.24,ease:"none"},23.21);
+fr(tSi.querySelector(".y2008"),{color:"#d8d6d1"},{color:"#2a1410",duration:.2,ease:"none"},23.3);
+to(tSi,{opacity:0,duration:.3,ease:"none"},24.4);
+fr(doc,{filter:"blur(0px)"},{x:SG(-719),y:-5,scale:.59,opacity:.28,filter:"blur(4px)",duration:.4,ease:"sine.inOut"},24.5);
+to(doc,{opacity:0,duration:.2},26.3);
+// S10 24.6-28.4: three fields type (dots), a key slides into the slot and turns, check, 403 -> plain sentence -> other language
+tIn(tDc,24.78,.3);to(tDc,{opacity:0,duration:.15},26.55);
+fields.forEach((f,i)=>fr(f,{opacity:0,y:28},{opacity:1,y:0,duration:.3},24.66+i*.04)); // ai round 2: ref fields still faint at 24.7 s
+const dotEls=fields.map(f=>[...f.querySelectorAll(".v2dot")]);
+for(let s=0;s<16;s++)dotEls.forEach((ds,fi)=>ds.forEach((d,k)=>set(d,{backgroundColor:(s+fi*2+k)%3?"#eceae6":"#5d6268"},24.8+s*.1)));
+set(dotEls.flat(),{backgroundColor:"#5d6268"},26.4);
+fr(keyW,{opacity:0,x:SG(70)},{opacity:1,x:0,duration:.17},25.03); // ai round 2: no key at 25.0 s in the ref, at rest by 25.2
+to(keyW,{rotation:AR?-90:90,duration:.2,ease:"power2.inOut"},25.55);
+fr(fchk,{opacity:0,scale:.2},{opacity:1,scale:1,duration:.25,ease:"back.out(3)"},25.98);
+to(fields,{borderColor:"#5f9a69",duration:.2},26.1);
+fr(f403,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.17,ease:"back.out(1.7)"},26.33);
+to(f403,{opacity:0,scale:1.1,duration:.1},26.92); // ai round 2: the ref 403 holds to 26.9 s and the card arrives faint at 27.0 s
+fr(tokC,{opacity:0,scale:.95},{opacity:1,scale:1,duration:.15,ease:"power1.out"},26.96);
+to(tokC.querySelectorAll(".we"),{opacity:0,duration:.08,stagger:.05},27.7);
+fr(tokC.querySelectorAll(".wa"),{opacity:0},{opacity:1,duration:.1,stagger:.065},27.74);
+to([...fields,keyW,fchk,tokC],{opacity:0,duration:.2},28.2);
+// S11 28.35-32.85: the mark ring, the week row ticks day by day (arrow hops), NEW, download 1, UPDATE pressed, check, SESSIONS KEPT
+fr(ring2,{opacity:0,scale:.85},{opacity:1,scale:1,duration:.3,ease:"none"},28.35);
+set("#mk2",{opacity:0},0);
+fr(bars3,{opacity:0},{opacity:1,duration:.2},28.5);
+dayEls.forEach((d,i)=>{fr(d,{opacity:0,y:8},{opacity:1,y:0,duration:.2},28.33+i*.06);if(i<6)fr(d.querySelector(".dchk"),{opacity:0,scale:.3},{opacity:1,scale:1,duration:.15,ease:"back.out(2)"},28.77+i*.17)});
+fr(arrowD,{opacity:0},{opacity:1,duration:.15},28.4);
+for(let i=0;i<6;i++){const t=28.52+i*.17;to(arrowD,{x:DAYX(i+1)-DAYX(0),duration:.17,ease:"power1.inOut"},t);to(arrowD,{y:-36,duration:.085,ease:"power1.out"},t);to(arrowD,{y:0,duration:.085,ease:"power1.in"},t+.085)}
+fr(newP,{opacity:0,scale:.4},{opacity:1,scale:1,duration:.2,ease:"back.out(2)"},29.98);
+fr(dlI,{opacity:0,scale:.8},{opacity:1,scale:1,duration:.2},30.4);fr("#dlBadge",{opacity:0,scale:.3},{opacity:1,scale:1,duration:.15,ease:"back.out(2)"},30.58);
+to([...dayEls,arrowD,newP],{opacity:0,duration:.15},31.05); // ai: the ref holds the week row to 31.05 s
+fr(updB,{opacity:0,scale:.5,y:40},{opacity:1,scale:1,y:0,duration:.3,ease:"back.out(1.6)"},31.08);
+tl.to(updB,{y:6,duration:.08,yoyo:true,repeat:1},31.28);
+// the press ripples out: an amber outline grows from the button edge and fades
+fr(updO,{opacity:0,scale:.78},{opacity:1,scale:1,duration:.25},31.33);to(updO,{opacity:0,duration:.25},31.58);
+fr("#mk2",{opacity:1,strokeDasharray:130,strokeDashoffset:130},{strokeDashoffset:0,duration:.18},31.82);
+tIn(tKe,32.07,.3);
+to([ring2,bars3,dlI,updB],{opacity:.4,duration:.1},32.55);to([ring2,bars3,dlI,updB],{opacity:0,duration:.15},32.68);to(tKe,{opacity:0,duration:.15},32.75);
+// S12 32.78-35.9: the card returns OPEN with its evidence; FIXED slams (power4.in) at 34.0; the card collapses into the mark
+fr(card12,{opacity:0,scale:.95},{opacity:1,scale:1,duration:.25},32.78);
+fr("#badge12",{opacity:0,scale:.3},{opacity:1,scale:1,duration:.2,ease:"back.out(2)"},33.05);
+fr("#stamp12",{opacity:0,scale:1.6,rotation:-10,xPercent:-50,yPercent:-50},{opacity:1,scale:1,rotation:-10,xPercent:-50,yPercent:-50,duration:.25,ease:"power4.in"},33.75);
+tl.to(card12,{y:-4,duration:.06,yoyo:true,repeat:1},34.0);
+fr("#tag12f",{opacity:1,clipPath:AR?"inset(0% 0% 0% 100%)":"inset(0% 100% 0% 0%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:.15},34.05);to("#tag12o",{opacity:0,duration:.1},34.1);
+to(card12,{x:726-960,y:368-560,scale:.12,rotation:-8,duration:.45,ease:"power2.in"},35.42);to(card12,{opacity:0,duration:.08},35.82);
+// S13 35.78-40: mark, "QA Wrap" wipes in, then each line blurs in
+fr(lockM,{opacity:0,scale:.6},{opacity:1,scale:1,duration:.15},35.78);
+fr(lockT,{clipPath:"inset(0% 100% 0% 0%)"},{clipPath:"inset(0% 0% 0% 0%)",duration:.3,ease:"none"},35.98); // ai: ref shows no letter at 36.0 s
+const blurIn=(el,t,d=.25)=>fr(el,{opacity:0,filter:"blur(8px)"},{opacity:1,filter:"blur(0px)",duration:d},t);
+blurIn(made,36.5);[...tagRow.children].forEach((p,i)=>blurIn(p,36.72+i*.07,.2));set(tagRow,{opacity:1},36.72);blurIn(dlB,37.0);blurIn(url,37.25);blurIn(gh,37.55);
 window.__timelines=window.__timelines||{};window.__timelines[ID]=tl;
 </script>
 </body>

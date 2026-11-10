@@ -139,6 +139,8 @@
   let on = false;
   let sessionId = null;
   let t0 = 0;
+  /** This page's tag in the log: a session crosses pages, and each page numbers its nodes from 1. */
+  let page = '';
   let seq = 0;
   let buffer = [];
   let observer = null;
@@ -155,6 +157,7 @@
     return id;
   };
 
+  // t0 is the session's start on this page's clock, so every page of one session shares one timeline.
   const now = () => Math.max(0, Math.round(performance.now() - t0));
 
   /* ── masking ────────────────────────────────────────────────────────────
@@ -299,7 +302,7 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
   function push(entry) {
     if (!on) return;
     if (buffer.length >= MAX_ENTRIES_PER_FLUSH) return;   // a runaway page is thinned, not followed
-    const stamped = { ...entry, t: now() };
+    const stamped = { ...entry, t: now(), p: page };
     spentEntries++;
     spentBytes += JSON.stringify(stamped).length;
     buffer.push(stamped);
@@ -455,7 +458,8 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
     const res = await send([]);
     const recording = !!(res?.result?.recording ?? res?.recording);
     const id = res?.result?.sessionId ?? res?.sessionId ?? null;
-    if (recording && !on) start(id);
+    const startedAt = res?.result?.startedAt ?? res?.startedAt ?? 0;
+    if (recording && !on) start(id, startedAt);
     else if (!recording && on) stop();
   }
 
@@ -463,7 +467,7 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
   // bridge's decision; `undefined` is "not asked yet".
   const asleep = () => window.UQAAwake === false;
 
-  function start(id) {
+  function start(id, startedAt = 0) {
     if (on || asleep()) return;
     on = true;
     sessionId = id;
@@ -475,7 +479,9 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
     winCount = 0;
     strikes = 0;
     heavy = false;
-    t0 = performance.now();
+    // Session clock, not page clock: a page opened 2 minutes into the session starts at 2:00, not 0:00.
+    t0 = performance.now() - (startedAt > 0 ? Math.max(0, Date.now() - startedAt) : 0);
+    page = Math.random().toString(36).slice(2, 8);
     snapshot();
     observer = new MutationObserver(onMutations);
     observer.observe(document.documentElement, {

@@ -1,0 +1,194 @@
+{
+  "id": "brand-show-it",
+  "kind": "trailer",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 20,
+  "seconds": 40.0,
+  "sampleRate": 48000,
+  "source": "brand film Sound section (work/film/brand/films.json) on the bed character of qa-wrap-40-ar.cues.json; worker bv 2026-11-10",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1.5,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "sections": [
+      {
+        "name": "intro",
+        "fromBar": 1,
+        "toBar": 3,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 3,
+        "toBar": 17,
+        "note": "kick + bass + 16th hats from the flash"
+      },
+      {
+        "name": "lift",
+        "fromBar": 17,
+        "toBar": 18,
+        "note": "plucks up an octave"
+      },
+      {
+        "name": "out",
+        "fromBar": 18,
+        "toBar": 21,
+        "note": "single hit, ring out under the end card"
+      }
+    ],
+    "padGain": 0.06,
+    "padSections": [
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band.",
+    "lowPad": {
+      "gain": 0.085,
+      "sections": [
+        "intro",
+        "drive",
+        "lift",
+        "out"
+      ],
+      "note": "EN bed carries a sustained 60-400 Hz body; measured in the 5.5-7.5 s bed-only gap"
+    },
+    "swells": [
+      {
+        "endSec": 34.5,
+        "dur": 0.75,
+        "gain": 0.45,
+        "note": "reverse swell into the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 17,
+      "singleHitBar": 18,
+      "ringOut": true
+    }
+  },
+  "voice": {
+    "voice": "Kore",
+    "lines": []
+  },
+  "seed": 20260911,
+  "rests": [],
+  "revision": "brand-show-it-1",
+  "sfx": [
+    {
+      "cue": "tick",
+      "atSec": 0.3,
+      "gainDb": 4,
+      "event": "bubble 1 pops"
+    },
+    {
+      "cue": "tick",
+      "atSec": 0.9,
+      "gainDb": 4,
+      "event": "bubble 2"
+    },
+    {
+      "cue": "tick",
+      "atSec": 1.5,
+      "gainDb": 4,
+      "event": "bubble 3"
+    },
+    {
+      "cue": "reveal",
+      "atSec": 5.5,
+      "gainDb": 0,
+      "event": "the screenshot flash and the turn"
+    },
+    {
+      "cue": "tick",
+      "atSec": 7.9,
+      "gainDb": 4,
+      "event": "still lands on the session line"
+    },
+    {
+      "cue": "swish",
+      "atSec": 12.0,
+      "gainDb": 0,
+      "event": "the arrow draws"
+    },
+    {
+      "cue": "sting",
+      "atSec": 13.4,
+      "gainDb": -3,
+      "event": "Redact block slams"
+    },
+    {
+      "cue": "tick",
+      "atSec": 17.0,
+      "gainDb": 4,
+      "event": "Record the screen pressed"
+    },
+    {
+      "cue": "tick",
+      "atSec": 22.0,
+      "gainDb": 4,
+      "event": "format pills pop"
+    },
+    {
+      "cue": "tick",
+      "atSec": 25.0,
+      "gainDb": 4,
+      "event": "Save last 1 minute pressed"
+    },
+    {
+      "cue": "swish",
+      "atSec": 25.6,
+      "gainDb": 0,
+      "event": "the minute clip drops out"
+    },
+    {
+      "cue": "success",
+      "atSec": 30.0,
+      "gainDb": 0,
+      "event": "the three bubbles turn green"
+    },
+    {
+      "cue": "logo",
+      "atSec": 35.1,
+      "gainDb": 0,
+      "event": "the mark draws its check"
+    }
+  ],
+  "tail": {
+    "envelopeDb": [
+      [
+        39.0,
+        0
+      ],
+      [
+        39.1,
+        -9
+      ],
+      [
+        39.6,
+        -14
+      ],
+      [
+        39.9,
+        -30
+      ],
+      [
+        39.95,
+        -70
+      ]
+    ],
+    "fadeToSec": 39.95,
+    "note": "tail fade from films.json bed.tailFadeSec, the commercial's envelope shape"
+  }
+}

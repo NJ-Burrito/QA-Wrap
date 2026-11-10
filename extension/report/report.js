@@ -1014,11 +1014,10 @@ async function renderVerdict() {
   const related = chains.reduce((n, c) => n + c.siblings.length, 0);
   const relatedBadge = related ? el('span', 'badge badge-fail', t(related === 1 ? 'report.v.relatedOne' : 'report.v.relatedMany', { n: related })) : null;
   const meta = el('span', 'cap muted', `${fmtDate(session.startedAt)} · ${duration.toFixed(1)} ${t('report.v.sec')}`);
-  const h1 = el('h1');
-  h1.id = 'v-h';
-  h1.title = headline;
-  const bdi = document.createElement('bdi');
-  bdi.textContent = headline;
+  // The card is headed by the name the tester typed (2026-11-10); the failure moves to its own «What broke» row.
+  const named = BF.namedTitle(session, t);
+  const h1 = el('h1'), bdi = document.createElement('bdi');
+  h1.id = 'v-h'; h1.title = bdi.textContent = named || headline;
   h1.append(bdi);
   // A labelled one-line row; the value is clipped, the whole of it is in `title`.
   const vrow = (key, text, full, ltr) => {
@@ -1074,7 +1073,8 @@ async function renderVerdict() {
   main.append(top, h1);
   // T-020: a verdict from absence carries its basis beside it, at the same weight.
   if (seenNone) main.append(el('p', 'v-cov', t('common.signal.coverage')));
-  for (const part of [where, did, queryBox]) if (part) main.append(part);
+  const broke = named && lead ? vrow('report.tabs.broke', headline, headline, failUrl != null) : null;
+  for (const part of [broke, where, did, queryBox]) if (part) main.append(part);
   main.append(counts, acts, aiBox, sync);
 
   const side = el('div', 'stack');

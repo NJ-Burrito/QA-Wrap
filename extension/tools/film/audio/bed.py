@@ -206,7 +206,7 @@ def shimmer(rng, dur, freqs, grains=46):
     return out / m if m else out
 
 
-def pad(rng, dur, freqs, seed_phase=0.0):
+def pad(rng, dur, freqs, seed_phase=0.0, band=(350.0, 3500.0)):
     """A sustained, band-limited chord.  Present, never a slab.
 
     Band-limited 350 Hz - 3.5 kHz so it cannot touch the 20-200 Hz band the
@@ -228,7 +228,7 @@ def pad(rng, dur, freqs, seed_phase=0.0):
         out += np.sin(2 * np.pi * f * detune * t + rng.uniform(0, 2 * np.pi)) * amp
         # a quiet third harmonic keeps it from reading as a test tone
         out += 0.12 * np.sin(2 * np.pi * 3 * f * detune * t) * amp
-    sos = butter(2, [350 / (SR / 2), 3500 / (SR / 2)], btype="band", output="sos")
+    sos = butter(2, [band[0] / (SR / 2), band[1] / (SR / 2)], btype="band", output="sos")
     out = sosfiltfilt(sos, out)
     m = np.max(np.abs(out))
     return out / m if m else out
@@ -361,6 +361,19 @@ class Bed:
                                              np.ones(int((self.bar + 0.35) * SR) - 2 * f),
                                              np.linspace(1, 0, f)]),
                            pad_gain, pan=0.12)
+            # -- the low pad (opt-in, cue bed.lowPad): the chord in its own register,
+            # 220-392 Hz, band-limited 180-420 Hz. It sustains, but above the
+            # 20-200 Hz band the anti-engine rule measures. Added for the 40 s
+            # AR cut, whose EN reference carries a sustained low body (measured).
+            lp = self.cues.get("bed", {}).get("lowPad")
+            if lp and sec in lp.get("sections", ["drive"]):
+                _, _, ln = CHORDS[(bar - 1) % len(CHORDS)]
+                L = self.bar + 0.35
+                f = int(0.18 * SR)
+                fade = np.concatenate([np.linspace(0, 1, f), np.ones(int(L * SR) - 2 * f), np.linspace(1, 0, f)])
+                for side, ph in ((-0.12, 0.3), (0.12, 2.2)):
+                    seg = pad(self.rng, L, [NOTE[nm] for nm in ln], seed_phase=bar * 0.7 + ph, band=(180.0, 420.0))
+                    self.place(t0 - 0.1, seg * fade[:len(seg)], float(lp["gain"]), pan=side)
             name, root, notes = CHORDS[(bar - 1) % len(CHORDS)]
             in_out = sec == "out"
             # The out section: the snap stops, the kick stops at `kickThroughBar`,

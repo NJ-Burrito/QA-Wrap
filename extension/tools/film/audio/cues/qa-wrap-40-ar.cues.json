@@ -1,0 +1,340 @@
+{
+  "id": "qa-wrap-40-ar",
+  "kind": "trailer",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 20,
+  "seconds": 40.0,
+  "sampleRate": 48000,
+  "source": "sibling of qa-wrap-40.cues.json for the ARABIC cut (2026-11-10, worker au): same bed sections; SFX onsets are the hits measured on the shipped EN film (site/media/qa-wrap-commercial-40s.mp4, work/film/c40/audio/en-audio-measure.md); the 9.53-10.0 hard silence and the reverse swell into the end card measured there too",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "targetLufs": -26.9,
+    "sections": [
+      {
+        "name": "intro",
+        "fromBar": 1,
+        "toBar": 3,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 3,
+        "toBar": 18,
+        "note": "kick + bass + 16th hats"
+      },
+      {
+        "name": "lift",
+        "fromBar": 18,
+        "toBar": 19,
+        "note": "plucks up an octave"
+      },
+      {
+        "name": "out",
+        "fromBar": 19,
+        "toBar": 21,
+        "note": "single hit, ring out under the end card"
+      }
+    ],
+    "swells": [
+      {
+        "endSec": 35.98,
+        "dur": 0.75,
+        "gain": 0.45,
+        "note": "reverse swell into the end card, EN side channel 35.24-35.98"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 18,
+      "singleHitBar": 19,
+      "ringOut": true
+    },
+    "padGain": 0.06,
+    "padSections": [
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band.",
+    "drop": {
+      "fromSec": 9.53,
+      "toSec": 10.0,
+      "note": "EN hard silence measured 9.53-9.98 (digital zero)"
+    },
+    "gridOffsetSec": -0.015,
+    "gridNote": "the EN bed's 16th hats sit at k*0.125-0.015 s; the AR timing master shifts the rendered bed 15 ms earlier to match",
+    "lowPad": {
+      "gain": 0.085,
+      "sections": [
+        "intro",
+        "drive",
+        "lift",
+        "out"
+      ],
+      "note": "EN bed carries a sustained 60-400 Hz body; measured in the 5.5-7.5 s bed-only gap"
+    }
+  },
+  "voice": {
+    "voice": "Kore",
+    "lines": []
+  },
+  "seed": 20260908,
+  "rests": [],
+  "revision": "c40-ar-1",
+  "sfx": [
+    {
+      "cue": "sting",
+      "atSec": 0.505,
+      "hitSec": 0.49,
+      "gainDb": 0,
+      "event": "s01 CANNOT REPRODUCE stamp lands (seen whole at 0.50, shake 0.50-0.67)",
+      "evidence": "mix flux 394 @0.490, side flux 309"
+    },
+    {
+      "cue": "swish",
+      "atSec": 8.985,
+      "hitSec": 8.985,
+      "gainDb": 0,
+      "event": "s05 START ready ring 8.93 -> riser into the cut",
+      "evidence": "side -30 dB 8.985-9.50, centroid 7.5 kHz, rising tone; hard cut at 9.53"
+    },
+    {
+      "cue": "sting",
+      "atSec": 10.0,
+      "hitSec": 9.985,
+      "gainDb": 6.5,
+      "event": "s06 the turn: X strokes + QA mark draws (10.0-10.45)",
+      "evidence": "side -26 dB 9.985-11.46, sub + chord"
+    },
+    {
+      "cue": "success",
+      "atSec": 10.705,
+      "hitSec": 10.69,
+      "gainDb": 0,
+      "event": "s06 mark check draws (10.5-10.7)",
+      "evidence": "side flux 130 @10.690"
+    },
+    {
+      "cue": "tick",
+      "atSec": 12.17,
+      "hitSec": 12.155,
+      "gainDb": 4,
+      "event": "s06 third pill CONSOLE pops (12.10)",
+      "evidence": "side flux 359, -32 dB @12.170 (inside voice: medium)"
+    },
+    {
+      "cue": "sting",
+      "atSec": 13.5,
+      "hitSec": 13.485,
+      "gainDb": -3,
+      "event": "s07 click burst grows (13.2-13.47)",
+      "evidence": "side -28 dB 13.485-14.22, sub + 900 Hz"
+    },
+    {
+      "cue": "tick",
+      "atSec": 14.75,
+      "hitSec": 14.735,
+      "gainDb": 4,
+      "event": "s07 arc draws, tick 1",
+      "evidence": "side -48.6 dB, 4 ticks 0.15 s apart"
+    },
+    {
+      "cue": "tick",
+      "atSec": 14.905,
+      "hitSec": 14.89,
+      "gainDb": 4,
+      "event": "s07 arc draws, tick 2",
+      "evidence": "side -48.8 dB"
+    },
+    {
+      "cue": "tick",
+      "atSec": 15.055,
+      "hitSec": 15.04,
+      "gainDb": 4,
+      "event": "s07 arc draws (15.0), tick 3",
+      "evidence": "side -48.8 dB"
+    },
+    {
+      "cue": "tick",
+      "atSec": 15.205,
+      "hitSec": 15.19,
+      "gainDb": 4,
+      "event": "s07 arc draws, tick 4",
+      "evidence": "side -49.1 dB"
+    },
+    {
+      "cue": "sting",
+      "atSec": 17.505,
+      "hitSec": 17.49,
+      "gainDb": -4,
+      "event": "s08 FILE pressed (17.5)",
+      "evidence": "side -32 dB 17.485-18.34, sub 50-130 Hz + 1.1 kHz"
+    },
+    {
+      "cue": "success",
+      "atSec": 18.505,
+      "hitSec": 18.49,
+      "gainDb": 0,
+      "event": "s08 card lands on the J chip, green check (18.3-19.2)",
+      "evidence": "side -28 dB 18.485-19.23, held 1.47 kHz"
+    },
+    {
+      "cue": "swish",
+      "atSec": 20.995,
+      "hitSec": 20.995,
+      "gainDb": 0,
+      "event": "s09 caret sweeps (20.97-21.97)",
+      "evidence": "side -43 dB 20.995-21.37, mix flux 639"
+    },
+    {
+      "cue": "tick",
+      "atSec": 22.805,
+      "hitSec": 22.79,
+      "gainDb": 4,
+      "event": "s09 Login corner brackets pop (22.93)",
+      "evidence": "side -43 dB, flux 142"
+    },
+    {
+      "cue": "tick",
+      "atSec": 23.115,
+      "hitSec": 23.1,
+      "gainDb": 4,
+      "event": "s09 API corner brackets (23.2)",
+      "evidence": "side -53 dB"
+    },
+    {
+      "cue": "tick",
+      "atSec": 25.61,
+      "hitSec": 25.595,
+      "gainDb": 4,
+      "event": "s10 key turns (25.55-25.75)",
+      "evidence": "side -47 dB"
+    },
+    {
+      "cue": "success",
+      "atSec": 26.005,
+      "hitSec": 25.99,
+      "gainDb": 0,
+      "event": "s10 green check: sign-in works (25.98-26.1)",
+      "evidence": "side -28 dB 25.985-27.12"
+    },
+    {
+      "cue": "tick",
+      "atSec": 28.605,
+      "hitSec": 28.59,
+      "gainDb": 4,
+      "event": "s11 day tick 1",
+      "evidence": "side -43 dB"
+    },
+    {
+      "cue": "tick",
+      "atSec": 28.965,
+      "hitSec": 28.95,
+      "gainDb": 4,
+      "event": "s11 day tick 2",
+      "evidence": "side -53 dB"
+    },
+    {
+      "cue": "tick",
+      "atSec": 29.285,
+      "hitSec": 29.27,
+      "gainDb": 4,
+      "event": "s11 day tick 3",
+      "evidence": "side -49 dB"
+    },
+    {
+      "cue": "tick",
+      "atSec": 29.63,
+      "hitSec": 29.615,
+      "gainDb": 4,
+      "event": "s11 day tick 4 (arrow ends 29.62)",
+      "evidence": "side -43 dB"
+    },
+    {
+      "cue": "reveal",
+      "atSec": 30.005,
+      "hitSec": 29.99,
+      "gainDb": 0,
+      "event": "s11 NEW (29.98) + download chip (30.4)",
+      "evidence": "side -28 dB 29.985-30.73"
+    },
+    {
+      "cue": "sting",
+      "atSec": 31.405,
+      "hitSec": 31.39,
+      "gainDb": -4,
+      "event": "s11 UPDATE pressed (31.28)",
+      "evidence": "side -29 dB 31.38-32.76, sub"
+    },
+    {
+      "cue": "success",
+      "atSec": 32.01,
+      "hitSec": 31.995,
+      "gainDb": 0,
+      "event": "s11 SESSIONS KEPT / check (31.82-32.0)",
+      "evidence": "side -33 dB @31.995"
+    },
+    {
+      "cue": "sting",
+      "atSec": 34.005,
+      "hitSec": 33.99,
+      "gainDb": -3,
+      "event": "s12 FIXED slams (33.75-34.0)",
+      "evidence": "side flux 360 @33.990"
+    },
+    {
+      "cue": "logo",
+      "atSec": 36.005,
+      "hitSec": 35.99,
+      "gainDb": 0,
+      "event": "s13 end card: lockup wipes in (35.95)",
+      "evidence": "side -27 dB 35.985-36.80"
+    },
+    {
+      "cue": "tick",
+      "atSec": 38.005,
+      "hitSec": 37.99,
+      "gainDb": 4,
+      "event": "s13 GitHub line (37.55-37.75) / URL",
+      "evidence": "side -43 dB @37.990"
+    }
+  ],
+  "tail": {
+    "envelopeDb": [
+      [
+        38.9,
+        0
+      ],
+      [
+        39.0,
+        -9
+      ],
+      [
+        39.5,
+        -14
+      ],
+      [
+        39.8,
+        -30
+      ],
+      [
+        39.95,
+        -70
+      ]
+    ],
+    "fadeToSec": 39.95,
+    "note": "EN after the last word: -41 dBFS at 39.0, -45 at 39.5, -62 at 39.8, -80 at 39.9; the gain envelope reproduces it on this bed"
+  }
+}

@@ -26,9 +26,15 @@ const fkey = (k) => String(k || '').slice(0, 200); // `forKey` is capped at 200 
 /**
  * The title of the report: the tester's charter unless it is the popup's placeholder, else the first Bug note, else the lead failure as `METHOD…
  */
-export function heroTitle({ session, events, t, summarise }) {
+/** The name the tester typed when they started, or '' when they left the placeholder. */
+export function namedTitle(session, t) {
   const charter = cut(session?.charter, 120);
-  if (charter && !/^untitled session$/i.test(charter) && charter !== cut(t('popup.session.untitled'), 120)) return charter;
+  return charter && !/^untitled session$/i.test(charter) && charter !== cut(t('popup.session.untitled'), 120) ? charter : '';
+}
+
+export function heroTitle({ session, events, t, summarise }) {
+  const charter = namedTitle(session, t);
+  if (charter) return charter;
   const bug = (events || []).find((e) => e.kind === 'note' && e.tag === 'bug' && cut(e.text));
   if (bug) return cut(bug.text);
   const fail = (events || []).find((e) => e.kind === 'net' && (e.error || e.status >= 400));

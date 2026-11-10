@@ -2,17 +2,19 @@
  "voice": "Kore",
  "model": "google/gemini-3.1-flash-tts-preview",
  "gate": "runs only if ~/.config/openrouter/qa-wrap-1109.env exists (decision D10); Gemini is otherwise banned on this machine",
+ "tempoNote": "tempo cap 1.40 by Director ruling 2026-11-10 (was 1.15); per-line tempo in work/film/c40/audio/vo-fit/fit.json (fit.py)",
+ "styles": "registered nj-writer voice-styles.json ids chosen by good_for/never_for: V1-V2 story (problem act, story beat), V3-V9 reel (short promo under 60 s), V10 invite (call-to-action close at the end of a film)",
  "note": "commercial-bible.md section 8 voice lines V1-V10: phrases that run through caption changes; tashkeel only in tts, never on screen; one request per line, one take",
  "lines": [
-  {"n": 1, "atSec": 0.4, "captions": [1], "caption": "تعذر تكراره. مغلق.", "tts": "تَعَذَّرَ تَكْرَارُهُ. مُغْلَقٌ."},
-  {"n": 2, "atSec": 2.5, "captions": [2, 3, "3b"], "caption": "كان الخلل حقيقيا. لكن الدليل ضاع. الخطوات والطلبات ووحدة التحكم، تبعثرت كلها.", "tts": "كَانَ الْخَلَلُ حَقِيقِيًّا، لَكِنَّ الدَّلِيلَ ضَاعَ. الْخُطُوَاتُ وَالطَّلَبَاتُ وَوَحْدَةُ التَّحَكُّمِ، تَبَعْثَرَتْ كُلُّهَا."},
-  {"n": 3, "atSec": 8.22, "captions": [4, 5], "caption": "اضغط ابدأ. كيو إيه راب (QA Wrap) يسجل أثناء اختبارك.", "tts": "اضْغَطِ ابْدَأْ، وَكِيُو إِي رَاب يُسَجِّلُ أَثْنَاءَ اخْتِبَارِكَ."},
-  {"n": 4, "atSec": 13.08, "captions": [6, 7], "caption": "كل خطأ يرتبط بالنقرة التي سببته.", "tts": "كُلُّ خَطَأٍ يَرْتَبِطُ بِالنَّقْرَةِ الَّتِي سَبَّبَتْهُ."},
-  {"n": 5, "atSec": 16.98, "captions": [8, 9], "caption": "اضغط مرة. وهو في جيرا (Jira) بدليله.", "tts": "اضْغَطْ مَرَّةً، وَهُوَ فِي جِيرَا بِدَلِيلِهِ."},
-  {"n": 6, "atSec": 20.1, "captions": [10, 11, 12], "caption": "العربية في جيرا من اليمين إلى اليسار. والإنجليزية بترتيبها.", "tts": "الْعَرَبِيَّةُ فِي جِيرَا مِنَ الْيَمِينِ إِلَى الْيَسَارِ، وَالْإِنْجِلِيزِيَّةُ بِتَرْتِيبِهَا."},
-  {"n": 7, "atSec": 24.8, "captions": [13, 14], "caption": "دخول مركز البيانات (Data Center) يعمل. والأخطاء جمل واضحة.", "tts": "دُخُولُ مَرْكَزِ الْبَيَانَاتِ يَعْمَلُ، وَالْأَخْطَاءُ جُمَلٌ وَاضِحَةٌ."},
-  {"n": 8, "atSec": 28.7, "captions": [15, 16, 17], "caption": "التحديثات تفحص يوميا. وبعد الإعداد الأول تثبتها بضغطة.", "tts": "التَّحْدِيثَاتُ تُفْحَصُ يَوْمِيًّا، وَبَعْدَ الْإِعْدَادِ الْأَوَّلِ تُثَبِّتُهَا بِضَغْطَةٍ."},
-  {"n": 9, "atSec": 33.1, "captions": [18], "caption": "الخلل القادم يأتي بدليله.", "tts": "الْخَلَلُ الْقَادِمُ يَأْتِي بِدَلِيلِهِ."},
-  {"n": 10, "atSec": 36.4, "captions": [19, 20], "caption": "احصل على كيو إيه راب. مجاني ومفتوح المصدر.", "tts": "احْصُلْ عَلَى كِيُو إِي رَاب، مَجَّانِيٌّ وَمَفْتُوحُ الْمَصْدَرِ."}
+  {"n": 1, "style": "story", "atSec": 0.4, "captions": [1], "caption": "تعذر تكراره. مغلق.", "tts": "تَعَذَّرَ تَكْرَارُهُ. مُغْلَقٌ.", "fit": {"endBy": 2.59, "note": "2026-11-10, Director: line 1 ends before line 2 starts; line 2 (kept part, 1.15x) must end by 5.9 s, so line 1 may run to 5.9 - 0.12 - line 2", "tempoRule": "fitOnly", "tempoNote": "2026-11-10 Director: 3 words with a full stop cannot reach 110 wpm below 1.7x without sounding rushed; tempo = what the window needs; listed as missing the band"}},
+  {"n": 2, "style": "story", "atSec": 2.5, "captions": [2, 3], "caption": "كان الخلل حقيقيا. لكن الدليل ضاع.", "tts": "كَانَ الْخَلَلُ حَقِيقِيًّا، لَكِنَّ الدَّلِيلَ ضَاعَ. الْخُطُوَاتُ وَالطَّلَبَاتُ وَوَحْدَةُ التَّحَكُّمِ، تَبَعْثَرَتْ كُلُّهَا.", "ttsUsed": "كَانَ الْخَلَلُ حَقِيقِيًّا، لَكِنَّ الدَّلِيلَ ضَاعَ.", "cutNote": "2026-11-10, Director: the bridge sentence «الخطوات والطلبات ووحدة التحكم، تبعثرت كلها.» was cut from the take (EN has no voice 5.9-8.2 s); tts stays as voiced, ttsUsed is the kept part", "fit": {"cutAfterPause": 2, "startAfterPrev": true, "endBy": 5.9}},
+  {"n": 3, "style": "reel", "atSec": 8.22, "captions": [4, 5], "caption": "اضغط ابدأ. QA Wrap يسجل أثناء اختبارك.", "tts": "اضْغَطِ ابْدَأْ، وَ QA Wrap يُسَجِّلُ أَثْنَاءَ اخْتِبَارِكَ.", "fit": {"splitAtPause": 1, "parts": [{"anchor": 8.22, "endBy": 9.45}, {"anchor": 10.3, "endBy": 13.0}], "note": "2026-11-10, Director: split at the pause after «اضغط ابدأ،» so no voice sits in the 9.53-9.98 s hard silence"}},
+  {"n": 4, "style": "reel", "atSec": 13.08, "captions": [6, 7], "caption": "كل خطأ يرتبط بالنقرة التي سببته.", "tts": "كُلُّ خَطَأٍ يَرْتَبِطُ بِالنَّقْرَةِ الَّتِي سَبَّبَتْهُ."},
+  {"n": 5, "style": "reel", "atSec": 16.98, "captions": [8, 9], "caption": "اضغط مرة. وهو في جيرا (Jira) بدليله.", "tts": "اضْغَطْ مَرَّةً، وَهُوَ فِي جِيرَا بِدَلِيلِهِ."},
+  {"n": 6, "style": "reel", "atSec": 20.1, "captions": [10, 11, 12], "caption": "العربية في جيرا من اليمين إلى اليسار. والإنجليزية بترتيبها.", "tts": "الْعَرَبِيَّةُ فِي جِيرَا مِنَ الْيَمِينِ إِلَى الْيَسَارِ، وَالْإِنْجِلِيزِيَّةُ بِتَرْتِيبِهَا."},
+  {"n": 7, "style": "reel", "atSec": 24.8, "captions": [13, 14], "caption": "دخول مركز البيانات (Data Center) يعمل. والأخطاء جمل واضحة.", "tts": "دُخُولُ مَرْكَزِ الْبَيَانَاتِ يَعْمَلُ، وَالْأَخْطَاءُ جُمَلٌ وَاضِحَةٌ."},
+  {"n": 8, "style": "reel", "atSec": 28.7, "captions": [15, 16, 17], "caption": "التحديثات تفحص يوميا. وبعد الإعداد الأول تثبتها بضغطة.", "tts": "التَّحْدِيثَاتُ تُفْحَصُ يَوْمِيًّا، وَبَعْدَ الْإِعْدَادِ الْأَوَّلِ تُثَبِّتُهَا بِضَغْطَةٍ."},
+  {"n": 9, "style": "reel", "atSec": 33.1, "captions": [18], "caption": "الخلل القادم يأتي بدليله.", "tts": "الْخَلَلُ الْقَادِمُ يَأْتِي بِدَلِيلِهِ."},
+  {"n": 10, "style": "invite", "atSec": 36.4, "captions": [19, 20], "caption": "احصل على QA Wrap. مجاني ومفتوح المصدر.", "tts": "احْصُلْ عَلَى QA Wrap، مَجَّانِيٌّ وَمَفْتُوحُ الْمَصْدَرِ.", "fit": {"startAt": 36.04, "endBy": 39.6, "note": "2026-11-10 Director: starts 0.21 s before its anchor (line 9 has ended, after the end-card logo hit at 35.99 s); ends by 39.6 s (EN voice ends 39.27)"}}
  ]
 }

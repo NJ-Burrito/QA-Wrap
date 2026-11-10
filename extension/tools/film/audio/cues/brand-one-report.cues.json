@@ -1,0 +1,194 @@
+{
+  "id": "brand-one-report",
+  "kind": "trailer",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 21,
+  "seconds": 42.0,
+  "sampleRate": 48000,
+  "source": "brand film Sound section (work/film/brand/films.json) on the bed character of qa-wrap-40-ar.cues.json; worker bv 2026-11-10",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1.5,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "sections": [
+      {
+        "name": "intro",
+        "fromBar": 1,
+        "toBar": 3,
+        "note": "pluck + 8th hats, no low end"
+      },
+      {
+        "name": "drive",
+        "fromBar": 3,
+        "toBar": 18,
+        "note": "kick + bass + 16th hats from the turn"
+      },
+      {
+        "name": "lift",
+        "fromBar": 18,
+        "toBar": 19,
+        "note": "plucks up an octave"
+      },
+      {
+        "name": "out",
+        "fromBar": 19,
+        "toBar": 22,
+        "note": "single hit, ring out under the end card"
+      }
+    ],
+    "padGain": 0.06,
+    "padSections": [
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band.",
+    "lowPad": {
+      "gain": 0.085,
+      "sections": [
+        "intro",
+        "drive",
+        "lift",
+        "out"
+      ],
+      "note": "EN bed carries a sustained 60-400 Hz body; measured in the 5.5-7.5 s bed-only gap"
+    },
+    "swells": [
+      {
+        "endSec": 37.0,
+        "dur": 0.75,
+        "gain": 0.45,
+        "note": "reverse swell into the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 18,
+      "singleHitBar": 19,
+      "ringOut": true
+    }
+  },
+  "voice": {
+    "voice": "Kore",
+    "lines": []
+  },
+  "seed": 20260910,
+  "rests": [],
+  "revision": "brand-one-report-1",
+  "sfx": [
+    {
+      "cue": "tick",
+      "atSec": 0.2,
+      "gainDb": 4,
+      "event": "caret's first blink"
+    },
+    {
+      "cue": "tick",
+      "atSec": 4.7,
+      "gainDb": 4,
+      "event": "Copy report pops"
+    },
+    {
+      "cue": "tick",
+      "atSec": 5.6,
+      "gainDb": 4,
+      "event": "Copy report pressed"
+    },
+    {
+      "cue": "reveal",
+      "atSec": 6.0,
+      "gainDb": 0,
+      "event": "the turn: green glow and the card starts writing"
+    },
+    {
+      "cue": "swish",
+      "atSec": 9.6,
+      "gainDb": 0,
+      "event": "report opens into tabs"
+    },
+    {
+      "cue": "swish",
+      "atSec": 15.1,
+      "gainDb": 0,
+      "event": "the card splits into two documents"
+    },
+    {
+      "cue": "tick",
+      "atSec": 16.9,
+      "gainDb": 4,
+      "event": "29119-3 tag pops"
+    },
+    {
+      "cue": "swish",
+      "atSec": 20.7,
+      "gainDb": 0,
+      "event": "destination ring arrives"
+    },
+    {
+      "cue": "tick",
+      "atSec": 21.6,
+      "gainDb": 4,
+      "event": "File to Jira pressed"
+    },
+    {
+      "cue": "success",
+      "atSec": 22.3,
+      "gainDb": 0,
+      "event": "copy lands on Jira"
+    },
+    {
+      "cue": "swish",
+      "atSec": 27.1,
+      "gainDb": 0,
+      "event": "confirmation sheet opens"
+    },
+    {
+      "cue": "sting",
+      "atSec": 33.8,
+      "gainDb": -3,
+      "event": "FILED stamp slams"
+    },
+    {
+      "cue": "logo",
+      "atSec": 37.6,
+      "gainDb": 0,
+      "event": "the mark draws its check"
+    }
+  ],
+  "tail": {
+    "envelopeDb": [
+      [
+        41.0,
+        0
+      ],
+      [
+        41.1,
+        -9
+      ],
+      [
+        41.6,
+        -14
+      ],
+      [
+        41.9,
+        -30
+      ],
+      [
+        41.95,
+        -70
+      ]
+    ],
+    "fadeToSec": 41.95,
+    "note": "tail fade from films.json bed.tailFadeSec, the commercial's envelope shape"
+  }
+}

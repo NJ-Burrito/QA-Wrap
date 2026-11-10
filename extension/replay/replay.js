@@ -200,6 +200,8 @@ async function load() {
     return;
   }
 
+  // The session clock, end to end: entries carry session time, so the scrubber runs 0 → the last entry.
+  range = { ...range, ms: range.to };
   $('scrub').max = String(range.ms);
   $('total').textContent = mmss(range.ms);
   setScrubText(at);

@@ -53,9 +53,17 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 - 📝 **Writes the report**: one press copies a ready bug report (title, steps, what happened, evidence). Sending to Jira and other trackers is one button away.
 - 🌍 **Arabic and English**, right to left where it should be.
 
-🎞️ Watch the 40-second film: [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4) · [العربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4)
+🎞️ See QA-Wrap in action · 40 s: [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4) · [العربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4)
+
+🎬 Six more films, each in English and Arabic, on the [website](https://nj-burrito.github.io/QA-Wrap/#films): Every Moment, Kept · One Report, Every Desk · Show It, Don't Describe It · The Whole Toolbox · Yours, and Sealed · Your Language, Your Numbers, Your Agent.
 
 <a id="new"></a>
+
+## ✨ New in 3.9.2
+
+- 🏷️ **The report names itself.** Its headline is the session name you typed; the failure moves to a "What broke" row.
+- ⏪ **Replay across pages.** A session that moved between pages replays the page as it was, with its real length and the red marks on the track.
+- 🎬 **Six new films**, each in English and Arabic, played in the page on the [website](https://nj-burrito.github.io/QA-Wrap/#films).
 
 ## ✨ New in 3.9.1
 

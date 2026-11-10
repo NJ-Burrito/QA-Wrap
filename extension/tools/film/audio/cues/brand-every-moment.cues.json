@@ -1,0 +1,195 @@
+{
+  "id": "brand-every-moment",
+  "kind": "trailer",
+  "bpm": 120,
+  "fps": 30,
+  "bars": 21,
+  "seconds": 42.0,
+  "sampleRate": 48000,
+  "source": "brand film Sound section (work/film/brand/films.json) on the bed character of qa-wrap-40-ar.cues.json; worker bv 2026-11-10",
+  "master": {
+    "integratedLufs": -14,
+    "maxShortTermLufs": -9,
+    "truePeakDbtp": -1.5,
+    "truePeakDbtp916": -1.5,
+    "codec": "aac",
+    "profile": "aac_low",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "320k"
+  },
+  "bed": {
+    "gainDb": -5,
+    "sections": [
+      {
+        "name": "intro",
+        "fromBar": 1,
+        "toBar": 3,
+        "note": "pluck + 8th hats, no low end, under the flood"
+      },
+      {
+        "name": "drive",
+        "fromBar": 3,
+        "toBar": 18,
+        "note": "kick + bass + 16th hats from the recording start; the mix (not the bed) holds -75 dBFS 9.0-9.5, as the commercial does"
+      },
+      {
+        "name": "lift",
+        "fromBar": 18,
+        "toBar": 19,
+        "note": "plucks up an octave into the end card"
+      },
+      {
+        "name": "out",
+        "fromBar": 19,
+        "toBar": 22,
+        "note": "single hit, ring out under the end card"
+      }
+    ],
+    "padGain": 0.06,
+    "padSections": [
+      "intro",
+      "drive",
+      "lift",
+      "out"
+    ],
+    "padNote": "the sustained band-limited chord, voiced two and three octaves above the plucks so it lives in 1-4 kHz - the band a voice rest sounds empty in - without touching the 20-200 Hz anti-engine band.",
+    "lowPad": {
+      "gain": 0.085,
+      "sections": [
+        "intro",
+        "drive",
+        "lift",
+        "out"
+      ],
+      "note": "EN bed carries a sustained 60-400 Hz body; measured in the 5.5-7.5 s bed-only gap"
+    },
+    "swells": [
+      {
+        "endSec": 36.5,
+        "dur": 0.75,
+        "gain": 0.45,
+        "note": "reverse swell into the end card"
+      }
+    ],
+    "outPlan": {
+      "kickThroughBar": 18,
+      "singleHitBar": 19,
+      "ringOut": true
+    },
+    "drop": {
+      "fromSec": 9.0,
+      "toSec": 9.5,
+      "note": "the one deliberate silence (films.json bed.silence)"
+    }
+  },
+  "voice": {
+    "voice": "Kore",
+    "lines": []
+  },
+  "seed": 20260909,
+  "rests": [],
+  "revision": "brand-every-moment-1",
+  "sfx": [
+    {
+      "cue": "tick",
+      "atSec": 0.1,
+      "gainDb": 4,
+      "event": "first coral row lands (then the cascade is bed-only)"
+    },
+    {
+      "cue": "swish",
+      "atSec": 4.9,
+      "gainDb": 0,
+      "event": "the popup rises"
+    },
+    {
+      "cue": "tick",
+      "atSec": 6.4,
+      "gainDb": 4,
+      "event": "Start recording pressed"
+    },
+    {
+      "cue": "reveal",
+      "atSec": 10.4,
+      "gainDb": 0,
+      "event": "the green glow rises (the turn)"
+    },
+    {
+      "cue": "swish",
+      "atSec": 11.2,
+      "gainDb": 0,
+      "event": "39 rows fold into the bar"
+    },
+    {
+      "cue": "swish",
+      "atSec": 16.4,
+      "gainDb": 0,
+      "event": "the arc draws click to 500"
+    },
+    {
+      "cue": "tick",
+      "atSec": 17.3,
+      "gainDb": 4,
+      "event": "high confidence pops"
+    },
+    {
+      "cue": "swish",
+      "atSec": 20.1,
+      "gainDb": 0,
+      "event": "500 box flips into Replay"
+    },
+    {
+      "cue": "sting",
+      "atSec": 23.5,
+      "gainDb": -3,
+      "event": "scrub head hits the red mark",
+      "docSec": 25.6,
+      "moved": "b1-notes: the scrub head reaches the red mark at 23.5 s (key frame 23.6); 25.6 s would hit a second pulse"
+    },
+    {
+      "cue": "swish",
+      "atSec": 27.0,
+      "gainDb": 0,
+      "event": "rows unfold and fold"
+    },
+    {
+      "cue": "success",
+      "atSec": 34.2,
+      "gainDb": 0,
+      "event": "the traced row rings green (bookend)"
+    },
+    {
+      "cue": "logo",
+      "atSec": 37.1,
+      "gainDb": 0,
+      "event": "the mark draws its check"
+    }
+  ],
+  "tail": {
+    "envelopeDb": [
+      [
+        41.0,
+        0
+      ],
+      [
+        41.1,
+        -9
+      ],
+      [
+        41.6,
+        -14
+      ],
+      [
+        41.9,
+        -30
+      ],
+      [
+        41.95,
+        -70
+      ]
+    ],
+    "fadeToSec": 41.95,
+    "note": "tail fade from films.json bed.tailFadeSec, the commercial's envelope shape"
+  }
+}

@@ -209,7 +209,7 @@ export const replayHandlers = {
       throw err;
     }
     const entries = Array.isArray(msg.entries) ? msg.entries : [];
-    if (!entries.length) return { recording: true, sessionId };
+    if (!entries.length) return { recording: true, sessionId, startedAt: (await getSession(sessionId).catch(() => null))?.startedAt || 0 };
     let stored;
     try { stored = await putReplayChunk({ sessionId, entries }); } catch (err) {
       if (err?.code === 'REPLAY_CAP') { // D-206

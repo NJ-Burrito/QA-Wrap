@@ -1,4 +1,4 @@
-# Microsoft Edge Add-ons: listing text (Arabic) for QA Wrap 3.9.1
+# Microsoft Edge Add-ons: listing text (Arabic) for QA Wrap 3.9.2
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 
