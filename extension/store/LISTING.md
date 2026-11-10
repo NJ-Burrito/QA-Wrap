@@ -21,6 +21,11 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, the accessibility and speed findings, and a timeline you can scrub.
 - Hand over: a record of the session you can hand over, filed to Jira with the project's own fields, or to nine other trackers and seven chat destinations, or saved as files in a folder you choose.
 
+New in 3.9.1
+- Profile tab and top-bar chip: Profile has its own tab in Settings, with your name in English and in Arabic. Your picture and name show at the end of the top bar, in the language you use QA Wrap in. The picture stays on your computer.
+- Network filter: the timeline no longer drowns in background noise (analytics beacons, blocked ad tags, cancelled requests, favicon and font misses). It is folded behind one line that counts it, never deleted, and every export keeps every request. A failure on your own site, a failure right after your action and a failed signed-in request are never hidden.
+- Click labels: a recorded click carries the name of the button pressed, such as Clicked "Save" (button). Emails, phone numbers, card numbers and long digit runs are removed, and nothing is read from fields or passwords. One switch turns it off.
+
 New in 3.9.0
 - Your profile: set a name and, if you like, a picture. Every file you export ends with one small line (name, date, QA Wrap version) so the work can be traced to you. The name and picture stay on your computer.
 - Sealed timeline: both download options can include the whole timeline as a readable Markdown file with your profile in it and a seal at the end. Verify file says whether it is intact or altered, and whose it is. The seal is tamper-evidence, not secrecy: the text stays readable, and anyone can edit a file and seal it again with their own key (the key fingerprint then differs).
@@ -141,8 +146,8 @@ Paste into the Arabic listing once the terminology vote (T-076) has passed, as t
 **Summary:**
 `مسجّل تقارير أخطاء مجاني ومحلي للمختبرين: يُربط كل إخفاق بالنقرة التي سبّبته، ثم يُرفع إلى Jira بضغطة واحدة.`
 
-**What's new in 3.9.0:**
-`ملف شخصي وسطر صغير في كل تصدير، وخط زمني مختوم مع التحقق من الملف، ولوحة مؤشرات أداء (KPI) تصدَّر بصيغة PDF، والفيلم وستة دروس بالعربية والإنجليزية.`
+**What's new in 3.9.1:**
+`الملف الشخصي في تبويب خاص وفي الشريط العلوي، وغربلة للشبكة تخفي ضجيج الخلفية ولا تخفي فشلا حقيقيا أبدا، وأسماء الأزرار في النقرات المسجّلة.`
 
 **Description:**
 
@@ -153,6 +158,11 @@ Paste into the Arabic listing once the terminology vote (T-076) has passed, as t
 - سجّل: أيقظه على الموقع الذي تختبره، سمِّ ما تختبره، ثم اضغط «ابدأ». يحفظ نقراتك وكتابتك وتنقّلك وطلبات الصفحة وسجل وحدة التحكم في خط زمني واحد.
 - فسّر: عندما يفشل شيء يريك النقرة التي سبّبته. اضغط «أوقف» فيجهز التقرير: عنوان وسلسلة السبب والنتيجة ولقطات الشاشة ونتائج إمكانية الوصول والسرعة وخط زمني تتنقل فيه.
 - سلّم: انسخ التقرير بصيغة Markdown، أو احفظه ملفات في مجلد تختاره، أو ارفعه إلى Jira بحقول مشروعك نفسها. وهناك تسع أدوات تتبّع أخرى وسبع وجهات محادثة، ولا يعمل أيّ منها إلا بعد أن تعدّه أنت وتضغط الزر.
+
+الجديد في 3.9.1
+- تبويب الملف الشخصي وشارة الشريط العلوي: صار للملف الشخصي تبويبه الخاص في الإعدادات، باسمك بالإنجليزية واسمك بالعربية. وتظهر صورتك واسمك في آخر الشريط العلوي بلغة QA Wrap التي تستعملها. تبقى الصورة على حاسوبك.
+- غربلة الشبكة: لم يعد الخط الزمني يغرق في ضجيج الخلفية (إشارات التحليلات ووسوم الإعلانات المحجوبة والطلبات الملغاة وغياب الأيقونة والخطوط). يُطوى خلف سطر واحد يعدّه ولا يُحذف شيء، وكل تصدير يحتفظ بكل الطلبات. ولا يُخفى أبدا فشل في موقعك أنت، ولا فشل بعد إجرائك مباشرة، ولا فشل طلب مسجّل الدخول.
+- أسماء النقرات: تحمل النقرة المسجّلة اسم الزر الذي ضُغط، مثل: نقر على «حفظ» (زر). تُزال عناوين البريد وأرقام الهواتف وأرقام البطاقات وسلاسل الأرقام الطويلة، ولا يُقرأ شيء من الحقول ولا كلمات المرور. ومفتاح واحد يوقفها.
 
 الجديد في 3.9.0
 - ملفك الشخصي: اكتب اسمك وأضف صورة إن شئت. ينتهي كل ملف تصدّره بسطر صغير واحد (الاسم والتاريخ وإصدار QA Wrap) ليُنسب العمل إليك. يبقى الاسم والصورة على حاسوبك.
@@ -171,6 +181,6 @@ Paste into the Arabic listing once the terminology vote (T-076) has passed, as t
 مجاني ومفتوح المصدر بترخيص MIT. الواجهة بالعربية والإنجليزية. المصدر: https://github.com/NJ-Burrito/QA-Wrap
 ```
 
-## What's new in 3.9.0 (English, for the Chrome "what's new" or release note)
+## What's new in 3.9.1 (English, for the Chrome "what's new" or release note)
 
-`Profile and fine print on every export, a sealed Markdown timeline with Verify file, a KPI dashboard with PDF export, and the film and six tutorials in Arabic and English.`
+`Profile in its own Settings tab and in the top bar, a network filter that hides background noise but never a real failure, and click labels.`

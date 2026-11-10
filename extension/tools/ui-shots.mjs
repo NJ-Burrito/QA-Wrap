@@ -116,7 +116,6 @@ try {
   await call({ type: 'UQA_NOTE', text: N_ISSUE, tag: 'issue' });
   await call({ type: 'UQA_SCAN_A11Y', tabId });
   await call({ type: 'UQA_SCAN_PERF', tabId });
-
   if (AR) {
     // Chosen the way a tester chooses it: the durable copy for the other surfaces and the bar, the mirror for the first paint.
     await ctl.evaluate(() => new Promise((r) => {
@@ -124,6 +123,10 @@ try {
       chrome.storage.sync.set({ qawLanguage: 'ar' }, r);
     }));
   }
+  // 3.9.1: the top-bar profile chip is part of the picture, so the tester has a profile (names in both languages; initials avatar, no picture).
+  const prof = await call({ type: 'UQA_SET_SETTINGS', patch: { testerName: 'Lina Haddad', profileNameEn: 'Lina Haddad', profileNameAr: 'لينا حداد' } });
+  if (prof?.ok === false) throw new Error(`could not seed the profile: ${JSON.stringify(prof)}`);
+
   const shots = [];
   async function shoot(name, target, opts = {}) {
     const file = path.join(OUT, `${name}.png`);
@@ -144,6 +147,7 @@ try {
     await ctl.reload();
     await ctl.waitForTimeout(700);
     await expectDir(ctl, 'popup');
+    await ctl.waitForSelector('[data-profile-chip][data-profile-ready="1"] .pchip[data-state]:not([data-state="empty"])', { timeout: 8000 }); // R15: the chip painted with the seeded profile
     await shoot(`popup-recording-${theme}`, ctl);
 
     // Scrolled to the bottom: the topper must still be there. That is the whole
@@ -177,6 +181,7 @@ try {
     await rep.goto(`chrome-extension://${id}/report/report.html`);
     await rep.waitForTimeout(1200);
     await expectDir(rep, 'report');
+    await rep.waitForSelector('[data-profile-chip][data-profile-ready="1"] .pchip[data-state]:not([data-state="empty"])', { timeout: 8000 }); // R15: the chip painted with the seeded profile
     await shoot(`report-${theme}`, rep);
 
     // Each tab is a different answer to a different question, so each one is
@@ -290,6 +295,7 @@ try {
   await fil.click('[data-file="jira"]');
   await fil.waitForTimeout(1500);
   await expectDir(fil, 'filing');
+  await fil.waitForSelector('[data-profile-chip][data-profile-ready="1"] .pchip[data-state]:not([data-state="empty"])', { timeout: 8000 });
   if (!(await fil.locator('#dlg-file[open]').count())) throw new Error('filing: the dialog is not open');
   await shoot('report-filing', fil);
   await fil.close();

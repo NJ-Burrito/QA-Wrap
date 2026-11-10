@@ -1,4 +1,4 @@
-# Opera add-ons: listing text (English) for QA Wrap 3.9.0
+# Opera add-ons: listing text (English) for QA Wrap 3.9.1
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 
@@ -26,6 +26,11 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
 
+New in 3.9.1
+- Profile tab and top-bar chip: Profile has its own tab in Settings, with your name in English and in Arabic. Your picture and name show at the end of the top bar, in the language you use QA Wrap in. The picture stays on your computer.
+- Network filter: the timeline no longer drowns in background noise (analytics beacons, blocked ad tags, cancelled requests, favicon and font misses). It is folded behind one line that counts it, never deleted, and every export keeps every request. A failure on your own site, a failure right after your action and a failed signed-in request are never hidden.
+- Click labels: a recorded click carries the name of the button pressed, such as Clicked "Save" (button). Emails, phone numbers, card numbers and long digit runs are removed, and nothing is read from fields or passwords. One switch turns it off.
+
 New in 3.9.0
 - Your profile: set a name and, if you like, a picture. Every file you export ends with one small line (name, date, QA Wrap version) so the work can be traced to you. The name and picture stay on your computer.
 - Sealed timeline: both download options can include the whole timeline as a readable Markdown file with your profile in it and a seal at the end. Verify file says whether it is intact or altered, and whose it is. The seal is tamper-evidence, not secrecy: the text stays readable, and anyone can edit a file and seal it again with their own key (the key fingerprint then differs).
@@ -46,7 +51,7 @@ Free and open source under the MIT licence. Interface in English and Arabic. Sou
 ## What's new in this version (short field, if the form has one)
 
 ```
-Profile and fine print on every export, a sealed Markdown timeline with Verify file, a KPI dashboard with PDF export, and the film and six tutorials in Arabic and English.
+Profile in its own Settings tab and in the top bar, a network filter that hides background noise but never a real failure, and click labels.
 ```
 
 ## Notes for the moderators (if the form has a free-text box)

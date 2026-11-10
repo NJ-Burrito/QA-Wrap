@@ -7,7 +7,7 @@
 ### 🔒 لا شيء يغادر حاسوبك حتى ترسله إلى Jira أو أداة تتبع أو ويب هوك.
 
 [![Edge Add-ons](https://img.shields.io/badge/Edge-Add--ons-0078D7?logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha)
-[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/qa-wrap/)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/firefox/addon/qa-wrap/)
 
 **QA-Wrap إضافة متصفح مجانية ومفتوحة المصدر لكتابة تقارير الأخطاء، صُنعت لمختبري الجودة.** تسجّل جلسة الاختبار اليدوي، وتربط كل خلل بالإجراء الذي سبّبه، وتكتب لك تقرير الخلل. بلا حساب وبلا خادم. [English](README.md)
 
@@ -29,7 +29,7 @@
 
 | | أين | الحالة |
 | --- | --- | --- |
-| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/en-US/firefox/addon/qa-wrap/) | ✅ متاحة (3.8.0، والإصدار 3.9.0 قادم) |
+| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة (3.8.0، والإصدار 3.9.0 قادم) |
 | 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (ليست في متجر Chrome) |
 | 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة (3.8.0، والإصدار 3.9.0 قدم في 2026-11-10 وهو قيد المراجعة) |
 | 🎭 **Opera** | إضافات Opera | ⏳ لم تنشر بعد (قدمت في 2026-10-23)؛ استخدم ملف `opera` من صفحة الإصدار حتى ذلك الحين |
@@ -48,6 +48,12 @@
 🎞️ شاهد الفيلم في 40 ثانية: [بالعربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4) · [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4)
 
 <a id="الجديد"></a>
+
+## ✨ الجديد في 3.9.1
+
+- 🪪 **تبويب الملف الشخصي وشارة الشريط العلوي.** صار للملف الشخصي تبويبه الخاص في الإعدادات، باسمك بالإنجليزية واسمك بالعربية. وتظهر صورتك واسمك في آخر الشريط العلوي بلغة QA-Wrap التي تستعملها. تبقى الصورة على حاسوبك.
+- 🧹 **غربلة الشبكة.** لم يعد الخط الزمني يغرق في ضجيج الخلفية (إشارات التحليلات ووسوم الإعلانات المحجوبة والطلبات الملغاة وغياب الأيقونة والخطوط). يُطوى خلف سطر واحد يعدّه ولا يُحذف شيء، وكل تصدير يحتفظ بكل الطلبات. ولا يُخفى أبدا فشل في موقعك أنت، ولا فشل بعد إجرائك مباشرة، ولا فشل طلب مسجّل الدخول.
+- 🖱️ **أسماء النقرات.** تحمل النقرة المسجّلة اسم الزر الذي ضُغط، مثل: نقر على «حفظ» (زر). تُزال عناوين البريد وأرقام الهواتف وأرقام البطاقات وسلاسل الأرقام الطويلة، ولا يُقرأ شيء من الحقول ولا كلمات المرور. ومفتاح واحد يوقفها.
 
 ## ✨ الجديد في 3.9.0
 
@@ -87,7 +93,7 @@
 - 💸 **هل QA-Wrap مجانية؟** نعم. لا خطة مدفوعة ولا حساب، برخصة MIT.
 - ⚖️ **هل هي بديل مجاني عن Jam أو Marker.io أو BugHerd؟** نعم، حين يجب أن يبقى التسجيل على جهازك. تلك خدمات مستضافة تشارك التقارير عبر سحابتها، أما QA-Wrap فلا خادم لها.
 - 🎫 **هل ترسل الخلل إلى Jira؟** نعم. زر الإرسال إلى Jira يصوغ الملخص، ويحوّل الخطورة إلى أولوية في Jira، ويعرض ما سيُرسل وما لن يُرسل. تُضبط أدوات التتبع الأخرى والويب هوك من الإعدادات.
-- 🌐 **أي متصفحات؟** Chrome وEdge هما المتصفحان المختبَران (Chrome 116 أو أحدث). ومستخدمو Edge يثبتونها من [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha)، ومستخدمو Firefox من [إضافات Firefox](https://addons.mozilla.org/en-US/firefox/addon/qa-wrap/) (لا يدعم Firefox التقاط التبويب، فتسجيل الشاشة متوقف فيه).
+- 🌐 **أي متصفحات؟** Chrome وEdge هما المتصفحان المختبَران (Chrome 116 أو أحدث). ومستخدمو Edge يثبتونها من [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha)، ومستخدمو Firefox من [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) (لا يدعم Firefox التقاط التبويب، فتسجيل الشاشة متوقف فيه).
 - 🤖 **هل يقرأ وكيل برمجة التقارير؟** نعم، عبر [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge)، جسر MCP للقراءة فقط. يبقى متوقفا حتى تشغّل جسر الوكيل من الإعدادات.
 - 🌍 **بالعربية؟** نعم. الواجهة والتقارير بالعربية والإنجليزية.
 
@@ -116,7 +122,7 @@
 
 تسجّل خطوة أداة التحديث نفسها لكل متصفح تجده على جهازك وتخبرك بأسمائها. كل متصفح يتحدّث إلى ملفه الخاص، فلا يصل إصدار Firefox أبدًا إلى Edge.
 
-**Firefox:** ثبتها من [إضافات Firefox](https://addons.mozilla.org/en-US/firefox/addon/qa-wrap/)، فتبقى مثبتة وتتحدث تلقائيا. الملف المضغوط في الجدول يصلح للتجربة، لكنه يحمل حتى إعادة تشغيل Firefox فقط.
+**Firefox:** ثبتها من [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/)، فتبقى مثبتة وتتحدث تلقائيا. الملف المضغوط في الجدول يصلح للتجربة، لكنه يحمل حتى إعادة تشغيل Firefox فقط.
 
 **Safari.** يحتاج Safari إلى جهاز Mac مع Xcode لتحويل النسخة إلى تطبيق (`xcrun safari-web-extension-converter`)، والتحديث بضغطة واحدة غير متاح هناك.
 

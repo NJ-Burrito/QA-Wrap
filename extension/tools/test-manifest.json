@@ -515,6 +515,10 @@
   {
    "file": "voice-render.mjs",
    "reason": "Bug Hunt voice render: calls the TTS model, owner runs it once (npm run game:voice -- --go); tested by test-voice-render"
+  },
+  {
+   "file": "build-psl.mjs",
+   "reason": "regenerates vendor/psl-data.js and the PSL block of content/page-hooks.js from a Public Suffix List file; --check compares the two copies"
   }
  ],
  "suites": [
@@ -8467,6 +8471,97 @@
   {
    "id": "test-kpi-page",
    "path": "tools/test-kpi-page.mjs",
+   "kind": "test",
+   "features": [
+    "report"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "tags": [
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ]
+  },
+  {
+   "id": "test-netfilter-sim",
+   "path": "tools/test-netfilter-sim.mjs",
+   "kind": "test",
+   "features": [
+    "report"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "lane": "node",
+   "stage": "unit",
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ]
+  },
+  {
+   "id": "test-netfilter",
+   "path": "tools/test-netfilter.mjs",
+   "kind": "test",
+   "features": [
+    "report"
+   ],
+   "headed": false,
+   "byHand": false,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "lane": "headless",
+   "stage": "e2e-headless",
+   "tags": [
+    "net:loopback",
+    "assertMode:counted",
+    "stage:e2e-headless"
+   ]
+  },
+  {
+   "id": "test-netfilter-fixture",
+   "path": "tools/test-netfilter-fixture.mjs",
+   "kind": "test",
+   "features": [
+    "report"
+   ],
+   "headed": true,
+   "byHand": true,
+   "headlessOk": false,
+   "python": "none",
+   "net": "loopback",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "lane": "headed",
+   "stage": "e2e-headed",
+   "tags": [
+    "byHand",
+    "net:loopback",
+    "assertMode:counted",
+    "stage:e2e-headed"
+   ]
+  },
+  {
+   "id": "test-profile-tab",
+   "path": "tools/test-profile-tab.mjs",
    "kind": "test",
    "features": [
     "report"

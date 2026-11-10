@@ -32,6 +32,11 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
 
+New in 3.9.1
+- Profile tab and top-bar chip: Profile has its own tab in Settings, with your name in English and in Arabic. Your picture and name show at the end of the top bar, in the language you use QA Wrap in. The picture stays on your computer.
+- Network filter: the timeline no longer drowns in background noise (analytics beacons, blocked ad tags, cancelled requests, favicon and font misses). It is folded behind one line that counts it, never deleted, and every export keeps every request. A failure on your own site, a failure right after your action and a failed signed-in request are never hidden.
+- Click labels: a recorded click carries the name of the button pressed, such as Clicked "Save" (button). Emails, phone numbers, card numbers and long digit runs are removed, and nothing is read from fields or passwords. One switch turns it off.
+
 New in 3.9.0
 - Your profile: set a name and, if you like, a picture. Every file you export ends with one small line (name, date, QA Wrap version) so the work can be traced to you. The name and picture stay on your computer.
 - Sealed timeline: both download options can include the whole timeline as a readable Markdown file with your profile in it and a seal at the end. Verify file says whether it is intact or altered, and whose it is. The seal is tamper-evidence, not secrecy: the text stays readable, and anyone can edit a file and seal it again with their own key (the key fingerprint then differs).
@@ -54,6 +59,11 @@ Free and open source under the MIT licence. Interface in English and Arabic. Sou
 - فسّر: عندما يفشل شيء يريك النقرة التي سبّبته. اضغط «أوقف» فيجهز التقرير: عنوان وسلسلة السبب والنتيجة ولقطات الشاشة ونتائج إمكانية الوصول والسرعة وخط زمني تتنقل فيه.
 - سلّم: انسخ التقرير بصيغة Markdown، أو احفظه ملفات في مجلد تختاره، أو ارفعه إلى Jira بحقول مشروعك نفسها. وهناك تسع أدوات تتبّع أخرى وسبع وجهات محادثة، ولا يعمل أيّ منها إلا بعد أن تعدّه أنت وتضغط الزر.
 
+الجديد في 3.9.1
+- تبويب الملف الشخصي وشارة الشريط العلوي: صار للملف الشخصي تبويبه الخاص في الإعدادات، باسمك بالإنجليزية واسمك بالعربية. وتظهر صورتك واسمك في آخر الشريط العلوي بلغة QA Wrap التي تستعملها. تبقى الصورة على حاسوبك.
+- غربلة الشبكة: لم يعد الخط الزمني يغرق في ضجيج الخلفية (إشارات التحليلات ووسوم الإعلانات المحجوبة والطلبات الملغاة وغياب الأيقونة والخطوط). يُطوى خلف سطر واحد يعدّه ولا يُحذف شيء، وكل تصدير يحتفظ بكل الطلبات. ولا يُخفى أبدا فشل في موقعك أنت، ولا فشل بعد إجرائك مباشرة، ولا فشل طلب مسجّل الدخول.
+- أسماء النقرات: تحمل النقرة المسجّلة اسم الزر الذي ضُغط، مثل: نقر على «حفظ» (زر). تُزال عناوين البريد وأرقام الهواتف وأرقام البطاقات وسلاسل الأرقام الطويلة، ولا يُقرأ شيء من الحقول ولا كلمات المرور. ومفتاح واحد يوقفها.
+
 الجديد في 3.9.0
 - ملفك الشخصي: اكتب اسمك وأضف صورة إن شئت. ينتهي كل ملف تصدّره بسطر صغير واحد (الاسم والتاريخ وإصدار QA Wrap) ليُنسب العمل إليك. يبقى الاسم والصورة على حاسوبك.
 - خط زمني مختوم: يمكن لخياري التنزيل أن يضمّا الخط الزمني كاملا في ملف Markdown (نص منسّق) مقروء، وفيه ملفك الشخصي وختم في آخره. ويقول «تحقق من ملف مختوم» إن كان الملف سليما أو معدّلا ولمن هو. الختم كاشف للتعديل وليس سرّية: يبقى النص مقروءا، ويستطيع أي شخص تعديل الملف وختمه من جديد بمفتاحه (فتختلف بصمة المفتاح).
@@ -72,8 +82,8 @@ Free and open source under the MIT licence. Interface in English and Arabic. Sou
 };
 
 const NEWS = {
-  en: `Profile and fine print on every export, a sealed Markdown timeline with Verify file, a KPI dashboard with PDF export, and the film and six tutorials in Arabic and English.`,
-  ar: `ملف شخصي وسطر صغير في كل تصدير، وخط زمني مختوم مع التحقق من الملف، ولوحة مؤشرات أداء (KPI) تصدَّر بصيغة PDF، والفيلم وستة دروس بالعربية والإنجليزية.`,
+  en: `Profile in its own Settings tab and in the top bar, a network filter that hides background noise but never a real failure, and click labels.`,
+  ar: `الملف الشخصي في تبويب خاص وفي الشريط العلوي، وغربلة للشبكة تخفي ضجيج الخلفية ولا تخفي فشلا حقيقيا أبدا، وأسماء الأزرار في النقرات المسجّلة.`,
 };
 
 const NAME = { en: 'QA Wrap', ar: 'QA Wrap' };
