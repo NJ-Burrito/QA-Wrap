@@ -25,12 +25,14 @@ const lessons = JSON.parse(read(path.join(EXT, 'tutorials', 'lessons.json')));
 const live = lessons.filter((l) => !l.pending);
 // 3.6.8 (Nader, 2026-10-23): the commercial's banner is the one packaged image, a local thumbnail, not a film.
 const THUMB = 'qa-wrap-film.webp';
+// 2026-11-10 (Nader): its Arabic twin, picked by the UI language, so an Arabic card shows Arabic words before a press.
+const THUMB_AR = 'qa-wrap-film-ar.webp';
 const hostedFiles = live.flatMap((l) => Object.values(l.files));
 
-test('no film, poster or caption sits under extension/tutorials; the only image is the hosted film banner, under 60 KB', () => {
+test('no film, poster or caption sits under extension/tutorials; the only images are the film banner pair, each under 60 KB', () => {
   const media = walk(path.join(EXT, 'tutorials')).filter((f) => /\.(mp4|webm|webp|png|jpe?g|srt)$/i.test(f) || f.startsWith('media/'));
-  assert.deepEqual(media, [THUMB]);
-  assert.ok(fs.statSync(path.join(EXT, 'tutorials', THUMB)).size < 60 * 1024, `${THUMB} is 60 KB or more`);
+  assert.deepEqual(media.sort(), [THUMB_AR, THUMB].sort());
+  for (const f of [THUMB, THUMB_AR]) assert.ok(fs.statSync(path.join(EXT, 'tutorials', f)).size < 60 * 1024, `${f} is 60 KB or more`);
 });
 test('D2: every drawn lesson has an English and an Arabic film hosted under site/media; none is marked online; no site/tutorials', () => {
   assert.ok(lessons.length >= 7, `only ${lessons.length} lessons listed`);
@@ -74,7 +76,8 @@ test('opening the page fetches nothing remote: a card shows only its packaged th
   const card = js.slice(js.indexOf('function cardFor'), js.indexOf('function chapterList'));
   assert.ok(!/posterUrl\(/.test(card) && !/createElement\('img'\)/.test(card), 'cardFor loads a poster');
   const srcs = card.match(/\.src = [^;]+;/g) || [];
-  assert.deepEqual(srcs, ['.src = lesson.thumb;'], 'cardFor sets an image source other than the packaged thumbnail');
+  assert.deepEqual(srcs, ['.src = thumbOf(lesson);'], 'cardFor sets an image source other than the packaged thumbnail');
+  for (const l of lessons) for (const f of [l.thumb, ...Object.values(l.thumbs || {})].filter(Boolean)) assert.ok(!/[:/]/.test(f) && fs.existsSync(path.join(EXT, 'tutorials', f)), `${l.id}: ${f} is not a packaged file beside the page`);
   for (const l of lessons) if (l.thumb) assert.ok(!/[:/]/.test(l.thumb) && fs.existsSync(path.join(EXT, 'tutorials', l.thumb)), `${l.id}: thumb is not a packaged file beside the page`);
   assert.equal((js.match(/posterUrl\(/g) || []).length, 0, 'a poster is requested from the page');
 });
@@ -97,6 +100,16 @@ test('the interface language picks the file: an Arabic UI gets the -ar film, an 
 test('the popup no longer points at the films', () => {
   const html = read(path.join(EXT, 'popup', 'popup.html'));
   assert.ok(!html.includes('pointer-films') && html.includes('pointer-practice'));
+});
+test('the Arabic film card shows the Arabic banner, the English card the English one (thumbOf, run as written)', () => {
+  const js = read(path.join(EXT, 'tutorials', 'tutorials.js'));
+  const line = js.split('\n').find((x) => x.startsWith('const thumbOf = '));
+  assert.ok(line, 'tutorials.js has no thumbOf');
+  const film = lessons.find((l) => l.kind === 'trailer');
+  assert.deepEqual(film.thumbs, { en: THUMB, ar: THUMB_AR }, 'the commercial does not name one banner per language');
+  const pick = (lang) => new Function('lang', `${line} return thumbOf;`)(lang)(film);
+  assert.equal(pick('ar'), THUMB_AR, 'the Arabic card does not use the -ar banner');
+  assert.equal(pick('en'), THUMB, 'the English card does not use the English banner');
 });
 console.log(`\n${n - failed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

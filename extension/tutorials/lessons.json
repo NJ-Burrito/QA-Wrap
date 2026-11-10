@@ -14,6 +14,10 @@
     },
     "poster": "qa-wrap-commercial-40s-1280.jpg",
     "thumb": "qa-wrap-film.webp",
+    "thumbs": {
+      "en": "qa-wrap-film.webp",
+      "ar": "qa-wrap-film-ar.webp"
+    },
     "secs": 40
   },
   {

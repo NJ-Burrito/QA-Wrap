@@ -68,6 +68,8 @@ const fileOf = (lesson) => lesson.files[lang] || lesson.files.en;
 const filmUrl = (lesson) => hostedUrl(fileOf(lesson));
 /** The poster for the language in use, chosen like the film (an Arabic card never names an English poster). Only a path: the page fetches no poster (T-048). */
 const posterOf = (lesson) => lesson.posters?.[lang] || lesson.poster || '';
+/** The packaged banner for the language in use (`thumbs.ar` on an Arabic card), a local file beside this page, never remote. */
+const thumbOf = (lesson) => lesson.thumbs?.[lang] || lesson.thumb || '';
 const params = new URLSearchParams(location.search);
 
 let lessons = [];
@@ -164,9 +166,9 @@ function cardFor(lesson) {
   const poster = el('div', 'poster');
   // Nothing remote is fetched until a click: the tile is CSS and the lesson title (T-048). The one exception is a
   // thumbnail packaged beside this page (`lesson.thumb`, the hosted film's banner): a local file, never a remote one.
-  if (lesson.thumb && !lesson.pending) {
+  if (thumbOf(lesson) && !lesson.pending) {
     const img = el('img', 'thumb');
-    img.src = lesson.thumb;
+    img.src = thumbOf(lesson);
     img.alt = '';
     img.decoding = 'async';
     poster.classList.add('has-thumb');

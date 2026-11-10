@@ -21,6 +21,8 @@ const out = [{
   files: { en: 'qa-wrap-commercial-40s.mp4', ar: 'qa-wrap-commercial-40s-ar.mp4' },
   poster: 'qa-wrap-commercial-40s-1280.jpg',
   thumb: 'qa-wrap-film.webp',
+  // the packaged in-tool banner, one per language (Nader, 2026-11-10): the Arabic card shows Arabic words before a press
+  thumbs: { en: 'qa-wrap-film.webp', ar: 'qa-wrap-film-ar.webp' },
   secs: 40,
 }];
 for (const f of films) {

@@ -94,7 +94,7 @@ check(js.includes('QAWi18n.lang()') && js.includes('const fileOf = (lesson) => l
 check(/window\.open\(u, '_blank', 'noopener'\)/.test(js), 'tutorials.js', 'a press does not open the film in a new tab');
 check(!/localStorage\.getItem\('qaw-tutorial-lang'\)/.test(js), 'tutorials.js', 'a stored language overrides the interface language');
 const card = js.slice(js.indexOf('function cardFor'), js.indexOf('function chapterList'));
-check(!/createElement\('img'\)/.test(card) && (card.match(/\.src = [^;]+;/g) || []).join() === '.src = lesson.thumb;', 'tutorials.js', 'the card loads something other than its packaged thumbnail before a press');
+check(!/createElement\('img'\)/.test(card) && (card.match(/\.src = [^;]+;/g) || []).join() === '.src = thumbOf(lesson);', 'tutorials.js', 'the card loads something other than its packaged thumbnail before a press');
 const play = js.slice(js.indexOf('function play('), js.indexOf("$('feature-close')"));
 check(!/\.src\s*=|\.poster\s*=|\.play\(\)/.test(play), 'tutorials.js', 'the details panel loads or plays media');
 check(js.includes("MEDIA_URL = 'https://nj-burrito.github.io/QA-Wrap/media/'"), 'tutorials.js', 'the hosted base address is not the site media folder');
