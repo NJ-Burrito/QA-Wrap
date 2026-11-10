@@ -624,3 +624,17 @@ p, li, figcaption { text-wrap: pretty; }
 .vdlg-x svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .vdlg-x:hover { color: var(--band-accent); }
 .vdlg-x:focus-visible { outline: 2px solid var(--band-accent); outline-offset: 2px; }
+
+/* Films (3.9.2): own grid, equal columns, no step connectors. */
+.film-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 2rem 2.5rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); align-items: start; }
+.film-grid > li { margin: 0; }
+.film-grid h3 { margin: 0 0 0.35rem; font-size: 1.25rem; }
+.film-grid p { margin: 0 0 0.9rem; color: var(--text-mid); }
+.film-grid .poster { position: relative; display: block; margin-bottom: 14px; border-radius: 12px; overflow: hidden; }
+.film-grid .poster img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; transition: transform .3s ease; }
+.film-grid .poster::after { content: ""; position: absolute; inset: 0; margin: auto; width: 60px; height: 60px; border-radius: 50%;
+  background: rgba(0, 0, 0, .6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23fff'/%3E%3C/svg%3E") center / 28px no-repeat;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .5); transition: transform .2s ease; }
+.film-grid .poster:hover img, .film-grid .poster:focus-visible img { transform: scale(1.03); }
+.film-grid .poster:hover::after, .film-grid .poster:focus-visible::after { transform: scale(1.1); }
+@media (prefers-reduced-motion: reduce) { .film-grid .poster img, .film-grid .poster::after { transition: none; } }
