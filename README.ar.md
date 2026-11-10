@@ -10,6 +10,8 @@
 
 **QA-Wrap إضافة متصفح مجانية ومفتوحة المصدر لكتابة تقارير الأخطاء، صُنعت لمختبري الجودة.** تسجّل جلسة الاختبار اليدوي، وتربط كل خلل بالإجراء الذي سبّبه، وتكتب لك تقرير الخلل. بلا حساب وبلا خادم. [English](README.md)
 
+من [نادر الزغول (NJ-Burrito)](https://nj-burrito.github.io/)، مهندس أتمتة جودة في عمّان، الأردن.
+
 [![QA-Wrap animated banner](site/assets/banner.gif)](https://nj-burrito.github.io/QA-Wrap/)
 
 🌐 [الموقع](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [تنزيل آخر إصدار](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · ✨ [الجديد](#الجديد) · 📥 [احصل عليها](#احصل-عليها) · ⚖️ [مقارنة](#مقارنة) · ❓ [أسئلة](#أسئلة) · 🚀 [التثبيت](#التثبيت) · 🔄 [التحديثات](#التحديثات) · 🔒 [الخصوصية](#الخصوصية) · 🧰 [أدوات أخرى](#عن-المشروع)
@@ -182,6 +184,7 @@
 - 💼 [المعرض](https://nj-burrito.github.io/): أعمال نادر ومشاريعه، وفيه قسم التواصل
 - 📦 [NJ-Kit](https://nj-burrito.github.io/NJ-Kit/): مهارات لـ Claude Code
 - 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): ملفك الشخصي كصفحة
+- 📄 [Business-Wrap](https://nj-burrito.github.io/Business-Wrap/): أدلة تدخل، ووثيقة واحدة بلغتين
 - 🐙 [GitHub](https://github.com/NJ-Burrito): الشيفرة وكل المستودعات المفتوحة
 - 🔗 [LinkedIn](https://www.linkedin.com/in/nader-alzghoul): ملف نادر
 

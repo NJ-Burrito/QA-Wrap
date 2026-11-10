@@ -16,6 +16,8 @@
 
 **QA-Wrap is a free, open-source bug report extension for QA testers.** It records a manual test session in Chrome or Edge, links every failure to the action that caused it, and writes the bug report for you, ready for Jira. A local-first, open-source alternative to Jam, Marker.io and BugHerd for manual and exploratory testing. No account, no server. [العربية](README.ar.md)
 
+By [Nader Alzghoul (NJ-Burrito)](https://nj-burrito.github.io/), a QA automation engineer in Amman, Jordan.
+
 [![QA-Wrap animated banner](site/assets/banner.gif)](https://nj-burrito.github.io/QA-Wrap/)
 
 🌐 [Website](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [Download](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · 📥 [Get it](#get) · ⚖️ [Compare](#compare) · ❓ [FAQ](#faq) · 🚀 [Install](#install) · ✨ [New](#new) · 🔄 [Updates](#updates) · 🔒 [Privacy](#privacy) · 🧰 [More tools](#about)
@@ -205,6 +207,7 @@ Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pi
 - 💼 [Portfolio](https://nj-burrito.github.io/): Nader's work and projects, with the contact section
 - 📦 [NJ-Kit](https://nj-burrito.github.io/NJ-Kit/): skills for Claude Code
 - 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): your profile as a page
+- 📄 [Business-Wrap](https://nj-burrito.github.io/Business-Wrap/): evidence in, one document in two languages
 - 🐙 [GitHub](https://github.com/NJ-Burrito): the source and all the open repositories
 - 🔗 [LinkedIn](https://www.linkedin.com/in/nader-alzghoul): Nader's profile
 
