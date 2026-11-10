@@ -29,3 +29,6 @@ plain c92e4292cbe72a2eaf6f0a59056da45000c03a0f874cb85c3454bd668f7ebb8f *qa-wrap-
 --store 8f92da9feabe1bb89f0f93826d3be3f3f8995d1f0ee6df8dcc4180463198670c *qa-wrap-3.8.4-firefox.zip
 --store 4a24b376a06fb05fad9d6b1dd6c36f7121d184d0cbd5e2622ab9988d8231f948 *qa-wrap-3.8.4-opera.zip
 --store 7166d748c78cd1c978b9b2b94819de67ec5e7764451a23e0f8c3f59b8a06b50f *qa-wrap-3.8.4-operagx.zip
+
+# 3.9.0 store build (node tools/build-browsers.mjs --store opera, 2026-11-10)
+--store c41aefd8c1d36f36038132eabaca132660d39e0e8bbf546bdf5f4e0d60ca3107 *qa-wrap-3.9.0-opera.zip

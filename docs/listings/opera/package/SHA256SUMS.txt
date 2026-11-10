@@ -1,1 +1,1 @@
-4a24b376a06fb05fad9d6b1dd6c36f7121d184d0cbd5e2622ab9988d8231f948 *qa-wrap-3.8.4-opera.zip
+c41aefd8c1d36f36038132eabaca132660d39e0e8bbf546bdf5f4e0d60ca3107 *qa-wrap-3.9.0-opera.zip

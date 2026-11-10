@@ -1,6 +1,6 @@
 # QA Wrap on Opera add-ons and Opera GX: the submission pack
 
-Prepared 2026-10-28 for QA Wrap 3.8.4. Nothing was submitted, no account was created, nobody logged in. Nader does every click below.
+Prepared 2026-10-28 for QA Wrap 3.8.4, refreshed 2026-11-10 for 3.9.0. Nothing was submitted, no account was created, nobody logged in. Nader does every click below.
 
 ## First: is a submission already open?
 
@@ -8,14 +8,14 @@ Prepared 2026-10-28 for QA Wrap 3.8.4. Nothing was submitted, no account was cre
 (`https://addons.opera.com/extensions/details/qa-wrap/` answered 404, and a store search for "qa wrap" listed other extensions).
 
 - If **Submitted extensions** on https://addons.opera.com/developer/ shows QA Wrap: do **not** upload a second extension. Use
-  **Upgrade** on that entry with the 3.8.4 zip below (Opera's acceptance criteria name the Upgrade button as the resubmit path).
+  **Upgrade** on that entry with the 3.9.0 zip below (Opera's acceptance criteria name the Upgrade button as the resubmit path).
 - If nothing is there: follow "New submission" below.
 
 ## What is in this folder
 
 | File | What it is | Goes into |
 |---|---|---|
-| `package/qa-wrap-3.8.4-opera.zip` | The store build, made by `node tools/build-browsers.mjs --store opera` from `extension/` (no `key`, no `updater/`, no `types/`). 372 files, 2.8 MB. | The upload field |
+| `package/qa-wrap-3.9.0-opera.zip` | The store build, made by `node tools/build-browsers.mjs --store opera` from `extension/` (no `key`, no `updater/`, no `types/`). 386 files, 2.8 MB. | The upload field |
 | `package/SHA256SUMS.txt` | SHA-256 of the zip | Keep, to prove which file was sent |
 | `listing.en.md` | Name, summary, description, category, URLs, notes for the moderators (English) | General tab, English |
 | `listing.ar.md` | The same in Arabic (diacritics removed) | Translations tab, Arabic, if offered |
@@ -27,15 +27,15 @@ Prepared 2026-10-28 for QA Wrap 3.8.4. Nothing was submitted, no account was cre
 No source zip is included: the package is the plain source with no bundler or minifier. The one minified file is
 `vendor/axe.min.js`, the unchanged axe-core 4.13.0 release (SHA-256 `c24f097b...70a0c1`, the same hash as `extension/vendor/README.md`);
 Opera asks that well-known libraries be "genuine and unchanged", and the notes say where it comes from. If a moderator still asks
-for source, give https://github.com/NJ-Burrito/QA-Wrap (tag `v3.8.4`).
+for source, give https://github.com/NJ-Burrito/QA-Wrap (tag `v3.9.0`).
 
 ## New submission (Opera add-ons, also serves Opera GX)
 
 1. Sign in at https://addons.opera.com/developer/ with your Opera account (create one there if you have none).
-2. Upload `package/qa-wrap-3.8.4-opera.zip`. The version (3.8.4) is read from the package. If the form says "Manifest format version
+2. Upload `package/qa-wrap-3.9.0-opera.zip`. The version (3.9.0) is read from the package. If the form says "Manifest format version
    is not supported" or "content_security_policy must be a string", stop and tell me: those are the old MV3 upload errors developers
    reported on Opera's forum, and our manifest is standard MV3.
-3. Open the **Versions** tab and click `3.8.4` to edit it. The fields live in the **General**, **Media** and **Translations** tabs.
+3. Open the **Versions** tab and click `3.9.0` to edit it. The fields live in the **General**, **Media** and **Translations** tabs.
 4. General: Name `QA Wrap`. Summary: the one sentence from `listing.en.md`. Description: the long block from `listing.en.md`.
    Category: **Web Development**. Homepage or support page: `https://nj-burrito.github.io/QA-Wrap/`. Privacy policy, if there is a field:
    `https://nj-burrito.github.io/QA-Wrap/privacy.html`.
@@ -54,14 +54,14 @@ for source, give https://github.com/NJ-Burrito/QA-Wrap (tag `v3.8.4`).
 | Route | Works? | What the user clicks |
 |---|---|---|
 | Opera add-ons store | Yes, once the listing is live. GX installs from the same store and the same build. | The listing page, **Add to Opera** |
-| GitHub release, unpacked | Yes today (same code as the store build; the store build was what was tested, below). | Download `qa-wrap-3.8.4-operagx.zip` (or `-opera.zip`) from https://github.com/NJ-Burrito/QA-Wrap/releases/latest, unzip, open `opera://extensions`, switch on **Developer mode**, **Load unpacked**, pick the folder |
+| GitHub release, unpacked | Yes today (same code as the store build; the store build was what was tested, below). | Download `qa-wrap-3.9.0-operagx.zip` (or `-opera.zip`) from https://github.com/NJ-Burrito/QA-Wrap/releases/latest, unzip, open `opera://extensions`, switch on **Developer mode**, **Load unpacked**, pick the folder |
 | Chrome Web Store | Not available: QA Wrap is not on the Chrome Web Store (`DISTRIBUTION.md`: paid fee, skipped). GX can install Chrome Web Store extensions, but forum users report failures on the new store address, so it would not be our main route anyway. | n/a |
 | GX.store Mods | Not relevant. A GX Mod is a manifest plus sounds, music, wallpapers, themes, shaders and page CSS; it carries no extension code, so a QA tool cannot be a Mod. | n/a |
 
 ## What was tested in Opera GX (2026-10-28, one run)
 
 Opera GX 137.0.6036.65 (Chromium 153, user agent `OPR/137.0.0.0`), throwaway profile under `O:\Temp`, closed and removed after the run.
-The store build `dist/opera` (3.8.4, the zip in `package/`) was loaded unpacked and driven by Playwright (`tools/lib-e2e.mjs`, the repo's own Opera harness). Raw output: `evidence/run.log`, `evidence/api-probe.json`, `evidence/copied-report.md`.
+The store build `dist/opera` (3.8.4, on 2026-10-28) was loaded unpacked and driven by Playwright (`tools/lib-e2e.mjs`, the repo's own Opera harness). Raw output: `evidence/run.log`, `evidence/api-probe.json`, `evidence/copied-report.md`. The 3.9.0 store build passed release-check (191 checks) on 2026-11-10 but was not driven live in Opera.
 
 | Check | Result |
 |---|---|
