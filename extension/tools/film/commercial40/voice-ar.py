@@ -7,7 +7,7 @@ Allowed for this job only (owner, 2026-11-09). Key: ~/.config/openrouter/qa-wrap
 read inside this process, never printed, logged or written. No verify, no re-voice, no ASR/LLM judge.
 A line that already has a wav is skipped (idempotent), never re-voiced. The only retry is for a transport
 failure that returned no audio (HTTP error / empty stream); a take that returned audio is final."""
-import json, pathlib, struct, sys, time, urllib.request, urllib.error
+import json, os, pathlib, struct, sys, time, urllib.request, urllib.error
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
 OUT = ROOT / "work" / "film" / "c40" / "audio" / "vo"
@@ -15,10 +15,10 @@ KEY = pathlib.Path.home() / ".config" / "openrouter" / "qa-wrap-1109.env"
 DELIVERY = ("Read this in Arabic at a steady, natural pace, warm and professional, like a colleague explaining "
             "something. Breathe briefly after commas and full stops, but keep the sentence flowing. Fall at the end: ")
 def main():
-    if not KEY.exists():
+    tok = os.environ.get("OPENROUTER_API_KEY")  # owner-supplied in-process key; never stored on disk
+    if not tok and not KEY.exists():
         sys.exit(f"NO KEY: {KEY} is missing; nothing was voiced.")
-    tok = None
-    for ln in KEY.read_text(encoding="utf-8").splitlines():
+    for ln in ([] if tok else KEY.read_text(encoding="utf-8").splitlines()):
         if ln.strip().startswith("OPENROUTER_API_KEY"):
             tok = ln.split("=", 1)[1].strip().strip('"').strip("'")
     if not tok:

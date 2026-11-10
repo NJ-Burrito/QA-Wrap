@@ -27,6 +27,8 @@ MAX_TEMPO = 1.25
 
 
 def key():
+    if os.environ.get('OPENROUTER_API_KEY'):  # owner-supplied in-process key; never stored on disk
+        return os.environ['OPENROUTER_API_KEY']
     if not KEY_FILE.exists():
         sys.exit(f'no key file at {KEY_FILE}; nothing voiced (the masters stay silent)')
     vals = {}
@@ -95,7 +97,7 @@ def one(fid, lang, dry):
         labels.append(f'[a{i}]')
     if dry:
         return
-    fc = ';'.join(chains) + f";{''.join(labels)}amix=inputs={len(labels)}:normalize=0:duration=longest,loudnorm=I=-14:TP=-2.0:LRA=11[a]"
+    fc = ';'.join(chains) + f";{''.join(labels)}amix=inputs={len(labels)}:normalize=0:duration=longest,loudnorm=I=-14:TP=-2.0:LRA=11,apad[a]"  # apad: -shortest then ends at the video, never cuts the end card
     tmp = master.with_suffix('.voiced.mp4')
     cmd = ['ffmpeg', '-y', '-v', 'error', *inputs, '-filter_complex', fc, '-map', '0:v:0', '-map', '[a]',
            '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-shortest', str(tmp)]
