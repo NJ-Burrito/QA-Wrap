@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Network filter fixture</title>
+<!-- tools/test-netfilter-fixture.mjs (D11 of docs/decisions/2026-11-10-network-filter-and-click-labels.md). Hosts are *.test names mapped to the local server by the browser's host resolver rules. -->
+<style>body{margin:16px}button,input,a{margin:4px;padding:6px 10px}</style>
+<script>
+  const P = new URLSearchParams(location.search).get('p');
+  const H = (h) => `http://${h}:${P}`;
+  // the hosts that serve the app a script or a frame (D3): a payment SDK, an SSO frame, a CDN chunk, a sibling-domain library
+  for (const [host, path] of [['pay.provider.test', '/sdk.js'], ['api.sibling.test', '/lib.js']]) { const s = document.createElement('script'); s.src = H(host) + path; document.head.appendChild(s); }
+</script>
+</head>
+<body>
+<h1>Network filter fixture</h1>
+<iframe id="sso" title="SSO" style="width:240px;height:40px"></iframe>
+<p>
+<button id="late">Late lookup</button>
+<button id="err-now">Save order</button>
+<button id="s-name">Delete Anna Smith, anna.smith@example.com</button>
+<button id="s-card">Pay with card 4111 1111 1111 1111</button>
+<input id="s-otp" autocomplete="one-time-code" aria-label="digit 3 of 6" maxlength="1" size="2">
+<label id="s-pw-wrap">Password <input id="pw" type="password" value="hunter2"></label>
+<button id="s-ar" aria-label="&#x202B;حفظ&#x200F; الطلب&#x202C;">حفظ</button>
+<button id="s-long"></button>
+<button id="s-emoji">&#x1F44D;&#x1F3FD; Like &#x1F1EF;&#x1F1F4; e&#x0301;&#x0301; done</button>
+<button id="s-icon"><svg width="12" height="12"><title>Settings gear</title><circle cx="6" cy="6" r="5"></circle></svg></button>
+<button id="s-icon-only"><i data-icon="trash"></i></button>
+<button id="s-none"></button>
+<table><tbody><tr id="s-row" role="row" onclick="void 0"><td role="gridcell">Maria Garcia maria@example.com 0791234567</td><td id="s-plain-cell" role="gridcell" tabindex="0">Jane Plainname VIP</td><td><button id="s-row-btn" aria-label="Edit">Edit</button></td></tr></tbody></table>
+<button id="s-save">Save</button>
+</p>
+<div id="out" role="status"></div>
+<script>
+  const $ = (id) => document.getElementById(id);
+  $('sso').src = H('sso.idp.test') + '/frame.html';
+  $('s-long').textContent = 'Long label '.repeat(40);
+  window.sent = { fetch: 0 };
+  const ok = (p, init) => { window.sent.fetch++; return fetch(p, init).then((r) => r.text()).catch(() => {}); };
+
+  window.scenario = {
+    // NOISE: navigation aborts, analytics beacons, an ad-blocked third-party tag, a duplicate favicon 404, a third-party font 404
+    noise() {
+      const c1 = new AbortController(); const c2 = new AbortController();
+      window.sent.fetch += 2;
+      fetch('/slow', { signal: c1.signal }).catch(() => {}); fetch('/slow', { signal: c2.signal }).catch(() => {});
+      setTimeout(() => { c1.abort(); c2.abort(); }, 50);
+      for (let i = 0; i < 3; i++) ok(H('www.google-analytics.com') + '/collect?i=' + i, { method: 'POST', body: 'x' });
+      ok(H('ads.tracker3p.test') + '/adtag.js');
+      ok('/static/app.js.map'); ok('/static/app.js.map');
+      ok(H('fonts.cdn3p.test') + '/f.woff2');
+    },
+    // REAL: a first-party 500, a 503 then 200, a 403 poll every 2 s, payment and SSO 4xx, a CDN chunk 404, a sibling API 500,
+    // a first-party host blocked (status 0), two GraphQL operations failing differently on one URL
+    real() {
+      ok('/api/orders');
+      ok('/api/flaky').then(() => ok('/api/flaky'));
+      window.poll = setInterval(() => ok('/api/poll'), 2000); ok('/api/poll');
+      ok(H('pay.provider.test') + '/charge', { method: 'POST', body: '{}' });
+      ok(H('sso.idp.test') + '/token');
+      const s = document.createElement('script'); s.src = H('cdn.static.test') + '/chunk.js'; document.head.appendChild(s);
+      ok(H('api.sibling.test') + '/api/data');
+      ok('/blocked');
+      const gql = (operationName) => ok('/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ operationName, query: `query ${operationName} { x }` }) });
+      gql('OpErrors'); gql('OpServer');
+    },
+    // 400 earlier noise failures, each a distinct address
+    flood(n = 400) {
+      const letters = (i) => { let t = ''; do { t = String.fromCharCode(97 + (i % 26)) + t; i = Math.floor(i / 26); } while (i > 0); return t; };
+      return new Promise((done) => {
+        let i = 0;
+        const tick = () => { for (let k = 0; k < 20 && i < n; k++, i++) ok(H('www.google-analytics.com') + '/g/collect/' + letters(i), { method: 'POST', body: 'x' }); i < n ? setTimeout(tick, 60) : done(); };
+        tick();
+      });
+    },
+    // the clock moves 40 minutes, then one more 500
+    minute40(ms = 40 * 60 * 1000) { const real = Date.now; Date.now = () => real.call(Date) + ms; ok('/api/minute40'); },
+  };
+  $('late').addEventListener('click', () => setTimeout(() => ok('/api/late'), 3000));
+  $('err-now').addEventListener('click', () => ok('/api/save'));
+  for (const id of ['s-plain-cell', 's-name', 's-card', 's-otp', 's-ar', 's-long', 's-emoji', 's-icon', 's-icon-only', 's-none', 's-save', 's-row-btn']) $(id).addEventListener('click', () => { $('out').textContent = id; });
+</script>
+</body>
+</html>

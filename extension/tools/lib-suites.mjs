@@ -29,7 +29,7 @@ export const QUARANTINE = {
   perf: { byHand: true, until: '2026-12-31', reason: 'D-1010-158: headed Chrome with CPU throttling, desktop and x6 budgets, English and Arabic popup rows: run by hand with npm run perf' },
   'test-boot-smoke': { byHand: true, until: '2026-12-31', reason: 'real headed Chrome loading the extension: run by hand with npm run smoke:boot' },
   'test-draft-door-live': { byHand: true, until: '2026-12-31', reason: 'T-075: real headed Chrome, worker handlers and the offscreen draft door: run by hand with the boot smoke' },
-  'test-capture-live': { byHand: true, until: '2026-12-31', reason: 'D-1010-114: headed Chrome on the secondary monitor, capture bridge and fixtures end to end: run by hand with the boot smoke' },
+  'test-capture-live': { byHand: true, until: '2026-12-31', reason: 'D-1010-114: headed Chrome on the secondary monitor, capture bridge and fixtures end to end: run by hand with the boot smoke' }, 'test-netfilter-fixture': { byHand: true, until: '2026-12-31', reason: 'D11: headed Chrome, the network-filter fixture (the same manifest runs in Node as test-netfilter-sim): run by hand' },
   'test-dock-live': { byHand: true, until: '2026-12-31', reason: 'sidepanel-1010: headed Chromium, the float Dock button opens the side panel with and without a testable page: run by hand' },
   'test-onboarding-live': { byHand: true, until: '2026-12-31', reason: 'features-1010 lane O: headed walk from the welcome page to the first copied report on the packaged practice page, with the click count: run by hand' },
   'test-first-run-live': { byHand: true, until: '2026-12-31', reason: 'D-1010-117: headed first-run frame (a throttled-window first frame is only provable in a visible window): run by hand' },

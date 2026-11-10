@@ -48,6 +48,10 @@ its source can be obtained. `tools/release-check.mjs` fails the build if a file
 under vendor/ is not named below, or if a loose font file ships under ui/fonts/
 (the typefaces travel embedded in the pages, and the families are named below).
 
+Public Suffix List (snapshot 2026-11-09) - Mozilla Foundation and contributors
+  Licence: MPL-2.0 (https://mozilla.org/MPL/2.0/). Compacted by tools/build-psl.mjs into vendor/psl-data.js and the PSL block of content/page-hooks.js;
+  the rules are otherwise unmodified. Source: https://publicsuffix.org/list/public_suffix_list.dat (SHA-256 347b147702878a99c37f699ab796a3c8eae3e4ee648db4eae5968d6f1583b037).
+
 axe-core 4.13.0 — Copyright (c) 2015-2026 Deque Systems, Inc.
   Mozilla Public License, Version 2.0 (MPL-2.0).
   Redistributed unmodified at vendor/axe.min.js. Its licence is unaffected by

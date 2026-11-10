@@ -286,7 +286,7 @@
       else if (d.t === 'rule-fired') send({ type: 'UQA_RULE_FIRED', ruleId: d.ruleId }).catch(() => {});
     };
     try { pagePort.postMessage('uqa-ack'); } catch { /* the page end is gone */ }
-    for (const k of ['awake', 'act', 'rules']) if (latest[k]) toPage(latest[k]);
+    for (const k of ['awake', 'act', 'rules', 'nf']) if (latest[k]) toPage(latest[k]);
   });
   // If page-hooks.js ran first its offer may predate this listener; ask once more, but only if no offer has arrived by then
   // (D-1010-89: a hello that crossed an offer already on its way would replace the channel this side has just acknowledged).
@@ -335,6 +335,19 @@
   function pushRules(rules) {
     toPage({ t: 'rules', rules: rules || [] });
   }
+
+  /** D3/D4: the tester's pinned hosts and edited denylist go down to the MAIN world, which classifies (D8). */
+  async function pushNf() {
+    try {
+      const answer = (await send({ type: 'UQA_NF_CONFIG' }))?.result;
+      if (!answer) return; // no answer: the page keeps its defaults
+      const cfg = answer;
+      toPage({ t: 'nf', hosts: Array.isArray(cfg.myHosts) ? cfg.myHosts : [], deny: Array.isArray(cfg.denylist) ? cfg.denylist : null });
+      window.UQANfLabels = cfg.clickLabels !== false; // the recorder reads this (isolated world, shared with it); until an answer arrives it stays off
+    } catch { /* the worker is not answering: the page keeps its defaults, and click labels stay off */ }
+  }
+  // D9/D10: a change in Settings reaches a page that is already open: the switch and My hosts are pushed again at once.
+  try { chrome.storage?.onChanged?.addListener((ch, area) => { if (area === 'local' && ch['qaw.netfilter']) pushNf(); }); } catch { /* no storage events here: the next wake pushes it */ }
 
   async function refreshRules() {
     try {
@@ -418,7 +431,7 @@
       if (!msg.armed) clearRing();
       publish({ awake: !!msg.armed });
       pushAwake(msg.armed);
-      if (msg.armed) refreshRules();
+      if (msg.armed) { refreshRules(); pushNf(); }
       else pushRules([]);
     }
     if (msg?.type === 'UQA_SESSION_RESET') {
@@ -453,7 +466,7 @@
   // Arming first, and awaited: the MAIN world must be told it is asleep before
   // anything else has a chance to act. Rules are only fetched once it is awake.
   refreshArmed().then((awake) => {
-    if (awake) refreshRules();
+    if (awake) { refreshRules(); pushNf(); }
   });
   refreshState();
   refreshSettings();

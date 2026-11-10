@@ -46,14 +46,14 @@ const sgPromoted = (sid) => { try { return new Set(JSON.parse(localStorage.getIt
 const sgPath = (u) => { try { const p = new URL(u); return p.pathname + p.search; } catch { return String(u || ''); } };
 /** The rows the level shows: Problems, or Everything; a promoted note joins Problems. */
 function sgView(events, sid) {
-  const sig = SIG.visibleProblems(events, 'all');
+  const sig = SIG.visibleProblems(FC?.withRecovery?.(events) ?? events, 'all');
   const level = sgLevel();
   const promo = sgPromoted(sid);
-  const rows = level === 'all' ? sig.rows : sig.rows.filter((r) => r.c === 'D' || promo.has(r.key));
+  const rows = level === 'all' ? sig.rows : sig.rows.filter((r) => r.c === 'D' || r.r === 'n-recovered' || promo.has(r.key)) /* D5: amber, visible, not a problem */;
   // The headline is the one problem number (core/finding-count.js: distinct failures, repeats folded), the same on the chip, the done card, the toast and the report.
   // What the tester's own tools found (a11y, links, layout, fine print) is a Finding, counted apart.
   const num = FC ? FC.problemCounts(events).groups : sig.problems;
-  return { sig, num, level, rows, promo, induced: sig.inducedRows };
+  return { sig, num, level, rows, promo, induced: sig.inducedRows, events };
 }
 function sgRow(r, v, sid, again) {
   const row = el('div', `sg-row${r.c === 'D' ? ' is-d' : ''}`);
@@ -82,7 +82,7 @@ function sgRow(r, v, sid, again) {
 /** Control, counts, "hiding" line, coverage line, Induced section. `again` repaints the page. */
 function sgBlock(v, sid, again) {
   const { sig } = v;
-  const box = el('div', 'sg');
+  const box = el('div', 'sg'); import('./nf-line.js').then((m) => m.mount(box, v.events, session, t, el)).catch(console.warn); // D1: the filter's counts and the hidden-calls line
   const seg = el('div', 'sg-seg');
   seg.setAttribute('role', 'group');
   seg.setAttribute('aria-label', t('common.signal.show'));

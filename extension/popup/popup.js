@@ -38,10 +38,10 @@ const sgPromoted = (sid) => { try { return new Set(JSON.parse(localStorage.getIt
 const sgPath = (u) => { try { const p = new URL(u); return p.pathname + p.search; } catch { return String(u || ''); } };
 /** The rows the level shows: Problems, or Everything; a promoted note joins Problems. */
 function sgView(events, sid) {
-  const sig = SIG.visibleProblems(events, 'all');
+  const sig = SIG.visibleProblems(FC?.withRecovery?.(events) ?? events, 'all'); // D5: a recovered failure is amber, not a problem, in the rows and the tier
   const level = sgLevel();
   const promo = sgPromoted(sid);
-  const rows = level === 'all' ? sig.rows : sig.rows.filter((r) => r.c === 'D' || promo.has(r.key));
+  const rows = level === 'all' ? sig.rows : sig.rows.filter((r) => r.c === 'D' || r.r === 'n-recovered' || promo.has(r.key)) /* D5: amber, visible, not a problem */;
   // The one problem number (core/finding-count.js: distinct failures); what the tools found (a11y, links, layout, fine print) is a Finding, counted apart.
   const num = FC ? FC.problemCounts(events).groups : sig.problems;
   return { sig, num, level, rows, promo, induced: sig.inducedRows };

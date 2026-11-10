@@ -33,7 +33,7 @@ const sig = (r) => JSON.stringify([r.problems, r.errors, r.warnings, r.notes, r.
   const note = classify({ kind: 'net', via: 'fetch', status: 0, error: true, en: 'AbortError', url: '/x', frameUrl: 'https://a.test/' });
   ok(bad.c === 'D' && bad.r === 'd-5xx', 'sample: 500 is d-5xx', JSON.stringify(bad));
   ok(note.c === 'N' && note.r === 'n-abort', 'sample: AbortError is n-abort', JSON.stringify(note));
-  ok(RULESET === 2 && Object.keys(REASONS).length === 16, 'ruleset 2, 16 reason codes');
+  ok(RULESET === 2 && Object.keys(REASONS).length === 23, 'ruleset 2, 23 reason codes (16 plus the 7 network-filter reasons)');
 }
 
 // ── registrableDomain

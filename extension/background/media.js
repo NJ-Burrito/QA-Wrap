@@ -273,7 +273,8 @@ export async function jiraOp(fn, args) {
 /** Exports and documents, built behind the same door. */
 export async function exportOp(op, request) {
   const s = await getSettings();
-  return offscreen('UQA_OFF_EXPORT', { op, request: { ...request, version: chrome.runtime.getManifest().version, profile: { name: s.testerName, nameAr: s.profileNameAr, nameEn: s.profileNameEn, picture: s.profilePicture } } });
+  const netFilter = /** @type {any} */ ((await chrome.storage.local.get('qaw.netfilter').catch(() => ({})))['qaw.netfilter']); // D9: the offscreen page cannot read storage
+  return offscreen('UQA_OFF_EXPORT', { op, request: { ...request, netFilter, version: chrome.runtime.getManifest().version, profile: { name: s.testerName, nameAr: s.profileNameAr, nameEn: s.profileNameEn, picture: s.profilePicture } } });
 }
 
 export async function mediaPermissions() {

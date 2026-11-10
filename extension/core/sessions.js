@@ -2,7 +2,7 @@
 // @ts-check
 /* What to do with a session the browser never let finish. */
 
-import { isFailure, dupeKey, liteProblem } from './events.js';
+import { isFailure, dupeKey, liteProblem, guarded } from './events.js';
 import { hostOf, isFirstPartyHost } from './origins.js';
 import { eraseStores, eraseLocalKeys, eraseSessionKeys, maskPrefix, statePrefix } from './store-registry.js';
 
@@ -77,16 +77,7 @@ export function purgePlan(sessions, { days, now = Date.now(), running = null }) 
 
 /* ── erasing ───────────────────────────────────────────────────────────── */
 
-/**
- * Every store a session's bytes can be in.
- *
- * Written as a list rather than as four calls in the worker because the thing
- * that goes wrong with "delete everything" is never the deleting: it is the one
- * store nobody remembered, still holding a recording after the tester was told
- * the machine was clean. `mediaParts` and `mediaPending` are the two that were
- * forgotten in the first draft of this — a clip is written in parts, and a clip
- * interrupted mid-write leaves a pending row behind.
- */
+/** Every store a session's bytes can be in: a list, so "delete everything" cannot forget one (a clip is written in parts and an interrupted one leaves a pending row). */
 export const ERASABLE_STORES = Object.freeze(eraseStores());
 
 /** Local keys erase-all also removes: derived from the registry (T-054). */
@@ -144,17 +135,7 @@ export function describeFootprint(footprint, tr) {
   return tail ? `${head} ${tail}` : head;
 }
 
-/**
- * Whether the browser has promised to keep any of it.
- *
- * `unlimitedStorage` removes the quota, not the eviction: without a persistence
- * grant Chrome may clear this extension's whole origin when the disk fills, and
- * a tester who was promised thirty days would find an empty report instead. So
- * the answer is said out loud on the one line that is already about what is
- * stored, rather than being a fact only the console knows.
- *
- * Tester-facing, so no em dash.
- */
+/** Whether the browser has promised to keep any of it: `unlimitedStorage` removes the quota, not the eviction, so the answer is said on the footprint line. Tester-facing, no em dash. */
 export function describePersistence(p, tr) {
   if (!p) return '';
   if (!p.supported) return say(tr, 'options.safe.fp.unsupported');
@@ -181,6 +162,9 @@ export const BLANK_FINDINGS = Object.freeze({
   rtl: {},
   /** Distinct problems: lite fingerprint -> host of the failing URL. The badge number. */
   fps: {},
+  noName: {}, // D10: unnamed buttons clicked, by locator
+  /** Network filter (D1): calls the page tagged as noise, counted per reason, never dropped. */
+  hidden: {},
 });
 
 /** Bounds tally storage; a session past this shows the badge stuck here, and the popup number wins. */
@@ -198,9 +182,11 @@ const HOST_CAP = 200;
 export const FINDING_KINDS = Object.freeze(new Set(['a11y', 'links', 'fineprint', 'rtl']));
 
 /** Whether this event can move the count; the worker's tally and countFindings() must see the same events. */
+const isNoName = (e) => e?.kind === 'dom' && e.unnamed === 'none'; // D10: an accessibility finding
+
 export function carriesFinding(event) {
   if (!event || typeof event !== 'object') return false;
-  return event.kind === 'nav' || FINDING_KINDS.has(event.kind) || isFailure(event);
+  return event.kind === 'nav' || isNoName(event) || FINDING_KINDS.has(event.kind) || isFailure(event) || (event.kind === 'rep' && !!event.flt);
 }
 
 export function foldFinding(tally, event) {
@@ -217,8 +203,20 @@ export function foldFinding(tally, event) {
     const h = hostOf(event.frameUrl);
     if (h) hosts.add(h);
   }
+  if (event.fp === 1) { const h = hostOf(event.url); if (h) hosts.add(h); } // D3: the page found this host first party (served the app a script or frame)
   const out = { ...t, hosts: hosts.size > HOST_CAP ? [...hosts].slice(0, HOST_CAP) : [...hosts] };
 
+  // D1/D8: a tagged call is counted under its reason and is not a problem; the page classified it, the worker only counts.
+  if ((event.kind === 'rep' || isFailure(event)) && event.flt && !guarded(event)) {
+    out.hidden = { ...out.hidden, [event.flt]: (out.hidden?.[event.flt] || 0) + (event.kind === 'rep' ? Math.max(1, Math.floor(Number(event.n)) || 1) : 1) };
+    return out;
+  }
+  if (event.kind === 'rep') return out;
+  if (isNoName(event)) {
+    const k = String(event.locator || event.selector || event.tag).slice(0, 99);
+    if (Object.keys(out.noName).length < 99) out.noName = { ...out.noName, [k]: 1 };
+    return out;
+  }
   if (isFailure(event)) {
     const key = hostOf(event.url) || '';
     out.failureHosts = { ...out.failureHosts, [key]: (out.failureHosts[key] || 0) + 1 };
@@ -253,14 +251,7 @@ export function foldFinding(tally, event) {
   }
 }
 
-/**
- * Read a tally as numbers a surface can print.
- *
- * The third-party split is applied here rather than in the fold, so that a host
- * the tester navigated to *after* its beacon failed is still counted as their
- * own. Doing it at fold time would have classified that failure for ever on the
- * evidence of the moment it arrived.
- */
+/** Read a tally as numbers a surface can print. The third-party split is applied here, not in the fold, so a host visited after its beacon failed still counts as their own. */
 export function findingTotals(tally) {
   const t = { ...BLANK_FINDINGS, ...(tally || {}) };
   const hosts = new Set(t.hosts);
@@ -283,14 +274,17 @@ export function findingTotals(tally) {
     else errors++;
   }
   const rtl = Object.values(t.rtl || {}).reduce((n, x) => n + (Number(x) || 0), 0);
-  const a11y = Number(t.a11y) || 0;
+  const noName = Object.keys(t.noName || {}).length;
+  const a11y = (Number(t.a11y) || 0) + noName; // D10
   const links = Number(t.links) || 0;
   const finePrint = Number(t.finePrint) || 0;
   return {
     failures,
     thirdParty,
+    hidden: Object.values(t.hidden || {}).reduce((n, x) => n + x, 0),
     theirHosts,
     a11y,
+    noName,
     links,
     rtl,
     finePrint,
@@ -317,10 +311,7 @@ export function countFindings(events = [], { session = null } = {}) {
   return findingTotals(tally);
 }
 
-/**
- * The headline sentence, written once so three surfaces cannot word it three
- * ways. Tester-facing, so no em dash.
- */
+/** The headline sentence, written once so three surfaces cannot word it three ways. Tester-facing, no em dash. */
 export function describeFindings(totals) {
   const t = totals || findingTotals(BLANK_FINDINGS);
   const parts = [];
@@ -329,22 +320,14 @@ export function describeFindings(totals) {
   if (t.links) parts.push(`${t.links} broken link${t.links === 1 ? '' : 's'}`);
   if (t.rtl) parts.push(`${t.rtl} element${t.rtl === 1 ? '' : 's'} clipped under layout stress`);
   if (t.finePrint) parts.push(`${t.finePrint} fine print gap${t.finePrint === 1 ? '' : 's'}`);
-  if (!parts.length) return 'Nothing was found. The checks a machine cannot make still apply.';
+  if (!parts.length) return `0 real failures, ${t.hidden} hidden, ${t.thirdParty} third-party. The checks a machine cannot make still apply.`;
   const last = parts.pop();
   return `${parts.length ? `${parts.join(', ')} and ` : ''}${last}.`;
 }
 
 /* ── window-size runs ───────────────────────────────────────────────────── */
 
-/**
- * The fold, in the shape §8 fixes: oldest first, an array and never null.
- *
- * Here rather than in the worker for the reason everything else in this file is
- * here: the decision is arithmetic on records and the storage round trip is
- * not, so `tools/test-sessions.mjs` can check it in plain Node. It also makes
- * `UQA_VIEWPORT_RUNS` provably a fold over the two events rather than a second
- * store that can disagree with them.
- */
+/** The fold, oldest first, an array and never null: pure arithmetic on records so tools/test-sessions.mjs can check it in plain Node. */
 export function viewportRuns(events = []) {
   const byRun = new Map();
   for (const e of events) {

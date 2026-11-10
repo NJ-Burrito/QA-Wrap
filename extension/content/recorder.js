@@ -138,8 +138,20 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
     return v.length > 200 ? `${v.slice(0, 200)}…` : v;
   }
 
-  function label(el, desc) {
-    return desc?.name || desc?.role || el.tagName.toLowerCase();
+  // D10: "Record click labels" (Settings, Timeline, Network filter), on by default in Settings. The bridge asks the worker for it when the page wakes and again when it changes; until an answer arrives, and when none comes, it is off.
+  const labelsOn = () => window.UQANfLabels === true; // off until the bridge has the tester's answer, so no label is recorded under a switch that was off
+
+  const CLICK_ACTIONS = new Set(['click', 'dblclick', 'contextmenu', 'auxclick']);
+
+  /** The recorded name of the element: a click goes through the privacy-checked click label (selector-engine.js); other actions keep the accessible name, scrubbed and cut. */
+  function labelOf(el, desc, action) {
+    const tag = el.tagName.toLowerCase();
+    if (S?.clickLabel && CLICK_ACTIONS.has(action)) {
+      const c = S.clickLabel(el, { enabled: labelsOn(), masked: isMasked(el) });
+      return { label: c.label || (c.unnamed ? '' : c.role || tag), role: c.role || tag, unnamed: c.unnamed };
+    }
+    const name = S?.clipGraphemes && S?.scrubLabel ? (isMasked(el) ? '' : S.clipGraphemes(S.scrubLabel(desc?.name))) : desc?.name;
+    return { label: name || desc?.role || tag, role: desc?.role || tag, unnamed: undefined };
   }
 
   /**
@@ -199,7 +211,9 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
     let desc = null;
     const tSel = now();
     try {
-      desc = S.describe(el, describeOpts(true)); // r7-05-3: the capture phase has a time budget
+      // D10: a click that may carry no label (switch off, masked, password, cc-*, one-time-code, contenteditable, table row or cell) also gets no name or text based locator
+      const noText = CLICK_ACTIONS.has(base.action) && !!S.labelRestricted?.(el, { enabled: labelsOn(), masked: isMasked(el) });
+      desc = S.describe(el, { ...describeOpts(true), noText }); // r7-05-3: the capture phase has a time budget
     } catch {
       /* the selector engine must never break the page under test */
     }
@@ -219,14 +233,16 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
 
   function emitRecord(el, base, desc) {
     const tSan = now();
+    // D10: a locator that quotes an email, a number or a secret would carry it into the spec; the label is scrubbed, so the locator is dropped (the CSS selector stays).
+    const leaky = S?.hasSensitive && (S.hasSensitive(desc?.locator) || S.hasSensitive(desc?.xpath));
     const ev = {
       ...base,
       preBumped: true, // r4-05-2: beginAct already advanced the epoch for this one
-      label: label(el, desc),
-      locator: desc?.locator || null,
+      ...labelOf(el, desc, base.action),
+      locator: leaky ? null : desc?.locator || null,
       framePrefix: desc?.framePrefix || '',
       selector: desc?.css || null,
-      xpath: desc?.xpath || null,
+      xpath: leaky ? null : desc?.xpath || null,
       strategy: desc?.strategy || null,
       locatorMatches: desc?.matches ?? null,
       locatorAmbiguous: desc?.ambiguous ?? null,

@@ -7,16 +7,24 @@
 
 import { classify } from './signal.js';
 import { groupFailures } from './dupes.js';
+import { markRecovered } from './netkeys.js';
 
 /**
  * @param {any[]} events
  * @returns {{ groups: number, events: number, dupes: number }}
  */
 export function problemCounts(events) {
-  const kept = (events || []).filter((e) => e && classify(e).c === 'D'); // a `rep` row classifies as the failure it folded
+  const rec = markRecovered(events); // D5: failed N times, then OK, is shown amber and is not a problem
+  const kept = (events || []).filter((e) => e && classify(e).c === 'D' && !rec.has(e)); // a `rep` row classifies as the failure it folded
   const found = groupFailures(kept);
   const total = found.reduce((n, g) => n + g.count, 0);
   return { groups: found.length, events: total, dupes: total - found.length };
+}
+
+/** D5: the same events with `rcv` set on every failure that recovered, so classify() shows it amber (the filter's prepare() does this for the panel and the report). */
+export function withRecovery(events) {
+  const rec = markRecovered(events);
+  return rec.size ? events.map((e) => (rec.has(e) ? { ...e, rcv: rec.get(e).n } : e)) : events;
 }
 
 /** `countFindings` totals with the failure part set to the problem groups, so a headline never disagrees with the Problems row. */

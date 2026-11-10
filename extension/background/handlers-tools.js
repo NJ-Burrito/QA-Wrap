@@ -126,11 +126,10 @@ export const ruleHandlers = {
   UQA_GET_RULES: async (msg, sender) => {
     const tabId = isExtensionPage(sender) ? null : sender?.tab?.id; // content scripts only: the float panel is a tab in a window never woken (H1)
     if (tabId != null && !(await armed.isArmedTab(tabId))) return [];
-    // The hint is the sender: a content script asking for its rules is asking
-    // about the session running in ITS window, and with two sessions live the
-    // wrong answer arms a page against a run it is not part of.
+    // The hint is the sender: a content script asking for its rules is asking about the session in ITS window.
     return getRules(hintFor(msg, sender));
   },
+  UQA_NF_CONFIG: async () => { const c = /** @type {any} */ ((await chrome.storage.local.get('qaw.netfilter'))['qaw.netfilter']) || {}; return { clickLabels: c.clickLabels, myHosts: c.myHosts, denylist: c.denylist }; }, // D3/D10: what a content script may not read from storage itself
   UQA_SET_RULES: (msg, sender) => setRules(msg.rules, hintFor(msg, sender)),
   UQA_ADD_RULE: (msg, sender) => addRule(msg.rule, hintFor(msg, sender)),
   UQA_DROP_RULE: (msg, sender) => dropRule(msg.id, hintFor(msg, sender)),

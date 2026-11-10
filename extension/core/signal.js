@@ -12,7 +12,8 @@
  * with HTTP status >= 400 or to a rejected network request that is not an abort.
  * Nothing unrecognised is ever a Note. `nh` and `sg` are never read.
  */
-import { isFailure, liteFp, dupeKey, liteProblem } from './events.js';
+import { isFailure, liteFp, dupeKey, liteProblem, guarded } from './events.js';
+import { etld1 } from './netfilter.js';
 
 export const RULESET = 2;
 
@@ -24,6 +25,14 @@ export const REASONS = {
   'n-resizeobserver': { c: 'N', tier: 'Note' },
   'n-opaque': { c: 'N', tier: 'Note' },
   'n-devwarn': { c: 'N', tier: 'Note' },
+  // Network filter (D4, D5, D9): hidden and counted, never deleted; `n-recovered` is the amber "failed N×, then OK" row.
+  'n-telemetry': { c: 'N', tier: 'Note' },
+  'n-adblock': { c: 'N', tier: 'Note' },
+  'n-junk': { c: 'N', tier: 'Note' },
+  'n-socket': { c: 'N', tier: 'Note' },
+  'n-rule': { c: 'N', tier: 'Note' },
+  'n-strict': { c: 'N', tier: 'Note' },
+  'n-recovered': { c: 'N', tier: 'Warning' },
   'd-doc': { c: 'D', tier: 'Error', severe: true },
   'd-third': { c: 'D', tier: 'Warning' },
   'd-timeout': { c: 'D', tier: 'Error', severe: true },
@@ -37,12 +46,6 @@ export const REASONS = {
 };
 
 /* ── registrable domain ──────────────────────────────────────────────────── */
-
-// ponytail: ~50 two-label public suffixes, not the full PSL; add a suffix when a real host is misjudged.
-const SUFFIX2 = new Set(('co.uk org.uk ac.uk gov.uk me.uk ltd.uk plc.uk net.uk sch.uk com.jo org.jo net.jo gov.jo edu.jo ' +
-  'co.jp ne.jp or.jp ac.jp go.jp com.au net.au org.au edu.au gov.au co.nz org.nz com.sa org.sa gov.sa edu.sa ' +
-  'com.eg com.tr com.br com.mx com.ar com.cn com.hk com.sg com.my co.in net.in org.in co.za co.kr com.tw ' +
-  'com.ua com.pk com.bd com.ng co.ke com.qa com.kw com.bh com.om com.lb co.ae').split(' '));
 
 const IPV4 = /^\d{1,3}(\.\d{1,3}){3}$/;
 
@@ -61,12 +64,9 @@ function isPrivateHost(h) {
   return a === 10 || a === 127 || a === 0 || (a === 192 && b === 168) || (a === 172 && b >= 16 && b <= 31) || (a === 169 && b === 254);
 }
 
+/** D3: the registrable domain from the vendored Public Suffix List snapshot (core/netfilter.js), no longer a hand-kept suffix list. */
 export function registrableDomain(host) {
-  const h = clean(host);
-  if (!h || IPV4.test(h) || h === 'localhost' || h.includes(':')) return h;
-  const l = h.split('.').filter(Boolean);
-  if (l.length <= 2) return l.join('.');
-  return SUFFIX2.has(l.slice(-2).join('.')) ? l.slice(-3).join('.') : l.slice(-2).join('.');
+  return etld1(clean(host));
 }
 
 /* ── raw facts ───────────────────────────────────────────────────────────── */
@@ -95,7 +95,7 @@ function isTimeout(o) {
 }
 function isAbort(o) {
   if (isTimeout(o)) return false;
-  if (o.en === 'AbortError' || o.ev === 'abort') return true;
+  if (o.en === 'AbortError' || o.ev === 'abort') return !(o.durationMs > 10000); // D4: an abort that took over 10 s stays a failure
   if (o.en !== undefined || o.ev !== undefined) return false;
   // old sessions carry only text: exact strings, anchored prefix, never a substring
   if (o.kind === 'net') return o.error === true && ABORT_TEXTS.includes(o.text);
@@ -130,6 +130,8 @@ function eventHost(o) {
   try { return f ? new URL(f).host : ''; } catch { return ''; }
 }
 function isThirdParty(o, ctx) {
+  if (o.fp === 1) return false; // D3: the page found this host first party (it served the app a script or a frame)
+  if (o.fp === 0 && o.kind === 'net' && !isPrivateHost(clean(eventHost(o)))) return true;
   const h = clean(eventHost(o));
   const p = clean(pageHostOf(o, ctx));
   if (!h || !p || isPrivateHost(h)) return false;
@@ -163,6 +165,9 @@ export function classify(ev, ctx, opts) {
     if (isOpaque(o) && on('n-opaque')) return ret('n-opaque');
     if (isDev(o) && on('n-devwarn')) return ret('n-devwarn');
   }
+  // D2 is applied last: a protected failure is never hidden, whatever the tag says. D5: a recovered failure is amber, visible, not a problem.
+  if (ev.flt && !guarded(o) && REASONS[`n-${ev.flt}`] && !(o.status >= 400 && ev.flt === 'redirect')) return ret(`n-${ev.flt}`);
+  if (o.rcv > 0 && o.kind === 'net') return ret('n-recovered');
   const d = (r) => (ev.storm ? ret('d-storm') : ret(r));
   if (o.kind === 'net' && o.via === 'document' && o.status >= 400) return d('d-doc');
   // D-1010-102: a resource load from another origin (ad blocker, a tracker that is down) is a Warning, never the app's first failure.

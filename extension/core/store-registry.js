@@ -26,6 +26,7 @@ export const REGISTRY = Object.freeze([
   idb('replay', 'typed values for replay', 'replay'),
   loc('cookieProfiles', 'saved cookie profiles, values included (encrypted)', 'eraseAll', undefined, 'cookies'),
   loc('interrupted', 'sessions a crash closed: id, saved event count and time, no content, shown once on the next popup open and removed when you dismiss it', 'eraseAll', undefined, null),
+  loc('qaw.netfilter', 'your network filter choices: the preset, ignore lists, My hosts, per-site hide rules and the Record click labels switch (no page content)', 'eraseAll', undefined, 'settings'),
   loc('lastPurgeAt', 'time of the last retention sweep', 'eraseAll', undefined, null),
   loc('purgeLog', 'count of sessions the sweep removed', 'eraseAll', undefined, null),
   ses('lastSessionId', 'id of the last session'),

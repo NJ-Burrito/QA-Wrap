@@ -13,6 +13,7 @@ import { isTesterNote } from './events.js';
 import { correlate, isFailure, reproSteps, clampLabel, dropDoubleSubmits, decodeSafe } from './artifact.js';
 import { shell, sessionIsArabic, escHtml } from './docshell.js';
 import { visibleProblems } from './signal.js';
+import { prepare, summary as filterSummary, filterSentences, siteOf } from './netfilter.js';
 import { byPageOf } from './artifact-docs.js';
 import { problemCounts } from './finding-count.js';
 import { MAKER, attribution, docFooter, embed, provenance, stripControl, commentText } from './provenance.js';
@@ -308,8 +309,9 @@ ${
 </div>`
         )
         .join('\n')
-    : '<p><span class="tag ok">${L.clean}</span> ${L.nothingFailed}</p>'
+    : `<p>${esc(nfOf(session, events, 'en').counts)}</p>`
 }
+<p class="nf-hidden">${esc(nfOf(session, events, 'en').hidden)}</p>
 
 ${h2(L.hSteps, 'steps')}
 <ol>${reproSteps(events, byPageOf(session, events)).map((s) => `<li>${esc(s.replace(/^\d+\.\s*/, ''))}</li>`).join('')}</ol>
@@ -435,7 +437,7 @@ function buildTextAr(session, events, chains) {
       out.push('');
     });
   } else {
-    out.push(L.nothingFailed, '');
+    out.push(nfOf(session, events, 'ar').counts, '');
   }
   out.push(L.hSteps, line());
   dropDoubleSubmits(events)
@@ -448,6 +450,7 @@ function buildTextAr(session, events, chains) {
     notes.forEach((n) => out.push(`${n.tag ? `[${n.tag.toUpperCase()}] ` : ''}${isoTxt(n.text)} (${when(n.ts, session.startedAt)})`));
     out.push('');
   }
+  out.push(nfOf(session, events, 'ar').hidden, '');
   out.push(L.hEnv, line());
   out.push(`${L.envViewport}: ${session.env?.viewport || '—'}`);
   out.push(`${L.envBrowser}: ${session.env?.userAgent || '—'}`);
@@ -458,6 +461,12 @@ function buildTextAr(session, events, chains) {
   out.push(docFooter({ session, version: VERSION }));
   out.push(embed.markdown({ session, version: VERSION, kind: 'text-report' }).replace(/^<!-- | -->$/g, ''));
   return out.join('\n');
+}
+
+/** D1: the network filter's accounting as two sentences, "M real failures, N hidden, K third-party" and "N calls hidden by filter (preset)". Never a "no issues" claim. */
+function nfOf(session, events, lang) {
+  const prep = prepare(events, session?.netFilter, siteOf(session));
+  return filterSentences(filterSummary(prep, { preset: session?.netFilter?.preset || 'balanced' }), visibleProblems(prep), lang);
 }
 
 /** No markup at all — for an email body or a chat window. */
@@ -494,7 +503,7 @@ export function buildText(session, events) {
       L.push('');
     });
   } else {
-    L.push('Nothing failed.', '');
+    L.push(nfOf(session, events, 'en').counts, '');
   }
 
   L.push('STEPS TO REPRODUCE', line());
@@ -508,6 +517,7 @@ export function buildText(session, events) {
     L.push('');
   }
 
+  L.push(nfOf(session, events, 'en').hidden, '');
   L.push('ENVIRONMENT', line());
   L.push(`Viewport: ${session.env?.viewport || '—'}`);
   L.push(`Browser:  ${session.env?.userAgent || '—'}`);
@@ -612,7 +622,8 @@ ${cases.join('\n')}
  * with fabricated headers is worse than one that is plainly partial.
  */
 export function buildHar(session, events) {
-  const net = events.filter((e) => e.kind === 'net').map(normaliseNetEvent).map((e) => (e.reqBody ? { ...e, reqBody: maskBodyKeys(e.reqBody) } : e)); // D-1010-133: credential body keys leave as the marker
+  // D1: a folded repeat is still a request; it is listed once with its count (`_folded`), so stored entries + folded counts = every request.
+  const net = events.filter((e) => e.kind === 'net' || (e.kind === 'rep' && (e.ofKind || 'net') === 'net')).map((e) => (e.kind === 'rep' ? { ...normaliseNetEvent({ ...e, kind: 'net', error: !(e.status > 0), ...(e.capped ? { url: 'qawrap://counted-not-stored', method: 'GET', status: 0 } : null) }), folded: Number(e.n) || 1, capped: !!e.capped } : normaliseNetEvent(e))).map((e) => (e.reqBody ? { ...e, reqBody: maskBodyKeys(e.reqBody) } : e)); // D-1010-133: credential body keys leave as the marker
   const started = new Date(session.startedAt).toISOString();
 
   return JSON.stringify(
@@ -631,7 +642,7 @@ export function buildHar(session, events) {
         // back in — the file is written for DevTools, Charles and whoever the
         // tester sends it to — so there is no old key to keep reading, and a
         // HAR exported before today keeps the name it was written with.
-        _qawrap: provenance({ session, version: VERSION, kind: 'har' }),
+        _qawrap: { ...provenance({ session, version: VERSION, kind: 'har' }), networkFilter: filterSummary(prepare(events, session?.netFilter, siteOf(session)), { preset: session?.netFilter?.preset || 'balanced' }) },
         comment:
           'Captured by a browser extension from fetch/XHR instrumentation, not from the ' +
           'network stack, so timings are wall-clock around the call rather than connect / ' +
@@ -704,7 +715,8 @@ export function buildHar(session, events) {
           },
           cache: {},
           timings: { send: 0, wait: Math.round(e.durationMs || 0), receive: 0 },
-          comment: e.overridden ? `Forced by a QA Wrap rule: ${e.ruleLabel || 'unnamed'}` : '',
+          comment: e.capped ? 'Counted, not stored: the recorder reached its limit of distinct requests, so only the number is known.' : e.overridden ? `Forced by a QA Wrap rule: ${e.ruleLabel || 'unnamed'}` : '',
+          ...(e.folded ? { _folded: e.folded } : {}),
         })),
       },
     },

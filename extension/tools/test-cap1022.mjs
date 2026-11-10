@@ -50,10 +50,11 @@ await test('a 5xx is always recorded, even with no tester action', async () => {
   assert.equal(env.ev('net')[0].status, 503);
 });
 
-await test('a 4xx nobody caused (no tester action) is not recorded', async () => {
+await test('a 4xx nobody caused (no tester action) is still recorded (D1: nothing is deleted) but carries no `ca` tag, so Strict can hide it', async () => {
   const env = mkEnv();
   await answer(env, 404);
-  assert.equal(env.ev('net').length, 0);
+  assert.equal(env.ev('net').length, 1);
+  assert.equal(env.ev('net')[0].ca, undefined);
 });
 
 await test('a 4xx right after a tester action is recorded', async () => {
@@ -153,20 +154,22 @@ await test('the saved clip\'s duration metadata is what the media decodes to (wi
   assert.match(r, /reconcileDuration\(Date\.now\(\) - slot\.startedAt, await decodedMs\(blob\)\)/, 'save() stores the decoded length');
 });
 
-await test('quiet detection: a 404 loop (beacon) yields 0 findings with no click, and still 0 after a click that did not cause it; a 404 right after a click is 1', async () => {
+await test('quiet detection: a 404 loop (beacon) is recorded but never tagged as caused by the tester, before or after a click that did not cause it; a 404 right after a click is tagged', async () => {
   const beacon = async (env) => { env.win.next = () => Promise.resolve(new Response('', { status: 404 })); await env.win.fetch('/analytics/beacon', { method: 'POST' }); };
   const loop = mkEnv();
   for (let i = 0; i < 4; i++) await beacon(loop);
   await new Promise((r) => setTimeout(r, 300));
-  assert.equal(loop.ev('net').length, 0, 'no click: nothing');
+  assert.ok(loop.ev('net').length > 0 && loop.ev('net').every((n) => n.ca === undefined), 'no click: recorded, not caused');
   loop.act(1); // a tester click lands in the middle of the loop
   for (let i = 0; i < 4; i++) await beacon(loop);
   await new Promise((r) => setTimeout(r, 300));
-  assert.equal(loop.ev('net').length, 0, 'the loop was failing before the click: background');
+  const after = [...loop.ev('net'), ...loop.ev('rep')];
+  assert.ok(after.every((n) => n.ca !== 2), 'the loop was failing before the click: background, never the causal-window tag');
   const caused = mkEnv();
   caused.act(1);
   await answer(caused, 404);
   assert.equal(caused.ev('net').length, 1);
+  assert.ok(caused.ev('net')[0].ca >= 1, 'a 404 right after a click is tagged as caused');
 });
 
 await test('Settings > About links LinkedIn, EN and AR', () => {

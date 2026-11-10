@@ -22,6 +22,7 @@ import { groupFailures, dupeKey } from './dupes.js';
 import { problemCounts, agreeWithProblems } from './finding-count.js';
 import { countFindings, describeFindings } from './sessions.js';
 import { visibleProblems, classify } from './signal.js';
+import { prepare, summary as filterSummary, filterSentences, siteOf } from './netfilter.js';
 import {
   reproSteps, dropDoubleSubmits, areasCovered, durationBand,
   inlinePlan, describeOmitted, stepLabel, LABEL_PROSE_MAX,
@@ -200,6 +201,7 @@ export function buildMarkdown(session, events, captures = {}) {
   L.push(`| Ruleset | v${sig.ruleset}; ${sig.notes} known-benign notes hidden, kept in the events |`);
   L.push('');
   L.push(describeFindings(found));
+  { const nf = filterSentences(filterSummary(prepare(events, session?.netFilter, siteOf(session)), { preset: session?.netFilter?.preset || 'balanced' }), visibleProblems(prepare(events, session?.netFilter, siteOf(session))), sessionIsArabic(session, events) ? 'ar' : 'en'); L.push('', nf.counts, '', nf.hidden); } // D1: the filter's accounting, always printed
   L.push('');
 
   if (chains.length) {
@@ -371,6 +373,8 @@ export function buildJson(session, events, captures = {}) {
       problems: problemCounts(events).groups,
       problemsBreakdown: { unit: 'distinct problems (repeats folded)', occurrences: problemCounts(events).events, afterNoiseRules: headline(events, session).problems, toolFindings: headline(events, session).tool },
       ruleset: visibleProblems(events).ruleset,
+      // D1: nothing is deleted; this is the accounting of what the network filter hides (shown + hidden = total).
+      networkFilter: (() => { const prep = prepare(events, session?.netFilter, siteOf(session)); const sum = filterSummary(prep, { preset: session?.netFilter?.preset || 'balanced' }); return { ...sum, sentences: filterSentences(sum, visibleProblems(prep)) }; })(),
       // AUTO-5: groups the tester marked "Not a bug". Still counted above and still listed in `events`.
       markedExpected: groupFailures(events).filter((g) => g.expected).map((g) => g.key),
       // Raw events, every one kept. `derived` is computed at export time, never stored;

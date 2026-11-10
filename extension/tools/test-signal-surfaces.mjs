@@ -66,7 +66,7 @@ for (const f of cases) {
 ok(exportsChecked === cases.length, 'every tune fixture exported, with and without tool findings', `${exportsChecked}/${cases.length}`);
 
 // the surfaces read the one function (popup = panel = report = filing)
-ok(/SIG\.visibleProblems\(events, 'all'\)/.test(read('popup/popup.js')) && /sg.num/.test(read('popup/popup.js')), 'popup reads visibleProblems');
+ok(/SIG\.visibleProblems\((FC\?\.withRecovery\?\.\(events\) \?\? )?events, 'all'\)/.test(read('popup/popup.js')) && /sg.num/.test(read('popup/popup.js')), 'popup reads visibleProblems');
 ok(/sgView\(events, session\.id\)/.test(read('devtools/panel.js')) && /sg.num/.test(read('devtools/panel.js')), 'panel reads visibleProblems');
 ok(/sg.num/.test(read('report/report.js')) && /sgv.num/.test(read('report/report.js')), 'report reads visibleProblems');
 ok(/signal: sgv && \{ problems: sgv.num/.test(read('report/report.js')) && /X\.signal/.test(read('report/filing.js')) && /s\.problems/.test(read('report/filing.js')), 'filing takes the report number');

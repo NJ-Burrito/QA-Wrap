@@ -657,7 +657,7 @@
   const roleTakesName = (el, role) =>
     NAME_FROM_CONTENT.has(role) || BORROWS_ITS_NAME.has(role) || !!(el.getAttribute('aria-label') || el.getAttribute('aria-labelledby'));
 
-  function candidatesFor(el, warn = new Map()) {
+  function candidatesFor(el, warn = new Map(), noText = false) {
     const out = [];
     const role = roleOf(el);
     const name = accessibleName(el);
@@ -675,7 +675,7 @@
       }
     }
 
-    if (role && quotable(name, warn, 1) && !nameIsBorrowed(el) && roleTakesName(el, role)) {
+    if (!noText && role && quotable(name, warn, 1) && !nameIsBorrowed(el) && roleTakesName(el, role)) {
       out.push({
         strategy: 'role', role, name, exact: true, rank: 1,
         expr: `getByRole(${q(role)}, { name: ${q(name)}, exact: true })`,
@@ -683,12 +683,12 @@
     }
 
     const label = labelFor(el) || wireText(el.getAttribute('aria-label') || '');
-    if (quotable(label, warn, 2) && /^(input|select|textarea)$/i.test(el.tagName)) {
+    if (!noText && quotable(label, warn, 2) && /^(input|select|textarea)$/i.test(el.tagName)) {
       out.push({ strategy: 'label', value: label, rank: 2, expr: `getByLabel(${q(label)})` });
     }
 
     const placeholder = wireText(el.getAttribute('placeholder') || '');
-    if (quotable(placeholder, warn, 3)) {
+    if (!noText && quotable(placeholder, warn, 3)) {
       out.push({ strategy: 'placeholder', value: placeholder, rank: 3, expr: `getByPlaceholder(${q(placeholder)})` });
     }
 
@@ -697,7 +697,7 @@
     }
 
     const text = visibleText(el);
-    if (text && text.length <= 60 && quotable(text, warn, 5) && !/^(input|select|textarea)$/i.test(el.tagName)) {
+    if (!noText && text && text.length <= 60 && quotable(text, warn, 5) && !/^(input|select|textarea)$/i.test(el.tagName)) {
       out.push({ strategy: 'text', value: text, rank: 5, expr: `getByText(${q(text)}, { exact: true })` });
     }
 
@@ -706,7 +706,7 @@
       out.push({ strategy: 'css', value: css, rank: 6, expr: `locator(${q(css)})` });
     }
 
-    out.push(...attributeCandidates(el));
+    if (!noText) out.push(...attributeCandidates(el)); // an onclick literal or a data value can quote what the user typed or saw
 
     const path = cssPath(el);
     if (path) out.push({ strategy: 'css', value: path, rank: 7, expr: `locator(${q(path)})` });
@@ -834,7 +834,7 @@
     try {
       // Candidates are already ranked best-first, so once one resolves uniquely
       // there is nothing better further down the list — stop resolving.
-      for (const c of candidatesFor(el, warn)) {
+      for (const c of candidatesFor(el, warn, options.noText === true)) {
         if (budgetMs && results.length && performance.now() - t0 > budgetMs) break; // best so far; the no-unique warning below says so
         const matched = resolve(c);
         const entry = {
@@ -884,7 +884,7 @@
       css: cssPath(el),
       xpath: xPath(el),
       role: roleOf(el),
-      name: accessibleName(el).slice(0, NAME_MAX),
+      name: options.noText === true ? '' : accessibleName(el).slice(0, NAME_MAX),
       tag: el.tagName.toLowerCase(),
     };
   }
@@ -916,10 +916,118 @@
     return out;
   }
 
+  /* ------------------------------------------------------------ click labels (D10) */
+
+  /**
+   * What a recorded action calls the element it touched, and nothing it must not repeat.
+   *
+   * Source order: accessible name (aria-labelledby, aria-label, label), the control's own visible text, title, alt, the value of a
+   * button-type input, the icon's SVG <title> or icon name. Never a text field's value; never anything inside a password, cc-*,
+   * one-time-code, masked or contenteditable element; a table row, cell or grid cell is named by its role only.
+   * The text is scrubbed (emails, phone numbers, digit runs, secret-name assignments) and cut to 80 graphemes with bidi controls stripped.
+   * Returns { label, role, unnamed }: `unnamed` is 'icon' or 'none' when the control has no accessible name at all (also an a11y finding).
+   */
+  const LABEL_MAX = 80;
+  const BIDI_CONTROLS = /[\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/g;
+  const AR_DIGITS = /[\u0660-\u0669\u06f0-\u06f9]/g;
+  const toLatin = (t) => t.replace(AR_DIGITS, (d) => String((d.charCodeAt(0) - 0x660) % 16 % 10));
+  const SECRET_ASSIGN = /(?<![\p{L}\p{N}_])(?:pass(?:word|wd|code|phrase)?|pwd|secret|token|api[-_ ]?key|apikey|auth(?:orization)?|bearer|session(?:id)?|cookie|otp|pin|cvv|cvc|ssn|iban|jwt|csrf|xsrf|كلمة المرور|رمز|رقم سري)\s*[:=]\s*\S+/giu;
+
+  /** The replacements only, no normalising: what makes a text sensitive. */
+  function scrubCore(text) {
+    let t = String(text ?? '');
+    t = t.replace(/[\p{L}\p{N}_.+'%-]+@[\p{L}\p{N}_-]+(?:\.[\p{L}\p{N}_-]+)+/gu, '…'); // also a non-ASCII address
+    t = t.replace(SECRET_ASSIGN, '…');
+    t = t.replace(/(?:\+|00)?[\d٠-٩۰-۹][\d٠-٩۰-۹ \u00a0\u202f/().-]{4,}[\d٠-٩۰-۹]/g, (m) => {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(toLatin(m))) return m; // an ISO date is not a number somebody owns
+      return toLatin(m).replace(/\D/g, '').length >= 7 ? '…' : m;
+    });
+    return t.replace(/[\d٠-٩۰-۹]{6,}/g, '…');
+  }
+
+  /** Emails, phone numbers, card-like runs, any run of 6 or more digits, and secret-name assignments are removed (replaced by an ellipsis); bidi controls are stripped. */
+  function scrubLabel(text) {
+    return scrubCore(String(text ?? '').replace(BIDI_CONTROLS, '')).replace(/…(?:\s*…)+/g, '…').replace(/\s+/g, ' ').trim();
+  }
+
+  /** True when the text carries something scrubLabel would remove: a locator that quotes it must not be stored. */
+  const hasSensitive = (text) => typeof text === 'string' && scrubCore(text) !== text;
+
+  /** At most `max` user-perceived characters, cut on a grapheme boundary (emoji sequences and combining marks stay whole). */
+  function clipGraphemes(text, max = LABEL_MAX) {
+    const t = String(text ?? '');
+    const Seg = typeof Intl !== 'undefined' && Intl.Segmenter;
+    const parts = Seg ? Array.from(new Seg(undefined, { granularity: 'grapheme' }).segment(t), (x) => x.segment) : Array.from(t);
+    return parts.length <= max ? t : `${parts.slice(0, max - 1).join('')}…`;
+  }
+
+  const ROWLIKE = /^(tr|td|th)$/;
+  const ROWROLE = /^(row|gridcell|cell|columnheader|rowheader)$/;
+  const SENSITIVE = 'input[type="password" i], [autocomplete^="cc-" i], [autocomplete~="one-time-code" i], [contenteditable=""], [contenteditable="true" i], [contenteditable="plaintext-only" i]';
+  const TEXTISH = /^(|text|search|tel|url|email|number|password|date|datetime-local|month|time|week)$/;
+
+  function sensitiveContext(el) {
+    try {
+      if (el.closest?.(SENSITIVE) || el.querySelector?.(SENSITIVE)) return true;
+      if (el.isContentEditable) return true;
+    } catch { /* an exotic node */ }
+    return false;
+  }
+
+  function iconName(el) {
+    const own = el.querySelector?.('svg title, [data-icon], [data-lucide], [class*="icon" i], [class*="lucide" i]') || (/\b(icon|lucide)/i.test(String(el.className?.baseVal ?? el.className ?? '')) ? el : null);
+    if (!own) return { icon: false, name: '' };
+    const title = own.matches?.('svg title') || own.tagName?.toLowerCase() === 'title' ? wireText(own.textContent) : '';
+    if (title) return { icon: true, name: title };
+    const attr = own.getAttribute?.('data-icon') || own.getAttribute?.('data-lucide') || '';
+    if (attr) return { icon: true, name: wireText(attr) };
+    const cls = String(own.className?.baseVal ?? own.className ?? '').match(/(?:^|\s)(?:lucide|icon|fa|bi|mdi|ti|ri)[-_]([a-z][a-z0-9-]{1,30})(?=\s|$)/i);
+    return { icon: true, name: cls && !/^(button|btn|only|left|right|sm|lg|md|xs|small|large)$/i.test(cls[1]) ? cls[1].replace(/-/g, ' ') : '' };
+  }
+
+  /** D10: true when a click on this element may carry no label and no name or text based locator (switch off, masked, sensitive field, table row or cell). */
+  function labelRestricted(el, { enabled = true, masked = false } = {}) {
+    if (!el || el.nodeType !== 1) return false;
+    const tag = el.tagName.toLowerCase();
+    const role = (roleOf(el) || tag).split(/\s+/)[0];
+    return !enabled || masked || sensitiveContext(el) || ROWLIKE.test(tag) || ROWROLE.test(role);
+  }
+
+  function clickLabel(el, { enabled = true, masked = false } = {}) {
+    if (!el || el.nodeType !== 1) return { label: '', role: '', unnamed: undefined };
+    const tag = el.tagName.toLowerCase();
+    const role = (roleOf(el) || tag).split(/\s+/)[0];
+    const roleOnly = { label: '', role, unnamed: undefined };
+    if (labelRestricted(el, { enabled, masked })) return roleOnly;
+    let name = '';
+    const type = (el.type || '').toLowerCase();
+    if (tag === 'textarea' || tag === 'select' || (tag === 'input' && TEXTISH.test(type))) {
+      // a field is named by its label, never by what was typed or chosen
+      name = wireText(el.getAttribute('aria-label') || '') || labelFor(el) || wireText(el.getAttribute('title') || '') || wireText(el.getAttribute('placeholder') || '');
+    } else {
+      name = accessibleName(el);
+      if (!name) name = wireText(el.getAttribute('alt') || '');
+    }
+    name = clipGraphemes(scrubLabel(name));
+    if (name) return { label: name, role, unnamed: undefined };
+    const icon = iconName(el);
+    const iconText = clipGraphemes(scrubLabel(icon.name));
+    if (iconText) return { label: iconText, role, unnamed: undefined };
+    if (/^(button|link|menuitem|tab|checkbox|radio|switch|option|treeitem)$/.test(role) || tag === 'button' || tag === 'a') {
+      return { label: '', role, unnamed: icon.icon ? 'icon' : 'none' };
+    }
+    return roleOnly;
+  }
+
   window.UQASelector = {
     describe,
     describeMany,
     accessibleName,
+    clickLabel,
+    labelRestricted,
+    scrubLabel,
+    hasSensitive,
+    clipGraphemes,
     roleOf,
     normText,
     isStableId,

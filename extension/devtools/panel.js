@@ -37,6 +37,25 @@ const sigReady = Promise.all([
   import('../core/finding-count.js').then((m) => { FC = m; }),
 ]).catch(() => {});
 
+/* ── network filter (D1, D6, D9, D10): devtools/netfilter-panel.js ─────────────────────────────────
+ * Every request stays in `events`; `nfEvents()` returns the same list with the reason each hidden call is hidden for.
+ * The timeline draws the hidden ones only while "Show" is on, and says how many there are. */
+let NFP = null;
+let nfCfg = null;
+let nfShow = false; // set from localStorage once the module has loaded
+let nfToastTimer = 0;
+const nfSite = () => (NFP ? NFP.siteOf(session) : '');
+const nfEvents = () => (NFP && nfCfg ? NFP.prepared(events, nfCfg, nfSite()) : events);
+const nfApply = async (cfg) => { await NFP.saveCfg(cfg); nfCfg = cfg; renderAll(); };
+/** D1: a hidden call is hidden from the list only; it is counted above it and stays in the session and the exports. */
+const nfIsHidden = (e) => !!(e && (e.kind === 'net' || e.kind === 'rep') && (e.flt || (e.status >= 300 && e.status < 400 && nfCfg?.preset !== 'everything'))); // a 3xx is hidden by the preset only, the same rule summary() counts it by
+const nfReady = import('./netfilter-panel.js').then(async (m) => {
+  NFP = m;
+  nfShow = sgGet('qaw.nf.show', '0') === '1';
+  nfCfg = await m.loadCfg();
+  m.onChange(async () => { nfCfg = await m.loadCfg(); renderAll(); });
+}).catch(() => {});
+
 /* ── the one problem number: core/signal.js visibleProblems (spec §7) ───────
  * The same block is in popup.js, devtools/panel.js and report.js: the number
  * comes from one function, the words from `common.signal.*`.
@@ -48,14 +67,15 @@ const sgPromoted = (sid) => { try { return new Set(JSON.parse(localStorage.getIt
 const sgPath = (u) => { try { const p = new URL(u); return p.pathname + p.search; } catch { return String(u || ''); } };
 /** The rows the level shows: Problems, or Everything; a promoted note joins Problems. */
 function sgView(events, sid) {
-  const sig = SIG.visibleProblems(events, 'all');
+  const prep = typeof nfEvents === 'function' ? nfEvents() : events;
+  const sig = SIG.visibleProblems(prep, 'all');
   const level = sgLevel();
   const promo = sgPromoted(sid);
-  const rows = level === 'all' ? sig.rows : sig.rows.filter((r) => r.c === 'D' || promo.has(r.key));
+  const rows = level === 'all' ? sig.rows : sig.rows.filter((r) => r.c === 'D' || r.r === 'n-recovered' || promo.has(r.key)) /* D5: a recovered failure is an amber row, visible and not a problem */;
   // The headline is the one problem number (core/finding-count.js: distinct failures, repeats folded), the same on the chip, the done card, the toast and the report.
   // What the tester's own tools found (a11y, links, layout, fine print) is a Finding, counted apart.
-  const num = FC ? FC.problemCounts(events).groups : sig.problems;
-  return { sig, num, level, rows, promo, induced: sig.inducedRows };
+  const num = FC ? FC.problemCounts(prep).groups : sig.problems;
+  return { sig, num, level, rows, promo, induced: sig.inducedRows, prep };
 }
 function sgRow(r, v, sid, again) {
   const row = el('div', `sg-row${r.c === 'D' ? ' is-d' : ''}`);
@@ -102,7 +122,16 @@ function sgBlock(v, sid, again) {
     box.append(el('p', 'sg-line sg-hiding', t('common.signal.hiding', { n: sig.notes, list })));
   }
   if (sig.collapsed) box.append(el('p', 'sg-line', t('common.signal.moreCollapsed', { n: sig.collapsed })));
-  if (!sig.problems) box.append(el('p', 'sg-line sg-cov', t('common.signal.coverage')));
+  if (NFP && nfCfg) {
+    // D1: always the counts, never a claim that nothing is wrong. D9: the chip names the preset and the rules for this site.
+    const sum = NFP.NF.summary(v.prep, { preset: nfCfg.preset });
+    box.append(NFP.chip(t, el, nfCfg, nfSite()));
+    box.append(el('p', 'sg-line', t('common.nf.counts', { m: sig.errors, n: sum.hiddenTotal, k: sig.warnings })));
+    if (sum.recovered) box.append(el('p', 'sg-line', t('common.nf.recovered', { n: sum.recovered })));
+    if (sum.hiddenTotal) box.append(NFP.hiddenBar(t, el, sum, nfShow, () => { nfShow = !nfShow; sgSet('qaw.nf.show', nfShow ? '1' : '0'); renderAll(); }));
+    box.append(el('p', 'sg-line nf-total', t('common.nf.hiddenLine', { n: sum.hiddenTotal, preset: t(`common.nf.preset.${nfCfg.preset}`) })));
+  }
+  if (!sig.problems && !NFP) box.append(el('p', 'sg-line sg-cov', t('common.signal.coverage')));
   if (v.induced.length) {
     const d = el('details', 'sg-induced');
     d.append(el('summary', '', `${t('common.signal.induced')} (${v.induced.length})`));
@@ -270,7 +299,7 @@ function summarise(ev) {
       return t('panel.timeline.summary.nav', { url: ev.url });
     case 'dom': {
       const target = ev.label || ev.tag || t('panel.timeline.summary.element');
-      if (ev.action === 'click') return t('panel.timeline.summary.clicked', { target });
+      if (ev.action === 'click') return (NFP && NFP.clickSummary(t, ev)?.text) || t('panel.timeline.summary.clicked', { target });
       if (ev.action === 'input') return t('panel.timeline.summary.typed', { value: ev.value ?? '', target });
       if (ev.action === 'change') return t('panel.timeline.summary.set', { target, value: ev.value ?? '' });
       if (ev.action === 'submit') return t('panel.timeline.summary.submitted', { target });
@@ -600,7 +629,16 @@ function buildRow(ev) {
   const body = el('div', 'body');
   const icon = noteIcon(ev);
   if (icon) body.append(icon);
-  body.append(document.createTextNode(summarise(ev)));
+  const cs = NFP && ev.kind === 'dom' && ev.action === 'click' ? NFP.clickSummary(t, ev) : null;
+  if (cs?.label && cs.text.includes(cs.label)) {
+    // D10: the label is data in the page's own direction, so it sits in <bdi>; the tooltip holds the whole label.
+    const at = cs.text.indexOf(cs.label);
+    const b = document.createElement('bdi');
+    b.dir = 'auto';
+    b.textContent = cs.label;
+    b.title = ev.label;
+    body.append(document.createTextNode(cs.text.slice(0, at)), b, document.createTextNode(cs.text.slice(at + cs.label.length)));
+  } else body.append(document.createTextNode(summarise(ev)));
 
   if (ev.locator) {
     const loc = el('code', `loc${ev.locatorAmbiguous ? ' ambiguous' : ''}`);
@@ -625,6 +663,23 @@ function buildRow(ev) {
     shotObserver.observe(fig);
   }
 
+  if (NFP && nfCfg && ev.kind === 'net' && isFailure(ev)) {
+    const menu = NFP.rowMenu({
+      t, el, ev, events, cfg: nfCfg, site: nfSite(), apply: nfApply, base: session?.startUrl,
+      toast: (text, undoLabel, undo) => {
+        const box = $('toast');
+        box.textContent = `${text} `;
+        const u = el('button', 'sg-btn', undoLabel);
+        u.type = 'button';
+        u.addEventListener('click', () => { undo(); box.hidden = true; });
+        box.append(u);
+        box.hidden = false;
+        clearTimeout(nfToastTimer);
+        nfToastTimer = setTimeout(() => (box.hidden = true), 8000);
+      },
+    });
+    if (menu) body.append(document.createElement('br'), menu);
+  }
   row.append(body);
   return row;
 }
@@ -632,7 +687,8 @@ function buildRow(ev) {
 function visibleEvents() {
   const onlyFailures = $('only-failures').checked;
   const cap = settings?.maxTimelineRows ?? 1000;
-  const all = events.filter((e) => !hidden.has(e.kind) && (!onlyFailures || isFailure(e)));
+  const prep = nfEvents();
+  const all = events.filter((e, i) => !hidden.has(e.kind) && (!onlyFailures || isFailure(e)) && (nfShow || !nfIsHidden(prep[i] || e)));
   // Cap what is DRAWN, never what is stored or exported. Newest rows win.
   return all.length > cap ? all.slice(all.length - cap) : all;
 }
@@ -646,11 +702,18 @@ function appendNewRows(fresh) {
   if (!host.firstChild || host.querySelector('.empty')) return renderTimeline();
 
   const onlyFailures = $('only-failures').checked;
-  const rows = fresh.filter((e) => !hidden.has(e.kind) && (!onlyFailures || isFailure(e)));
+  const rows = fresh.filter((e) => !hidden.has(e.kind) && (!onlyFailures || isFailure(e)) && (nfShow || !nfIsHidden(nfEvents()[events.indexOf(e)] || e)));
   if (!rows.length) return;
 
   const frag = document.createDocumentFragment();
-  rows.forEach((ev) => frag.append(buildRow(ev)));
+  if (NFP) {
+    // D6 on the poll too: group over everything visible; a new row that folds into a group led by an already-drawn row means that
+    // row's count changed, so the list is redrawn once (the cheap path stays for polls that only add new, separate rows).
+    const grp = NFP.groupedRows(t, el, visibleEvents());
+    const fresh2 = new Set(rows);
+    if (rows.some((ev) => grp.skip.has(ev) && !fresh2.has(grp.leadOf.get(ev)))) return renderTimeline();
+    rows.forEach((ev) => { if (!grp.skip.has(ev)) frag.append(grp.row(ev) || buildRow(ev)); });
+  } else rows.forEach((ev) => frag.append(buildRow(ev)));
   host.append(frag);
 
   // Honour the draw cap without re-rendering: drop from the top.
@@ -674,7 +737,8 @@ function renderTimeline() {
 
   // One reflow instead of one per row.
   const frag = document.createDocumentFragment();
-  visible.forEach((ev) => frag.append(buildRow(ev)));
+  const grp = NFP ? NFP.groupedRows(t, el, visible) : null; // D6: repeats of one call inside 30 s are one row
+  visible.forEach((ev) => { if (grp?.skip.has(ev)) return; frag.append(grp?.row(ev) || buildRow(ev)); });
   host.append(frag);
   renderedCount = visible.length;
 
@@ -1018,6 +1082,7 @@ async function boot() {
   // with live in core/, and a draw that ran first would find no failures at all.
   await rulesReady;
   await sigReady;
+  await nfReady;
   const res = await send({ type: 'UQA_GET_SETTINGS' });
   if (res.ok) settings = res.result;
   await loadSessions();

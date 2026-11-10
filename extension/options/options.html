@@ -327,6 +327,30 @@
           </div>
           <input type="range" id="screenshotWidth" />
         </div>
+
+        <fieldset class="range-field" id="nf-field" aria-labelledby="nf-title">
+          <legend id="nf-title" data-i18n="options.nf.title">Network filter</legend>
+          <p class="range-note" data-i18n="options.nf.intro">Choose how much background traffic the timeline shows. Nothing is deleted: hidden calls stay in the session, the HAR and the exports, and are counted.</p>
+          <div role="radiogroup" aria-label="Which calls to show" data-i18n-aria="options.nf.presetLabel">
+            <label><input type="radio" name="nfPreset" value="strict" /> <span data-i18n="options.nf.preset.strict">Strict: show only failures my actions caused</span></label>
+            <label><input type="radio" name="nfPreset" value="balanced" /> <span data-i18n="options.nf.preset.balanced">Balanced: hide analytics, blocked tags, cancelled requests and similar noise</span></label>
+            <label><input type="radio" name="nfPreset" value="everything" /> <span data-i18n="options.nf.preset.everything">Everything: hide nothing</span></label>
+          </div>
+          <label class="toggle"><input type="checkbox" id="nf-clickLabels" /> <span data-i18n="options.nf.clickLabels">Record click labels</span></label>
+          <p class="range-note" data-i18n="options.nf.clickLabelsNote">The name of the button or link you click is saved with the step. Text typed into fields, passwords, card fields, one-time codes and table cells are never read. Emails, phone numbers and long digit runs are removed.</p>
+          <details id="nf-advanced">
+            <summary data-i18n="options.nf.advanced">Advanced</summary>
+            <label for="nf-ignoreDomains" data-i18n="options.nf.ignoreDomains">Ignored domains (one per line)</label>
+            <textarea id="nf-ignoreDomains" rows="3" dir="ltr" spellcheck="false"></textarea>
+            <label for="nf-ignorePaths" data-i18n="options.nf.ignorePaths">Ignored path patterns (one per line, * matches anything)</label>
+            <textarea id="nf-ignorePaths" rows="3" dir="ltr" spellcheck="false"></textarea>
+            <label for="nf-ignoreStatuses" data-i18n="options.nf.ignoreStatuses">Ignored statuses (for example 404 or 0)</label>
+            <input type="text" id="nf-ignoreStatuses" dir="ltr" spellcheck="false" />
+            <label for="nf-myHosts" data-i18n="options.nf.myHosts">My hosts (always treated as part of the app, one per line)</label>
+            <textarea id="nf-myHosts" rows="3" dir="ltr" spellcheck="false"></textarea>
+          </details>
+          <p class="range-note" id="nf-status" role="status"></p>
+        </fieldset>
       </section>
 
       <!-- ============================================ output -->
@@ -1030,5 +1054,6 @@
     <script src="buffer-bridge.js"></script>
     <script src="ai-writing.js" type="module"></script>
     <script src="jira-helper.js" type="module"></script>
+    <script src="netfilter.js" type="module"></script>
   </body>
 </html>

@@ -147,7 +147,7 @@ const NAMES = [
   'UQA_CLEAR_MASKS', 'UQA_INJECT', 'UQA_GET_SETTINGS', 'UQA_SET_SETTINGS',
   'UQA_VAULT_STATE', 'UQA_VAULT_PASS', 'UQA_VAULT_UNLOCK', 'UQA_VAULT_LOCK', 'UQA_VAULT_FORGET', 'UQA_RESET_SETTINGS',
   'UQA_ERASE_ALL', 'UQA_SESSION_FOOTPRINT', 'UQA_COMMANDS', 'UQA_OPEN_SHORTCUTS',
-  'UQA_OPEN_REPORT', 'UQA_OPEN_OPTIONS', 'UQA_GET_RULES', 'UQA_SET_RULES',
+  'UQA_OPEN_REPORT', 'UQA_OPEN_OPTIONS', 'UQA_GET_RULES', 'UQA_NF_CONFIG', 'UQA_SET_RULES',
   'UQA_ADD_RULE', 'UQA_DROP_RULE', 'UQA_RULE_FIRED', 'UQA_SESSION_STATE',
   // Five names added on 8 September 2026 with decision 8 of research/56, which
   // moved `<all_urls>` out of `host_permissions`. Two are about where this
@@ -196,8 +196,8 @@ const NAMES = [
   'UQA_TOGGLE_RTL', 'UQA_RTL_STATE',
 ];
 
-test('the worker still answers all 191 message names, in the same order', () => {
-  assert.equal(NAMES.length, 191);
+test('the worker still answers all 192 message names, in the same order', () => {
+  assert.equal(NAMES.length, 192);
   assert.deepEqual(declared, NAMES);
 });
 

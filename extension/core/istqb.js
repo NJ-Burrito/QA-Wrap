@@ -367,7 +367,7 @@ export function suggestSeverity(chain, { startUrl = '' } = {}) {
 const ASSET_EXT = /\.(?:png|jpe?g|gif|webp|avif|svg|ico|bmp|woff2?|ttf|otf|eot|mp3|mp4|webm|ogg|wav|m4a|map)(?:$|[?#])/i;
 const hostOf = (u) => { try { return new URL(String(u)).hostname.toLowerCase(); } catch { return ''; } };
 
-/** shop.example.com and api.example.com are one site; example.co.uk keeps three labels. */
+/** Fallback for old sessions; the page tags `fp` from the Public Suffix List (D3). */
 const siteOf = (h) => {
   const p = h.split('.');
   const keep = p.length > 2 && p[p.length - 1].length === 2 && /^(?:co|com|org|net|gov|edu|ac)$/.test(p[p.length - 2]) ? 3 : 2;
@@ -383,6 +383,8 @@ function peripheralFailure(f, startUrl) {
   const type = String(f.resourceType || f.type || '').toLowerCase();
   if (/^(?:image|font|media|stylesheet|ping|beacon)$/.test(type)) return true;
   if (!type && !/^(?:fetch|xhr|document)$/.test(String(f.via || '')) && ASSET_EXT.test(String(f.url || ''))) return true;
+  if (f.fp === 0) return true;
+  if (f.fp === 1) return false;
   const h = hostOf(f.url);
   const s = hostOf(startUrl);
   if (h && s && siteOf(h) !== siteOf(s)) return true;

@@ -1,27 +1,9 @@
 /* QA Wrap — local-first QA toolkit in the ISTQB shape. */
 /**
- * Whose failure is it?
- *
- * The number at the top of a report is the one number everybody reads. On any
- * site that embeds analytics it was reporting **the ad blocker's work, not the
- * product's** — an independent field test recorded "27 problems found" where
- * all 27 were blocked beacons to a third-party host and the application under
- * test had failed exactly zero times.
- *
- * The correlation engine had been right about each one individually; every
- * chain named the correct click. The conclusion was wrong entirely, because
- * nothing had asked *whose server* had failed.
- *
- * ── decided from where the tester went, never from a blocklist ────────────
- *
- * The temptation is a list of known ad and analytics hosts. It is the wrong
- * mechanism twice over: a blocklist goes stale the week after it is written,
- * and it is actively wrong for an internal tool whose own telemetry host looks
- * exactly like somebody else's tracker.
- *
- * "Did the tester actually visit it?" needs no list, never goes stale, and
- * stays right on a site nobody has heard of — including one on a private LAN,
- * which is most of what this extension is used against.
+ * Whose failure is it? Decided from where the tester went, never from a blocklist (a list goes stale, and is wrong for
+ * an internal tool whose own telemetry host looks like a tracker). The exact test, with the Public Suffix List, runs in
+ * the page hook and in core/netfilter.js (D3); this file is the worker's light fallback and must stay small, because
+ * the service worker's boot graph is at its ceiling (test-worker-imports).
  */
 
 export function hostOf(url) {
@@ -47,29 +29,12 @@ export function sessionHosts(session, events = []) {
   return hosts;
 }
 
-/**
- * `api.shop.com` is not third party to `shop.com`.
- *
- * So the comparison is on the registrable tail rather than the exact host —
- * otherwise every application whose API lives on a subdomain would have its own
- * failures thrown out of its own report, which is the opposite mistake and a
- * worse one.
- *
- * A failure with no URL at all — a console error, an uncaught exception —
- * belongs to the page by definition.
- */
+/** `api.shop.com` is not third party to `shop.com`; a failure with no URL (a console error) belongs to the page. */
 export function isFirstParty(url, hosts) {
   return isFirstPartyHost(hostOf(url), hosts);
 }
 
-/**
- * The same question asked of a host that has already been extracted.
- *
- * The running tally the worker keeps for the popup counts failures by host
- * rather than holding every failing event in session storage, so it needs to
- * ask this without a URL to hand. Splitting it out is what stops that tally
- * and the report's own split answering differently.
- */
+/** The same question for a host already extracted (the worker's tally counts by host). */
 export function isFirstPartyHost(h, hosts) {
   if (!h) return true;
   for (const known of hosts) {

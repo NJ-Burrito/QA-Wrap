@@ -1,11 +1,5 @@
 /* QA Wrap — local-first QA toolkit in the ISTQB shape. */
-/**
- * The one definition of "this event is a problem".
- *
- * It lives on its own because three places need it and they must never drift:
- * the store (which indexes it), the artefact builder (which reports it), and the
- * panel (which colours it).
- */
+/** The one definition of "this event is a problem": the store indexes it, the artefact builder reports it, the panel colours it. */
 
 import { hostOf } from './origins.js';
 
@@ -28,11 +22,7 @@ export function ruleOutcomes(conditions, outcomes) {
   return (a) => outcomes[1 + conditions.reduce((n, c) => n * 2 + (a[c.id] ? 1 : 0), 0)] ?? null;
 }
 
-/**
- * IndexedDB cannot index a predicate, so the answer is written onto the record
- * as 1/0 at insert time and indexed. Counting failures then costs a key range
- * count instead of reading and filtering every event in the session.
- */
+/** IndexedDB cannot index a predicate, so the answer is written onto the record as 1/0 at insert time and indexed. */
 export function failFlag(ev) {
   return isFailure(ev) ? 1 : 0;
 }
@@ -81,7 +71,10 @@ export function liteFp(ev) {
 
 /** A failure the live tally may count: not induced by the tester, not a hook-hinted Note (a hint never hides an HTTP error). */
 export const liteProblem = (ev) =>
-  isFailure(ev) && !ev.overridden && ev.via !== 'api' && !(ev.nh && !(ev.status >= 400));
+  isFailure(ev) && !ev.overridden && ev.via !== 'api' && !(ev.nh && !(ev.status >= 400)) && !(ev.flt && !guarded(ev));
+
+/** D2 (network filter): what no `flt` tag can hide. A first-party 5xx, transport error or GraphQL error; any 4xx+ within 2 s of a tester action; an authenticated request. */
+export const guarded = (e) => (e.fp === 1 && (e.status >= 500 || e.ev === 'gql' || ((e.error === true || (e.kind === 'rep' && !(e.status > 0))) && e.en !== 'AbortError' && e.ev !== 'abort'))) || (e.ca === 1 && (e.status >= 400 || e.ev === 'gql')) || e.au === 1;
 
 /** The events a report or ticket shows: failures that are problems, one per fingerprint (first occurrence), everything else as is. */
 export function problemEvents(events) {
@@ -96,18 +89,14 @@ export function problemEvents(events) {
 
 /* ── what a page is allowed to put in the record ─────────────────────────── */
 
-/**
- * Every event kind a page may report, and every field it may carry. A page under test can send any message the
- * content script can, so the record is an allow-list of kinds AND fields: anything not named is dropped silently
- * (an invented kind, a forged sessionId or failed flag, a claimed frameUrl, megabytes of padding).
- */
+/** Every event kind a page may report and every field it may carry: anything not named is dropped (a page can send any message the content script can). */
 export const EVENT_FIELDS = Object.freeze({
   /* The network hooks in content/page-hooks.js. */
   net: [
     'via', 'method', 'url', 'status', 'ok', 'durationMs', 'error', 'text',
     'responsePreview', 'redirectedTo', 'overridden', 'ruleLabel', 'mocked',
     'graphqlError', 'operation', 'reqHeaders', 'reqBody', 'resHeaders',
-    'en', 'ev', 'act', 'nh', 'n', 'thirdParty',
+    'en', 'ev', 'act', 'nh', 'n', 'thirdParty', 'flt', 'fp', 'ca', 'au', 'sc',
   ],
   /* The console wrapper. */
   console: ['level', 'text', 'stack', 'en', 'ev', 'act', 'nh', 'n', 'src'],
@@ -115,13 +104,13 @@ export const EVENT_FIELDS = Object.freeze({
   pageerror: ['text', 'stack', 'en', 'ev', 'act', 'nh', 'n', 'src'],
   /* The hook's folded repeats: a count for a failure already stored, never a new one. */
   rep: [
-    'ofKind', 'method', 'url', 'status', 'en', 'ev', 'nh', 'text', 'act', 'n', 'storm', 'capped', 'operation',
+    'ofKind', 'method', 'url', 'status', 'en', 'ev', 'nh', 'text', 'act', 'n', 'storm', 'capped', 'operation', 'flt', 'fp', 'ca', 'au', 'lt', 'ws',
   ],
   /* content/recorder.js — one action the tester took, with its locator. */
   dom: [
     'action', 'button', 'mods', 'trusted', 'key', 'value', 'masked', 'control', 'tag', 'label',
     'locator', 'framePrefix', 'selector', 'xpath', 'strategy',
-    'locatorMatches', 'locatorAmbiguous', 'locatorWarnings', 'warnCodes',
+    'locatorMatches', 'locatorAmbiguous', 'locatorWarnings', 'warnCodes', 'role', 'unnamed',
   ],
   /* content/picker.js files what was picked as a note. */
   note: ['text', 'tag'],
@@ -146,18 +135,10 @@ export const EVENT_FIELDS = Object.freeze({
   ],
 });
 
-/**
- * How far a page's own clock may be from ours before we stop believing it. Not zero: the page stamps the moment a thing
- * happened and we stamp the arrival, and that gap is the click-to-request ordering. Not unbounded: a page can claim any number.
- */
+/** How far a page's own clock may be from ours before we stop believing it (the click-to-request ordering needs some slack; a page can claim any number). */
 export const TS_SKEW_MS = 5000;
 
-/*
- * T-043: why a locator is weaker than it looks. The engine names the reason by code; the report words it in
- * en and ar. Only these two codes are believed: the page sends the field, so any other value is dropped.
- * The recorder forwards the engine's `warnings` list, so the engine ends it with `code:<name>` tokens and
- * `sanitiseEvent` moves them to `warnCodes`.
- */
+/* T-043: why a locator is weaker than it looks; only these two codes are believed (the engine's `code:<name>` tokens move to `warnCodes`). */
 export const LOCATOR_WARN_CODES = Object.freeze(['bidi', 'truncated']);
 
 /* r2-02-1: a locator is source code: a chain of getBy*, locator, filter, nth, first, last, frameLocator calls with literal arguments, nothing else. */
@@ -234,6 +215,10 @@ export function sanitiseEvent(raw, { frameUrl = null, frameId, now = Date.now(),
   for (const f of ['reqHeaders', 'resHeaders']) if (out[f] !== undefined) out[f] = capHeaders(out[f]);
   if (typeof out.forKey === 'string') out.forKey = out.forKey.slice(0, 200); else delete out.forKey; // C1
   if (out.auto !== true) delete out.auto;
+  if (!/^[a-z]{2,24}$/.test(out.role)) delete out.role; // D10
+  if (out.unnamed !== 'icon' && out.unnamed !== 'none') delete out.unnamed;
+  if (!/^(abort|telemetry|adblock|junk|socket|redirect)$/.test(out.flt)) delete out.flt; // known filter tags only
+  for (const f of ['fp', 'ca', 'au']) if (!(out[f] === 1 || out[f] === 2 || (f === 'fp' && !out[f] && out[f] !== undefined))) delete out[f];
   if (out.mods !== undefined) out.mods = Array.isArray(out.mods) ? ['Control', 'Shift', 'Alt', 'Meta'].filter((m) => out.mods.includes(m)) : [];
   if (out.mods && !out.mods.length) delete out.mods; // OF-1
 

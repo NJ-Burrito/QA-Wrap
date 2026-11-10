@@ -283,7 +283,7 @@ test('only the events that can move the number touch the tally', () => {
 });
 
 test('an empty session says so rather than printing a bare zero', () => {
-  assert.match(describeFindings(countFindings([])), /^Nothing was found\./);
+  assert.match(describeFindings(countFindings([])), /^0 real failures, 0 hidden, 0 third-party\./);
   assert.equal(describeFindings({ failures: 1, a11y: 0, links: 0, rtl: 0, finePrint: 0 }),
     '1 failed request or error.');
   assert.ok(!describeFindings(countFindings(walked, { session: { startUrl: site } })).includes('\u2014'),

@@ -143,7 +143,7 @@ const lastOfKind = (events, kind, what) => {
  * text — attaching to a Jira issue, where the far end wants a readable file —
  * can ask for it without going round the gzip.
  */
-async function buildExportRaw({ sessionId, format, withImages = true, files, version, shotPaths, profile }, ctx = {}) {
+async function buildExportRaw({ sessionId, format, withImages = true, files, version, shotPaths, profile, netFilter }, ctx = {}) {
   /*
    * The build number is passed in, not read here.
    *
@@ -165,7 +165,8 @@ async function buildExportRaw({ sessionId, format, withImages = true, files, ver
   ctx.lang = sessionIsArabic(stored, events) ? 'ar' : 'en';
   ctx.version = build;
   ctx.trace = traceLine({ lang: ctx.lang, date: Date.now(), version: build, profile: ctx.profile });
-  const session = stored;
+  // D9: the tester's preset, sent by the caller (this page cannot read storage). Not enumerable, so it is read by the filter but never written into session.json.
+  const session = netFilter && typeof netFilter === 'object' ? Object.defineProperty({ ...stored }, 'netFilter', { value: netFilter, enumerable: false }) : stored;
 
   let captures = {};
   if (withImages) {
@@ -377,7 +378,7 @@ async function buildExportRaw({ sessionId, format, withImages = true, files, ver
 /** `{captureId: sha256}` for the session's stored screenshots (T-066; a legacy record is hashed from its blob). */
 const shotHashes = async (events) => captureHashes(await getCaptures(events.filter((e) => e.kind === 'screenshot' && e.captureId).map((e) => e.captureId)));
 
-async function buildBundle({ sessionId, parts, version, profile }) {
+async function buildBundle({ sessionId, parts, version, profile, netFilter }) {
   const ids = bundleIds(parts);
   const { session, events } = await loadSession(sessionId);
   // r10-11-2: the picture names come first, so each document links an omitted picture to its zip entry.
@@ -393,7 +394,7 @@ async function buildBundle({ sessionId, parts, version, profile }) {
   // completion review 3: each part carries the same checksum footer or `checksums` it would as a single export (the zip's own hash is the result's sha256).
   const hashes = await shotHashes(events);
   for (const format of ids) {
-    const part = await buildExport({ sessionId, format, withImages: format !== 'json', version, shotPaths, profile });
+    const part = await buildExport({ sessionId, format, withImages: format !== 'json', version, shotPaths, profile, netFilter });
     built.push(['markdown', 'manual', 'srs', 'sbtm', 'json'].includes(format) ? await stampDocument(part, { format, hashes }) : part);
   }
   return {

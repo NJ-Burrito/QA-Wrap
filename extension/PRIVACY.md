@@ -37,6 +37,19 @@ When you switch on "pre-roll buffer" (off by default), an awake tab keeps its la
 
 The **2-minute replay buffer** is off by default and is switched on one site at a time, from the popup, on a window you have woken. While it is on, that page keeps the last 120 seconds of what the recorder already sees (your clicks and typing, console messages, and network calls as address, status and time only, with no bodies or headers) in the page's own memory. The buffer is not written to disk and is not sent anywhere. Anything older than 120 seconds is dropped as it ages, and closing or reloading the page, putting QA Wrap to sleep or switching the site off throws it away. Only when you press **Save last 2 minutes** does a session start, pre-filled with that buffer; from then on it is an ordinary session, stored like any other. Values you masked, password fields and credential-shaped words are masked before they are kept, and again when the session is saved. While the buffer is on, the page shows a small note saying so.
 
+### Click labels, and what the network filter hides
+
+- **Click labels.** A recorded click carries the name of the button or link you pressed (its accessible name, its own text, its title, an icon's name),
+  so the timeline can say *Clicked "Save" (button)*. It is not taken from text typed into a field, or from a password field, a card field
+  (`cc-*`), a one-time-code field, a masked element or an editable region, and a table row or cell is named by its role only. Before it is stored, emails, phone
+  numbers, card-like runs, any run of six or more digits and `name=value` secrets are removed, bidi control characters are stripped, and the label is cut to
+  80 characters on a character boundary. For those clicks, and for every click while the switch below is off, no name- or text-based locator or XPath is stored either: only a test id, a role without a name, an id or a structural path. Turn it off in Settings, Timeline, Network filter, *Record click labels*:
+  clicks are then recorded by role only.
+- **The network filter hides, it does not delete.** Analytics beacons, ad-blocked third-party tags, cancelled requests, favicon and source-map misses and similar
+  noise are collapsed in the timeline and counted ("N calls hidden by filter"). They stay in the session, the HAR and every export. Failures on the site you are testing,
+  and any failure within two seconds of your own action, stay visible. The site classification uses a copy of the Public Suffix List that ships inside the extension;
+  no host name is sent anywhere to classify it.
+
 ### What it deliberately does not record
 
 Four layers, applied before anything is written, in this order:
@@ -266,6 +279,7 @@ the settings from the browser profile.
 | typed values for replay | IndexedDB `replay` | retention days | Erase all | no |
 | saved cookie profiles, values included (encrypted) | chrome.storage.local `cookieProfiles` | until removed | Erase all | no |
 | sessions a crash closed: id, saved event count and time, no content, shown once on the next popup open and removed when you dismiss it | chrome.storage.local `interrupted` | until removed | Erase all | no |
+| your network filter choices: the preset, ignore lists, My hosts, per-site hide rules and the Record click labels switch (no page content) | chrome.storage.local `qaw.netfilter` | until removed | Erase all | no |
 | time of the last retention sweep | chrome.storage.local `lastPurgeAt` | until removed | Erase all | no |
 | count of sessions the sweep removed | chrome.storage.local `purgeLog` | until removed | Erase all | no |
 | per-session tool state: rules, tools used, lost-event count, raw start URL (memory only) | chrome.storage.session `sessionState:` | browser session | Erase all | no |
