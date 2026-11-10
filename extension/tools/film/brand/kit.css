@@ -1,10 +1,10 @@
 /* QA Wrap brand films: the commercial's look, value for value (commercial40/composition.template.html, bible §2-3).
    build.mjs prepends the @font-face block and replaces __W__/__H__. Do not invent values here: lift them. */
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:__W__px;height:__H__px;overflow:hidden;background:#181c20}
-:root{--ink:#ecebe7;--dim:#8a9096;--card:#25292e;--card2:#2c3137;--line:#3a4047;--coral:#ff7d63;--amber:#f0b94a;--green:#7bd389;--bg:#181c20}
+html,body{width:__W__px;height:__H__px;overflow:hidden;background:#181c20} /* literal: film render kit, not product UI */
+:root{--ink:#ecebe7;--dim:#8a9096;--card:#25292e;--card2:#2c3137;--line:#3a4047;--coral:#ff7d63;--amber:#f0b94a;--green:#7bd389;--bg:#181c20} /* literal: film render kit, not product UI */
 #stage{position:relative;width:__W__px;height:__H__px;overflow:hidden;background:var(--bg);font-family:"Thmanyah Sans",sans-serif;color:var(--ink)}
-.v #stage{background:#1a1e22}
+.v #stage{background:#1a1e22} /* literal: film render kit, not product UI */
 .abs{position:absolute}
 bdi{unicode-bidi:isolate}
 /* ambient: vignette, two key glows, ghost blocks, grain */
@@ -12,49 +12,49 @@ bdi{unicode-bidi:isolate}
 #glowR,#glowG{position:absolute;left:0;top:0;width:1500px;height:1500px;border-radius:50%;filter:blur(40px);opacity:0}
 #glowR{background:radial-gradient(circle,rgba(196,112,91,.34) 0,rgba(196,112,91,.12) 40%,transparent 68%)}
 #glowG{background:radial-gradient(circle,rgba(106,164,114,.30) 0,rgba(106,164,114,.10) 37%,transparent 56%)}
-.ghost{position:absolute;left:0;top:0;background:#262d38;border-radius:10px;filter:blur(7px);opacity:.42}
+.ghost{position:absolute;left:0;top:0;background:#262d38;border-radius:10px;filter:blur(7px);opacity:.42} /* literal: film render kit, not product UI */
 #grain{position:absolute;inset:0;pointer-events:none;z-index:50;mix-blend-mode:overlay;background-repeat:repeat;background-size:384px 384px;image-rendering:pixelated}
 #world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 540px}
 .v #world{left:-420px;top:420px}
 #fg,#ec{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:960px 540px}
 .v #fg,.v #ec{left:-420px;top:420px}
 /* components (bible §2) */
-.card{position:absolute;border-radius:18px;background:linear-gradient(#2a2e33,#24282c);border:1px solid #343a41;box-shadow:0 30px 60px rgba(0,0,0,.45)}
-.card .hd{position:absolute;left:0;right:0;top:0;height:76px;border-bottom:1px solid #343a41}
-.card .id{position:absolute;inset-inline-start:33px;top:23px;font:700 25px "Thmanyah Sans";letter-spacing:.06em;color:#aeb3b8;direction:ltr}
-.bar{position:absolute;height:18px;border-radius:9px;background:#53575d}
-.chip{position:absolute;width:60px;height:60px;border-radius:14px;background:linear-gradient(#2d3238,#23272c);box-shadow:0 10px 22px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;border:1px solid #3a3f46}
+.card{position:absolute;border-radius:18px;background:linear-gradient(#2a2e33,#24282c);border:1px solid #343a41;box-shadow:0 30px 60px rgba(0,0,0,.45)} /* literal: film render kit, not product UI */
+.card .hd{position:absolute;left:0;right:0;top:0;height:76px;border-bottom:1px solid #343a41} /* literal: film render kit, not product UI */
+.card .id{position:absolute;inset-inline-start:33px;top:23px;font:700 25px "Thmanyah Sans";letter-spacing:.06em;color:#aeb3b8;direction:ltr} /* literal: film render kit, not product UI */
+.bar{position:absolute;height:18px;border-radius:9px;background:#53575d} /* literal: film render kit, not product UI */
+.chip{position:absolute;width:60px;height:60px;border-radius:14px;background:linear-gradient(#2d3238,#23272c);box-shadow:0 10px 22px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;border:1px solid #3a3f46} /* literal: film render kit, not product UI */
 .chip svg{width:60%;height:60%}
-.ic{fill:none;stroke:#eceae6;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.ic.coral{stroke:var(--coral)}.ic.amber{stroke:var(--amber)}.ic.green{stroke:var(--green)}.ic.dim{stroke:#9aa0a6}
-.btn{position:absolute;border-radius:20px;background:var(--amber);color:#2a2008;font:900 24px/1 "Thmanyah Sans";display:flex;align-items:center;justify-content:center;box-shadow:0 8px 0 #c08a25,0 18px 30px rgba(0,0,0,.4);letter-spacing:.04em;white-space:nowrap;padding:0 26px}
-.btn.green{background:var(--green);color:#10331a;box-shadow:0 8px 0 #4f9a5c,0 18px 30px rgba(0,0,0,.4)}
-.pill{position:absolute;height:54px;padding:0 25px;border-radius:27px;background:#272b30;border:1px solid #3a4047;font:700 25px/52px "Thmanyah Sans";letter-spacing:.04em;color:#ecebe7;white-space:nowrap}
+.ic{fill:none;stroke:#eceae6;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round} /* literal: film render kit, not product UI */
+.ic.coral{stroke:var(--coral)}.ic.amber{stroke:var(--amber)}.ic.green{stroke:var(--green)}.ic.dim{stroke:#9aa0a6} /* literal: film render kit, not product UI */
+.btn{position:absolute;border-radius:20px;background:var(--amber);color:#2a2008;font:900 24px/1 "Thmanyah Sans";display:flex;align-items:center;justify-content:center;box-shadow:0 8px 0 #c08a25,0 18px 30px rgba(0,0,0,.4);letter-spacing:.04em;white-space:nowrap;padding:0 26px} /* literal: film render kit, not product UI */
+.btn.green{background:var(--green);color:#10331a;box-shadow:0 8px 0 #4f9a5c,0 18px 30px rgba(0,0,0,.4)} /* literal: film render kit, not product UI */
+.pill{position:absolute;height:54px;padding:0 25px;border-radius:27px;background:#272b30;border:1px solid #3a4047;font:700 25px/52px "Thmanyah Sans";letter-spacing:.04em;color:#ecebe7;white-space:nowrap} /* literal: film render kit, not product UI */
 .pill.caps{text-transform:uppercase;letter-spacing:.08em}
-.pill.green{background:var(--green);border-color:var(--green);color:#10331a}
-.pill.coral{background:var(--coral);border-color:var(--coral);color:#2a1410}
-.pill.amber{background:var(--amber);border-color:var(--amber);color:#2a2008}
-.pill.lineG{border:2px solid var(--green);color:#bfe8c6}
-.pill.lineC{border:2px solid var(--coral);color:#ffb3a3}
+.pill.green{background:var(--green);border-color:var(--green);color:#10331a} /* literal: film render kit, not product UI */
+.pill.coral{background:var(--coral);border-color:var(--coral);color:#2a1410} /* literal: film render kit, not product UI */
+.pill.amber{background:var(--amber);border-color:var(--amber);color:#2a2008} /* literal: film render kit, not product UI */
+.pill.lineG{border:2px solid var(--green);color:#bfe8c6} /* literal: film render kit, not product UI */
+.pill.lineC{border:2px solid var(--coral);color:#ffb3a3} /* literal: film render kit, not product UI */
 .tag{position:absolute;height:40px;padding:0 20px;border-radius:20px;font:900 20px/40px "Thmanyah Sans";letter-spacing:.08em;text-align:center;white-space:nowrap;text-transform:uppercase}
-.tag.open{border:1.5px solid #3f454c;color:#aeb3b8;line-height:37px}
-.tag.coral{background:var(--coral);color:#2a1410}
-.tag.green{background:var(--green);color:#123018}
+.tag.open{border:1.5px solid #3f454c;color:#aeb3b8;line-height:37px} /* literal: film render kit, not product UI */
+.tag.coral{background:var(--coral);color:#2a1410} /* literal: film render kit, not product UI */
+.tag.green{background:var(--green);color:#123018} /* literal: film render kit, not product UI */
 .stamp{position:absolute;text-align:center;font:900 70px/1 "Thmanyah Sans";letter-spacing:.02em;color:var(--coral);border:6px solid var(--coral);border-radius:14px;padding:8px 26px;white-space:nowrap;text-transform:uppercase;background:rgba(37,41,46,.94)}
 .stamp.green{color:var(--green);border-color:var(--green)}
-.lbl{font:700 22px/1.25 "Thmanyah Sans";color:#d9d7d2;letter-spacing:.02em;white-space:nowrap}
-.lbl.dim{color:#8a9096}
+.lbl{font:700 22px/1.25 "Thmanyah Sans";color:#d9d7d2;letter-spacing:.02em;white-space:nowrap} /* literal: film render kit, not product UI */
+.lbl.dim{color:#8a9096} /* literal: film render kit, not product UI */
 .num{font-family:"Thmanyah Serif Text";font-weight:500}
-.field{position:absolute;border-radius:12px;border:1.5px solid #3b4249;background:linear-gradient(#22262b,#1f2327)}
+.field{position:absolute;border-radius:12px;border:1.5px solid #3b4249;background:linear-gradient(#22262b,#1f2327)} /* literal: film render kit, not product UI */
 .dot{position:absolute;width:24px;height:24px;border-radius:50%;margin:-12px 0 0 -12px}
 .cursor{position:absolute;left:0;top:0;width:44px;height:44px;z-index:30}
-.ripple{position:absolute;left:-30px;top:-30px;width:60px;height:60px;border-radius:50%;border:3px solid #f0c55c;opacity:0}
+.ripple{position:absolute;left:-30px;top:-30px;width:60px;height:60px;border-radius:50%;border:3px solid #f0c55c;opacity:0} /* literal: film render kit, not product UI */
 /* words on the screen space layer */
 .ttlw{position:absolute;overflow:hidden;padding:6px 0}
-.ttl{font:700 70px/1.15 "Thmanyah Serif Display";color:#d8d6d1;letter-spacing:.01em;white-space:nowrap}
-.ttl .c-coral{color:var(--coral)}.ttl .c-green{color:#96c19f}.ttl .c-amber{color:var(--amber)}
-.cap{position:absolute;font:500 40px/1.3 "Thmanyah Sans";color:#eeede9;white-space:nowrap}
+.ttl{font:700 70px/1.15 "Thmanyah Serif Display";color:#d8d6d1;letter-spacing:.01em;white-space:nowrap} /* literal: film render kit, not product UI */
+.ttl .c-coral{color:var(--coral)}.ttl .c-green{color:#96c19f}.ttl .c-amber{color:var(--amber)} /* literal: film render kit, not product UI */
+.cap{position:absolute;font:500 40px/1.3 "Thmanyah Sans";color:#eeede9;white-space:nowrap} /* literal: film render kit, not product UI */
 .v .cap{white-space:normal;width:840px;font-size:44px}
 .e2{left:0;width:1920px;text-align:center;white-space:nowrap}
-.v2tg{height:54px;padding:0 22px;border-radius:27px;background:#272b30;border:1px solid #3a4047;font:700 27px/52px "Thmanyah Sans";letter-spacing:.04em;color:#e8e6e1}
+.v2tg{height:54px;padding:0 22px;border-radius:27px;background:#272b30;border:1px solid #3a4047;font:700 27px/52px "Thmanyah Sans";letter-spacing:.04em;color:#e8e6e1} /* literal: film render kit, not product UI */
 .ar .lbl,.ar .cap,.ar .pill,.ar .btn,.ar .tag,.ar .stamp{direction:rtl}
