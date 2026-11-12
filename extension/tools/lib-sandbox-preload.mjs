@@ -65,7 +65,7 @@ function install() {
     else if (!out.executablePath && out.channel === undefined) out.channel = engineFields.channel;
     if (forceHeadless()) { out.headless = true; if (!out.executablePath) out.channel = 'chromium'; }
     const runId = E.QAW_RUNID || path.basename(RUN);
-    out.args = [...(opts.args || []), ...EGRESS_FLAGS, `--qaw-run=${runId}`];
+    out.args = [...(opts.args || []), ...EGRESS_FLAGS, `--qaw-run=${runId}`, ...(E.QAW_MUTE === '1' ? ['--mute-audio'] : [])];
     out.downloadsPath = E.QAW_DOWNLOADS || path.join(RUN, 'downloads', safeSuite);
     fs.mkdirSync(out.downloadsPath, { recursive: true });
     delete out.proxy; // a suite proxy would replace the dead port

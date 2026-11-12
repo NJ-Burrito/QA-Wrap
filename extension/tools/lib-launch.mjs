@@ -23,6 +23,7 @@
  *   QAW_FORCE_HEADLESS=1                  headless even for `headed: true` callers; the runner sets it only for
  *                                         suites whose manifest row says headlessOk (UQA_HEADLESS alone cannot,
  *                                         launchPopupHarness passes headed:true - rehearsal R4)
+ *   QAW_MUTE=1                            add --mute-audio, so a run makes no sound (the page's audio still plays, unheard)
  * lib-sandbox-preload.mjs applies the same engine and headless rules to a launch that did not come through here.
  */
 import fs from 'node:fs';
@@ -88,6 +89,7 @@ export function launchOptions(EXT, { width = 1280, height = 900, position, heade
       '--no-first-run',
       '--no-default-browser-check',
       '--disable-features=Translate,MediaRouter',
+      ...(process.env.QAW_MUTE === '1' ? ['--mute-audio'] : []),
     ],
   };
 }

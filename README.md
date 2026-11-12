@@ -59,6 +59,10 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 
 <a id="new"></a>
 
+## ✨ New in 3.9.3
+
+- 📦 **Store builds update through the store.** The Edge, Firefox and Opera packages carry no updater of their own.
+
 ## ✨ New in 3.9.2
 
 - 🏷️ **The report names itself.** Its headline is the session name you typed; the failure moves to a "What broke" row.
