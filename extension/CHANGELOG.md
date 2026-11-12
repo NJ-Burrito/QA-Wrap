@@ -6,6 +6,13 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.9.3, 2026-11-12
+
+### Changed
+
+- Store packages for Edge, Firefox and Opera are store builds: no manifest key, no native updater and no GitHub update check; the store updates the add-on.
+- Internal: 32 module-private names are no longer exported, one unused re-export is gone, and so is the unused `fontkit` development dependency (Knip pass, `extension/knip.json`). No behaviour change.
+
 ## 3.9.2, 2026-11-10
 
 ### Fixed

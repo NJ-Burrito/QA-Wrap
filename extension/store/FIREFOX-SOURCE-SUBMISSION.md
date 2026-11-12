@@ -3,7 +3,7 @@
 Firefox for Android: best effort, untested on device (decision 2026-10-20). The manifest sets no `gecko_android` key; the float opens as a tab there (docs/BROWSERS-GUIDE.md B15).
 
 What AMO's reviewer needs to reproduce the build byte-for-byte, per
-`extension/tools/build-browsers.mjs firefox` and the AMO source-code
+`extension/tools/build-browsers.mjs --store firefox` and the AMO source-code
 submission requirement (see `research/51d-legal-privacy-licensing.md` §2:
 "any transpiled or minified build needs the pre-build source, a README with
 exact tool versions and the commands to reproduce an identical copy; build
@@ -15,7 +15,7 @@ tools must be open source and locally runnable").
 | --- | --- |
 | Node.js | v22.14.0 (`node --version`) |
 | npm | 11.2.0 (`npm --version`) |
-| `qa-wrap` package version | 3.9.2 (`extension/package.json` `"version"`) |
+| `qa-wrap` package version | 3.9.3 (`extension/package.json` `"version"`) |
 
 `extension/package.json` declares no `engines` field and the build uses no
 bundler, transpiler or minifier (no `esbuild`, `webpack`, `rollup`, `terser`,
@@ -29,7 +29,7 @@ this submission was actually built with, not a hard requirement.
 Run from `extension/`:
 
 ```bash
-node tools/build-browsers.mjs firefox
+node tools/build-browsers.mjs --store firefox
 ```
 
 (`node tools/build-browsers.mjs all` builds every target, Firefox included,
@@ -39,7 +39,7 @@ source, eight targets.") The result is:
 - `dist/firefox/` — the unpacked, unsigned Firefox build (load via
   `about:debugging` → *This Firefox* → *Load Temporary Add-on* → its
   `manifest.json`, or submit for signing at addons.mozilla.org)
-- `dist/qa-wrap-3.9.2-firefox.zip` — the same folder, zipped
+- `dist/qa-wrap-3.9.3-firefox.zip` — the same folder, zipped
 
 Both come from `extension/manifest.json` plus the transform in
 `manifestFor()`/`TARGETS.firefox` (`extension/core/capabilities.js`,
@@ -57,7 +57,7 @@ QA Wrap's own source — every file under `background/`, `content/`, `core/`, `p
 `offscreen/`, `popup/`, `options/`, `sidepanel/`, `report/`, `ui/`,
 `reporter/`, `annotate/`, `diagram/`, `devtools/`, `replay/`, `api/` — ships
 as the plain, unminified JavaScript/HTML/CSS/JSON committed to the
-repository. `node tools/build-browsers.mjs firefox` does not compile,
+repository. `node tools/build-browsers.mjs --store firefox` does not compile,
 bundle, transpile or minify any of it; it only writes two files that do not
 exist in the source tree, and both are produced by that single command, from
 data already in the repository:

@@ -1,4 +1,4 @@
-# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.9.2
+# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.9.3
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 
@@ -25,6 +25,9 @@ Record, explain, hand over.
 - Record: wake it on the site you are testing, name what you are testing, press Start. It keeps your clicks, typing and navigation, the page's requests and the console in one timeline.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
+
+New in 3.9.3
+- Store packages carry no updater of their own: the store updates QA Wrap.
 
 New in 3.9.2
 - Report headline: the report now opens with the session name you typed. The failure moves to a "What broke" row under it; a session with no name keeps the failure as its headline.

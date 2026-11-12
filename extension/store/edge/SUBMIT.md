@@ -6,7 +6,9 @@ Official docs this follows (fetched 2026-10-23): https://learn.microsoft.com/en-
 
 ## Upload this file
 
-`dist/qa-wrap-<version>-edge.zip`, made by `node tools/build-browsers.mjs edge` from `extension/` (today `dist/qa-wrap-3.7.1-edge.zip`; the release build carries the release version). Build it from the release commit, not from this branch's version if the version has moved.
+`dist/qa-wrap-<version>-edge.zip`, made by `node tools/build-browsers.mjs --store edge` from `extension/` at the release tag (today `dist/qa-wrap-3.7.1-edge.zip`; the release build carries the release version). Build it from the release commit, not from this branch's version if the version has moved.
+
+**Store build only.** Never upload the GitHub-release zip of the same name: it keeps the manifest `key`, `updater/` (with `host.cmd`) and the GitHub update check, which the stores refuse or forbid (Opera rejects `updater/host.cmd`; AMO forbids self-updating; Edge refuses `key`). 3.9.2 went to AMO as the GitHub zip by mistake on 2026-11-12 and had to be replaced by 3.9.3.
 
 ## Files in this folder
 

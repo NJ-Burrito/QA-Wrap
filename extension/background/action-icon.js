@@ -26,7 +26,7 @@ export const G = {
  * limestone strokes here, and the toolbar swapped to that older mark the moment a session started.
  * A worker has no stylesheet to read a token from, hence literals.
  */
-const ART = Object.freeze({ plate: '#F1EFE9', ring: '#1D2024', check: '#B5432B' });
+export const ART = Object.freeze({ plate: '#F1EFE9', ring: '#1D2024', check: '#B5432B' });
 /** The limestone edge of the state badge is the plate colour. */
 const PAPER = ART.plate;
 export const BADGE = '#8E5A10'; /* literal: --live's light value (D4, red=FAIL only). */

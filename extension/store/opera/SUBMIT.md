@@ -12,7 +12,9 @@ The Opera docs are short on form-field detail. The steps below are the ones the 
 
 ## Upload this file
 
-`dist/qa-wrap-<version>-opera.zip`, made by `node tools/build-browsers.mjs opera` from `extension/` (today `dist/qa-wrap-3.7.1-opera.zip`; build from the release commit). The same build serves Opera GX. If the form refuses a `.zip`, tell the developer: the fallback is to load the unpacked `dist/opera` in `opera://extensions` and pack it to `.crx` there (check).
+`dist/qa-wrap-<version>-opera.zip`, made by `node tools/build-browsers.mjs --store opera` from `extension/` at the release tag (today `dist/qa-wrap-3.7.1-opera.zip`; build from the release commit). The same build serves Opera GX. If the form refuses a `.zip`, tell the developer: the fallback is to load the unpacked `dist/opera` in `opera://extensions` and pack it to `.crx` there (check).
+
+**Store build only.** Never upload the GitHub-release zip of the same name: it keeps the manifest `key`, `updater/` (with `host.cmd`) and the GitHub update check, which the stores refuse or forbid (Opera rejects `updater/host.cmd`; AMO forbids self-updating; Edge refuses `key`). 3.9.2 went to AMO as the GitHub zip by mistake on 2026-11-12 and had to be replaced by 3.9.3.
 
 ## Files in this folder
 

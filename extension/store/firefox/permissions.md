@@ -1,4 +1,4 @@
-# Firefox Add-ons (AMO): permission justifications for QA Wrap 3.9.2
+# Firefox Add-ons (AMO): permission justifications for QA Wrap 3.9.3
 
 Read from the built `dist/firefox/manifest.json`; every permission the package declares has a row. Copy a row into the store's per-permission box.
 

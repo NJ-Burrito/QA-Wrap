@@ -11,7 +11,9 @@ Official docs this follows (fetched 2026-10-23):
 
 ## Upload this file
 
-`dist/qa-wrap-<version>-firefox.zip`, made by `node tools/build-browsers.mjs firefox` from `extension/` (today `dist/qa-wrap-3.7.1-firefox.zip`; build from the release commit so the version matches). It already carries the add-on id `qa-wrap@qa-wrap.invalid`, `strict_min_version` 140.0 and `data_collection_permissions` (required: none).
+`dist/qa-wrap-<version>-firefox.zip`, made by `node tools/build-browsers.mjs --store firefox` from `extension/` at the release tag (today `dist/qa-wrap-3.7.1-firefox.zip`; build from the release commit so the version matches). It already carries the add-on id `qa-wrap@qa-wrap.invalid`, `strict_min_version` 140.0 and `data_collection_permissions` (required: none).
+
+**Store build only.** Never upload the GitHub-release zip of the same name: it keeps the manifest `key`, `updater/` (with `host.cmd`) and the GitHub update check, which the stores refuse or forbid (Opera rejects `updater/host.cmd`; AMO forbids self-updating; Edge refuses `key`). 3.9.2 went to AMO as the GitHub zip by mistake on 2026-11-12 and had to be replaced by 3.9.3.
 
 ## Files in this folder
 
