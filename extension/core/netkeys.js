@@ -30,9 +30,9 @@ export const isNet = (e) => !!e && (e.kind === 'net' || (e.kind === 'rep' && (e.
 export const countOf = (e) => (e.kind === 'rep' ? Math.min(Math.max(Math.floor(Number(e.n)) || 1, 1), 1e6) : 1);
 const worst = (e) => (e.kind === 'rep' && e.ws ? Number(e.ws) || 0 : Number(e.status) || 0);
 
-export const isAbortEv = (e) => e.en === 'AbortError' || e.ev === 'abort';
+const isAbortEv = (e) => e.en === 'AbortError' || e.ev === 'abort';
 export const failsNet = (e) => isNet(e) && (e.error === true || e.status >= 400 || e.ev === 'gql' || (e.kind === 'rep' && !(e.status > 0)));
-export const isOkNet = (e) => e.kind === 'net' && !e.error && e.status >= 200 && e.status < 400 && e.ev !== 'gql';
+const isOkNet = (e) => e.kind === 'net' && !e.error && e.status >= 200 && e.status < 400 && e.ev !== 'gql';
 
 /**
  * D2, the hard rule. True when this event must stay visible whatever a tag, a preset or a rule says:
@@ -52,8 +52,8 @@ export function groupKey(e, withStatus = true) {
 /** D5 key: the group key plus the GraphQL operation, so one operation's failure is recovered only by a clean answer of the same operation. */
 const recKey = (e) => `${groupKey(e, false)}|${e.operation ? `op:${e.operation}` : ''}`;
 
-export const GROUP_WINDOW_MS = 30000;
-export const RECOVER_WINDOW_MS = 30000;
+const GROUP_WINDOW_MS = 30000;
+const RECOVER_WINDOW_MS = 30000;
 
 /**
  * D5: failures followed by a 2xx or 3xx on the same method + origin + path within 30 s are "failed N×, then OK".

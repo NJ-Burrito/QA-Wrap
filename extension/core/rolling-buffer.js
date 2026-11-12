@@ -7,7 +7,7 @@
  */
 export const WINDOW_MS = 60_000;
 export const SLOTS = 3;
-export const STAGGER_MS = WINDOW_MS / SLOTS;
+const STAGGER_MS = WINDOW_MS / SLOTS;
 
 /** @param {({startedAt:number}|null)[]} slots @param {number} now @param {number} t0 when rolling began @returns {number[]} slots to (re)start now */
 export function dueRestarts(slots, now, t0, windowMs = WINDOW_MS, stagger = STAGGER_MS) {

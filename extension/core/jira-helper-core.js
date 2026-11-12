@@ -7,7 +7,7 @@
  */
 export const KEY = 'qawJira';
 export const ALARM = 'qaw-jira';
-export const WINDOW_MIN = 2; // each poll looks 2 minutes back, the alarm fires every minute; the seen-list drops the overlap
+const WINDOW_MIN = 2; // each poll looks 2 minutes back, the alarm fires every minute; the seen-list drops the overlap
 
 export const DEFAULTS = Object.freeze({
   dropdown: true,

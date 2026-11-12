@@ -15,7 +15,7 @@
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 /** A round axis maximum at or above `max`, and its ticks. */
-export function niceScale(max, ticks = 4, integer = false) {
+function niceScale(max, ticks = 4, integer = false) {
   if (!(max > 0)) return { max: 1, step: 1, ticks: [0, 1] };
   const raw = max / ticks;
   const pow = 10 ** Math.floor(Math.log10(raw));

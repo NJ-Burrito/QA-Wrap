@@ -17,7 +17,7 @@ const AVATAR = 128;
 const VERIFY_MAX = 20 * 1024 * 1024;
 
 /** A square, centre-cropped copy of an image file as a small data URL. */
-export async function toAvatar(file) {
+async function toAvatar(file) {
   const bmp = await createImageBitmap(file);
   const c = document.createElement('canvas');
   c.width = c.height = AVATAR;

@@ -26,9 +26,9 @@ export const G = {
  * limestone strokes here, and the toolbar swapped to that older mark the moment a session started.
  * A worker has no stylesheet to read a token from, hence literals.
  */
-export const ART = Object.freeze({ plate: '#F1EFE9', ring: '#1D2024', check: '#B5432B' });
+const ART = Object.freeze({ plate: '#F1EFE9', ring: '#1D2024', check: '#B5432B' });
 /** The limestone edge of the state badge is the plate colour. */
-export const PAPER = ART.plate;
+const PAPER = ART.plate;
 export const BADGE = '#8E5A10'; /* literal: --live's light value (D4, red=FAIL only). */
 
 /** The sizes Chrome asks an action icon for. */
@@ -85,7 +85,7 @@ export function checkPoints(scale = 1) {
  * Paint one frame. Everything is in grid units and the context is scaled once,
  * so 16 px and 48 px are the same drawing rather than two of them.
  */
-export function drawFrame(ctx, size, alpha) {
+function drawFrame(ctx, size, alpha) {
   const v = variantFor(size);
   const { startDeg, endDeg } = ringSweep();
 
@@ -139,7 +139,7 @@ export function drawFrame(ctx, size, alpha) {
  * reads on both light and dark toolbars at 16 px. `dot` = recording,
  * `dash` = asleep, `triangle` = a problem occurred.
  */
-export function drawBadge(ctx, size, kind = 'dot') {
+function drawBadge(ctx, size, kind = 'dot') {
   const r = size * 0.2, cx = size - r - 1, cy = size - r - 1;
   ctx.save();
   ctx.lineWidth = 1;

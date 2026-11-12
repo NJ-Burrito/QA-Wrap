@@ -223,10 +223,9 @@ export const foldKey = (ev) => fingerprint(ev) + '|' + actOf(ev);
 
 /**
  * The worker's badge tally is the one lite implementation: `liteFp` / `liteProblem`
- * live in events.js (already in the worker graph) and are re-exported here under
- * the names L3/L5 and the tests use. The badge counts distinct `dupeKey`s, the key core/finding-count.js groups by.
+ * live in events.js (already in the worker graph); import them from there. The badge counts distinct `dupeKey`s,
+ * the key core/finding-count.js groups by.
  */
-export { liteFp as liteKey } from './events.js';
 export function liteCount(events) {
   const s = new Set();
   for (const e of events) if (e && liteProblem(e)) s.add(dupeKey(e));

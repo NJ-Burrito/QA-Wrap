@@ -23,7 +23,7 @@ const MEDIA_NAME = /\.(png|jpe?g|gif|webp|webm|mp4|mov|mp3|wav|ogg|pdf|ico|woff2
 const isZip = (f) => /\.zip$/i.test(f.filename || '') || f.blob?.type === 'application/zip';
 
 /** Text can be scanned; images, video, audio and archives cannot (declared, never silently skipped). Zips are opened separately. */
-export const isTextFile = (f) => !/^(image|video|audio)\//.test(f.blob?.type || '') && !/\.(png|jpe?g|gif|webp|webm|mp4|zip|gz)$/i.test(f.filename || '');
+const isTextFile = (f) => !/^(image|video|audio)\//.test(f.blob?.type || '') && !/\.(png|jpe?g|gif|webp|webm|mp4|zip|gz)$/i.test(f.filename || '');
 
 const decode = new TextDecoder();
 

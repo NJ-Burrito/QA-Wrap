@@ -47,7 +47,7 @@ export async function generateSealKey() {
 }
 
 /** The public half as the three JWK members a fingerprint and a verification need. */
-export async function publicJwkOf(publicKey) {
+async function publicJwkOf(publicKey) {
   const { kty, crv, x, y } = await crypto.subtle.exportKey('jwk', publicKey);
   return { kty, crv, x, y };
 }

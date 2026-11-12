@@ -25,11 +25,11 @@ const last4 = (v) => String(v || '').slice(-4);
 const newId = () => `w_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 5)}`;
 
 /** Shape checks, exported for the unit test. Returns '' when fine, else the reason key. */
-export function checkChatUrl(svc, url) {
+function checkChatUrl(svc, url) {
   if (LOOP.test(url)) return '';
   return svc.re && svc.re.test(url) ? '' : 'shape';
 }
-export const originOf = (url) => (String(url).match(/^https?:\/\/[^/\s]+/) || [''])[0];
+const originOf = (url) => (String(url).match(/^https?:\/\/[^/\s]+/) || [''])[0];
 
 export function wireIntegrations({ $, t, send, save, getSettings, repaintAll }) {
   const S = () => getSettings();
