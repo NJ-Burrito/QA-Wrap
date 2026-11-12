@@ -26,6 +26,10 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
 
+New in 3.9.2
+- Report headline: the report now opens with the session name you typed. The failure moves to a "What broke" row under it; a session with no name keeps the failure as its headline.
+- Replay across pages: a session that moved across several pages now replays each page as it was at that moment, at its full length, with the red marks on the track.
+
 New in 3.9.1
 - Profile tab and top-bar chip: Profile has its own tab in Settings, with your name in English and in Arabic. Your picture and name show at the end of the top bar, in the language you use QA Wrap in. The picture stays on your computer.
 - Network filter: the timeline no longer drowns in background noise (analytics beacons, blocked ad tags, cancelled requests, favicon and font misses). It is folded behind one line that counts it, never deleted, and every export keeps every request. A failure on your own site, a failure right after your action and a failed signed-in request are never hidden.
