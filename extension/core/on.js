@@ -41,7 +41,7 @@ export const ON_FAILED = /^\[QA Wrap\] .+ failed:/;
 export const RING_KEY = 'handlerRing';
 export const RING_MAX = 50;
 /** A handler that throws on every event must not write storage on every event: the same failure inside this window is not stored again. */
-export const RING_REPEAT_MS = 5000;
+const RING_REPEAT_MS = 5000;
 let chain = Promise.resolve();
 let lastSig = '';
 let lastAt = 0;
@@ -49,7 +49,7 @@ let lastAt = 0;
 // D-1010-57 / r3-03-3: a failure message can quote a typed value, a page address or a host. It is masked and stripped
 // before it is written, so what rests on disk is already clean (the support bundle and Erase all both see only that).
 const URLISH = /\b[a-z][\w+.-]*:\/\/[^\s"'<>)]+|\b(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?\b|\b(?:[\w-]+\.)+(?:com|net|org|io|dev|app|co|gov|edu|local|test|internal|example|sa|ae|eg|uk|de|fr)\b(?::\d+)?/gi;
-export const cleanMessage = (m) => redact(String(m ?? '')).text.replace(URLISH, '[url]');
+const cleanMessage = (m) => redact(String(m ?? '')).text.replace(URLISH, '[url]');
 export function ring(name, err) {
   const row = { t: Date.now(), name: String(name).slice(0, 60), msg: cleanMessage(err?.message || err).slice(0, 160) };
   const sig = `${row.name}

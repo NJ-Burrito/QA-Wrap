@@ -30,6 +30,7 @@ export const EXCLUDE = new Set([
   '.gitignore', 'FIX-SPEC.md',
   'package.json', 'package-lock.json',
   'tsconfig.json', 'tsconfig.wide.json', // type-check config: dev only, it shipped by accident
+  'knip.json', // dead-code check config: dev only
   '.field-profile', '.uat-profile', '.ui-shots-profile', '.uat', '.ui-shots',
   '.tutorials', '.tutorial-profile',
   'Microsoft', // Windows PowerShell's ModuleAnalysisCache lands here as Microsoft/Windows/PowerShell/ when a child powershell.exe cannot resolve LOCALAPPDATA; never product (1015)

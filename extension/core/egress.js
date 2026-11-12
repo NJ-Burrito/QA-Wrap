@@ -9,7 +9,7 @@
  */
 import { isSecretHeader } from './privacy.js';
 export const LEDGER_KEY = 'egressLedger';
-export const LEDGER_MAX = 200;
+const LEDGER_MAX = 200;
 
 /** Findings from the scan that just ran for a kind, taken by the next send of that kind. */
 const scans = {};

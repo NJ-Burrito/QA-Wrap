@@ -14,7 +14,7 @@ async function read() {
   try { return (await chrome.storage.local.get(LEDGER_KEY))[LEDGER_KEY] || []; } catch { return []; }
 }
 
-export async function paintEgress(doc, t) {
+async function paintEgress(doc, t) {
   const list = doc.getElementById('egress-list');
   if (!list) return;
   const lines = ledgerLines(await read(), t);

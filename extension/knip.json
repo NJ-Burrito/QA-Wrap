@@ -1,0 +1,237 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "annotate/annotate.js",
+    "api/api.js",
+    "background/armed.js",
+    "background/context-menus.js",
+    "background/dispatch-tables.js",
+    "background/export-build.js",
+    "background/istqb-render-door.js",
+    "background/jira-door.js",
+    "background/jira.js",
+    "background/media.js",
+    "background/notify.js",
+    "background/security-headers.js",
+    "background/service-worker.js",
+    "background/session-state.js",
+    "background/site-access.js",
+    "background/trackers.js",
+    "content/autofill.js",
+    "content/autopilot.js",
+    "content/bar.js",
+    "content/bridge.js",
+    "content/checks.js",
+    "content/data-injector.js",
+    "content/harvester.js",
+    "content/keymap.js",
+    "content/links.js",
+    "content/mask.js",
+    "content/page-hooks.js",
+    "content/picker.js",
+    "content/recorder.js",
+    "content/replay-buffer.js",
+    "content/replay-recorder.js",
+    "content/rtl-stress.js",
+    "content/selector-engine.js",
+    "content/spec-reader.js",
+    "content/ui-host.js",
+    "content/vitals.js",
+    "core/a11y-flow.js",
+    "core/action-join.js",
+    "core/adf.js",
+    "core/agent.js",
+    "core/api-send.js",
+    "core/artifact-docs.js",
+    "core/artifact.js",
+    "core/chart-model.js",
+    "core/cookie-formats.js",
+    "core/correlate.js",
+    "core/db.js",
+    "core/docs.js",
+    "core/docshell.js",
+    "core/dupes.js",
+    "core/events.js",
+    "core/exporters.js",
+    "core/file-types.js",
+    "core/filing.js",
+    "core/fine-print.js",
+    "core/flow.js",
+    "core/formats.js",
+    "core/gif.js",
+    "core/istqb-render.js",
+    "core/istqb.js",
+    "core/jira-auth.js",
+    "core/jira-templates.js",
+    "core/kpi.js",
+    "core/links.js",
+    "core/locatorplan.js",
+    "core/locatorset.js",
+    "core/mdhtml.js",
+    "core/postman.js",
+    "core/product.js",
+    "core/provenance.js",
+    "core/replay.js",
+    "core/sessions.js",
+    "core/shapes.js",
+    "core/srs-reverse.js",
+    "core/store-registry.js",
+    "core/tracker-specs.js",
+    "core/xlsx.js",
+    "devtools/audit.js",
+    "devtools/devtools.js",
+    "devtools/panel.js",
+    "diagram/diagram.js",
+    "game/engine.js",
+    "game/game.js",
+    "game/scoring.js",
+    "game/trial-ui.js",
+    "game/trial.js",
+    "jira/helper.js",
+    "jira/scrollfix.js",
+    "kpi/kpi.js",
+    "kpi/view.js",
+    "offscreen/agent-bridge.js",
+    "offscreen/offscreen.js",
+    "offscreen/part-writer.js",
+    "options/ai-writing.js",
+    "options/buffer-bridge.js",
+    "options/e1022.js",
+    "options/jira-helper.js",
+    "options/netfilter.js",
+    "options/options.js",
+    "options/remembered.js",
+    "platform/chat-mattermost.js",
+    "platform/console-brand.js",
+    "platform/i18n.js",
+    "platform/settings.js",
+    "platform/vault.js",
+    "popup/action-stack.js",
+    "popup/autopilot-banner.js",
+    "popup/buffer.js",
+    "popup/done-card.js",
+    "popup/guards.js",
+    "popup/interrupted.js",
+    "popup/next.js",
+    "popup/note-slider.js",
+    "popup/onboard.js",
+    "popup/popup.js",
+    "popup/tool-actions.js",
+    "popup/tool-rows.js",
+    "popup/tools-fold.js",
+    "popup/updates-menu.js",
+    "popup/viewport.js",
+    "practice/faults.js",
+    "practice/mock-server.js",
+    "replay/replay.js",
+    "report/bugfirst.js",
+    "report/charts.js",
+    "report/eml.js",
+    "report/filing.js",
+    "report/istqb.js",
+    "report/notes-export.js",
+    "report/quality.js",
+    "report/report.js",
+    "report/sizes.js",
+    "reporter/reporter.js",
+    "tutorials/tutorials.js",
+    "ui/dom.js",
+    "ui/download.js",
+    "ui/folder.js",
+    "ui/icons.js",
+    "ui/live.js",
+    "ui/motion.js",
+    "ui/profile-chip.js",
+    "ui/scenes.js",
+    "ui/sound.js",
+    "ui/theme.js",
+    "ui/tone.js",
+    "ui/update-card.js",
+    "ui/vfx.js",
+    "videoedit/videoedit.js",
+    "welcome/welcome.js",
+    "whatsnew/whatsnew.js",
+    "tools/**/*.mjs",
+    "game/levels/*.js",
+    "game/trials/*.js",
+    "tools/film/brand/kit.js",
+    "tools/film/brand/films/*.js"
+  ],
+  "project": [
+    "**/*.{js,mjs}",
+    "!vendor/**",
+    "!tools/fixtures/**"
+  ],
+  "ignoreDependencies": [
+    "opentype.js"
+  ],
+  "ignoreIssues": {
+    "background/draft-door.js": [
+      "exports"
+    ],
+    "background/action-icon.js": [
+      "exports"
+    ],
+    "core/netfilter.js": [
+      "exports"
+    ],
+    "core/origins.js": [
+      "exports"
+    ],
+    "core/egress.js": [
+      "exports"
+    ],
+    "core/http.js": [
+      "exports"
+    ],
+    "core/formats-export.js": [
+      "exports"
+    ],
+    "core/objects.js": [
+      "exports"
+    ],
+    "core/signal.js": [
+      "exports"
+    ],
+    "core/support-bundle.js": [
+      "exports"
+    ],
+    "core/rate-links.js": [
+      "exports"
+    ],
+    "devtools/netfilter-panel.js": [
+      "exports"
+    ],
+    "kpi/pdf.js": [
+      "exports"
+    ],
+    "platform/worker-errors.js": [
+      "exports"
+    ],
+    "ui/update-lib.js": [
+      "exports"
+    ],
+    "offscreen/rolling.js": [
+      "exports"
+    ],
+    "game/**": [
+      "exports"
+    ],
+    "popup/draft.js": [
+      "exports"
+    ],
+    "popup/note-row.js": [
+      "exports"
+    ],
+    "report/ai-suggest.js": [
+      "exports"
+    ],
+    "report/notes-file.js": [
+      "exports"
+    ]
+  },
+  "ignoreUnresolved": [
+    "/core/db.js",
+    "./pdf.js"
+  ]
+}
