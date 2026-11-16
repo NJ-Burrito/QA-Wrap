@@ -268,7 +268,7 @@ export function safeName(text, max = 80) {
     .slice(0, max)
     // After the cut, not before it: a name cut at a dot ended in one, and
     // Chrome refuses that segment too. A split emoji goes the same way.
-    .replace(/[\ud800-\udbff]$/, '')
+    .replace(/\p{Cs}$/u, '')
     .replace(/[.~ ]+$/, '');
   // A Windows device name is not a folder anybody can open.
   return /^(con|prn|aux|nul|com\d|lpt\d)(\.|$)/i.test(name) ? `_${name}` : name || 'untitled';
