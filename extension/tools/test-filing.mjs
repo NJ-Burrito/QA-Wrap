@@ -434,5 +434,18 @@ test('the real session’s paths still come out the way they are on disk', () =>
   );
 });
 
+test('no path segment is one Chrome answers "Invalid filename" to (2026-11-16)', () => {
+  // Each of these was refused by chrome.downloads.download in a real Chrome, and the evidence then fell out of the tree.
+  const session = { charter: '⁨تسجيل‏ منتج⁩', startedAt: new Date(2026, 10, 16, 9, 0).getTime() };
+  const path = evidencePath({ kind: 'screenshot', label: '~Saved‎ o­k‌.', ext: 'png' }, 1, session, { folder: `${'c'.repeat(59)}. tail/CON/aux.x/draft~` });
+  assert.equal(path, `${'c'.repeat(59)}/_CON/_aux.x/draft/QA Wrap/Screenshots/تسجيل منتج 2026-11-16/01 Saved ok - تسجيل منتج 2026-11-16.png`);
+  for (const part of path.split('/')) {
+    assert.doesNotMatch(part, /\p{Cf}/u, part);
+    assert.doesNotMatch(part, /^[.~ ]|[.~ ]$/, part);
+  }
+  // A name cut in the middle of an emoji keeps no half of it.
+  assert.doesNotMatch(withFolder('x', `${'a'.repeat(59)}🐞`), /[\ud800-\udfff]/);
+});
+
 console.log(`\n${passed} passed, ${failures.length} failed`);
 if (failures.length) process.exit(1);

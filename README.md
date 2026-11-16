@@ -51,6 +51,7 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 - 🎬 **Records a session**: you press Start, test as usual, press Stop. Clicks, typing (sensitive values removed), page errors and network failures are kept in order.
 - 🔗 **Links each failure to its cause**: the report shows the action just before every problem.
 - 📝 **Writes the report**: one press copies a ready bug report (title, steps, what happened, evidence). Sending to Jira and other trackers is one button away.
+- 📁 **Saves where you choose**: screenshots, recordings and exports go into one tidy tree (`QA Wrap/Screenshots/<test> <date>/…`), in Downloads, in a subfolder you name, or in any folder you pick. "Ask where to save each file" opens the Save dialog every time.
 - 🌍 **Arabic and English**, right to left where it should be.
 
 🎞️ See QA-Wrap in action · 40 s: [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4) · [العربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4)
@@ -58,6 +59,12 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 🎬 Six more films, each in English and Arabic, on the [website](https://nj-burrito.github.io/QA-Wrap/#films): Every Moment, Kept · One Report, Every Desk · Show It, Don't Describe It · The Whole Toolbox · Yours, and Sealed · Your Language, Your Numbers, Your Agent.
 
 <a id="new"></a>
+
+## 🔜 Fixed on main, in the next release
+
+- 📁 **Saved files go where you chose.** "Ask where to save each file" opens the Save dialog for every file, Cancel saves nothing, and a folder you picked is used from the popup, the side panel and the DevTools panel too.
+- 🖼️ **Evidence saves under any title.** A session title or screenshot label carrying an invisible direction mark (common in Arabic text) made the browser refuse the file name; the screenshot then landed loose in Downloads or was lost.
+- 📐 **Side panel.** The tools line up with the session cards, and the profile chip fits the top bar while recording.
 
 ## ✨ New in 3.9.3
 
