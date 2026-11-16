@@ -7,13 +7,14 @@
  */
 .pchip-slot { display: inline-flex; flex: 0 1 auto; align-items: center; min-inline-size: 0; }
 .pchip-slot:empty { display: none; }
-.pchip-wrap { position: relative; display: inline-flex; align-items: center; }
+.pchip-wrap { position: relative; display: inline-flex; align-items: center; min-inline-size: 0; max-inline-size: 100%; }
 
 .pchip {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
   max-inline-size: 190px;
+  min-inline-size: 0; /* shrinks to an ellipsis in a narrow bar instead of running past its edge */
   min-block-size: 36px;
   padding-inline: 3px var(--sp-2);
   border: 1px solid var(--border);
@@ -31,6 +32,7 @@
 /* No profile yet: a quiet chip, no picture slot, the same height. */
 .pchip-empty { padding-inline: var(--sp-2); color: var(--text-muted); border-style: dashed; gap: 6px; }
 .pchip-empty:hover { color: var(--text); }
+.pchip > svg { flex: none; } /* the icon keeps its size while the name gives way */
 
 .pchip-av, .pcard-av {
   flex: none;
