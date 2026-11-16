@@ -60,11 +60,11 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 
 <a id="new"></a>
 
-## 🔜 Fixed on main, in the next release
+## ✨ New in 3.9.4
 
 - 📁 **Saved files go where you chose.** "Ask where to save each file" opens the Save dialog for every file, Cancel saves nothing, and a folder you picked is used from the popup, the side panel and the DevTools panel too.
 - 🖼️ **Evidence saves under any title.** A session title or screenshot label carrying an invisible direction mark (common in Arabic text) made the browser refuse the file name; the screenshot then landed loose in Downloads or was lost.
-- 📐 **Side panel.** The tools line up with the session cards, and the profile chip fits the top bar while recording.
+- 📐 **Side panel.** The tools line up with the session cards, the Tools section is as tall as what it holds, and the profile chip fits the top bar while recording.
 
 ## ✨ New in 3.9.3
 

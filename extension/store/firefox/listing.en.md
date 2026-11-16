@@ -1,4 +1,4 @@
-# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.9.3
+# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.9.4
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 
@@ -25,6 +25,11 @@ Record, explain, hand over.
 - Record: wake it on the site you are testing, name what you are testing, press Start. It keeps your clicks, typing and navigation, the page's requests and the console in one timeline.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
+
+New in 3.9.4
+- Saved files go where you chose: "Ask where to save each file" opens the Save dialog for every file, Cancel saves nothing, and a folder you picked is used from the popup, the side panel and the DevTools panel too.
+- Evidence saves under any title: a session title or screenshot label carrying an invisible direction mark (common in Arabic text) made the browser refuse the file name. Those names are cleaned before the save.
+- Side panel: the tools line up with the session cards, the Tools section is as tall as what it holds, and the profile chip fits the top bar while recording.
 
 New in 3.9.3
 - Store packages carry no updater of their own: the store updates QA Wrap.
