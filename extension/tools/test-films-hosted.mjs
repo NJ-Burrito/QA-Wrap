@@ -57,13 +57,13 @@ test('one tracked copy per film: each mp4 name is tracked exactly once in the re
 // 2026-10-26: 6.85 -> 6.9 MB: 3.8.1 (sharp recording, file probe, awake dot) lands 6.851 MB, +0.7 KB net of 3.8.0, which already sat on the line; no media or dev file joined.
 // 2026-10-22: 6.7 -> 6.85 MB, merged lanes: object picking + keyframes (~25 KB) and the updater installers + What's new page (~46 KB).
 // Nader 2026-10-15: Bug Hunt game ships as the practice page; 6.25 MB to 6.7 MB (measured 6.58 MB: game 560 KB, 15 Ogg Opus voices 224 KB of it).
-// 2026-11-16: 7.3 -> 7.65 MB: the folder icons Nader asked for (brand/folder-icons, 10 icons x 10 sizes, 328 KB; PNG from 32 px up, bitmaps under) and the replay stylesheet code (measured 7.62 MB).
-test('the package stays small: what shipping() copies is under 7.65 MB', () => {
+// 2026-11-16: 7.3 -> 8 MB: the folder icons Nader asked for (brand/folder-icons, 10 icons x 10 sizes up to 512 px, 500 KB; PNG from 32 px up, bitmaps under) and the replay stylesheet code (measured 7.79 MB). Nader 2026-11-16: «i dont mind the size».
+test('the package stays small: what shipping() copies is under 8 MB', () => {
   const size = (p, rel) => (fs.statSync(p).isDirectory()
     ? fs.readdirSync(p).reduce((s, c) => s + size(path.join(p, c), `${rel}/${c}`), 0)
     : (isWorkingNote(rel) ? 0 : fs.statSync(p).size));
   const total = shipping(fs.readdirSync(EXT)).reduce((s, name) => s + size(path.join(EXT, name), name), 0);
-  assert.ok(total < 7.65 * 1024 * 1024, `${(total / 1048576).toFixed(2)} MB`);
+  assert.ok(total < 8 * 1024 * 1024, `${(total / 1048576).toFixed(2)} MB`);
 });
 test('the page builds no remote address, and the extension-page CSP allows only own media and images', () => {
   const js = read(path.join(EXT, 'tutorials', 'tutorials.js'));

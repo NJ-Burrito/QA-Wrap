@@ -160,7 +160,9 @@ function Invoke-Update($cfg, $m) {
 # Which folders: a folder named "QA Wrap" that holds at least one of the category folders the extension writes, found (a) in the user's
 # Downloads folder, up to three levels down, (b) at an absolute path the extension read from its own downloads, or (c) remembered from
 # an earlier run (icons.json beside config.json). Inside it: that folder, its category folders (brand\folder-icons\folders.json) and the
-# test folders one level under a category. Nothing else is touched, and a desktop.ini this host did not write is never replaced.
+# test folders one level under a category; above it, the folders between Downloads and it (a "Save into" folder); and the QA Wrap tool
+# folder (the installed extension folder or the nearest folder above it named QA-Wrap / QA Wrap). Nothing else is touched, and a
+# desktop.ini this host did not write is never replaced. On by default: "reset" turns it off until the next "apply".
 # The .ico files are copied beside the host, so the icons survive an update that swaps the extension folder.
 $IconOwner = 'Owner=qawrap'
 function Set-FolderIcon($dir, $ico) {
@@ -194,9 +196,9 @@ function Invoke-Icons($cfg, $m) {
   if (@('apply', 'refresh', 'reset', 'status') -notcontains $action) { throw 'unknown icons action' }
   $home0 = Split-Path -Parent $ConfigPath
   $statePath = Join-Path $home0 'icons.json'
-  $state = if (Test-Path -LiteralPath $statePath) { Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json } else { [pscustomobject]@{ on = $false; roots = @() } }
+  $state = if (Test-Path -LiteralPath $statePath) { Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json } else { [pscustomobject]@{ on = $true; roots = @() } }
   if ($action -eq 'status') { return @{ ok = $true; action = $action; on = [bool]$state.on } }
-  if ($action -eq 'refresh' -and -not $state.on) { return @{ ok = $true; action = $action; on = $false; folders = 0; changed = 0 } } # after a download: only for someone who turned the icons on
+  if ($action -eq 'refresh' -and -not $state.on) { return @{ ok = $true; action = $action; on = $false; folders = 0; changed = 0 } } # after a download or an update: on unless the tester restored plain folders
 
   # The icons, beside the host. Refreshed from the installed extension whenever its copy differs.
   $icons = Join-Path $home0 'folder-icons'
@@ -236,18 +238,32 @@ function Invoke-Icons($cfg, $m) {
     $roots += $full
   }
 
-  $n = 0; $changed = @(); $foreign = 0
+  $todo = @()
+  # The tool folder: the installed extension folder, or the nearest of its parents (three at most) named like the product.
+  $tool = "$($cfg.folder)".TrimEnd('\')
+  for ($i = 0; $i -lt 4 -and $tool -and (Split-Path $tool); $i++) {
+    if ((Split-Path $tool -Leaf) -match '^qa[ _-]?wrap') { $todo += , @($tool, $rootIco); break }
+    $tool = Split-Path $tool
+  }
+  $dlFull = if (Test-Path -LiteralPath $dl) { (Get-Item -LiteralPath $dl -Force).FullName.TrimEnd('\') } else { $null }
   foreach ($root in $roots) {
-    $todo = @(, @($root, $rootIco))
+    # A "Save into" folder: every folder between Downloads and the root wears the QA Wrap icon too (Downloads itself never does).
+    if ($dlFull -and $root.StartsWith("$dlFull\", [StringComparison]::OrdinalIgnoreCase)) {
+      for ($up = Split-Path $root; $up.Length -gt $dlFull.Length; $up = Split-Path $up) { $todo += , @($up, $rootIco) }
+    }
+    $todo += , @($root, $rootIco)
     foreach ($cat in Get-ChildItem -LiteralPath $root -Directory -Force | Where-Object { $cats.ContainsKey($_.Name) }) {
       $todo += , @($cat.FullName, $cats[$cat.Name])
       foreach ($t in Get-ChildItem -LiteralPath $cat.FullName -Directory -Force) { $todo += , @($t.FullName, $cats[$cat.Name]) }
     }
-    foreach ($item in $todo) {
-      if ($action -eq 'reset') { if (Clear-FolderIcon $item[0]) { $changed += $item[0] }; continue }
-      $r = Set-FolderIcon $item[0] $item[1]
-      if ($r -eq 'foreign') { $foreign++ } else { $n++; if ($r -eq 'placed') { $changed += $item[0] } }
-    }
+  }
+  $n = 0; $changed = @(); $foreign = 0; $seen = @{}
+  foreach ($item in $todo) {
+    if ($seen.ContainsKey($item[0]) -or -not (Test-Path -LiteralPath $item[0] -PathType Container)) { continue }
+    $seen[$item[0]] = $true
+    if ($action -eq 'reset') { if (Clear-FolderIcon $item[0]) { $changed += $item[0] }; continue }
+    $r = Set-FolderIcon $item[0] $item[1]
+    if ($r -eq 'foreign') { $foreign++ } else { $n++; if ($r -eq 'placed') { $changed += $item[0] } }
   }
   if ($changed.Count) { # tell Explorer which folders changed, so an open window repaints without F5
     try {
@@ -268,6 +284,9 @@ try {
   if ($m.op -eq 'ping') { $res = @{ ok = $true; ping = $true; icons = $true } }
   elseif ($m.op -eq 'icons') { $res = Invoke-Icons $cfg $m }
   elseif ($m.op -ne 'update') { throw 'unknown op' }
-  else { $res = Invoke-Update $cfg $m }
+  else {
+    $res = Invoke-Update $cfg $m
+    try { $null = Invoke-Icons $cfg ([pscustomobject]@{ action = 'refresh' }) } catch {} # the new build's icons, on the folders, after every update
+  }
 } catch { $res = @{ ok = $false; error = "$($_.Exception.Message)" } }
 if ($MessageFile) { $res | ConvertTo-Json -Compress } else { Write-Message $res }

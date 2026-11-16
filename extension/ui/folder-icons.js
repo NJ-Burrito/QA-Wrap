@@ -8,14 +8,14 @@
  * this extension's own downloads. Folders only; no file is touched.
  *
  *   folderIcons(action)  'apply' | 'reset' | 'refresh' | 'status'  ->  the host's answer, or { ok: false, code }
- *   refreshSoon()        after a save: a few seconds later, dress the folders that save made (only once the tester turned icons on)
+ *   refreshSoon()        after a save: a few seconds later, dress the folders that save made (on by default; off after Restore plain folders)
  *
  * Codes: NO_HELPER (the host is not installed, or nativeMessaging is not granted), OLD_HELPER (installed before this op existed:
  * run updater\install.cmd again), FAILED (the host's own error text is in `error`).
  */
 import { HOST } from './update-lib.js';
 
-const KEY = 'folderIcons'; // chrome.storage.local: true once "Apply folder icons" worked, false after "Restore plain folders"
+const KEY = 'folderIcons'; // chrome.storage.local: on unless false ("Restore plain folders" writes false, "Apply folder icons" true)
 const ROOT = /^(.*[\\/]QA Wrap)[\\/]/i;
 
 /** The QA Wrap folders this extension's own downloads went into, as absolute paths (the only place a path can be learned). */
@@ -47,7 +47,7 @@ let timer = null;
 export function refreshSoon(api = globalThis.chrome, ms = 4000) {
   clearTimeout(timer);
   timer = setTimeout(async () => {
-    const on = (await api.storage.local.get(KEY).catch(() => ({})))[KEY] === true;
+    const on = (await api.storage.local.get(KEY).catch(() => ({})))[KEY] !== false;
     if (on) folderIcons('refresh', api).catch(() => {});
   }, ms);
 }

@@ -22,7 +22,10 @@ import { CATEGORIES } from '../core/filing.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(root, 'brand', 'folder-icons');
-export const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256];
+// The top image is 512, not 256: at 125 % scaling Explorer's extra large icons are 320 px, and a 256 image stretched there is soft.
+// Windows reads the PNG's own size (measured 2026-11-16: 1 px edges at 512 against 2 px from a 256 image). One entry only: an .ico
+// cannot tell 256 from 512 in its directory (both are 0), so it carries one of them.
+export const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 512];
 
 const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, 'ui/icons.js'), 'utf8'), sandbox);
@@ -160,7 +163,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       const c = Object.assign(document.createElement('canvas'), { width: size, height: size });
       const g = c.getContext('2d');
       g.drawImage(img, 0, 0, size, size);
-      return { rgba: Array.from(g.getImageData(0, 0, size, size).data), png: c.toDataURL('image/png').split(',')[1] };
+      return { rgba: size < 32 ? Array.from(g.getImageData(0, 0, size, size).data) : [], png: c.toDataURL('image/png').split(',')[1] };
     }, { markup, size });
     fs.mkdirSync(OUT, { recursive: true });
     for (const [file, { glyph, kind }] of Object.entries(icons)) {

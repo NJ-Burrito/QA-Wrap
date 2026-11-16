@@ -6,6 +6,17 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.10.1, 2026-11-16
+
+### Changed
+
+- Folder icons are on by default. They appear after each save and after each update; "Restore plain folders" in Settings, Files turns them off until you apply them again.
+- The folder you name in "Save into" (and any folder between Downloads and the QA Wrap folder) and the QA Wrap tool folder get the QA Wrap icon too.
+
+### Fixed
+
+- Folder icons are sharp in large and extra large views: each icon now carries a 512 px image, so a screen scaled to 125 % or more no longer stretches a smaller one.
+
 ## 3.10.0, 2026-11-16
 
 ### Added
