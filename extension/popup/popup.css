@@ -2812,13 +2812,18 @@ html[data-surface='panel'] #step-live > .meta { display: none; }
 @container app (width < 440px) {
   html[data-surface='panel'] .app-grid { grid-template-rows: var(--header-h) minmax(0, 1fr) auto auto auto; }
   html[data-surface='panel'] .app section.session { max-block-size: none; }
+  html[data-surface='panel'] .app .tools-body { padding-inline: var(--sp-3); }
 }
 @container app (440px <= width < 720px) {
   html[data-surface='panel'] .app section.session { flex: 2 1 0; }
   html[data-surface='panel'] .app .tools { flex: 0 1 auto; }
+  html[data-surface='panel'] .tools-head { padding-inline: 0; }
 }
 @container app (width < 720px) {
   /* Not on the finished card: there the card and the tools are one scroller (ui-1016 H2). Break a request sits in the tools' row, so it has the same cap. */
   html[data-surface='panel'] .app:not(:has(#step-done:not([hidden]))) .tools,
   html[data-surface='panel'] .app:has(#break-panel:not([hidden])) .work { max-block-size: calc((100vh - var(--header-h) - var(--strip-h)) * 0.6); }
+  /* 1116: one gutter. «Tools», the group labels and the rows all start on the session cards' line (12px narrow, 16px medium);
+     the rows sat 4px outside it and the labels 4px inside. The two width blocks above set the row and heading insets. */
+  html[data-surface='panel'] .fav-head, html[data-surface='panel'] .app .activity-head { padding-inline: 0; }
 }
