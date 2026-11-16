@@ -38,8 +38,13 @@ h1 { font-size: var(--t-title); letter-spacing: var(--track-title); line-height:
   overflow: hidden;
   min-height: 320px;
 }
+/* The frame is the recorded window at its own size, scaled to fit by replay.js (fit): left and top are physical because the scale is. */
 #stage {
   display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
   width: 100%;
   height: 62vh;
   border: 0;
@@ -69,6 +74,11 @@ h1 { font-size: var(--t-title); letter-spacing: var(--track-title); line-height:
 }
 .track { position: relative; flex: 1; }
 #scrub { width: 100%; margin: 0; height: 24px; }
+/* The played part, from the start of the line in either direction (--fill is set by replay.js). */
+#scrub::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--accent) var(--fill, 0%), var(--border-strong) var(--fill, 0%)); }
+[dir='rtl'] #scrub::-webkit-slider-runnable-track { background: linear-gradient(to left, var(--accent) var(--fill, 0%), var(--border-strong) var(--fill, 0%)); }
+#scrub::-moz-range-track { background: var(--border-strong); }
+#scrub::-moz-range-progress { background: var(--accent); }
 
 /* The failure marks sit under the track, not on it, so they never swallow a
    click meant for the scrubber. */

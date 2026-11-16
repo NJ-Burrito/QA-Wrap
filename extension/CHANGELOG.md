@@ -6,6 +6,19 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.10.0, 2026-11-16
+
+### Added
+
+- Folder icons (Windows). Settings, Files, "Apply folder icons" gives the QA Wrap folder and each folder inside it (Screenshots, Recordings, Reports and the rest) its own icon in Explorer, drawn for every view from the small list to extra large icons. Only folders change, never a file. New folders get their icon after each save, and "Restore plain folders" puts the Windows folders back. It uses the update helper: run `updater\install.cmd` once more to refresh a helper installed before this version.
+- The Favourites section of the tool list folds and opens like "All tools", and remembers how you left it.
+
+### Fixed
+
+- "Watch the replay" opens one tab. It opened one more for every file saved since the report was opened, and a second press now shows the replay that is already open.
+- The replay shows the page. It dropped every stylesheet, the page's direction, where it was scrolled and the size of the window, so a recorded page came back as bare text with icons the size of the window. Replays you already have show with the styling that was recorded; new recordings also keep the rules of the site's stylesheet files, as text, and nothing is fetched when a replay plays.
+- The replay's slider reaches the last moment of the session, and its filled part follows the position.
+
 ## 3.9.4, 2026-11-16
 
 ### Fixed

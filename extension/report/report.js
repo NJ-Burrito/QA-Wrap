@@ -1225,7 +1225,7 @@ function renderChains() {
   const replay = managed(el('button', 'btn btn-secondary', t('report.broke.replay')), 'replayAllowed');
   replay.type = 'button';
   replay.hidden = $('watch-replay')?.hidden !== false;
-  replay.addEventListener('click', () => send({ type: 'UQA_OPEN_REPLAY', sessionId }));
+  replay.addEventListener('click', openReplay);
   const jump = el('button', 'btn btn-ghost', t('report.broke.showInTimeline'));
   jump.type = 'button';
   jump.addEventListener('click', () => { showTab('timeline', { focus: true }); jumpTo(f.ts); });
@@ -2285,19 +2285,29 @@ async function saveExport(format, content, mime, { encoding, audience = true, la
 
 /* ── what was saved, kept with the session ─────────────────────────────── */
 
-async function renderSaved() {
-  /* The replay, if one was recorded. Asked for by size rather than by content:
-     `UQA_REPLAY_INFO` reads the chunk headers and inflates nothing, so a
-     session with a large replay costs the timeline nothing to offer it. */
+/** The replay, if one was recorded: `UQA_REPLAY_INFO` reads the chunk headers and inflates nothing. One press opens one tab: the handler is
+ *  set, never added, because this runs again on every repaint of the saved list (each run used to add a listener, so one press opened several tabs). */
+function offerReplay() {
   send({ type: 'UQA_REPLAY_INFO', sessionId }).then((info) => {
     const btn = document.getElementById('watch-replay');
     if (!btn || !info?.ok || !info.result?.entries) return;
-    const kb = Math.max(1, Math.round((info.result.stored || 0) / 1024));
-    btn.textContent = t('report.timeline.replayKb', { kb });
+    btn.textContent = t('report.timeline.replayKb', { kb: Math.max(1, Math.round((info.result.stored || 0) / 1024)) });
     btn.hidden = false;
     managed(btn, 'replayAllowed');
-    btn.addEventListener('click', () => send({ type: 'UQA_OPEN_REPLAY', sessionId }));
+    btn.onclick = openReplay;
   });
+}
+
+/** One replay tab per session: a second press shows the one that is open. Here, not in the worker: its boot graph has no room. */
+async function openReplay() {
+  const url = chrome.runtime.getURL(`replay/replay.html?session=${encodeURIComponent(sessionId)}`);
+  const open = (await chrome.tabs.query({}).catch(() => [])).find((tab) => tab.url === url);
+  if (open?.id) chrome.tabs.update(open.id, { active: true }).catch(() => null);
+  else send({ type: 'UQA_OPEN_REPLAY', sessionId });
+}
+
+async function renderSaved() {
+  offerReplay();
 
   // D-1010-155: ask for the export rows only. A worker that ignores `kinds` answers the whole session, so the filter stays;
   // and the answer is read into a local, because the page-wide `events` must never be narrowed to the exports.
@@ -3581,18 +3591,7 @@ async function loadSession() {
   sessionsLib ||= await import('../core/sessions.js').catch(() => null);
   actionJoinLib ||= await import('../core/action-join.js').catch(() => null);
   window.UQAReport.sessionId = sessionId;
-  /* The replay, if one was recorded. Asked for by size rather than by content:
-     `UQA_REPLAY_INFO` reads the chunk headers and inflates nothing, so a
-     session with a large replay costs the timeline nothing to offer it. */
-  send({ type: 'UQA_REPLAY_INFO', sessionId }).then((info) => {
-    const btn = document.getElementById('watch-replay');
-    if (!btn || !info?.ok || !info.result?.entries) return;
-    const kb = Math.max(1, Math.round((info.result.stored || 0) / 1024));
-    btn.textContent = t('report.timeline.replayKb', { kb });
-    btn.hidden = false;
-    managed(btn, 'replayAllowed');
-    btn.addEventListener('click', () => send({ type: 'UQA_OPEN_REPLAY', sessionId }));
-  });
+  offerReplay();
 
   const res = await send({ type: 'UQA_GET_TIMELINE', sessionId });
   if (!res.ok) return say(werr(res), 'err');

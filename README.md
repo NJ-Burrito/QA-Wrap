@@ -37,9 +37,9 @@ By [Nader Alzghoul (NJ-Burrito)](https://nj-burrito.github.io/), an AI QA automa
 
 | | Where | Status |
 | --- | --- | --- |
-| 🦊 **Firefox** | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ Live (3.9.3; 3.9.4 to follow) |
-| 🟢 **Chrome** | [GitHub release zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([steps](#install)) | ✅ Live (3.9.4; not in the Chrome Web Store) |
-| 🔷 **Edge** | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ Live (3.9.2; 3.9.4 to follow) |
+| 🦊 **Firefox** | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ Live (3.9.3; 3.10.0 to follow) |
+| 🟢 **Chrome** | [GitHub release zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([steps](#install)) | ✅ Live (3.10.0; not in the Chrome Web Store) |
+| 🔷 **Edge** | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ Live (3.9.2; 3.10.0 to follow) |
 | 🎭 **Opera** | Opera add-ons | ⏳ Not public yet (in moderation since 2026-10-23); use the `opera` zip from the release meanwhile |
 | 🤖 **MCP bridge** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) 0.1.0 | ✅ Live |
 | 📚 **MCP Registry** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ Live |
@@ -52,6 +52,7 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 - 🔗 **Links each failure to its cause**: the report shows the action just before every problem.
 - 📝 **Writes the report**: one press copies a ready bug report (title, steps, what happened, evidence). Sending to Jira and other trackers is one button away.
 - 📁 **Saves where you choose**: screenshots, recordings and exports go into one tidy tree (`QA Wrap/Screenshots/<test> <date>/…`), in Downloads, in a subfolder you name, or in any folder you pick. "Ask where to save each file" opens the Save dialog every time.
+- 🗂️ **Folder icons on Windows**: one press in Settings gives the QA Wrap folder and each category folder its own icon in Explorer.
 - 🌍 **Arabic and English**, right to left where it should be.
 
 🎞️ See QA-Wrap in action · 40 s: [English](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s.mp4) · [العربية](https://nj-burrito.github.io/QA-Wrap/media/qa-wrap-commercial-40s-ar.mp4)
@@ -59,6 +60,12 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 🎬 Six more films, each in English and Arabic, on the [website](https://nj-burrito.github.io/QA-Wrap/#films): Every Moment, Kept · One Report, Every Desk · Show It, Don't Describe It · The Whole Toolbox · Yours, and Sealed · Your Language, Your Numbers, Your Agent.
 
 <a id="new"></a>
+
+## ✨ New in 3.10.0
+
+- 🗂️ **Folder icons on Windows.** Settings, Files, "Apply folder icons" gives the QA Wrap folder and each folder inside it (Screenshots, Recordings, Reports and the rest) its own icon in Explorer, sharp from the small list to extra large icons. Only folders change, never a file, and new folders get theirs after each save. It uses the update helper.
+- 🎞️ **The replay shows the page.** "Watch the replay" opens one tab, and the page comes back with its styling, its direction, where it was scrolled and the size of the window, where it used to be bare text.
+- ⭐ **Favourites fold.** The Favourites section of the tool list folds and opens like "All tools", and remembers how you left it.
 
 ## ✨ New in 3.9.4
 

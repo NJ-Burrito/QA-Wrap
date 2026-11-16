@@ -379,6 +379,56 @@ test('a session that crosses pages replays each page at its own time (2026-11-10
   assert.equal(span(log).to, 147000, 'the scrubber runs on the session clock');
 });
 
+test('the replay keeps the page\'s stylesheets, its direction and where it was scrolled (2026-11-16: "nothing to see")', () => {
+  const doc = {
+    t: 1, id: 1, n: 'HTML', a: { dir: 'rtl', lang: 'ar', onload: 'x()' }, c: [
+      { t: 1, id: 2, n: 'HEAD', a: {}, c: [
+        { t: 1, id: 3, n: 'STYLE', a: {}, c: [{ t: 3, v: 'ul > li{color:red} </style><script>alert(1)</script>' }] },
+        { t: 1, id: 4, n: 'LINK', a: { rel: 'stylesheet', href: '', media: 'screen' }, c: [] },
+        { t: 1, id: 5, n: 'LINK', a: { rel: 'icon', href: '' }, c: [] },
+      ] },
+      { t: 1, id: 6, n: 'BODY', a: { class: 'app' }, c: [{ t: 3, v: 'hello' }] },
+    ],
+  };
+  const log = [
+    { k: 'snapshot', t: 0, p: 'a', w: 1150, h: 783, doc },
+    { k: 'css', t: 5, p: 'a', id: 4, v: '@import url("https://x.test/a.css");.card{margin:0}' },
+    { k: 'scroll', t: 9, p: 'a', x: 0, y: 420 },
+  ];
+  const before = toDocument(stateAt(log, 1));
+  assert.ok(before.includes('<html dir="rtl" lang="ar">'), 'the root keeps its direction, and no handler');
+  assert.ok(before.includes('ul > li{color:red}'), 'a style element is raw text: an escaped > is a broken selector');
+  assert.ok(!before.includes('</style><'.concat('script')), 'a closing tag inside a sheet cannot end it: what follows stays CSS text');
+  assert.ok(!before.includes('.card{margin:0}') && !/top:-/.test(before), 'nothing from later in the log');
+  assert.ok(/svg:not\(\[width\]\)/.test(before), 'a sheet that is not in the log: icons get a size instead of the window');
+  const after = toDocument(stateAt(log, 10));
+  assert.ok(after.includes('<style media="screen">.card{margin:0}</style>'), 'a link\'s recorded rules become a style element');
+  assert.ok(!/@import/.test(after) && !/x\.test/.test(after), 'an @import would fetch');
+  assert.ok(after.includes('top:-420px'), 'the page is shown where it was scrolled to');
+  assert.ok(!/svg:not\(\[width\]\)/.test(after), 'every sheet is there: no stand-in sizes');
+  assert.ok(after.includes('<body class="app">hello</body>'));
+});
+
+test('the recorder logs a stylesheet\'s rules as text: a link\'s, and a style element\'s once, not twice', () => {
+  const { api, sandbox } = loadRecorder();
+  const sheet = (...rules) => ({ cssRules: rules.map((cssText) => ({ cssText })) });
+  const style = elem('style', {}, [text('.a{color:red}')], { sheet: sheet('.a{color:red}', '.inserted{top:0}') });
+  const link = elem('link', { rel: 'stylesheet', href: 'https://example.test/app.css' }, [], { sheet: sheet('.b{margin:0}') });
+  const foreign = elem('link', { rel: 'stylesheet', href: 'https://cdn.test/x.css' }, [], { sheet: { get cssRules() { throw new Error('SecurityError'); } } });
+  const icon = elem('link', { rel: 'icon', href: '/favicon.ico' }, []);
+  sandbox.document.documentElement = elem('html', {}, [elem('head', {}, [style, link, foreign, icon]), elem('body', {}, [text('hi')])]);
+  api._start('s1');
+  const buffer = api._buffer();
+  const css = Array.from(buffer).filter((e) => e.k === 'css').map((e) => e.v); // Array.from: the buffer is the sandbox's array
+  assert.deepEqual(css, ['.a{color:red}.inserted{top:0}', '.b{margin:0}'], 'the two readable sheets, in document order; the foreign one and the icon are not');
+  assert.equal(buffer[0].k, 'snapshot');
+  assert.ok(!JSON.stringify(buffer[0]).includes('color:red'), 'the style element\'s text is not in the snapshot as well');
+  assert.ok(!JSON.stringify(buffer).includes('example.test/app.css'), 'and the address of a sheet is still not stored');
+  const page = toDocument(stateAt(buffer, 1e9));
+  assert.ok(page.includes('.inserted{top:0}') && page.includes('.b{margin:0}'), 'and the player shows them');
+  api._stop();
+});
+
 /* ── the numbers the page prints ────────────────────────────────────────── */
 
 test('the span is the first and last stamps in the log', () => {

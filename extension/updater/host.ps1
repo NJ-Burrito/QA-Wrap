@@ -1,7 +1,8 @@
 # QA Wrap native messaging host: com.njburrito.qawrap.updater (Chrome starts it; no admin rights).
 # One request {op:'update', version, zip, zipApi, sha256, token} -> download, verify, swap the extension folder in place, answer {ok}.
 # The folder comes from config.json written by install.cmd, never from the message. Rolls back from the backup on any failure.
-# Nothing outside the extension folder is touched: the browser profile (storage, IndexedDB, sessions, settings) lives elsewhere.
+# An update touches nothing outside the extension folder: the browser profile (storage, IndexedDB, sessions, settings) lives elsewhere.
+# A second request {op:'icons', action} puts QA Wrap's folder icons on its own download folders (a desktop.ini per folder; see Invoke-Icons).
 # Test hooks (never used by Chrome): -ConfigPath <file> -MessageFile <json file> run one request without stdin/stdout framing.
 param([string]$ConfigPath = (Join-Path $PSScriptRoot 'config.json'), [string]$MessageFile = "")
 $ErrorActionPreference = 'Stop'
@@ -155,11 +156,117 @@ function Invoke-Update($cfg, $m) {
   } finally { Remove-Item -LiteralPath $work -Recurse -Force -ErrorAction SilentlyContinue }
 }
 
+# op 'icons': QA Wrap's own icons on its download folders. Folders only, never files. action: apply | refresh | reset | status.
+# Which folders: a folder named "QA Wrap" that holds at least one of the category folders the extension writes, found (a) in the user's
+# Downloads folder, up to three levels down, (b) at an absolute path the extension read from its own downloads, or (c) remembered from
+# an earlier run (icons.json beside config.json). Inside it: that folder, its category folders (brand\folder-icons\folders.json) and the
+# test folders one level under a category. Nothing else is touched, and a desktop.ini this host did not write is never replaced.
+# The .ico files are copied beside the host, so the icons survive an update that swaps the extension folder.
+$IconOwner = 'Owner=qawrap'
+function Set-FolderIcon($dir, $ico) {
+  $ini = Join-Path $dir 'desktop.ini'
+  $want = "[.ShellClassInfo]`r`nIconResource=$ico,0`r`n[QA Wrap]`r`n$IconOwner`r`n"
+  $cur = if ([IO.File]::Exists($ini)) { [IO.File]::ReadAllText($ini) } else { $null }
+  if ($null -ne $cur -and $cur -notmatch $IconOwner) { return 'foreign' }
+  $changed = $false
+  if ($cur -ne $want) {
+    if ($null -ne $cur) { [IO.File]::SetAttributes($ini, [IO.FileAttributes]::Normal) } # a hidden system file cannot be rewritten in place
+    [IO.File]::WriteAllText($ini, $want, [Text.Encoding]::Unicode)
+    $changed = $true
+  }
+  $fa = [IO.File]::GetAttributes($ini); $fw = $fa -bor [IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::System
+  if ($fw -ne $fa) { [IO.File]::SetAttributes($ini, $fw); $changed = $true }
+  # Explorer reads a folder's desktop.ini only when the FOLDER is read-only. On a folder that flag locks nothing: files in it stay writable.
+  $da = [IO.File]::GetAttributes($dir); $dw = $da -bor [IO.FileAttributes]::ReadOnly
+  if ($dw -ne $da) { [IO.File]::SetAttributes($dir, $dw); $changed = $true }
+  if ($changed) { 'placed' } else { 'kept' }
+}
+function Clear-FolderIcon($dir) {
+  $ini = Join-Path $dir 'desktop.ini'
+  if (-not [IO.File]::Exists($ini) -or [IO.File]::ReadAllText($ini) -notmatch $IconOwner) { return $false }
+  [IO.File]::SetAttributes($ini, [IO.FileAttributes]::Normal); [IO.File]::Delete($ini)
+  $da = [IO.File]::GetAttributes($dir)
+  [IO.File]::SetAttributes($dir, [IO.FileAttributes]([int]$da -band (-bnot [int][IO.FileAttributes]::ReadOnly)))
+  $true
+}
+function Invoke-Icons($cfg, $m) {
+  $action = if ($m.action) { "$($m.action)" } else { 'apply' }
+  if (@('apply', 'refresh', 'reset', 'status') -notcontains $action) { throw 'unknown icons action' }
+  $home0 = Split-Path -Parent $ConfigPath
+  $statePath = Join-Path $home0 'icons.json'
+  $state = if (Test-Path -LiteralPath $statePath) { Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json } else { [pscustomobject]@{ on = $false; roots = @() } }
+  if ($action -eq 'status') { return @{ ok = $true; action = $action; on = [bool]$state.on } }
+  if ($action -eq 'refresh' -and -not $state.on) { return @{ ok = $true; action = $action; on = $false; folders = 0; changed = 0 } } # after a download: only for someone who turned the icons on
+
+  # The icons, beside the host. Refreshed from the installed extension whenever its copy differs.
+  $icons = Join-Path $home0 'folder-icons'
+  $src = Join-Path "$($cfg.folder)".TrimEnd('\') 'brand\folder-icons'
+  if (Test-Path -LiteralPath (Join-Path $src 'folders.json')) {
+    New-Item -ItemType Directory -Force $icons | Out-Null
+    foreach ($f in Get-ChildItem -LiteralPath $src -File | Where-Object { $_.Extension -eq '.ico' -or $_.Name -eq 'folders.json' }) {
+      $to = Join-Path $icons $f.Name
+      if (-not (Test-Path -LiteralPath $to) -or (Get-Item -LiteralPath $to).Length -ne $f.Length -or (Get-FileHash -LiteralPath $to).Hash -ne (Get-FileHash -LiteralPath $f.FullName).Hash) { Copy-Item -LiteralPath $f.FullName -Destination $to -Force }
+    }
+  }
+  $mapPath = Join-Path $icons 'folders.json'
+  if (-not (Test-Path -LiteralPath $mapPath)) { throw 'this QA Wrap build has no folder icons: update QA Wrap first' }
+  $map = Get-Content -LiteralPath $mapPath -Raw | ConvertFrom-Json
+  $cats = @{}
+  foreach ($p in $map.folders.PSObject.Properties) { if ("$($p.Value)" -match '^[a-z0-9-]+\.ico$') { $cats[$p.Name] = Join-Path $icons $p.Value } }
+  if ("$($map.root)" -notmatch '^[a-z0-9-]+\.ico$') { throw 'bad folder icon map' }
+  $rootIco = Join-Path $icons $map.root
+
+  # Candidate folders, then the one test every candidate must pass: named "QA Wrap", and holding a category folder.
+  $cand = @()
+  foreach ($p in @($m.roots) + @($state.roots)) { if ($p -and [IO.Path]::IsPathRooted("$p")) { $cand += "$p" } }
+  $dl = $null
+  try { $dl = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' -ErrorAction Stop).'{374DE290-123F-4565-9164-39C4925E467B}' } catch {}
+  $dl = if ($dl) { [Environment]::ExpandEnvironmentVariables($dl) } else { Join-Path $env:USERPROFILE 'Downloads' }
+  if ($MessageFile -and $m.downloads) { $dl = "$($m.downloads)" } # test hook only
+  if (Test-Path -LiteralPath $dl) {
+    if ((Split-Path $dl -Leaf) -ieq 'QA Wrap') { $cand += $dl }
+    Get-ChildItem -LiteralPath $dl -Directory -Recurse -Depth 2 -Filter 'QA Wrap' -ErrorAction SilentlyContinue | ForEach-Object { $cand += $_.FullName }
+  }
+  $roots = @()
+  foreach ($c in $cand) {
+    if (-not (Test-Path -LiteralPath $c -PathType Container)) { continue }
+    $full = (Get-Item -LiteralPath $c -Force).FullName.TrimEnd('\')
+    if ((Split-Path $full -Leaf) -ine 'QA Wrap' -or $roots -contains $full) { continue }
+    if (-not (Get-ChildItem -LiteralPath $full -Directory -Force | Where-Object { $cats.ContainsKey($_.Name) } | Select-Object -First 1)) { continue }
+    $roots += $full
+  }
+
+  $n = 0; $changed = @(); $foreign = 0
+  foreach ($root in $roots) {
+    $todo = @(, @($root, $rootIco))
+    foreach ($cat in Get-ChildItem -LiteralPath $root -Directory -Force | Where-Object { $cats.ContainsKey($_.Name) }) {
+      $todo += , @($cat.FullName, $cats[$cat.Name])
+      foreach ($t in Get-ChildItem -LiteralPath $cat.FullName -Directory -Force) { $todo += , @($t.FullName, $cats[$cat.Name]) }
+    }
+    foreach ($item in $todo) {
+      if ($action -eq 'reset') { if (Clear-FolderIcon $item[0]) { $changed += $item[0] }; continue }
+      $r = Set-FolderIcon $item[0] $item[1]
+      if ($r -eq 'foreign') { $foreign++ } else { $n++; if ($r -eq 'placed') { $changed += $item[0] } }
+    }
+  }
+  if ($changed.Count) { # tell Explorer which folders changed, so an open window repaints without F5
+    try {
+      Add-Type -Namespace QAW -Name Shell -MemberDefinition '[DllImport("shell32.dll", CharSet = CharSet.Unicode)] public static extern void SHChangeNotify(int eventId, uint flags, string item1, IntPtr item2);'
+      foreach ($d in $changed) { [QAW.Shell]::SHChangeNotify(0x2000, 0x0005, $d, [IntPtr]::Zero); [QAW.Shell]::SHChangeNotify(0x1000, 0x0005, $d, [IntPtr]::Zero) } # SHCNE_UPDATEITEM, SHCNE_UPDATEDIR; SHCNF_PATHW
+    } catch {}
+  }
+  $on = $action -ne 'reset'
+  $keep = if ($on) { $roots } else { @() }
+  [IO.File]::WriteAllText($statePath, (@{ on = $on; roots = @($keep) } | ConvertTo-Json -Compress), (New-Object Text.UTF8Encoding $false))
+  @{ ok = $true; action = $action; on = $on; roots = $roots.Count; folders = $n; changed = $changed.Count; foreign = $foreign }
+}
+
 try {
   $cfg = Get-Content -LiteralPath $ConfigPath -Raw | ConvertFrom-Json
   $raw = if ($MessageFile) { Get-Content -LiteralPath $MessageFile -Raw } else { Read-Message }
   $m = $raw | ConvertFrom-Json
-  if ($m.op -eq 'ping') { $res = @{ ok = $true; ping = $true } }
+  if ($m.op -eq 'ping') { $res = @{ ok = $true; ping = $true; icons = $true } }
+  elseif ($m.op -eq 'icons') { $res = Invoke-Icons $cfg $m }
   elseif ($m.op -ne 'update') { throw 'unknown op' }
   else { $res = Invoke-Update $cfg $m }
 } catch { $res = @{ ok = $false; error = "$($_.Exception.Message)" } }

@@ -1,0 +1,14 @@
+{
+  "root": "qa-wrap.ico",
+  "folders": {
+    "Reports": "reports.ico",
+    "Tickets": "tickets.ico",
+    "Tests": "tests.ico",
+    "Session sheets": "session-sheets.ico",
+    "Screenshots": "screenshots.ico",
+    "Recordings": "recordings.ico",
+    "Accessibility": "accessibility.ico",
+    "Documents": "documents.ico",
+    "Sessions": "sessions.ico"
+  }
+}

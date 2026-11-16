@@ -36,12 +36,12 @@ test('replay: a quiet minute of 100 ms ticks writes srcdoc under once per second
   const stage = {};
   let writes = 0;
   Object.defineProperty(stage, 'srcdoc', { set() { writes++; } });
-  const el = { textContent: '', value: '' };
+  const el = { textContent: '', value: '', style: { setProperty() {} } };
   const ctx = {
     log: [{ k: 'snapshot', t: 0 }, { k: 'attr', t: 30000 }],
     shownIdx: -1, at: 0, window: {}, timer: null, lastWrite: 0, Date: { now: () => clock },
     $: (id) => (id === 'stage' ? stage : el),
-    stateAt: () => ({}), toDocument: () => '<html></html>', mmss: () => '0:00', setScrubText: () => {},
+    stateAt: () => ({}), toDocument: () => '<html></html>', mmss: () => '0:00', setScrubText: () => {}, fit: () => {}, range: { ms: 30000 },
   };
   vm.createContext(ctx);
   vm.runInContext(`${fn}; this.render = render;`, ctx);
@@ -55,12 +55,12 @@ test('replay: a mutation every 100 ms while playing reloads the frame at most tw
   const stage = {};
   let writes = 0;
   Object.defineProperty(stage, 'srcdoc', { set() { writes++; } });
-  const el = { textContent: '', value: '' };
+  const el = { textContent: '', value: '', style: { setProperty() {} } };
   const busy = Array.from({ length: 200 }, (_, i) => ({ k: 'attr', t: i * 100 + 50 }));
   const ctx = {
     log: busy, shownIdx: -1, at: 0, window: {}, timer: 1, lastWrite: 0, Date: { now: () => clock },
     $: (id) => (id === 'stage' ? stage : el),
-    stateAt: () => ({}), toDocument: () => '<html></html>', mmss: () => '0:00', setScrubText: () => {},
+    stateAt: () => ({}), toDocument: () => '<html></html>', mmss: () => '0:00', setScrubText: () => {}, fit: () => {}, range: { ms: 30000 },
   };
   vm.createContext(ctx);
   vm.runInContext(`${fn}; this.render = render;`, ctx);

@@ -538,6 +538,17 @@
         </p>
         <p class="range-note" id="downloadFolder-preview"></p>
 
+        <!-- Windows only (options/folder-icons.js unhides it): QA Wrap's icons on its download folders, through the updater host. -->
+        <div id="folder-icons" hidden>
+          <h3 class="sub-head" data-i18n="options.files.iconsHead">Folder icons</h3>
+          <p class="range-note" data-i18n="options.files.iconsNote">Gives the QA Wrap folder and each folder inside it (Screenshots, Recordings, Reports and the rest) its own icon in Windows Explorer. Only folders change, never a file, and new folders get theirs after each save. It uses the update helper.</p>
+          <div class="row-2">
+            <button id="folder-icons-apply" class="btn" type="button" data-i18n="options.files.iconsApply">Apply folder icons</button>
+            <button id="folder-icons-reset" class="btn btn-quiet" type="button" data-i18n="options.files.iconsRestore">Restore plain folders</button>
+          </div>
+          <p class="range-note" id="folder-icons-state" role="status"></p>
+        </div>
+
         <label class="switch">
           <input type="checkbox" id="saveAs" />
           <span><strong data-i18n="options.files.saveAsLabel">Ask where to save each file</strong><em data-i18n="options.files.saveAsHint">Opens the browser's Save dialog every time. Off, and files go straight to the folder above.</em></span>
@@ -1050,6 +1061,7 @@
     <script src="options.js" type="module"></script>
     <script src="remembered.js"></script>
     <script src="e1022.js" type="module"></script>
+    <script src="folder-icons.js" type="module"></script>
     <script src="../ui/update-card.js"></script>
     <script src="buffer-bridge.js"></script>
     <script src="ai-writing.js" type="module"></script>
