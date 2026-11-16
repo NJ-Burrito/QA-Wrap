@@ -18,6 +18,7 @@
  *   text      { id, v }                         a text node's new value
  *   input     { id, v, checked }                what was typed
  *   scroll    { x, y }                          where the page was
+ *   css       { id, v }                         a stylesheet's rules, as text (a <style> or a <link>)
  *   viewport  { w, h }                          how big the window was
  *
  * A node is `{ t: 1, id, n, a, c, value?, checked?, masked? }` for an element
@@ -136,6 +137,14 @@ export function stateAt(entries, at) {
         const n = byId.get(e.id);
         if (!n) { state.skipped++; break; }
         n.c = [{ t: 3, v: e.v }];
+        delete n.css; // a <style> rewritten as text: the text is the sheet now
+        state.applied++;
+        break;
+      }
+      case 'css': {
+        const n = byId.get(e.id);
+        if (!n) { state.skipped++; break; }
+        n.css = String(e.v ?? '');
         state.applied++;
         break;
       }
@@ -151,6 +160,7 @@ export function stateAt(entries, at) {
         const parent = byId.get(e.parent);
         if (!parent) { state.skipped++; break; }
         parent.c = parent.c || [];
+        if (parent.css !== undefined && String(parent.n).toUpperCase() === 'STYLE') delete parent.css;
         const nodes = (e.nodes || []).map(clone);
         const i = e.before == null ? parent.c.length : parent.c.findIndex((c) => c.id === e.before);
         parent.c.splice(i < 0 ? parent.c.length : i, 0, ...nodes);
@@ -185,20 +195,51 @@ export function stateAt(entries, at) {
   return state;
 }
 
+/**
+ * A stylesheet's text, safe inside `<style>`. That element is raw text, so nothing is entity-escaped (an escaped `>` is a broken
+ * child selector); the only way out of it is a closing tag, and `<\/` is the same CSS with no tag in it. `@import` would fetch.
+ */
+const cssText = (s) => String(s ?? '').replace(/<\//g, '<\\/').replace(/@import\b[^;]*;?/gi, '');
+
+/** A `<style>` for a recorded sheet: a `<style>` element, or a `<link>` whose rules the recorder kept. '' when there is nothing to show. */
+function styleHtml(node) {
+  const css = node.css !== undefined ? node.css : (node.c || []).map((c) => (c.t === 3 ? c.v : '')).join('');
+  if (!css) return '';
+  const media = String(node.a?.media || '');
+  return `<style${media && !/[<>"]/.test(media) ? ` media="${escAttr(media)}"` : ''}>${cssText(css)}</style>`;
+}
+
+/** The recorded sheets of a tree, in document order: what the head of a replay is made of. */
+function sheetsOf(node, out = []) {
+  if (!node || node.t !== 1) return out;
+  const tag = String(node.n || '').toUpperCase();
+  if (tag === 'STYLE' || (tag === 'LINK' && node.css !== undefined)) out.push(styleHtml(node));
+  else for (const c of node.c || []) sheetsOf(c, out);
+  return out;
+}
+
+/** An element's attributes as markup; the same filter for every element, `<html>` and `<body>` included. */
+function attrsHtml(node) {
+  const parts = [];
+  for (const [k, v] of Object.entries(node?.a || {})) {
+    if (/^(on|srcdoc$)/i.test(k) || !/^[a-zA-Z_:][-a-zA-Z0-9_:.]*$/.test(k)) continue; // r2-02-3: an attribute name from a log is never markup
+    parts.push(`${k}="${escAttr(URL_ATTRS.has(k) ? 'about:blank' : v)}"`);
+  }
+  return parts;
+}
+
 /** One node as HTML. Inert by construction — see the header. */
 export function toHtml(node) {
   if (!node) return '';
   if (node.t === 3) return escText(node.v);
   if (node.t !== 1) return '';
   const tag = String(node.n || '').toUpperCase();
+  if (tag === 'STYLE') return styleHtml(node);
+  if (tag === 'LINK' && node.css !== undefined) return styleHtml(node);
   if (FORBIDDEN.has(tag)) return '';
 
   const name = tag.toLowerCase();
-  const parts = [];
-  for (const [k, v] of Object.entries(node.a || {})) {
-    if (/^(on|srcdoc$)/i.test(k) || !/^[a-zA-Z_:][-a-zA-Z0-9_:.]*$/.test(k)) continue; // r2-02-3: an attribute name from a log is never markup
-    parts.push(`${k}="${escAttr(URL_ATTRS.has(k) ? 'about:blank' : v)}"`);
-  }
+  const parts = attrsHtml(node);
   if (node.value !== undefined && (tag === 'INPUT' || tag === 'TEXTAREA')) {
     parts.push(`value="${escAttr(node.value)}"`);
   }
@@ -223,16 +264,37 @@ export function toHtml(node) {
  */
 export function toDocument(state) {
   if (!state) return '<!doctype html><meta charset="utf-8"><p>Nothing was recorded.</p>';
+  const kids = state.doc?.c || [];
+  const is = (tag) => (c) => c.t === 1 && String(c.n).toUpperCase() === tag;
+  const head = kids.find(is('HEAD'));
+  const body = kids.find(is('BODY'));
+  const html = attrsHtml(state.doc);
+  // The page is shown where it was scrolled to. Nothing runs in the frame, so nothing can scroll it: the root is moved instead
+  // (relative, so what was laid out against the page moves with it and what was fixed to the window stays).
+  const x = Math.round(Number(state.scroll?.x) || 0);
+  const y = Math.round(Number(state.scroll?.y) || 0);
   return (
-    '<!doctype html><html><head><meta charset="utf-8">' +
+    `<!doctype html><html${html.length ? ' ' + html.join(' ') : ''}><head><meta charset="utf-8">` +
     '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:">' +
     `<title>${escText(state.title || '')}</title>` +
+    // Before the page's own sheets, so they win: an image is an empty box in a replay, and an icon with no sheet to size it is not a wall.
+    '<style>img,video,canvas,iframe{background:rgba(127,127,127,.16)}' +
+    (missingSheets(head) ? 'svg:not([width]):not([style*="width"]){inline-size:1.25em;block-size:1.25em}img:not([width]){max-inline-size:100%}' : '') +
+    '</style>' +
+    sheetsOf(head).join('') +
+    // After them, so these hold.
     '<style>[data-uqa-masked]{position:relative}' +
     '[data-uqa-masked]::after{content:"";position:absolute;inset:0;background:#1D2024;border-radius:3px}' +
+    `html{overflow:hidden!important;scroll-behavior:auto!important${x || y ? `;position:relative!important;left:${-x}px!important;top:${-y}px!important` : ''}}` +
     '</style></head>' +
-    (toHtml(state.doc?.c?.find((c) => String(c.n).toUpperCase() === 'BODY')) || `<body>${toHtml(state.doc)}</body>`) +
+    (toHtml(body) || `<body>${toHtml(state.doc)}</body>`) +
     '</html>'
   );
+}
+
+/** True when the page had stylesheet files whose rules are not in the log: every replay recorded before 3.9.5, and a sheet served from another site. */
+export function missingSheets(head) {
+  return (head?.c || []).some((c) => c.t === 1 && String(c.n).toUpperCase() === 'LINK' && /stylesheet/i.test(c.a?.rel || '') && c.css === undefined);
 }
 
 /** First and last timestamps in the log — the scrubber's range. */

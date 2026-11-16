@@ -255,7 +255,13 @@ export const replayHandlers = {
   UQA_OPEN_REPLAY: async (msg) => {
     const sessionId = msg.sessionId || (await activeSessionId());
     if (!sessionId) throw coded('No session to replay.', 'NO_SESSION');
-    return openOwnPage(`replay/replay.html?session=${encodeURIComponent(sessionId)}`);
+    // One replay tab per session: a second press shows the tab that is already open.
+    const path = `replay/replay.html?session=${encodeURIComponent(sessionId)}`;
+    const open = (await chrome.tabs.query({}).catch(() => [])).find((t) => t.url === chrome.runtime.getURL(path));
+    if (!open) return openOwnPage(path);
+    await chrome.tabs.update(open.id, { active: true });
+    await chrome.windows.update(open.windowId, { focused: true }).catch(() => {});
+    return { tabId: open.id, url: open.url };
   },
 
 };

@@ -7,7 +7,16 @@ let toolsOpenTouched = false;
 let toolsFoldForced = false;
 let toolsObserver = null;
 let toolsChosen = null; // null until storage answers; then whether the tester ever opened or closed the fold themselves
-chrome.storage.local.get('toolsOpen').then((r) => {
+let favOpen = true; // the favourites fold; open until the tester closes it
+function keepFavOpen(open) {
+  if (open === favOpen) return;
+  favOpen = open;
+  chrome.storage.local.set({ favOpen }).catch(() => {});
+}
+chrome.storage.local.get(['toolsOpen', 'favOpen']).then((r) => {
+  favOpen = r?.favOpen !== false;
+  const favs = document.querySelector('details.favourites');
+  if (favs) favs.open = favOpen;
   toolsOpen = r?.toolsOpen === true;
   toolsChosen = r?.toolsOpen !== undefined;
   const fold = document.getElementById('tools-fold');

@@ -2348,6 +2348,7 @@
   "replay.status.heavy": "This page changed too fast to follow, so the replay stops following it here and keeps the page as it was.",
   "replay.status.loading": "Reading the session…",
   "replay.status.noSession": "No session was named in the address.",
+  "replay.status.noSheets": "Some of this page's stylesheet files are not in the recording, so parts of it show without their styling.",
   "replay.status.partial.many": "{n} chunks could not be read; the rest is here.",
   "replay.status.partial.one": "{n} chunk could not be read; the rest is here.",
   "replay.status.ready": "The page as it was, and every change to it.",

@@ -32,8 +32,11 @@ function renderTools() {
   // real row's press, not a second row: `[data-action]` stays one element per
   // tool, which is what every suite and film clicks.
   const favs = favourites.map(byId).filter(Boolean);
-  const fav = el('section', 'favourites');
-  const favHead = el('h3', 'fav-head');
+  // A fold like "All tools" below it: closed, the favourites are one line (tools-fold.js keeps the choice).
+  const fav = el('details', 'favourites');
+  fav.open = favOpen;
+  fav.addEventListener('toggle', () => keepFavOpen(fav.open));
+  const favHead = el('summary', 'fav-head');
   favHead.append(el('span', 'activity-label', t('popup.rail.favourites')));
   fav.append(favHead);
   if (favs.length) {

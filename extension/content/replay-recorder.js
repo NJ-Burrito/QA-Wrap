@@ -103,6 +103,9 @@
    */
   const MAX_SESSION_ENTRIES = 20000;
   const MAX_SESSION_BYTES = 8 * 1024 * 1024;
+  /** One stylesheet's rules, and all of a page's: a sheet past the first is cut at a rule, a page past the second keeps the sheets it has. */
+  const MAX_SHEET_BYTES = 1024 * 1024;
+  const MAX_PAGE_CSS_BYTES = 3 * 1024 * 1024;
 
   /**
    * The attributes worth following.
@@ -247,6 +250,52 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
    * the same opaque block `content/mask.js` paints on the page, which is what
    * the tester saw and therefore what the replay should show.
    */
+  /* ── stylesheets ────────────────────────────────────────────────────────
+   *
+   * A replay with no stylesheet is a wall of text and icons the size of the window (the report of 2026-11-16: "nothing to see").
+   * A <link>'s rules are not in the DOM, and a <style> filled through insertRule has no text, so both are read from the sheet itself
+   * and logged as their own `css` entry: text only, nothing fetched at replay (the player's CSP forbids every url() in it).
+   * ponytail: a sheet served from another site without CORS cannot be read by a page script; fetching it from the worker is the upgrade
+   * (it needs a line in core/egress.js). Rules inserted after the sheet was read are not followed either.
+   */
+  let cssSpent = 0;
+  let sheetQueue = [];
+  function sheetCss(sheet, depth = 0) {
+    let rules;
+    try { rules = sheet?.cssRules; } catch { return null; }   // another origin: not ours to read
+    if (!rules) return null;
+    let out = '';
+    for (const rule of rules) {
+      let text = '';
+      if (rule.styleSheet !== undefined) {                    // @import: its rules, not its address
+        const inner = depth < 4 ? sheetCss(rule.styleSheet, depth + 1) : null;
+        const media = rule.media?.mediaText || '';
+        text = inner ? (media ? `@media ${media}{${inner}}` : inner) : '';
+      } else {
+        try { text = rule.cssText; } catch { text = ''; }
+      }
+      if (out.length + text.length > MAX_SHEET_BYTES) break;
+      out += text;
+    }
+    return out;
+  }
+  const isSheetLink = (node) => node.tagName === 'LINK' && /(^|\s)stylesheet(\s|$)/i.test(node.getAttribute?.('rel') || '');
+  /** Log the rules of the sheets serialize() met, after the entry that carries their nodes. A <link> still loading is logged when it lands. */
+  function logSheets() {
+    const nodes = sheetQueue;
+    sheetQueue = [];
+    for (const node of nodes) {
+      const css = sheetCss(node.sheet);
+      if (css == null) {
+        if (node.tagName === 'LINK' && !node.sheet) node.addEventListener?.('load', () => { if (on) { sheetQueue.push(node); logSheets(); } }, { once: true });
+        continue;
+      }
+      if (!css || cssSpent + css.length > MAX_PAGE_CSS_BYTES) continue;
+      cssSpent += css.length;
+      push({ k: 'css', id: idOf(node), v: css });
+    }
+  }
+
   function serialize(node, budget = { left: MAX_NODES_PER_TREE }) {
     if (!node) return null;
     if (budget.left <= 0) return null;
@@ -281,6 +330,10 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
     }
 
     const out = { t: 1, id, n: tag, a: attrs, c: [] };
+    if (tag === 'STYLE' ? !!node.sheet : isSheetLink(node)) {
+      sheetQueue.push(node);
+      if (tag === 'STYLE') return out;                    // its rules follow as a css entry: the text is not logged twice
+    }
 
     // A field's value is not an attribute once a person has typed in it.
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
@@ -327,6 +380,7 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
       y: window.scrollY,
       doc: serialize(document.documentElement),
     });
+    logSheets();
   }
 
   function onMutations(records) {
@@ -378,6 +432,7 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
           before: m.nextSibling ? ids.get(m.nextSibling) || null : null,
           nodes: added,
         });
+        logSheets();
       }
     }
   }
@@ -475,6 +530,8 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
     buffer = [];
     spentEntries = 0;
     spentBytes = 0;
+    cssSpent = 0;
+    sheetQueue = [];
     winAt = 0;
     winCount = 0;
     strikes = 0;
@@ -524,6 +581,7 @@ const isSecretName = (name) => { const t = String(name).replace(/([a-z\d])([A-Z]
     onInput,
     onMutations,
     snapshot,
+    sheetCss,
     isRecording: () => on,
     asleep,
     isFollowing: () => !!observer,

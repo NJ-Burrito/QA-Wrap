@@ -17,7 +17,7 @@
  * under a millisecond, and a tester scrubbing backwards — which is what they do
  * when they land on a failure — would have cost a rebuild anyway.
  */
-import { stateAt, toDocument, span, failureMarks, humanSize } from '../core/replay.js';
+import { stateAt, toDocument, span, failureMarks, humanSize, missingSheets } from '../core/replay.js';
 
 /*
  * The words, before anything writes any.
@@ -79,13 +79,35 @@ function render(ms) {
   if (idx !== shownIdx && !(timer && Date.now() - lastWrite < 500)) {
     shownIdx = idx;
     lastWrite = Date.now();
-    $('stage').srcdoc = toDocument(stateAt(log, ms));
+    const s = stateAt(log, ms);
+    $('stage').srcdoc = toDocument(s);
+    fit(s);
     window.__uqaSrcdocWrites = (window.__uqaSrcdocWrites || 0) + 1;
   }
   $('clock').textContent = mmss(ms);
   $('scrub').value = String(ms);
+  $('scrub').style.setProperty('--fill', `${range.ms ? (ms / range.ms) * 100 : 0}%`); // the played part of the track (it sat at half, whatever the moment)
   setScrubText(ms);
 }
+
+/**
+ * The frame is the recorded window, scaled down to fit the stage: the page keeps the layout it had instead of reflowing into this one.
+ * Never scaled up, and never taller than most of this window, so the controls stay in view.
+ */
+let recorded = { w: 1280, h: 800 };
+function fit(s) {
+  if (s) recorded = { w: s.w > 0 ? s.w : 1280, h: s.h > 0 ? s.h : 800 };
+  const el = $('stage');
+  const box = el.parentElement;
+  const k = Math.min(1, box.clientWidth / recorded.w, (window.innerHeight * 0.72) / recorded.h);
+  el.style.width = `${recorded.w}px`;
+  el.style.height = `${recorded.h}px`;
+  el.style.transform = `scale(${k})`;
+  el.style.left = `${Math.max(0, Math.round((box.clientWidth - recorded.w * k) / 2))}px`;
+  box.style.height = `${Math.round(recorded.h * k)}px`;
+}
+new ResizeObserver(() => fit()).observe($('stage').parentElement);
+addEventListener('resize', () => fit());
 
 /**
  * The play button's icon and word, from the new icon family (UI rework
@@ -156,7 +178,7 @@ function paintState() {
       } else {
         $('sub').textContent = state.unreadable
           ? t(state.unreadable === 1 ? 'replay.status.partial.one' : 'replay.status.partial.many', { n: state.unreadable })
-          : t(state.heavy ? 'replay.status.heavy' : 'replay.status.ready');
+          : t(state.heavy ? 'replay.status.heavy' : state.noSheets ? 'replay.status.noSheets' : 'replay.status.ready');
         $('failure-note').textContent = state.marks
           ? t(state.marks === 1 ? 'replay.marks.one' : 'replay.marks.many', { n: state.marks })
           : t('replay.marks.none');
@@ -232,6 +254,9 @@ async function load() {
   );
   state.marks = marks.length;
   state.heavy = log.some((e) => e.k === 'heavy');
+  // A sheet whose rules are not in the log: every replay recorded before 3.9.5, and a stylesheet served from another site.
+  const sheetIds = new Set(log.filter((e) => e.k === 'css').map((e) => `${e.p}:${e.id}`));
+  state.noSheets = log.some((e) => e.k === 'snapshot' && missingSheets({ c: (e.doc?.c?.find((c) => String(c.n).toUpperCase() === 'HEAD')?.c || []).filter((c) => !sheetIds.has(`${e.p}:${c.id}`)) }));
   paintState();
 
   // Open at the first failure: that is the moment the tester came for.
@@ -242,7 +267,8 @@ async function load() {
 $('play').addEventListener('click', play);
 $('scrub').addEventListener('input', (e) => {
   stop();
-  render(Number(e.target.value) || 0);
+  const v = Number(e.target.value) || 0;
+  render(v >= range.ms - 10 ? range.ms : v); // the slider steps by 10: its last stop is the end of the session, not up to 9 ms before it
 });
 $('theme')?.addEventListener('click', () => window.UQATheme?.cycle?.());
 
