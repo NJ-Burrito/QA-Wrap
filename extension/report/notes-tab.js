@@ -67,7 +67,7 @@ async function save(format) {
   const keep = new Set(shown(sessionNotes(ctx?.events || [])));
   const out = buildNotesExport(ctx?.session, (ctx?.events || []).filter((e) => keep.has(e)), format);
   if (!out.count) return say('report.timeline.exportNone', 'err');
-  const res = await window.UQADownload.downloadText(out.content, out.filename, out.mime);
+  const res = await (await import('./notes-file.js')).saveNotesExport(ctx?.session, out, format);
   say(res.ok ? 'report.timeline.exported' : 'report.timeline.exportFailed', res.ok ? 'ok' : 'err', { n: out.count, name: out.filename });
 }
 

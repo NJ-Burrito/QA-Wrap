@@ -36,49 +36,22 @@
   /**
    * @returns {Promise<{ok: boolean, how: string, id?: number, error?: string}>}
    */
-  async function downloadText(content, filename, mime = 'text/plain', { saveAs = false } = {}) {
-    let url;
+  function downloadText(content, filename, mime = 'text/plain', opts = {}) {
+    let blob;
     try {
-      url = URL.createObjectURL(new Blob([content], { type: mime }));
+      blob = new Blob([content], { type: mime });
     } catch (err) {
-      return { ok: false, how: 'blob', error: String(err?.message || err) };
+      return Promise.resolve({ ok: false, how: 'blob', error: String(err?.message || err) });
     }
-
-    const revokeLater = () => setTimeout(() => URL.revokeObjectURL(url), 60_000);
-
-    if (chrome.downloads?.download) {
-      try {
-        const id = await new Promise((resolve, reject) => {
-          chrome.downloads.download({ url, filename, saveAs, conflictAction: 'uniquify' }, (downloadId) => {
-            if (chrome.runtime.lastError) return reject(new Error(chrome.runtime.lastError.message));
-            if (downloadId === undefined) return reject(new Error('the download was not started'));
-            resolve(downloadId);
-          });
-        });
-        revokeLater();
-        return { ok: true, how: 'downloads', id };
-      } catch (err) {
-        // Fall through to the anchor rather than losing the export.
-        try {
-          anchorFallback(url, filename);
-          revokeLater();
-          return { ok: true, how: 'anchor', error: String(err?.message || err) };
-        } catch (err2) {
-          revokeLater();
-          return { ok: false, how: 'anchor', error: String(err2?.message || err2) };
-        }
-      }
-    }
-
-    try {
-      anchorFallback(url, filename);
-      revokeLater();
-      return { ok: true, how: 'anchor' };
-    } catch (err) {
-      revokeLater();
-      return { ok: false, how: 'anchor', error: String(err?.message || err) };
-    }
+    return downloadBlob(blob, filename, opts);
   }
+
+  /** The tester's settings, for the two this file must obey on every save: `saveAs` and `downloadFolder`. */
+  const prefs = () => new Promise((resolve) => {
+    try {
+      chrome.runtime.sendMessage({ type: 'UQA_GET_SETTINGS' }, (res) => { void chrome.runtime.lastError; resolve(res?.ok ? res.result : {}); });
+    } catch { resolve({}); }
+  });
 
   /** Where a finished download actually landed, for telling the user. */
   async function whereIsIt(id) {
@@ -114,6 +87,12 @@
         revokeLater();
         return { ok: true, how: 'downloads', id };
       } catch (err) {
+        // Cancel in the Save dialog means "do not save". The anchor below would
+        // write the file into Downloads anyway, which is the opposite.
+        if (saveAs && /cancel/i.test(String(err?.message))) {
+          revokeLater();
+          return { ok: false, how: 'downloads', cancelled: true, error: String(err.message) };
+        }
         try {
           anchorFallback(url, filename);
           revokeLater();
@@ -152,7 +131,10 @@
    * and a tester capturing forty screenshots never wants to see it. It is
    * carried here rather than read here, because this file has no settings.
    */
-  async function saveFiled(data, relativePath, mime, { saveAs = false } = {}) {
+  async function saveFiled(data, relativePath, mime, opts = {}) {
+    // Read here, not passed in: six surfaces call this and none of them passed
+    // it, so «Ask where to save each file» only ever worked for the audio file.
+    const saveAs = opts.saveAs ?? !!(await prefs()).saveAs;
     /*
      * A gzipped artefact is named `.gz`, wherever it came from.
      *
@@ -169,7 +151,11 @@
       relativePath = `${relativePath}.gz`;
     }
 
-    const handle = await window.UQAFolder?.usable({ prompt: true });
+    // The action popup never asks: Chrome closes it when the permission bubble
+    // takes focus, and the save dies with it. The side panel and pages can ask.
+    const barePopup = /\/popup\/popup\.html$/.test(location.pathname) && !new URLSearchParams(location.search).get('surface');
+    const chosen = await window.UQAFolder?.get();
+    const handle = chosen ? await window.UQAFolder.usable({ prompt: !barePopup }) : null;
     if (handle) {
       try {
         const { writeToDirectory } = await import('../core/filing.js');
@@ -193,14 +179,17 @@
         // Fall through to Downloads rather than losing the artefact — but say
         // which one happened, because the tester is looking in a folder.
         const fallback = data instanceof Blob
-          ? await downloadBlob(data, relativePath)
-          : await downloadText(data, relativePath, mime);
+          ? await api.downloadBlob(data, relativePath, { saveAs })
+          : await api.downloadText(data, relativePath, mime, { saveAs });
         return { ...fallback, how: 'downloads-fallback', error: String(err?.message || err) };
       }
     }
-    return data instanceof Blob
-      ? await downloadBlob(data, relativePath, { saveAs })
-      : await downloadText(data, relativePath, mime, { saveAs });
+    const out = data instanceof Blob
+      ? await api.downloadBlob(data, relativePath, { saveAs })
+      : await api.downloadText(data, relativePath, mime, { saveAs });
+    // A folder was chosen and could not be used (permission lapsed or refused):
+    // the tester is about to look in it, so the result says it went elsewhere.
+    return chosen && out.ok ? { ...out, how: 'downloads-fallback', error: 'The chosen folder needs permission again.' } : out;
   }
 
   /**
@@ -243,5 +232,7 @@
     }
   }
 
-  window.UQADownload = { downloadText, downloadBlob, saveFiled, whereIsIt, announce };
+  // `saveFiled` calls through `api`, so a page (or a test) that replaces one route replaces it for every save.
+  const api = { downloadText, downloadBlob, saveFiled, whereIsIt, announce, prefs };
+  window.UQADownload = api;
 })();

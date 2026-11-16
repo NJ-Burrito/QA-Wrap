@@ -16,10 +16,7 @@
     const { buildNotesExport } = await import('./notes-build.js');
     const out = buildNotesExport(ctx.session, ctx.events, format);
     if (!out.count) return say('report.timeline.exportNone', 'err');
-    // exp1022: Documents/<title> <date>/<title> <date> notes.<ext>, like the Save sheet's notes file.
-    const filing = await import('../core/filing.js');
-    out.filename = filing.notesPath(ctx.session, format === 'csv' ? 'csv' : 'md');
-    const res = await window.UQADownload.downloadText(out.content, out.filename, out.mime);
+    const res = await (await import('./notes-file.js')).saveNotesExport(ctx.session, out, format);
     say(res.ok ? 'report.timeline.exported' : 'report.timeline.exportFailed', res.ok ? 'ok' : 'err', { n: out.count, name: out.filename });
   }
   for (const [id, format] of [['export-notes', 'markdown'], ['export-notes-csv', 'csv']]) {

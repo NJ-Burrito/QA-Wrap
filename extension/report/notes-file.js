@@ -78,3 +78,11 @@ export async function saveNotes({ session, events, filing, settings, say }) {
   }
   return out;
 }
+
+/** «Export notes» on the Timeline and on the Notes tab: the tree path, the tester's «Save into» folder, the granted folder. */
+export async function saveNotesExport(session, out, format) {
+  const filing = await import('../core/filing.js');
+  const { downloadFolder = '' } = await window.UQADownload.prefs();
+  out.filename = filing.notesPath(session, format === 'csv' ? 'csv' : 'md', { folder: downloadFolder });
+  return window.UQADownload.saveFiled(out.content, out.filename, out.mime);
+}

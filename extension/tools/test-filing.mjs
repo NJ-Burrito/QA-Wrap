@@ -243,12 +243,12 @@ await testAsync('the first copy is not touched by the second', async () => {
   assert.equal(reports.files.get('Bug report - test one fixture 2026-09-07 (2).md').data, 'second');
 });
 
-test('both download call sites say conflictAction uniquify', () => {
+test('the download call site says conflictAction uniquify', () => {
   // One word, and rule 4 on the Downloads route rests entirely on it. Chrome's
   // default is uniquify today; a default is not a guarantee.
   const download = read('ui/download.js');
   const calls = download.match(/chrome\.downloads\.download\(\{[^}]*\}/g) || [];
-  assert.equal(calls.length, 2, `expected two download calls in ui/download.js, found ${calls.length}`);
+  assert.equal(calls.length, 1, `expected one download call in ui/download.js (text goes through the blob route), found ${calls.length}`);
   for (const call of calls) assert.match(call, /conflictAction: 'uniquify'/, call);
 });
 
@@ -265,6 +265,25 @@ test('the audio export no longer forces a Save dialog per clip', () => {
   const media = read('background/media.js');
   const audio = media.slice(media.indexOf('export async function exportAudio'));
   assert.match(audio.slice(0, 1500), /saveAs: !!saveAs/);
+});
+
+test('the save goes where the tester chose (2026-11-16)', () => {
+  const download = read('ui/download.js');
+  // The standing «Ask where to save» preference is read by saveFiled itself: no surface passed it.
+  assert.ok(download.includes('opts.saveAs ?? !!(await prefs()).saveAs'));
+  // Cancel in the Save dialog must not fall through to the anchor download.
+  assert.ok(download.includes('cancelled: true'));
+  // A chosen folder that could not be used is reported, not passed off as a plain download.
+  assert.ok(download.includes("chosen && out.ok ? { ...out, how: 'downloads-fallback'"));
+  // Every surface that saves loads the granted folder, the popup and the DevTools panel included.
+  for (const page of ['popup/popup.html', 'devtools/panel.html', 'report/report.html', 'annotate/annotate.html', 'diagram/diagram.html']) {
+    assert.ok(read(page).includes('ui/folder.js'), `${page} saves without the granted folder`);
+  }
+  // No page writes a file past saveFiled.
+  for (const f of ['report/notes-export.js', 'report/notes-tab.js', 'report/report.js', 'popup/popup.js', 'devtools/panel.js']) {
+    assert.ok(!read(f).includes('UQADownload.downloadText(') && !read(f).includes('UQADownload.downloadBlob('), `${f} bypasses saveFiled`);
+  }
+  assert.ok(read('report/report.js').includes("$('save-go').disabled = true; await window.UQAFolder?.usable({ prompt: true })"), 'Save everything asks for the folder after the click has expired');
 });
 
 /* ── rule 5: one document, one filename ─────────────────────────────────── */

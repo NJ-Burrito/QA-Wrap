@@ -2743,7 +2743,7 @@ $('save-go').addEventListener('click', async (e) => { if (e.detail > 1) return;
   // granted folder that has become unwritable falls back to Downloads per
   // file, and that is the case the confirmation most needs to report.
   const routes = new Set();
-  $('save-go').disabled = true;
+  $('save-go').disabled = true; await window.UQAFolder?.usable({ prompt: true }); // the folder is asked for while the click is live: the exports below outlast it
   // Re-enabled in a `finally` below whatever any of this does: the button was
   // disabled here and re-enabled only on the success path, so one throw left
   // "Save everything" dead for the life of the page.
