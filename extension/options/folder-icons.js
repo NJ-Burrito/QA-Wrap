@@ -30,7 +30,7 @@ async function mount(doc) {
   });
   press('folder-icons-apply', 'apply', 'options.files.iconsApplied');
   press('folder-icons-reset', 'reset', 'options.files.iconsReset');
-  const on = (/** @type {any} */ (await chrome.storage.local.get('folderIcons').catch(() => ({})))).folderIcons === true;
+  const on = (/** @type {any} */ (await chrome.storage.local.get('folderIcons').catch(() => ({})))).folderIcons !== false; // on by default
   if (on) state.textContent = tr('options.files.iconsOn');
 }
 

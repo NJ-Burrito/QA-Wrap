@@ -776,7 +776,7 @@
   "options.files.iconsHead": "Folder icons",
   "options.files.iconsNoHelper": "This needs the update helper. Turn on automatic updates in the Updates tab, then press again.",
   "options.files.iconsNone": "No QA Wrap folder found yet. Save something first, then press again.",
-  "options.files.iconsNote": "Gives the QA Wrap folder and each folder inside it (Screenshots, Recordings, Reports and the rest) its own icon in Windows Explorer. Only folders change, never a file, and new folders get theirs after each save. It uses the update helper.",
+  "options.files.iconsNote": "Gives the QA Wrap folder and each folder inside it (Screenshots, Recordings, Reports and the rest) its own icon in Windows Explorer. Only folders change, never a file, and new folders get theirs after each save. On by default; it uses the update helper.",
   "options.files.iconsOldHelper": "The update helper on this computer is from an older version. Run updater\\install.cmd in the QA Wrap folder once more, then press again.",
   "options.files.iconsOn": "Folder icons are on: new folders get theirs after each save.",
   "options.files.iconsReset": "Done: the folders are plain Windows folders again.",

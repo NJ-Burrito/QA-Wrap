@@ -29,9 +29,9 @@
 
 | | أين | الحالة |
 | --- | --- | --- |
-| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة (3.9.3، والإصدار 3.10.0 لاحقًا) |
-| 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (3.10.0، وليست في متجر Chrome) |
-| 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة (3.9.2، والإصدار 3.10.0 لاحقًا) |
+| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة (3.9.3، والإصدار 3.10.1 لاحقًا) |
+| 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (3.10.1، وليست في متجر Chrome) |
+| 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة (3.9.2، والإصدار 3.10.1 لاحقًا) |
 | 🎭 **Opera** | إضافات Opera | ⏳ لم تنشر بعد (قيد المراجعة منذ 2026-10-23)؛ استخدم ملف `opera` من صفحة الإصدار حتى ذلك الحين |
 | 🤖 **جسر MCP** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) الإصدار 0.1.0 | ✅ متاح |
 | 📚 **سجل MCP** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ متاح |
@@ -52,6 +52,11 @@
 🎬 ستة أفلام أخرى، كل منها بالعربية والإنجليزية، على [الموقع](https://nj-burrito.github.io/QA-Wrap/#films): كل لحظة محفوظة · تقرير واحد لكل مكتب · أره ولا تصفه · عدة الاختبار كاملة · عملك، مختوم · بلغتك، وبأرقامك، ومع وكيلك.
 
 <a id="الجديد"></a>
+
+## ✨ الجديد في 3.10.1
+
+- 🔍 **أيقونات المجلدات واضحة في العرض الكبير:** كل أيقونة تحمل صورة بحجم 512 بكسل، فلا تتمدد صورة أصغر على شاشة مكبّرة 125 % أو أكثر.
+- 🗂️ **أيقونات المجلدات مفعّلة افتراضيًا:** تظهر بعد كل حفظ وكل تحديث، وعلى مجلد «احفظ في» ومجلد أداة QA Wrap أيضًا. زر «استعادة المجلدات العادية» في الإعدادات يوقفها.
 
 ## ✨ الجديد في 3.10.0
 

@@ -14,7 +14,7 @@ import { CATEGORIES } from '../core/filing.js';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ICONS = path.join(EXT, 'brand', 'folder-icons');
-const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256];
+const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 512]; // the top image is 512: crisp at 125 % scaling (gen-folder-icons.mjs)
 let n = 0, failed = 0;
 const test = async (name, fn) => { try { await fn(); n++; console.log(`  ok  ${name}`); } catch (e) { n++; failed++; console.log(`  FAIL ${name}\n       ${e.message}`); } };
 // the word is built so the CI audit (no shell-script host in Linux suites) passes: this live run is skipped off Windows
@@ -27,7 +27,7 @@ await test('every category in core/filing.js has an icon, and the map names noth
   for (const f of [map.root, ...Object.values(map.folders)]) assert.ok(fs.existsSync(path.join(ICONS, f)), `${f} is missing: node tools/gen-folder-icons.mjs`);
 });
 
-await test('each .ico carries the ten sizes from 16 to 256, 32-bit, each image inside the file', () => {
+await test('each .ico carries the ten sizes from 16 to 512, 32-bit, each image inside the file', () => {
   for (const f of [map.root, ...Object.values(map.folders)]) {
     const b = fs.readFileSync(path.join(ICONS, f));
     assert.equal(b.readUInt16LE(2), 1, `${f}: an icon file`);
@@ -35,7 +35,8 @@ await test('each .ico carries the ten sizes from 16 to 256, 32-bit, each image i
     const got = [];
     for (let i = 0; i < SIZES.length; i++) {
       const e = 6 + 16 * i;
-      got.push(b.readUInt8(e) || 256);
+      const at = b.readUInt32LE(e + 12);
+      got.push(b.readUInt8(e) || (b.readUInt32BE(at) === 0x89504e47 ? b.readUInt32BE(at + 16) : 256)); // 0 in the directory: the PNG's own width
       assert.equal(b.readUInt16LE(e + 6), 32, `${f}: 32-bit`);
       assert.ok(b.readUInt32LE(e + 12) + b.readUInt32LE(e + 8) <= b.length, `${f}: image ${i} lies inside the file`);
     }
@@ -63,7 +64,9 @@ if (process.platform === 'win32') {
   mk(work, 'host'); mk(root, 'Screenshots', 'Login 2026-11-16'); mk(root, 'Reports'); mk(root, 'My own notes'); mk(picked, 'Recordings'); mk(stranger, 'Holiday');
   fs.writeFileSync(path.join(root, 'Screenshots', 'shot.png'), 'x');
   fs.writeFileSync(path.join(root, 'Reports', 'desktop.ini'), '[.ShellClassInfo]\r\nIconResource=mine.ico,0\r\n');
-  fs.writeFileSync(cfg, JSON.stringify({ folder: EXT, repo: 'NJ-Burrito/QA-Wrap' }));
+  const tool = path.join(work, 'Tools', 'QA-Wrap');
+  fs.cpSync(ICONS, path.join(tool, 'dist', 'chrome', 'brand', 'folder-icons'), { recursive: true });
+  fs.writeFileSync(cfg, JSON.stringify({ folder: path.join(tool, 'dist', 'chrome'), repo: 'NJ-Burrito/QA-Wrap' }));
   const run = (msg) => {
     const file = path.join(work, 'msg.json');
     fs.writeFileSync(file, JSON.stringify({ op: 'icons', downloads: dl, ...msg }));
@@ -74,16 +77,20 @@ if (process.platform === 'win32') {
   const readOnly = (dir) => (fs.statSync(dir).mode & 0o200) === 0;
 
   try {
-    await test('refresh does nothing until the icons were turned on', () => {
+    await test('on by default: the first refresh (after a download or an update) already dresses the folders', () => {
       const r = run({ action: 'refresh' });
-      assert.equal(r.ok, true); assert.equal(r.folders, 0);
-      assert.equal(ini(root), null);
+      assert.equal(r.ok, true, JSON.stringify(r)); assert.ok(r.folders > 0);
+      assert.match(ini(root), /qa-wrap.ico/);
     });
 
     await test('apply: the QA Wrap folder, its category folders and their test folders get their icon; files and other folders are left alone', () => {
       const r = run({ action: 'apply', roots: [picked, path.join(work, 'no such folder'), 'relative/QA Wrap'] });
       assert.equal(r.ok, true, JSON.stringify(r));
       assert.equal(r.roots, 2, 'the one in Downloads and the one the extension named; not the stranger');
+      assert.match(ini(path.join(dl, 'Client')), /qa-wrap.ico/, 'the Save into folder between Downloads and QA Wrap');
+      assert.equal(ini(dl), null, 'Downloads itself never');
+      assert.match(ini(tool), /qa-wrap.ico/, 'the tool folder');
+      assert.equal(ini(path.join(tool, 'dist', 'chrome')), null, 'only the tool folder, not the build inside it');
       assert.match(ini(root), /IconResource=.*\\folder-icons\\qa-wrap\.ico,0/);
       assert.match(ini(path.join(root, 'Screenshots')), /\\screenshots\.ico,0[\s\S]*Owner=qawrap/);
       assert.match(ini(path.join(root, 'Screenshots', 'Login 2026-11-16')), /\\screenshots\.ico,0/);
@@ -110,6 +117,7 @@ if (process.platform === 'win32') {
       const r = run({ action: 'reset' });
       assert.equal(r.ok, true);
       assert.equal(ini(root), null); assert.equal(ini(path.join(root, 'Screenshots')), null); assert.equal(ini(path.join(picked, 'Recordings')), null);
+      assert.equal(ini(tool), null); assert.equal(ini(path.join(dl, 'Client')), null);
       assert.ok(!readOnly(path.join(root, 'Screenshots')));
       assert.ok(fs.existsSync(path.join(root, 'Reports', 'desktop.ini')));
       assert.equal(run({ action: 'refresh' }).folders, 0);

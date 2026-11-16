@@ -37,9 +37,9 @@ By [Nader Alzghoul (NJ-Burrito)](https://nj-burrito.github.io/), an AI QA automa
 
 | | Where | Status |
 | --- | --- | --- |
-| 🦊 **Firefox** | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ Live (3.9.3; 3.10.0 to follow) |
-| 🟢 **Chrome** | [GitHub release zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([steps](#install)) | ✅ Live (3.10.0; not in the Chrome Web Store) |
-| 🔷 **Edge** | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ Live (3.9.2; 3.10.0 to follow) |
+| 🦊 **Firefox** | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ Live (3.9.3; 3.10.1 to follow) |
+| 🟢 **Chrome** | [GitHub release zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([steps](#install)) | ✅ Live (3.10.1; not in the Chrome Web Store) |
+| 🔷 **Edge** | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ Live (3.9.2; 3.10.1 to follow) |
 | 🎭 **Opera** | Opera add-ons | ⏳ Not public yet (in moderation since 2026-10-23); use the `opera` zip from the release meanwhile |
 | 🤖 **MCP bridge** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) 0.1.0 | ✅ Live |
 | 📚 **MCP Registry** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ Live |
@@ -60,6 +60,11 @@ Also submitted: Glama, mcpservers.org, mcp.directory, [awesome-mcp-servers](http
 🎬 Six more films, each in English and Arabic, on the [website](https://nj-burrito.github.io/QA-Wrap/#films): Every Moment, Kept · One Report, Every Desk · Show It, Don't Describe It · The Whole Toolbox · Yours, and Sealed · Your Language, Your Numbers, Your Agent.
 
 <a id="new"></a>
+
+## ✨ New in 3.10.1
+
+- 🔍 **Folder icons are sharp in large views:** each icon carries a 512 px image, so a screen scaled to 125 % or more no longer stretches a smaller one.
+- 🗂️ **Folder icons are on by default:** they appear after each save and each update, on the Save into folder and the QA Wrap tool folder too. "Restore plain folders" in Settings turns them off.
 
 ## ✨ New in 3.10.0
 
