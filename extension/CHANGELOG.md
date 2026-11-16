@@ -6,6 +6,8 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.9.4, 2026-11-16
+
 ### Fixed
 
 - Saved files go where you chose. "Ask where to save each file" now opens the Save dialog for every file (it only did for the audio file), and pressing Cancel in that dialog no longer saves the file to Downloads anyway.
