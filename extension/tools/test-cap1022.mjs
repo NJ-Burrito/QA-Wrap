@@ -178,10 +178,12 @@ await test('Settings > About links LinkedIn, EN and AR', () => {
   for (const l of ['en', 'ar']) assert.ok(JSON.parse(read('platform', 'i18n', `${l}.json`))['options.e1022.aboutLinkedin']);
 });
 
-await test('side panel: tools take 3 parts of 5, the rest 2 (60/40); the island toolbar is untouched', () => {
+await test('side panel: tools are as tall as what they hold, at most 60% of the room; the session has the rest; the island toolbar is untouched', () => {
   const css = read('popup', 'popup.css');
-  assert.match(css, /data-surface='panel'\] \.app-grid \{ grid-template-rows: var\(--header-h\) minmax\(0, 2fr\) auto minmax\(0, 3fr\) auto/);
-  assert.match(css, /data-surface='panel'\] \.app \.tools \{ flex: 3 1 0/);
+  assert.match(css, /data-surface='panel'\] \.app-grid \{ grid-template-rows: var\(--header-h\) minmax\(0, 1fr\) auto auto auto/);
+  assert.match(css, /data-surface='panel'\] \.app \.tools \{ flex: 0 1 auto/);
+  assert.match(css, /data-surface='panel'\] \.app:not\(:has\(#step-done:not\(\[hidden\]\)\)\) \.tools,\s+html\[data-surface='panel'\] \.app:has\(#break-panel:not\(\[hidden\]\)\) \.work \{ max-block-size: calc\(\(100vh - var\(--header-h\) - var\(--strip-h\)\) \* 0\.6\)/);
+  assert.doesNotMatch(css, /minmax\(0, 3fr\)|flex: 3 1 0/, 'no fixed 60% share is left');
 });
 
 console.log(`\n${passed} passed, ${failures.length} failed`);

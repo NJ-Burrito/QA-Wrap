@@ -26,9 +26,23 @@ function fillToolsRoom() {
   const fold = document.getElementById('tools-fold');
   const sheet = document.getElementById('tool-sheet');
   if (!fold || !sheet || fold.open || toolsChosen !== false || toolsOpenTouched) return;
-  if (sheet.getBoundingClientRect().bottom - fold.getBoundingClientRect().bottom < 32) return;
+  if (Math.max(sheet.getBoundingClientRect().bottom - fold.getBoundingClientRect().bottom, panelRoom(sheet)) < 32) return;
   toolsFoldForced = true;
   fold.open = true;
+}
+
+/**
+ * The side panel (1116): the sheet is only as tall as what it holds, so the free room is under the session's last line, not under the fold.
+ * It counts as room for the list only when the session still shows whole with the list grown to its cap (the sheet's max height, popup.css).
+ */
+function panelRoom(sheet) {
+  const session = document.getElementById('session');
+  const cap = parseFloat(getComputedStyle(sheet).maxBlockSize); // "none" (NaN) on every surface but the side panel
+  if (!session || !(cap > 0)) return 0;
+  const content = document.createRange();
+  content.selectNodeContents(session);
+  const free = session.getBoundingClientRect().bottom - content.getBoundingClientRect().bottom;
+  return free - (cap - sheet.getBoundingClientRect().height);
 }
 
 /** The "Back to session" row of one open tool row; created once per row, text refreshed on every language paint. */
@@ -84,7 +98,9 @@ function foldTools(host) {
     chrome.storage.local.set({ toolsOpen }).catch(() => {});
   });
   host.append(fold);
-  new ResizeObserver(fillToolsRoom).observe(document.getElementById('tool-sheet') || host);
+  const room = new ResizeObserver(fillToolsRoom);
+  room.observe(document.getElementById('tool-sheet') || host);
+  if (document.getElementById('session')) room.observe(document.getElementById('session')); // the side panel's room is the session's (panelRoom)
   fillToolsRoom();
   if (!toolsObserver) {
     toolsObserver = new MutationObserver(() => {

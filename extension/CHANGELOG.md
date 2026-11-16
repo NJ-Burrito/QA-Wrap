@@ -6,6 +6,10 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+### Fixed
+
+- Side panel: the Tools section is now as tall as what it holds. With no favourites and "All tools" folded it is a few lines above Stop, and the session (the note row, the saved lines) has the rest of the panel. With the list open or many favourites it grows, up to 60% of the panel as before. It used to hold 60% of the panel even when empty.
+
 ## 3.9.3, 2026-11-12
 
 ### Changed
