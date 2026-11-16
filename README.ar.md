@@ -29,10 +29,10 @@
 
 | | أين | الحالة |
 | --- | --- | --- |
-| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة (3.8.0، والإصدار 3.9.0 قادم) |
-| 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (ليست في متجر Chrome) |
-| 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة (3.8.0، والإصدار 3.9.0 قدم في 2026-11-10 وهو قيد المراجعة) |
-| 🎭 **Opera** | إضافات Opera | ⏳ لم تنشر بعد (قدمت في 2026-10-23)؛ استخدم ملف `opera` من صفحة الإصدار حتى ذلك الحين |
+| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة (3.9.3، والإصدار 3.9.4 لاحقًا) |
+| 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (3.9.4، وليست في متجر Chrome) |
+| 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة (3.9.2، والإصدار 3.9.4 لاحقًا) |
+| 🎭 **Opera** | إضافات Opera | ⏳ لم تنشر بعد (قيد المراجعة منذ 2026-10-23)؛ استخدم ملف `opera` من صفحة الإصدار حتى ذلك الحين |
 | 🤖 **جسر MCP** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) الإصدار 0.1.0 | ✅ متاح |
 | 📚 **سجل MCP** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ متاح |
 

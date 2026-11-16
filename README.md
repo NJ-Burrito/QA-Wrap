@@ -37,10 +37,10 @@ By [Nader Alzghoul (NJ-Burrito)](https://nj-burrito.github.io/), an AI QA automa
 
 | | Where | Status |
 | --- | --- | --- |
-| 🦊 **Firefox** | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ Live (3.8.0; 3.9.0 coming) |
-| 🟢 **Chrome** | [GitHub release zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([steps](#install)) | ✅ Live (not in the Chrome Web Store) |
-| 🔷 **Edge** | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ Live (3.8.0; 3.9.0 submitted 2026-11-10, in review) |
-| 🎭 **Opera** | Opera add-ons | ⏳ Not public yet (submitted 2026-10-23); use the `opera` zip from the release meanwhile |
+| 🦊 **Firefox** | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ Live (3.9.3; 3.9.4 to follow) |
+| 🟢 **Chrome** | [GitHub release zip](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([steps](#install)) | ✅ Live (3.9.4; not in the Chrome Web Store) |
+| 🔷 **Edge** | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ Live (3.9.2; 3.9.4 to follow) |
+| 🎭 **Opera** | Opera add-ons | ⏳ Not public yet (in moderation since 2026-10-23); use the `opera` zip from the release meanwhile |
 | 🤖 **MCP bridge** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) 0.1.0 | ✅ Live |
 | 📚 **MCP Registry** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ Live |
 
