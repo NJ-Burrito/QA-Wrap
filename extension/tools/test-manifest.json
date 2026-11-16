@@ -519,6 +519,10 @@
   {
    "file": "build-psl.mjs",
    "reason": "regenerates vendor/psl-data.js and the PSL block of content/page-hooks.js from a Public Suffix List file; --check compares the two copies"
+  },
+  {
+   "file": "gen-folder-icons.mjs",
+   "reason": "the folder icon generator: writes brand/folder-icons/*.ico and folders.json (test-folder-icons is its gate)"
   }
  ],
  "suites": [
@@ -8246,6 +8250,28 @@
   {
    "id": "test-install-host",
    "path": "tools/test-install-host.mjs",
+   "kind": "test",
+   "lane": "node",
+   "stage": "unit",
+   "features": [
+    "worker"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:unit"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted",
+   "byHand": false,
+   "headlessOk": false
+  },
+  {
+   "id": "test-folder-icons",
+   "path": "tools/test-folder-icons.mjs",
    "kind": "test",
    "lane": "node",
    "stage": "unit",

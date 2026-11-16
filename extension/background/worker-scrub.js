@@ -105,8 +105,7 @@ export async function scrubReplay(entries) {
   const cfg = scrubCfg || (await loadScrubCfg());
   if (!cfg.on) return entries;
   for (const stack = [entries]; stack.length;) {
-    const o = stack.pop();
-    if (o.k === 'css') continue; // a stylesheet's rules are the site's code, not what a person typed: redact() reads ".card:nth-child(3n)" as a card number and breaks the rule
+    const o = stack.pop(); if (o.k === 'css') continue;
     for (const k of Object.keys(o)) {
       const v = o[k];
       if (typeof v === 'string') { if (v.length > 8 && !REPLAY_KEEP.has(k)) o[k] = redact(v, { extra: cfg.extra }).text; }

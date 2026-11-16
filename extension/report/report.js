@@ -1225,7 +1225,7 @@ function renderChains() {
   const replay = managed(el('button', 'btn btn-secondary', t('report.broke.replay')), 'replayAllowed');
   replay.type = 'button';
   replay.hidden = $('watch-replay')?.hidden !== false;
-  replay.addEventListener('click', () => send({ type: 'UQA_OPEN_REPLAY', sessionId }));
+  replay.addEventListener('click', openReplay);
   const jump = el('button', 'btn btn-ghost', t('report.broke.showInTimeline'));
   jump.type = 'button';
   jump.addEventListener('click', () => { showTab('timeline', { focus: true }); jumpTo(f.ts); });
@@ -2294,8 +2294,16 @@ function offerReplay() {
     btn.textContent = t('report.timeline.replayKb', { kb: Math.max(1, Math.round((info.result.stored || 0) / 1024)) });
     btn.hidden = false;
     managed(btn, 'replayAllowed');
-    btn.onclick = () => send({ type: 'UQA_OPEN_REPLAY', sessionId });
+    btn.onclick = openReplay;
   });
+}
+
+/** One replay tab per session: a second press shows the one that is open. Here, not in the worker: its boot graph has no room. */
+async function openReplay() {
+  const url = chrome.runtime.getURL(`replay/replay.html?session=${encodeURIComponent(sessionId)}`);
+  const open = (await chrome.tabs.query({}).catch(() => [])).find((tab) => tab.url === url);
+  if (open?.id) chrome.tabs.update(open.id, { active: true }).catch(() => null);
+  else send({ type: 'UQA_OPEN_REPLAY', sessionId });
 }
 
 async function renderSaved() {

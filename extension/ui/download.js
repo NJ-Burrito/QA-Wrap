@@ -174,7 +174,7 @@
         // Named from the folder the tester actually picked, not from the root:
         // "it went into QA Wrap/Reports" is no help to somebody who has three
         // client folders. `writeToDirectory` answers relative to the handle.
-        return { ok: true, how: 'folder', path: `${handle.name}/${written}`, folder: handle.name };
+        return iconsAfter({ ok: true, how: 'folder', path: `${handle.name}/${written}`, folder: handle.name });
       } catch (err) {
         // Fall through to Downloads rather than losing the artefact — but say
         // which one happened, because the tester is looking in a folder.
@@ -189,7 +189,13 @@
       : await api.downloadText(data, relativePath, mime, { saveAs });
     // A folder was chosen and could not be used (permission lapsed or refused):
     // the tester is about to look in it, so the result says it went elsewhere.
-    return chosen && out.ok ? { ...out, how: 'downloads-fallback', error: 'The chosen folder needs permission again.' } : out;
+    return iconsAfter(chosen && out.ok ? { ...out, how: 'downloads-fallback', error: 'The chosen folder needs permission again.' } : out);
+  }
+
+  /** A save may have made a new QA Wrap folder: it gets its icon (Windows, once the tester turned folder icons on; ui/folder-icons.js). */
+  function iconsAfter(res) {
+    if (res?.ok) import('./folder-icons.js').then((m) => m.refreshSoon()).catch(() => null);
+    return res;
   }
 
   /**
