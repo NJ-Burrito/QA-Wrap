@@ -6,6 +6,8 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.10.0, 2026-11-16
+
 ### Added
 
 - Folder icons (Windows). Settings, Files, "Apply folder icons" gives the QA Wrap folder and each folder inside it (Screenshots, Recordings, Reports and the rest) its own icon in Explorer, drawn for every view from the small list to extra large icons. Only folders change, never a file. New folders get their icon after each save, and "Restore plain folders" puts the Windows folders back. It uses the update helper: run `updater\install.cmd` once more to refresh a helper installed before this version.

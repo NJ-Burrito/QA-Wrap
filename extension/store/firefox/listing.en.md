@@ -1,4 +1,4 @@
-# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.9.4
+# Firefox Add-ons (AMO): listing text (English) for QA Wrap 3.10.0
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 
@@ -25,6 +25,11 @@ Record, explain, hand over.
 - Record: wake it on the site you are testing, name what you are testing, press Start. It keeps your clicks, typing and navigation, the page's requests and the console in one timeline.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
+
+New in 3.10.0
+- Folder icons on Windows: Settings, Files, "Apply folder icons" gives the QA Wrap folder and each folder inside it (Screenshots, Recordings, Reports and the rest) its own icon in Explorer, sharp from the small list to extra large icons. Only folders change, never a file, and new folders get theirs after each save. It uses the update helper.
+- The replay shows the page: "Watch the replay" opens one tab, and the page comes back with its styling, its direction, where it was scrolled and the size of the window, where it used to be bare text.
+- Favourites fold: the Favourites section of the tool list folds and opens like "All tools", and remembers how you left it.
 
 New in 3.9.4
 - Saved files go where you chose: "Ask where to save each file" opens the Save dialog for every file, Cancel saves nothing, and a folder you picked is used from the popup, the side panel and the DevTools panel too.
