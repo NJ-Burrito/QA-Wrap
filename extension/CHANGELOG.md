@@ -12,6 +12,7 @@ Not shown to users: a release copies its own `## <version>` section only. Rename
 - A folder you picked is used from the popup, the side panel and the DevTools panel too, not only from the report page. "Save everything" asks for the folder's permission at the click, so a long export no longer drops into Downloads half way.
 - When a picked folder cannot be used, the message says the files went to Downloads instead of reporting a normal save.
 - "Export notes" (Timeline and Notes tab) files into the same tree and the same "Save into" folder as every other export.
+- Evidence saves under any title. A session title, a screenshot label or a "Save into" folder holding an invisible direction mark (common in Arabic text), a leading `~`, a folder name cut at a dot, or a Windows device name such as `CON` made Chrome refuse the path as an invalid filename; the file then landed loose in Downloads or was lost. Those names are cleaned before the save.
 - Side panel: the tool rows, the group labels and "Tools" start on one line with the session's cards (the rows sat 4 px outside it), at both panel widths.
 - Side panel: the profile chip shortens to fit the top bar while a session records; it was cut off at the panel's edge.
 - Side panel: the Tools section is now as tall as what it holds. With no favourites and "All tools" folded it is a few lines above Stop, and the session (the note row, the saved lines) has the rest of the panel. With the list open or many favourites it grows, up to 60% of the panel as before. It used to hold 60% of the panel even when empty.

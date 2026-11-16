@@ -252,19 +252,26 @@ export const isMoreFormat = (id) => id in FORMATS && id !== 'session-manifest' &
  * dots and spaces (silently stripped by Windows, so two files collide).
  */
 export function safeName(text, max = 80) {
-  return (
-    String(text ?? '')
-      // Illegal characters and control codes only. Hyphens stay: a charter
-      // often contains one, and rewriting the tester's own words is worse
-      // than the small ambiguity with the " - " separating title from stamp.
-      .replace(/[\\/:*?"<>|\u0000-\u001f]/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .replace(/^\.+/, '')
-      .replace(/[. ]+$/, '')
-      .slice(0, max)
-      .trim() || 'untitled'
-  );
+  const name = String(text ?? '')
+    // Invisible format characters: direction marks, joiners, the soft hyphen.
+    // Chrome answers "Invalid filename" to a path holding one, the save then
+    // fell out of the tree, and Arabic titles and page labels carry them
+    // routinely. Removed, not spaced: a joiner sits inside a word.
+    .replace(/\p{Cf}/gu, '')
+    // Illegal characters and control codes only. Hyphens stay: a charter
+    // often contains one, and rewriting the tester's own words is worse
+    // than the small ambiguity with the " - " separating title from stamp.
+    .replace(/[\\/:*?"<>|\u0000-\u001f]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^[.~ ]+/, '')
+    .slice(0, max)
+    // After the cut, not before it: a name cut at a dot ended in one, and
+    // Chrome refuses that segment too. A split emoji goes the same way.
+    .replace(/[\ud800-\udbff]$/, '')
+    .replace(/[.~ ]+$/, '');
+  // A Windows device name is not a folder anybody can open.
+  return /^(con|prn|aux|nul|com\d|lpt\d)(\.|$)/i.test(name) ? `_${name}` : name || 'untitled';
 }
 
 const pad = (n) => String(n).padStart(2, '0');
