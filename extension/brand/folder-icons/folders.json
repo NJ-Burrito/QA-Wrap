@@ -1,14 +1,14 @@
 {
-  "root": "qa-wrap.ico",
+  "root": "qa-wrap-eabcad9f.ico",
   "folders": {
-    "Reports": "reports.ico",
-    "Tickets": "tickets.ico",
-    "Tests": "tests.ico",
-    "Session sheets": "session-sheets.ico",
-    "Screenshots": "screenshots.ico",
-    "Recordings": "recordings.ico",
-    "Accessibility": "accessibility.ico",
-    "Documents": "documents.ico",
-    "Sessions": "sessions.ico"
+    "Reports": "reports-f396dc0c.ico",
+    "Tickets": "tickets-e5f7dec2.ico",
+    "Tests": "tests-f4bd3416.ico",
+    "Session sheets": "session-sheets-8bdac1c8.ico",
+    "Screenshots": "screenshots-cf5c1b49.ico",
+    "Recordings": "recordings-0fdfeb05.ico",
+    "Accessibility": "accessibility-b28bb826.ico",
+    "Documents": "documents-7d52be51.ico",
+    "Sessions": "sessions-5079f2e1.ico"
   }
 }

@@ -14,7 +14,7 @@ import { CATEGORIES } from '../core/filing.js';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ICONS = path.join(EXT, 'brand', 'folder-icons');
-const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 512]; // the top image is 512: crisp at 125 % scaling (gen-folder-icons.mjs)
+const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256]; // the top image is 256: the shell scales the first 0-size entry itself (gen-folder-icons.mjs)
 let n = 0, failed = 0;
 const test = async (name, fn) => { try { await fn(); n++; console.log(`  ok  ${name}`); } catch (e) { n++; failed++; console.log(`  FAIL ${name}\n       ${e.message}`); } };
 // the word is built so the CI audit (no shell-script host in Linux suites) passes: this live run is skipped off Windows
@@ -27,7 +27,7 @@ await test('every category in core/filing.js has an icon, and the map names noth
   for (const f of [map.root, ...Object.values(map.folders)]) assert.ok(fs.existsSync(path.join(ICONS, f)), `${f} is missing: node tools/gen-folder-icons.mjs`);
 });
 
-await test('each .ico carries the ten sizes from 16 to 512, 32-bit, each image inside the file', () => {
+await test('each .ico carries the ten sizes from 16 to 256, 32-bit, each image inside the file', () => {
   for (const f of [map.root, ...Object.values(map.folders)]) {
     const b = fs.readFileSync(path.join(ICONS, f));
     assert.equal(b.readUInt16LE(2), 1, `${f}: an icon file`);
@@ -80,27 +80,27 @@ if (process.platform === 'win32') {
     await test('on by default: the first refresh (after a download or an update) already dresses the folders', () => {
       const r = run({ action: 'refresh' });
       assert.equal(r.ok, true, JSON.stringify(r)); assert.ok(r.folders > 0);
-      assert.match(ini(root), /qa-wrap.ico/);
+      assert.match(ini(root), /qa-wrap-[0-9a-f]{8}.ico/);
     });
 
     await test('apply: the QA Wrap folder, its category folders and their test folders get their icon; files and other folders are left alone', () => {
       const r = run({ action: 'apply', roots: [picked, path.join(work, 'no such folder'), 'relative/QA Wrap'] });
       assert.equal(r.ok, true, JSON.stringify(r));
       assert.equal(r.roots, 2, 'the one in Downloads and the one the extension named; not the stranger');
-      assert.match(ini(path.join(dl, 'Client')), /qa-wrap.ico/, 'the Save into folder between Downloads and QA Wrap');
+      assert.match(ini(path.join(dl, 'Client')), /qa-wrap-[0-9a-f]{8}.ico/, 'the Save into folder between Downloads and QA Wrap');
       assert.equal(ini(dl), null, 'Downloads itself never');
-      assert.match(ini(tool), /qa-wrap.ico/, 'the tool folder');
+      assert.match(ini(tool), /qa-wrap-[0-9a-f]{8}.ico/, 'the tool folder');
       assert.equal(ini(path.join(tool, 'dist', 'chrome')), null, 'only the tool folder, not the build inside it');
-      assert.match(ini(root), /IconResource=.*\\folder-icons\\qa-wrap\.ico,0/);
-      assert.match(ini(path.join(root, 'Screenshots')), /\\screenshots\.ico,0[\s\S]*Owner=qawrap/);
-      assert.match(ini(path.join(root, 'Screenshots', 'Login 2026-11-16')), /\\screenshots\.ico,0/);
-      assert.match(ini(path.join(picked, 'Recordings')), /\\recordings\.ico,0/);
+      assert.match(ini(root), /IconResource=.*\\folder-icons\\qa-wrap-[0-9a-f]{8}.ico,0/);
+      assert.match(ini(path.join(root, 'Screenshots')), /\\screenshots-[0-9a-f]{8}.ico,0[\s\S]*Owner=qawrap/);
+      assert.match(ini(path.join(root, 'Screenshots', 'Login 2026-11-16')), /\\screenshots-[0-9a-f]{8}.ico,0/);
+      assert.match(ini(path.join(picked, 'Recordings')), /\\recordings-[0-9a-f]{8}.ico,0/);
       assert.ok(readOnly(path.join(root, 'Screenshots')), 'the folder is flagged so Explorer reads the desktop.ini');
       assert.equal(ini(path.join(root, 'My own notes')), null, 'a folder that is not a category');
       assert.equal(ini(stranger), null, 'a "QA Wrap" with none of our folders in it');
       assert.equal(fs.readFileSync(path.join(root, 'Reports', 'desktop.ini'), 'utf8'), '[.ShellClassInfo]\r\nIconResource=mine.ico,0\r\n', 'a desktop.ini that is not ours is never replaced');
       assert.equal(r.foreign, 1);
-      assert.ok(fs.existsSync(path.join(work, 'host', 'folder-icons', 'qa-wrap.ico')), 'the icons live beside the host, not in the extension folder');
+      assert.ok(fs.existsSync(path.join(work, 'host', 'folder-icons', map.root)), 'the icons live beside the host, not in the extension folder');
       fs.writeFileSync(path.join(root, 'Screenshots', 'second.png'), 'x'); // the flag locks nothing
     });
 
@@ -109,8 +109,22 @@ if (process.platform === 'win32') {
       mk(root, 'Tests', 'Checkout 2026-11-16');
       const r = run({ action: 'refresh' });
       assert.equal(r.changed, 2, 'Tests and the test folder in it');
-      assert.match(ini(path.join(root, 'Tests', 'Checkout 2026-11-16')), /\\tests\.ico,0/);
+      assert.match(ini(path.join(root, 'Tests', 'Checkout 2026-11-16')), /\\tests-[0-9a-f]{8}.ico,0/);
       assert.match(ini(path.join(picked, 'Recordings')), /recordings/, 'the named folder is remembered');
+    });
+
+    await test('new art under a new name: refresh repoints every desktop.ini (Explorer caches by path) and drops the stale icon', () => {
+      const built = path.join(tool, 'dist', 'chrome', 'brand', 'folder-icons');
+      const m2 = JSON.parse(fs.readFileSync(path.join(built, 'folders.json'), 'utf8'));
+      const old = m2.folders.Screenshots;
+      const fresh = old.replace(/-[0-9a-f]{8}\.ico$/, '-00000000.ico');
+      fs.renameSync(path.join(built, old), path.join(built, fresh));
+      m2.folders.Screenshots = fresh;
+      fs.writeFileSync(path.join(built, 'folders.json'), JSON.stringify(m2));
+      const r = run({ action: 'refresh' });
+      assert.ok(r.changed >= 2, JSON.stringify(r));
+      assert.match(ini(path.join(root, 'Screenshots')), /screenshots-00000000\.ico,0/);
+      assert.ok(!fs.existsSync(path.join(work, 'host', 'folder-icons', old)), 'the previous build\'s icon is removed');
     });
 
     await test('reset: our desktop.ini files and the flag are gone, the stranger and the foreign file are as they were, and refresh stays off', () => {

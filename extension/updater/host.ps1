@@ -211,6 +211,11 @@ function Invoke-Icons($cfg, $m) {
     }
   }
   $mapPath = Join-Path $icons 'folders.json'
+  if (Test-Path -LiteralPath $mapPath) { # an earlier build's icons: the names carry a content hash, so the current map names every live one
+    $cur = Get-Content -LiteralPath $mapPath -Raw | ConvertFrom-Json
+    $live = @($cur.folders.PSObject.Properties | ForEach-Object { "$($_.Value)" }) + @("$($cur.root)")
+    Get-ChildItem -LiteralPath $icons -File -Filter '*.ico' | Where-Object { $live -notcontains $_.Name } | Remove-Item -Force -ErrorAction SilentlyContinue
+  }
   if (-not (Test-Path -LiteralPath $mapPath)) { throw 'this QA Wrap build has no folder icons: update QA Wrap first' }
   $map = Get-Content -LiteralPath $mapPath -Raw | ConvertFrom-Json
   $cats = @{}
