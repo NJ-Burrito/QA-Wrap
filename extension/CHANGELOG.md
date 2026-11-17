@@ -6,6 +6,13 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.10.2, 2026-11-17
+
+### Fixed
+
+- Folder icons show the new art in Explorer at once: each icon file's name carries a fingerprint of its content, so Explorer's icon cache can no longer keep showing an older, blurred copy. The largest image is a 256 px drawing, which Windows uses as it is instead of shrinking a 512 px one.
+- "Save every file" no longer reports "the sound of this clip could not be decoded" for a recording made without "Tab sound" or "Mic": sound is only exported from clips that have a sound track.
+
 ## 3.10.1, 2026-11-16
 
 ### Changed

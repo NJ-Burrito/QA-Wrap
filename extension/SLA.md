@@ -1,6 +1,6 @@
 # Service level
 
-**QA Wrap**, published and maintained by Nader Alzghoul. Version 3.10.1.
+**QA Wrap**, published and maintained by Nader Alzghoul. Version 3.10.2.
 
 ---
 
