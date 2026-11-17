@@ -2515,8 +2515,8 @@ function saveParts() {
       // The soundtrack on its own, for the half of QA that is listened to: a
       // tester quoting what the app said, a transcript, a bug where the audio
       // is the evidence and a 40 MB clip is not.
-      ...(media.some((m) => m.kind === 'recording')
-        ? [['media:audio', t('report.part.audio', { n: media.filter((m) => m.kind === 'recording').length }), t('report.part.audioNote')]]
+      ...(media.some(hasSound)
+        ? [['media:audio', t('report.part.audio', { n: media.filter(hasSound).length }), t('report.part.audioNote')]]
         : []),
     ] },
     { id: 'team', label: t('report.save.groupTeam'), items: [
@@ -2834,7 +2834,7 @@ $('save-go').addEventListener('click', async (e) => { if (e.detail > 1) return;
     }
     if (chosen.includes('media:notes')) { const r = await (await import('./notes-file.js')).saveNotes({ session, events, filing: await filingLib(), settings, say: t }); r.routes.forEach((x) => routes.add(x)); written.push(...r.written); failed.push(...r.failed); }
     if (chosen.includes('media:audio')) { const { evidencePath } = await filingLib();
-      const clips = media.filter((m) => m.kind === 'recording').sort((a, b) => a.ts - b.ts);
+      const clips = media.filter(hasSound).sort((a, b) => a.ts - b.ts);
       for (const [i, clip] of clips.entries()) {
         status.textContent = t('report.save.savingAudio', { label: clip.label || t('report.save.theRecording') });
         const filename = evidencePath({ ...clip, type: 'audio/wav' }, i + 1, session, {
@@ -3742,3 +3742,4 @@ function repaintAll() {
   setupTrackers();
   setupMattermost();
 })();
+function hasSound(m) { return m.kind === 'recording' && (!m.sources || !!m.sources.tabAudio || !!m.sources.mic); } // no "Tab sound"/"Mic" = no track to export (EncodingError)
