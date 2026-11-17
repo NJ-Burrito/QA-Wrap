@@ -13,6 +13,7 @@
  *
  * The updater host (updater/host.ps1, op "icons") puts them on the download folders. Icons go on folders only, never on files.
  */
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -22,10 +23,10 @@ import { CATEGORIES } from '../core/filing.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(root, 'brand', 'folder-icons');
-// The top image is 512, not 256: at 125 % scaling Explorer's extra large icons are 320 px, and a 256 image stretched there is soft.
-// Windows reads the PNG's own size (measured 2026-11-16: 1 px edges at 512 against 2 px from a 256 image). One entry only: an .ico
-// cannot tell 256 from 512 in its directory (both are 0), so it carries one of them.
-export const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 512];
+// The top image is 256. The shell takes the first entry whose directory size is 0 and scales it itself, so a 512 there is
+// downsampled by Explorer and comes out softer at 256 than a 256 drawn at 256; at 320 both are the same (measured 2026-11-17
+// through SHDefExtractIcon). The blur seen on 3.10.1 was Explorer's icon cache, which the hashed file names below fix.
+export const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256];
 
 const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, 'ui/icons.js'), 'utf8'), sandbox);
@@ -166,13 +167,20 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       return { rgba: size < 32 ? Array.from(g.getImageData(0, 0, size, size).data) : [], png: c.toDataURL('image/png').split(',')[1] };
     }, { markup, size });
     fs.mkdirSync(OUT, { recursive: true });
+    for (const f of fs.readdirSync(OUT)) if (f.endsWith('.ico')) fs.rmSync(path.join(OUT, f)); // generated, and the hashed names change
     for (const [file, { glyph, kind }] of Object.entries(icons)) {
       const images = [];
       for (const size of SIZES) {
         const r = await raster(svg(glyph, size, kind), size);
         images.push({ size, rgba: Uint8Array.from(r.rgba), png: Buffer.from(r.png, 'base64') });
       }
-      fs.writeFileSync(path.join(OUT, file), ico(images));
+      // The name carries a hash of the bytes. Explorer caches a folder icon by path, so new art under an old name is never shown;
+      // a new name rewrites every desktop.ini (updater/host.ps1) and Explorer reads the new file.
+      const bytes = ico(images);
+      const named = file.replace(/\.ico$/, `-${crypto.createHash('sha256').update(bytes).digest('hex').slice(0, 8)}.ico`);
+      fs.writeFileSync(path.join(OUT, named), bytes);
+      if (map.root === file) map.root = named;
+      for (const k of Object.keys(map.folders)) if (map.folders[k] === file) map.folders[k] = named;
     }
     fs.writeFileSync(path.join(OUT, 'folders.json'), `${JSON.stringify(map, null, 2)}\n`);
     console.log(`${Object.keys(icons).length} icons, ${SIZES.length} sizes each -> ${path.relative(root, OUT)}`);
