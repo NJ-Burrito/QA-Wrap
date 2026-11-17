@@ -2515,8 +2515,6 @@ function saveParts() {
       // The soundtrack on its own, for the half of QA that is listened to: a
       // tester quoting what the app said, a transcript, a bug where the audio
       // is the evidence and a 40 MB clip is not.
-      // Only clips that carry sound: a clip recorded without "Tab sound" or "Mic"
-      // has no track, and asking for one is an EncodingError in the save list.
       ...(media.some(hasSound)
         ? [['media:audio', t('report.part.audio', { n: media.filter(hasSound).length }), t('report.part.audioNote')]]
         : []),
@@ -3744,8 +3742,4 @@ function repaintAll() {
   setupTrackers();
   setupMattermost();
 })();
-
-/** A recording with a sound track. Clips from before `sources` existed are given the benefit of the doubt. */
-function hasSound(m) {
-  return m.kind === 'recording' && (!m.sources || !!m.sources.tabAudio || !!m.sources.mic);
-}
+function hasSound(m) { return m.kind === 'recording' && (!m.sources || !!m.sources.tabAudio || !!m.sources.mic); } // no "Tab sound"/"Mic" = no track to export (EncodingError)
