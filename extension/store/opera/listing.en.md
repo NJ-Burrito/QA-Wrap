@@ -1,4 +1,4 @@
-# Opera add-ons: listing text (English) for QA Wrap 3.10.2
+# Opera add-ons: listing text (English) for QA Wrap 3.10.3
 
 Paste each block into the field named above it. Source of truth: `tools/store-packs-text.mjs`.
 
@@ -26,7 +26,7 @@ Record, explain, hand over.
 - Explain: when something fails it shows the click that caused it. Press Stop and the report is ready: a headline, the cause-and-effect chain, the screenshots, accessibility and speed findings, and a timeline you can scrub.
 - Hand over: copy the report as Markdown, save it as files in a folder you choose, or file it to Jira with the project's own fields. Nine other trackers and seven chat destinations are there too, each only when you set it up and press the button.
 
-New in 3.10.2
+New in 3.10.3
 - Folder icons are sharp in large views: each icon carries a 512 px image, so a screen scaled to 125 % or more no longer stretches a smaller one.
 - Folder icons are on by default: they appear after each save and each update, on the Save into folder and the QA Wrap tool folder too. "Restore plain folders" in Settings turns them off.
 

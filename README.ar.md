@@ -29,9 +29,9 @@
 
 | | أين | الحالة |
 | --- | --- | --- |
-| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة (3.9.3، والإصدار 3.10.2 لاحقًا) |
-| 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (3.10.2، وليست في متجر Chrome) |
-| 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة (3.9.2، والإصدار 3.10.2 لاحقًا) |
+| 🦊 **Firefox** | [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/) | ✅ متاحة (3.9.3، والإصدار 3.10.3 لاحقًا) |
+| 🟢 **Chrome** | [ملف الإصدار على GitHub](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) ([الخطوات](#التثبيت)) | ✅ متاحة (3.10.3، وليست في متجر Chrome) |
+| 🔷 **Edge** | [إضافات Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) | ✅ متاحة (3.9.2، والإصدار 3.10.3 لاحقًا) |
 | 🎭 **Opera** | إضافات Opera | ⏳ لم تنشر بعد (قيد المراجعة منذ 2026-10-23)؛ استخدم ملف `opera` من صفحة الإصدار حتى ذلك الحين |
 | 🤖 **جسر MCP** (npm) | [qa-wrap-bridge](https://www.npmjs.com/package/qa-wrap-bridge) الإصدار 0.1.0 | ✅ متاح |
 | 📚 **سجل MCP** | [io.github.NJ-Burrito/qa-wrap-bridge](https://registry.modelcontextprotocol.io/v0/servers?search=qa-wrap-bridge) | ✅ متاح |
@@ -52,6 +52,10 @@
 🎬 ستة أفلام أخرى، كل منها بالعربية والإنجليزية، على [الموقع](https://nj-burrito.github.io/QA-Wrap/#films): كل لحظة محفوظة · تقرير واحد لكل مكتب · أره ولا تصفه · عدة الاختبار كاملة · عملك، مختوم · بلغتك، وبأرقامك، ومع وكيلك.
 
 <a id="الجديد"></a>
+
+## ✨ الجديد في 3.10.3
+
+- 🔐 **الأمان:** رُقّيت اعتماديات خادم الويب في المساعد (hono 4.13.20 و @hono/node-server 2.1.11) فأُغلقت سبع ثغرات منشورة، وأُضيف إلى المستودع ملف SECURITY.md (الإبلاغ الخاص عن الثغرات مفعّل) وملف CODEOWNERS.
 
 ## ✨ الجديد في 3.10.2
 

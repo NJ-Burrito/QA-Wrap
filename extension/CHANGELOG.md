@@ -6,6 +6,13 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.10.3, 2026-11-23
+
+### Security
+
+- The MCP helper's web server dependencies are upgraded to hono 4.13.20 and @hono/node-server 2.1.11, which closes seven published advisories.
+- Added SECURITY.md (private vulnerability reporting is enabled on the repository) and a CODEOWNERS file.
+
 ## 3.10.2, 2026-11-17
 
 ### Fixed
