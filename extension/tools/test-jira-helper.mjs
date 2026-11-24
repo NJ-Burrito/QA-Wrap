@@ -736,6 +736,8 @@ field.addEventListener('click', (e) => {
       page = await ctx.newPage(); page.on('pageerror', (e) => errors.push(e.message));
       await page.waitForTimeout(1500); // the worker registers the page scripts
       await page.goto(H); await page.waitForSelector('#qaw-jira-dir', { timeout: 8000 }); await page.waitForTimeout(600);
+      // GitLab 2026-11-24: dropped at 185.2 (not 190) = half of a 9.6 px width change: the box was read before the web font swapped in.
+      await page.evaluate(() => document.fonts.ready);
       const b = await page.locator('#qaw-jira-dir').boundingBox(); const cy = b.y + 8;
       await page.mouse.move(b.x + b.width / 2, cy); await page.mouse.down(); await page.mouse.move(250, cy, { steps: 8 }); await page.mouse.up(); await page.mouse.move(600, 500); await page.waitForTimeout(500);
       const dropped = (await tab()).left;
