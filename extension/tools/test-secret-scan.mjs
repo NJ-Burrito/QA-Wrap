@@ -156,7 +156,7 @@ test('scanText: overlapping hits merge into one range, which takes the saved-tok
   assert.deepEqual(scanFields({ a: t }, [tok]).findings, [{ field: 'a', kind: 'saved-token', start: 9, end: 9 + tok.length, length: tok.length }]);
 });
 test('scanOutbound: observe cuts confirmed kinds and saved tokens by scan (a guess is only recorded); enforce cuts every finding', () => {
-  const jwt = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijklmnop';
+  const jwt = ['eyJhbGciOiJIUzI1NiJ9', 'eyJzdWIiOiIxMjM0NTY3ODkwIn0', 'abcdefghijklmnop'].join('.'); // built at run time: a fake token never sits whole in the source
   const text = `jwt ${jwt} password=hunter2hunter2`;
   const o = scanOutbound({ body: text });
   assert.ok(!o.redacted.body.includes(jwt) && !o.redacted.body.includes('hunter2hunter2'), o.redacted.body); // the password goes too: the capture redactor masks it after the scan
