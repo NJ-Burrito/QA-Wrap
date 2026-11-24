@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { median, bootGraphBytes, soakLine, soakCeilings, soakOver } from './perf-worker.mjs';
+import { median, quantile, spreadPct, SPREAD_LIMIT_PCT, bootGraphBytes, soakLine, soakCeilings, soakOver } from './perf-worker.mjs';
 
 let n = 0;
 const t = (name, fn) => { fn(); n++; console.log(`  ok  ${name}`); };
@@ -18,6 +18,18 @@ t('median handles odd, even and unsorted input', () => {
   assert.equal(median([3, 1, 2]), 2);
   assert.equal(median([4, 1, 3, 2]), 2.5);
   assert.equal(median([5]), 5);
+});
+
+// PW-1110: one slow cold start must not fail a refresh, a really noisy run still must.
+t('the spread reads the middle half: one outlier passes, a noisy run fails', () => {
+  assert.equal(quantile([1, 2, 3, 4, 5], 0.25), 2);
+  assert.equal(quantile([1, 2, 3, 4], 0.75), 3.25);
+  const quiet = [6.8, 6.9, 7.0, 6.7, 6.8, 7.1, 6.9, 6.8, 7.0, 12.0]; // the 2026-11-23 CI pattern: one 12 ms start
+  assert.ok(spreadPct(quiet) <= SPREAD_LIMIT_PCT, `quiet run with one outlier: ${spreadPct(quiet).toFixed(0)}%`);
+  const noisy = [5, 7, 9, 11, 13, 6, 8, 10, 12, 14];
+  assert.ok(spreadPct(noisy) > SPREAD_LIMIT_PCT, `noisy run: ${spreadPct(noisy).toFixed(0)}%`);
+  assert.equal(spreadPct([]), 0);
+  assert.equal(spreadPct([5, 5, 5]), 0);
 });
 
 t('the walker finds a boot graph of plausible size', () => {

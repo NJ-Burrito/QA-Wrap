@@ -42,8 +42,12 @@ const KB = 1024;
 process.env.UQA_HEADLESS = '1';
 
 export const median = (xs) => { const s = [...xs].sort((a, b) => a - b); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
-/** r8-07-3: how far the samples spread, as a percentage of their median ((max - min) / median). A noisy run shows as noisy. */
-export const spreadPct = (xs) => { if (!xs.length) return 0; const m = median(xs); return m ? ((Math.max(...xs) - Math.min(...xs)) / m) * 100 : 0; };
+/** Linear-interpolated quantile, q in [0, 1]. */
+export const quantile = (xs, q) => { const s = [...xs].sort((a, b) => a - b); const i = (s.length - 1) * q; const lo = Math.floor(i); return s[lo] + (s[Math.ceil(i)] - s[lo]) * (i - lo); };
+/** r8-07-3, PW-1110: how far the middle half of the samples spreads, as a percentage of the median ((p75 - p25) / median).
+ * The old (max - min) / median let ONE slow cold start of a ~7 ms worker fail the run: 71-79 % on a quiet CI runner.
+ * A box that is really busy still moves the middle half, so a noisy run still shows as noisy. */
+export const spreadPct = (xs) => { if (!xs.length) return 0; const m = median(xs); return m ? ((quantile(xs, 0.75) - quantile(xs, 0.25)) / m) * 100 : 0; };
 export const SPREAD_LIMIT_PCT = 25;
 /** r8-07-3: the machine's CPU busy percentage over `ms`, from the OS tick counters, so a run on a loaded box says so. */
 export async function cpuLoadPct(ms = 1000) {
@@ -302,9 +306,9 @@ if (MAIN) try {
   console.log('\n' + 'sample spread: ' + Object.entries(result.cold).map(([k, r]) => k + ' ' + (r.spreadPct || 0).toFixed(0) + '%').join(', ') + '; CPU busy before the run: ' + loadBefore.toFixed(0) + '%');
   if (JSON_OUT) {
     if (worstSpread > SPREAD_LIMIT_PCT) { console.error(`perf-worker: refusing to write ${JSON_OUT}: the worst sample spread is ${worstSpread.toFixed(0)}% (limit ${SPREAD_LIMIT_PCT}%) at ${loadBefore.toFixed(0)}% CPU busy. Rerun on a quiet machine.`); process.exitCode = 1; } else {
-    // The decision and its reasoning belong to the person, not the run: carry them over from the file being replaced.
+    // The decision and its reasoning belong to the person, not the run, and the soak ceilings to their own --record-soak run: carry them over.
     let kept = {};
-    try { const old = JSON.parse(fs.readFileSync(JSON_OUT, 'utf8')); kept = { decision: old.decision, why: old.why }; } catch { /* first run */ }
+    try { const old = JSON.parse(fs.readFileSync(JSON_OUT, 'utf8')); kept = { decision: old.decision, why: old.why, soak: old.soak }; } catch { /* first run */ }
     fs.writeFileSync(JSON_OUT, JSON.stringify({ n: N, realKB, ...result, measuredOn: `${new Date().toISOString().slice(0, 10)}, ${os.platform()} ${os.release()}, headless Chromium, ${N} cold starts per variant, temp profiles`, ...kept }, null, 2) + '\n');
     }
   }
