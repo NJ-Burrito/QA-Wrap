@@ -301,7 +301,9 @@ if (MAIN) try {
   console.log(`\npopup first contentful paint: ${fmt(result.paint.with)} ms with the display faces, ${fmt(result.paint.without)} ms without (diff ${fmt(result.paint.with - result.paint.without)} ms)`);
   console.log(`UQA_OVERLAY_ASSETS: first call ${fmt(result.overlay.first)} ms (parses ui/fonts.css), warm median ${fmt(result.overlay.warm)} ms`);
   result.deltaMs = { x1: d1, x6: d6 };
-  const worstSpread = Math.max(...Object.values(result.cold).map((r) => r.spreadPct || 0));
+  // PW-1110: the stub (an empty worker, ~11 ms) is the ratio's control. Its spread is a few ms of scheduler jitter on every
+  // machine (39-45 % on a 5 % CPU GitHub runner, 2026-11-24), so it is printed and stored but only the real variants refuse a run.
+  const worstSpread = Math.max(...Object.entries(result.cold).filter(([k]) => k !== 'stub').map(([, r]) => r.spreadPct || 0));
   result.load = { cpuBusyPctBefore: Number(loadBefore.toFixed(1)), worstSpreadPct: Number(worstSpread.toFixed(1)) };
   console.log('\n' + 'sample spread: ' + Object.entries(result.cold).map(([k, r]) => k + ' ' + (r.spreadPct || 0).toFixed(0) + '%').join(', ') + '; CPU busy before the run: ' + loadBefore.toFixed(0) + '%');
   if (JSON_OUT) {

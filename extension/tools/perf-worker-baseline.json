@@ -1,33 +1,40 @@
 {
-  "n": 10,
-  "realKB": 763.23046875,
+  "n": 20,
+  "realKB": 761.55078125,
   "cold": {
     "stub": {
-      "median": 6.799999997019768,
-      "samples": 10
+      "median": 8.5,
+      "samples": 20,
+      "spreadPct": 23.235294117715537
     },
-    "763 KB": {
-      "median": 23.69999998807907,
-      "samples": 10
+    "762 KB": {
+      "median": 57.84999999997672,
+      "samples": 20,
+      "spreadPct": 18.36646499573618
     },
     "real +70 KB": {
-      "median": 23.44999998807907,
-      "samples": 10
+      "median": 58.54999999998836,
+      "samples": 20,
+      "spreadPct": 16.097352689892443
     }
   },
   "paint": {
-    "with": 68,
-    "without": 64
+    "with": 104,
+    "without": 92
   },
   "overlay": {
-    "first": 33.10000002384186,
-    "warm": 13.799999982118607
+    "first": 32.699999999953434,
+    "warm": 12.70000000006985
   },
   "deltaMs": {
-    "x1": -0.25,
-    "x6": -1.5
+    "x1": 0.7000000000116415,
+    "x6": 4.200000000069849
   },
-  "measuredOn": "2026-10-10, win32 10.0.26300, headless Chromium, 10 cold starts per variant, temp profiles",
+  "load": {
+    "cpuBusyPctBefore": 3.8,
+    "worstSpreadPct": 18.4
+  },
+  "measuredOn": "2026-11-24, linux 7.0.0-1020-azure, headless Chromium, 20 cold starts per variant, temp profiles",
   "decision": "keep-byte-cap",
   "why": "The rule (830 KB under 15 ms worse than 760 KB at 6x -> ms gate) read literally is met (the padded copy measured faster), but run-to-run spread of one variant is tens of ms, so 15 ms cannot be resolved, and comment padding costs parse only, not evaluation. Evidence too weak to delete the ledger. The cap is not raised; the 6x column is projected (no CPU throttle exists for a service worker).",
   "soak": {
