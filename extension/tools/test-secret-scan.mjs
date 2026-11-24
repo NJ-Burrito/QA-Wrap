@@ -7,6 +7,7 @@
  */
 import assert from 'node:assert/strict';
 import { scanText, redactText, scanFields, adfText, redactAdf, REDACTION } from '../core/secret-scan.js';
+import { maskBodyKeys, scanOutbound } from '../core/secret-scan-text.js';
 
 let passed = 0;
 const failures = [];
@@ -109,6 +110,60 @@ test('r3-03-1 / r3-03-2: every new vendor shape is a vendor-token finding; a sec
   }
   assert.deepEqual(kinds('https://a.test/p?phpsessid=abcdef123456&b=1'), ['password']);
   assert.deepEqual(kinds('{"pass":"failed-run","session":"recording"}'), []);
+});
+
+// Mutation testing (Stryker, 2026-11-24): maskBodyKeys and the merge / known-token / outbound rules had most mutants survive.
+test('maskBodyKeys: urlencoded values of credential names are masked, the rest kept byte for byte', () => {
+  const R = encodeURIComponent(REDACTION);
+  assert.equal(maskBodyKeys({ kind: 'form', text: 'user=ann&password=hunter2xyz&api_key=k1&=x&token' }).text, `user=ann&password=${R}&api_key=${R}&=x&token`);
+  assert.equal(maskBodyKeys({ kind: 'form', text: 'pass%77ord=zz' }).text, `pass%77ord=${R}`, 'the key is URL-decoded before it is judged');
+  assert.equal(maskBodyKeys({ kind: 'form', text: 'password=a' }, (k) => `<${k}>`).text, 'password=%3Cpassword%3E', 'the replacement comes from rep(key)');
+});
+test('maskBodyKeys: FormData text parts are masked by name; file parts and other names are untouched', () => {
+  const parts = [{ name: 'password', value: 'p1' }, { name: 'token', file: true, value: 'blob' }, { name: 'city', value: 'Amman' }, null];
+  assert.deepEqual(maskBodyKeys({ kind: 'FormData', parts }).parts, [{ name: 'password', value: REDACTION }, { name: 'token', file: true, value: 'blob' }, { name: 'city', value: 'Amman' }, null]);
+  assert.equal(parts[0].value, 'p1', 'the input is not changed');
+});
+test('maskBodyKeys: JSON is walked (nested objects and arrays); an object under a secret name goes whole; null and booleans stay', () => {
+  const b = { kind: 'json', text: JSON.stringify({ user: 'ann', password: 'p1', nested: { api_key: 'k' }, list: [{ token: 't' }], secret: null, client_secret: { a: 1 }, other: { password: false } }) };
+  assert.deepEqual(JSON.parse(maskBodyKeys(b).text), { user: 'ann', password: REDACTION, nested: { api_key: REDACTION }, list: [{ token: REDACTION }], secret: null, client_secret: REDACTION, other: { password: false } });
+  assert.deepEqual(JSON.parse(maskBodyKeys({ kind: 'text', text: ' [{"password":"x"}]' }).text), [{ password: REDACTION }], 'a text body that is JSON is treated as JSON');
+});
+test('maskBodyKeys: a cut-off JSON body is masked by pattern; nothing to mask returns the same object', () => {
+  assert.equal(maskBodyKeys({ kind: 'json', text: '{"password": "abc", "user": "ann", "token": 12345, oops' }).text, `{"password": "${REDACTION}", "user": "ann", "token": "${REDACTION}", oops`);
+  for (const b of [{ kind: 'json', text: '{"a":1}' }, { kind: 'text', text: 'password=x' }, { kind: 'raw', text: '{"password":"x"}' }, { kind: 'json' }]) assert.equal(maskBodyKeys(b), b, JSON.stringify(b));
+  assert.equal(maskBodyKeys(null), null);
+});
+test('scanText: an empty text, a placeholder and the qaw1 provenance stamp are not findings', () => {
+  assert.deepEqual(scanText(''), []);
+  assert.deepEqual(scanText(null), []);
+  assert.deepEqual(scanText('password: [redacted]'), []);
+  assert.deepEqual(scanText('"token": "qaw1:abcdef0123456789"'), []);
+});
+test('scanText: saved tokens of 8+ characters are found every time they occur; shorter ones never', () => {
+  const t = 'id abcdefgh1 and again abcdefgh1; short abc7';
+  assert.deepEqual(scanText(t, ['abcdefgh1', 'abc7', '', null]).map((h) => [h.kind, t.slice(h.start, h.end)]), [['saved-token', 'abcdefgh1'], ['saved-token', 'abcdefgh1']]);
+  assert.deepEqual(scanText('x 12345678 y', ['12345678']).map((h) => h.kind), ['saved-token'], 'exactly 8 is enough');
+  assert.deepEqual(scanText('x 1234567 y', ['1234567']), [], '7 is not');
+});
+test('scanText: overlapping hits merge into one range, which takes the saved-token kind and the furthest end', () => {
+  const tok = 'ghp_' + 'a'.repeat(36);
+  const t = `password=${tok}`;
+  const h = scanText(t, [tok]);
+  assert.equal(h.length, 1);
+  assert.equal(h[0].kind, 'saved-token');
+  assert.equal(t.slice(h[0].start, h[0].end), tok);
+  assert.deepEqual(scanFields({ a: t }, [tok]).findings, [{ field: 'a', kind: 'saved-token', start: 9, end: 9 + tok.length, length: tok.length }]);
+});
+test('scanOutbound: observe cuts confirmed kinds and saved tokens by scan (a guess is only recorded); enforce cuts every finding', () => {
+  const jwt = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijklmnop';
+  const text = `jwt ${jwt} password=hunter2hunter2`;
+  const o = scanOutbound({ body: text });
+  assert.ok(!o.redacted.body.includes(jwt) && !o.redacted.body.includes('hunter2hunter2'), o.redacted.body); // the password goes too: the capture redactor masks it after the scan
+  assert.deepEqual(o.findings.filter((f) => f.kind === 'jwt' || f.kind === 'password').map((f) => [f.kind, f.redacted]), [['jwt', true], ['password', false]]);
+  const e = scanOutbound({ body: text }, { mode: 'enforce' });
+  assert.ok(!e.redacted.body.includes('hunter2hunter2') && e.findings.filter((f) => f.kind === 'password').every((f) => f.redacted));
+  assert.ok(!scanOutbound({ b: 'saved X9k2mQ7vL4pZ' }, { known: ['X9k2mQ7vL4pZ'] }).redacted.b.includes('X9k2mQ7vL4pZ'), 'a saved token is cut even in observe');
 });
 
 console.log(`\n${passed} passed, ${failures.length} failed`);

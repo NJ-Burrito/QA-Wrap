@@ -691,4 +691,61 @@ await t('S2: the AI-writing send is a ledgered, opt-in egress (kind ai-write): o
   assert.ok(!JSON.stringify(row).includes('open the page'), 'no content in the ledger');
 });
 
+// Mutation testing (Stryker, 2026-11-24): Retry-After, the 429 retry and the redirect guard had most mutants survive.
+await t('Retry-After is seconds or an HTTP date; absent, empty or garbage is null; a past date is 0', async () => {
+  const r = (v) => ({ headers: new Headers(v == null ? {} : { 'retry-after': v }) });
+  assert.equal(E.retryAfterMs(r('3')), 3000);
+  assert.equal(E.retryAfterMs(r('0')), 0);
+  const d = E.retryAfterMs(r(new Date(Date.now() + 5000).toUTCString()));
+  assert.ok(d > 3000 && d <= 5000, String(d));
+  assert.equal(E.retryAfterMs(r(new Date(Date.now() - 60000).toUTCString())), 0);
+  for (const v of [null, '', 'soon']) assert.equal(E.retryAfterMs(r(v)), null, String(v));
+  assert.equal(E.retryAfterMs(null), null);
+  assert.equal(E.retryAfterMs({}), null);
+});
+
+await t('a 429 to a GET or HEAD is retried once after Retry-After; a POST, a wait over 10 s or no header hands the 429 back', async () => {
+  const before = globalThis.fetch, calls = [];
+  let replies = [];
+  globalThis.fetch = async (url, init) => { calls.push(init.method || 'GET'); return replies.shift(); };
+  const r429 = (ra) => ({ status: 429, headers: new Headers(ra == null ? {} : { 'retry-after': ra }) });
+  const ok = () => ({ status: 200, headers: new Headers() });
+  const run = async (init, ra) => { calls.length = 0; replies = [r429(ra), ok()]; return (await E.fetchT('https://a.test/x', init)).status; };
+  try {
+    assert.equal(await run({}, '0'), 200); assert.equal(calls.length, 2);
+    assert.equal(await run({ method: 'head' }, '0'), 200); assert.equal(calls.length, 2, 'HEAD in any case is retried too');
+    assert.equal(await run({ method: 'POST' }, '0'), 429); assert.equal(calls.length, 1, 'a POST is never sent twice');
+    assert.equal(await run({}, '11'), 429); assert.equal(calls.length, 1, 'over 10 s: the caller decides');
+    assert.equal(await run({}, null), 429); assert.equal(calls.length, 1, 'no Retry-After: no retry');
+  } finally { globalThis.fetch = before; }
+});
+
+await t('a request with a credential (header, query, webhook path) or noRedirect does not follow a redirect; a plain one does', async () => {
+  const before = globalThis.fetch, modes = [];
+  globalThis.fetch = async (u, init) => { modes.push(init.redirect); return { status: 302, headers: new Headers({ location: 'https://evil.test/' }) }; };
+  const blocked = (e) => e.code === 'POLICY_BLOCKED' && e.key === 'redirect';
+  try {
+    await assert.rejects(E.fetchT('https://a.test/x', { headers: { Authorization: 'Bearer x' } }), blocked);
+    await assert.rejects(E.fetchT('https://a.test/x', { headers: new Headers({ 'X-Api-Key': 'k' }) }), blocked);
+    await assert.rejects(E.fetchT('https://a.test/x?token=abc'), blocked);
+    await assert.rejects(E.fetchT('https://hooks.slack.com/services/T000/B000/xyz'), blocked);
+    await assert.rejects(E.fetchT('https://a.test/x', {}, { noRedirect: true }), blocked);
+    assert.deepEqual(modes, ['manual', 'manual', 'manual', 'manual', 'manual']);
+    modes.length = 0;
+    assert.equal((await E.fetchT('https://a.test/plain', { headers: { Accept: 'x' } })).status, 302);
+    assert.deepEqual(modes, [undefined], 'a plain request keeps the browser default');
+    globalThis.fetch = async () => ({ type: 'opaqueredirect', status: 0, headers: new Headers() }); // what Chrome hands back
+    await assert.rejects(E.fetchT('https://a.test/x', { headers: [['Cookie', 'a=b']] }), blocked);
+    globalThis.fetch = async (u, init) => { modes.push(init.redirect); return { status: 200, headers: new Headers() }; };
+    E.useRedirectGuard(async () => true);
+    modes.length = 0; await E.fetchT('https://a.test/plain');
+    assert.deepEqual(modes, ['manual'], 'an organisation host allow-list makes every request manual');
+    E.useRedirectGuard(async () => { throw new Error('policy read failed'); });
+    modes.length = 0; await E.fetchT('https://a.test/plain');
+    assert.deepEqual(modes, [undefined], 'a policy lookup that throws does not block the send');
+    assert.equal(E.credentialed(null), false);
+    assert.equal(E.credentialed({ accept: 'x' }), false);
+  } finally { E.useRedirectGuard(null); globalThis.fetch = before; }
+});
+
 console.log(`\n${n} passed, 0 failed`);
