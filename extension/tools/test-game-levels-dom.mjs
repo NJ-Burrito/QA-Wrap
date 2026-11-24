@@ -34,6 +34,7 @@ window.__run = async (n) => {
 window.__ready = true;
 </script></body></html>`;
 
+const DEAD_WAIT = 2600;   // levels/l3.js DEAD_MS 1700 + margin: long enough that a wrong catch would show
 const g = await startGame();
 const fast = await startGame({ payDelayMs: 150 });
 const browser = await launch();
@@ -102,7 +103,9 @@ try {
       const L = await open(g, 3);
       await L.page.click('#next');
       await L.page.evaluate(act);
-      await L.page.waitForTimeout(1700);
+      // the level's own DEAD_MS (1.7 s) timer decides; a fixed 1.7 s sleep raced it on a busy machine (flaky in the full suite)
+      if (want) await L.page.waitForFunction(() => window.__events.some((e) => e.type === 'catch'), null, { timeout: 6000 }).catch(() => {});
+      else await L.page.waitForTimeout(DEAD_WAIT);
       const ev = await L.events();
       ok(has(ev, 'catch') === want, `L3: ${label}`, ev.join());
       await L.close();
@@ -114,7 +117,7 @@ try {
     await run('a fetch after the click -> not caught', () => setTimeout(() => { window.__ctx.fetch('/api/coupons'); }, 200), false);
     const L = await open(g, 3);
     await L.page.click('#back');
-    await L.page.waitForTimeout(1500);
+    await L.page.waitForTimeout(DEAD_WAIT);   // past DEAD_MS, so a catch would have fired (1.5 s proved nothing)
     let ev = await L.events();
     ok(has(ev, 'wrong:decoy') && !has(ev, 'catch'), 'L3: the Back decoy is a "wrong", never a catch', ev.join());
     await L.page.click('.shop-footer[data-bonus="l3"]');
