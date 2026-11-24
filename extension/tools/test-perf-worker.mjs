@@ -32,6 +32,11 @@ t('the spread reads the middle half: one outlier passes, a noisy run fails', () 
   assert.equal(spreadPct([5, 5, 5]), 0);
 });
 
+t('only the real variants refuse a refresh: the stub spread is reported, not gated', () => {
+  const src = fs.readFileSync(new URL('./perf-worker.mjs', import.meta.url), 'utf8');
+  assert.match(src, /const worstSpread = Math\.max\(\.\.\.Object\.entries\(result\.cold\)\.filter\(\(\[k\]\) => k !== 'stub'\)/);
+});
+
 t('the walker finds a boot graph of plausible size', () => {
   const kb = bootGraphBytes(fileURLToPath(new URL('..', import.meta.url))) / 1024;
   assert.ok(kb > 500 && kb < 1000, `${kb} KB`);
@@ -59,9 +64,11 @@ t('the baseline is no more than 30 days old (D-1010-158): measuredOn starts with
 // r8-07-3: the stored cold-start median must sit under a sanity ceiling (not a budget: a run that stored 200 ms was a loaded box), and a stored spread, when present, is inside the limit.
 t('the stored cold-start median is under the sanity ceiling and its spread was acceptable', () => {
   const b = JSON.parse(fs.readFileSync(new URL('./perf-worker-baseline.json', import.meta.url), 'utf8'));
-  const CEILING_MS = 60;
+  // PW-1110 (2026-11-24): 60 -> 120 ms. A quiet GitHub runner measures 74-76 ms and this PC 48-50 ms for both the 2026-10-10 code
+  // and today's (no regression; the machine itself slowed). A loaded box stores ~200 ms, which this still refuses.
+  const CEILING_MS = 120;
   for (const [name, r] of Object.entries(b.cold)) assert.ok(r.median < CEILING_MS, name + ' cold median ' + r.median.toFixed(1) + ' ms is over the ' + CEILING_MS + ' ms ceiling: the baseline was recorded on a loaded machine');
-  for (const [name, r] of Object.entries(b.cold)) if (r.spreadPct != null) assert.ok(r.spreadPct <= 25, name + ' sample spread ' + r.spreadPct.toFixed(0) + '% is over 25%');
+  for (const [name, r] of Object.entries(b.cold)) if (name !== 'stub' && r.spreadPct != null) assert.ok(r.spreadPct <= 25, name + ' sample spread ' + r.spreadPct.toFixed(0) + '% is over 25%');
 });
 
 // D-1010-195: the soak probe is by hand and report-only; this guards its row format and that it never feeds the gate or the baseline.
