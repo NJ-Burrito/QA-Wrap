@@ -139,7 +139,7 @@ body {
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---- Type --------------------------------------------------------------- */
-h1, h2, h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; margin: 0 0 0.6rem; }
+h1, h2, h3 { text-wrap: balance; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; margin: 0 0 0.6rem; }
 h1, .h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 6vw, 2.9rem); letter-spacing: -0.015em; line-height: 1.12; }
 h2 { font-family: var(--display); font-size: clamp(1.7rem, 4.6vw, 2.35rem); line-height: 1.12; margin-top: 0; }
 h3 { font-size: 1.1rem; margin-top: 1.6rem; }
@@ -324,7 +324,6 @@ main:not(.home) .hero .lead { margin-top: 1rem; }
 /* Hero */
 .hero-home {
   background-color: var(--band); color: var(--on-band);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M48 0H0V48' fill='none' stroke='%23ECEAE3' stroke-opacity='.045'/%3E%3C/svg%3E");
   padding: clamp(1.75rem, 5vw, 4.5rem) 0 clamp(2.5rem, 7vw, 5rem);
   overflow: hidden;
 }
@@ -378,16 +377,16 @@ main:not(.home) .hero .lead { margin-top: 1rem; }
 /* Jump links */
 .jump { background: var(--band); border-top: 1px solid var(--band-line); }
 .jump .wrap { padding-top: 0.35rem; padding-bottom: 0.35rem; }
-.jump ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; }
+.jump ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.4rem; overflow-x: auto; scrollbar-width: none; }
 .jump ul::-webkit-scrollbar { display: none; }
 .jump li { margin: 0; }
 .jump a {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.9rem; white-space: nowrap;
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.15rem; white-space: nowrap;
   color: var(--on-band-mid); text-decoration: none; font-weight: 600; font-size: 0.95rem;
-  border: 1px solid var(--band-line); border-radius: 999px;
+  border-bottom: 2px solid transparent;
   transition: color .2s var(--ease), border-color .2s var(--ease);
 }
-.jump a:hover { color: var(--band-accent); border-color: var(--band-accent); }
+.jump a:hover { color: var(--band-accent); border-bottom-color: var(--band-accent); }
 
 /* Steps: one trace line runs through three stops */
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2rem; position: relative; }
@@ -438,6 +437,16 @@ main:not(.home) .hero .lead { margin-top: 1rem; }
 .gallery-ctl .fi { width: 22px; height: 22px; }
 [dir="rtl"] .gallery-ctl .fi { transform: scaleX(-1); }
 @media (min-width: 52rem) { .gallery-ctl { display: flex; } }
+
+/* Release notes: plain list on the light band (the .facts list is built for the dark trust band). */
+#new h3 { margin: 2.2rem 0 0.5rem; font-size: 1.05rem; color: var(--text-muted); font-weight: 700; }
+#new h2 + h3 { margin-top: 0; }
+.relnotes { list-style: none; margin: 0 0 0.5rem; padding: 0; max-width: 46rem; }
+.relnotes li { margin: 0; padding: 0.85rem 0; border-top: 1px solid var(--border); color: var(--text-mid); }
+.relnotes li:last-child { border-bottom: 1px solid var(--border); }
+.relnotes b { color: var(--text); }
+#new details.fold { margin-top: 2rem; max-width: 46rem; }
+#new details.fold > h3:first-of-type { margin-top: 1.4rem; }
 
 /* Trust band */
 .trust-line { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 7.4vw, 3.4rem); line-height: 1.1; margin: 0 0 2rem; max-width: 20ch; color: var(--on-band); letter-spacing: -0.015em; }
@@ -532,7 +541,8 @@ body[data-lang="ar"] [data-lang-block="en"] { display: none; }
 /* Get block */
 .get-h { margin: 1.25rem 0 0.6rem; }
 .get-list { list-style: none; padding: 0; margin: 0 0 0.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 0.6rem; }
-.get-list li > a, .get-list li > .get-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem 0.9rem; border: 1px solid var(--border-strong); border-radius: 12px; text-decoration: none; color: inherit; min-height: 48px; }
+.get-list li { display: flex; }
+.get-list li > a, .get-list li > .get-row { flex: 1; display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem 0.9rem; border: 1px solid var(--border-strong); border-radius: 12px; text-decoration: none; color: inherit; min-height: 48px; }
 .get-list li > a:hover { border-color: var(--accent); }
 .get-list .fi { flex: none; }
 .get-name { flex: 1; font-weight: 600; overflow-wrap: anywhere; }
