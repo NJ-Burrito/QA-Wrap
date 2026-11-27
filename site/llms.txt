@@ -25,6 +25,17 @@
 - Coding agents? qa-wrap-bridge is a read-only MCP bridge (npm, Official MCP Registry), off until Agent bridge is turned on in Settings.
 - Languages? English and Arabic, right to left for Arabic.
 
+## More tools by NJ-Burrito
+
+- [NJ-Kit](https://nj-burrito.github.io/NJ-Kit/): skills for Claude Code
+- [Business-Wrap](https://nj-burrito.github.io/Business-Wrap/): evidence in, one document in two languages
+- [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): your profile as a page
+- [NJ-Whip](https://nj-burrito.github.io/NJ-Whip/): an on-screen whip for Claude Code
+- [Story-Wrap](https://nj-burrito.github.io/story-wrap/): source at https://github.com/NJ-Burrito/Story-Wrap
+- [NJ-Flush](https://nj-burrito.github.io/NJ-Flush/): free Windows RAM cleaner
+- [NJ-Sort](https://nj-burrito.github.io/NJ-Sort/): keeps Windows desktop icons where you put them, even after File Explorer restarts
+- [Portfolio](https://nj-burrito.github.io/): Nader Alzghoul's work
+
 ## About the maker
 
 Nader Alzghoul (NJ-Burrito, نادر الزغول) is a QA automation engineer in Amman, Jordan. Portfolio https://nj-burrito.github.io/ , GitHub https://github.com/NJ-Burrito , LinkedIn https://www.linkedin.com/in/nader-alzghoul . Contact: naderalzghoulbusiness@gmail.com
