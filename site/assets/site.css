@@ -246,7 +246,7 @@ section:last-child { margin-bottom: 0; }
 .tagline { font-size: clamp(1.15rem, 3vw, 1.35rem); font-weight: 600; color: var(--text-mid); margin: 0 0 1.4rem; }
 
 figure { margin: 0 0 1.75rem; }
-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface-sunken); }
+figure img, figure video { display: block; width: 100%; height: auto; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface-sunken); }
 figcaption { font-size: 0.92rem; color: var(--text-muted); margin-top: 0.5rem; max-width: var(--measure); }
 
 .table-scroll { overflow-x: auto; }

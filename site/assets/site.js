@@ -66,15 +66,22 @@
   }).catch(function () { /* a network error says nothing about the file: keep the poster */ });
 })();
 
-/* The animated banner is 4 MB: it is fetched only when its slide is about to be seen. */
+/* The animated banner is a 300 KB muted loop (MP4, with a poster): it starts only when its slide is on screen,
+   and never for a reader who asked for reduced motion, who keeps the poster. */
 (function () {
-  var imgs = document.querySelectorAll('img[data-src]');
-  function load(i) { i.src = i.getAttribute('data-src'); i.removeAttribute('data-src'); }
-  if (!('IntersectionObserver' in window)) { imgs.forEach(load); return; }
+  var vids = document.querySelectorAll('video.banner-loop');
+  if (!vids.length) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) return;
   var io = new IntersectionObserver(function (es) {
-    es.forEach(function (e) { if (e.isIntersecting) { load(e.target); io.unobserve(e.target); } });
-  }, { rootMargin: '200px' });
-  imgs.forEach(function (i) { io.observe(i); });
+    es.forEach(function (e) {
+      if (e.isIntersecting) {
+        var p = e.target.play();
+        if (p && p.catch) p.catch(function () { /* autoplay refused: the poster stays */ });
+      } else { e.target.pause(); }
+    });
+  }, { rootMargin: '100px' });
+  vids.forEach(function (v) { io.observe(v); });
 })();
 
 /* Motion (home page only): GSAP from assets/vendor and assets/motion.js, fetched after the page
