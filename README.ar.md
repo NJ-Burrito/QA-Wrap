@@ -233,6 +233,9 @@
 - 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): ملفك الشخصي كصفحة
 - 📄 [Business-Wrap](https://nj-burrito.github.io/Business-Wrap/): أدلة تدخل، ووثيقة واحدة بلغتين
 - ⚡ [NJ-Whip](https://nj-burrito.github.io/NJ-Whip/ar/): سوط على الشاشة لـ Claude Code
+- 🧹 [NJ-Flush](https://nj-burrito.github.io/NJ-Flush/): منظف ذاكرة RAM مجاني لويندوز
+- 🗂️ [NJ-Sort](https://nj-burrito.github.io/NJ-Sort/): يُبقي أيقونات سطح مكتب ويندوز حيث وضعتها، حتى بعد إعادة تشغيل مستكشف الملفات
+- 🎞️ [Story-Wrap](https://nj-burrito.github.io/story-wrap/): [الشيفرة على GitHub](https://github.com/NJ-Burrito/Story-Wrap)
 - 🐙 [GitHub](https://github.com/NJ-Burrito): الشيفرة وكل المستودعات المفتوحة
 - 🔗 [LinkedIn](https://www.linkedin.com/in/nader-alzghoul): ملف نادر
 

@@ -15,7 +15,7 @@
 [![Arabic and English](https://img.shields.io/badge/Arabic%20%2B%20English-first--class-0d9488.svg)](README.ar.md)
 [![GitHub](https://img.shields.io/badge/GitHub-source-181717?logo=github&logoColor=white)](https://github.com/NJ-Burrito)
 
-**QA-Wrap is a free, open-source bug report extension for QA testers.** It records a manual test session in Chrome or Edge, links every failure to the action that caused it, and writes the bug report for you, ready for Jira. A local-first, open-source alternative to Jam, Marker.io and BugHerd for manual and exploratory testing. No account, no server. [العربية](README.ar.md)
+**QA-Wrap is a free, open-source bug report extension for QA testers.** It records a manual test session in Chrome, Edge or Firefox, links every failure to the action that caused it, and writes the bug report for you, ready for Jira. A local-first, open-source alternative to Jam, Marker.io and BugHerd for manual and exploratory testing. No account, no server. [العربية](README.ar.md)
 
 By [Nader Alzghoul (NJ-Burrito)](https://nj-burrito.github.io/), an AI QA automation engineer in Amman, Jordan.
 
@@ -256,6 +256,9 @@ Run from source: `chrome://extensions` > Developer mode > **Load unpacked** > pi
 - 🪪 [Profile-Wrap](https://nj-burrito.github.io/Profile-Wrap/): your profile as a page
 - 📄 [Business-Wrap](https://nj-burrito.github.io/Business-Wrap/): evidence in, one document in two languages
 - ⚡ [NJ-Whip](https://nj-burrito.github.io/NJ-Whip/): an on-screen whip for Claude Code
+- 🧹 [NJ-Flush](https://nj-burrito.github.io/NJ-Flush/): free Windows RAM cleaner
+- 🗂️ [NJ-Sort](https://nj-burrito.github.io/NJ-Sort/): keeps Windows desktop icons where you put them, even after File Explorer restarts
+- 🎞️ [Story-Wrap](https://nj-burrito.github.io/story-wrap/): [source on GitHub](https://github.com/NJ-Burrito/Story-Wrap)
 - 🐙 [GitHub](https://github.com/NJ-Burrito): the source and all the open repositories
 - 🔗 [LinkedIn](https://www.linkedin.com/in/nader-alzghoul): Nader's profile
 
