@@ -24,6 +24,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { route, excludedReason, TIERS, selectTier as builtinTier } from './lib-router.mjs';
 import { loadManifest, buildPlan, runPlan, flakeProbe, execRow, loadHelpers, readHistory, readJson, gitChangedFiles, selectChangedRows, nodePool } from './lib-sched.mjs';
 import { tierVerdict, counts, ledgerSummary, compareGate, budgetCheck, p95, EXIT } from './lib-verdict.mjs';
+import { applyVibiumGate } from './lib-vibium-gate.mjs';
 import { preflight, decide } from './lib-preflight.mjs';
 import { acquireRunLock, acquireHeadedLock, finalTeardown, spawnTracked } from './lib-teardown.mjs';
 import { writeRun, publishLatest, pruneRuns, renderScreen, fmtDur } from './lib-report.mjs';
@@ -325,6 +326,7 @@ async function main() {
     canary = ex.canary;
   }
   const elapsedMs = Date.now() - t0;
+  const vibium = applyVibiumGate(result.rows, { runDir, say }); // optional second opinion (QAW_VIBIUM_GATE=1): an extra field per row, never the verdict
 
   /* ---- guards, teardown, leak scan ---- */
   const guardProblems = [];
@@ -369,6 +371,7 @@ async function main() {
     leftovers: td.killed.length + td.left.length, guardProblems, leaks, acceptEnv, changed: changedInfo ? { files: changedInfo.files.length, escalated: changedInfo.escalated, unmapped: changedInfo.unmapped, via: changedInfo.via } : undefined,
     flags: Object.fromEntries(Object.entries(flags).filter(([k]) => !['ext', 'manifest', 'runsRoot', 'changedFiles'].includes(k))),
     reportRel, logRel: `${reportRel}/logs`, latestRel: `${path.relative(repoRoot, path.join(runsRoot, 'latest')).replace(/\\/g, '/')}/`,
+    vibium,
     suites: allRows.map((x) => ({ ...x })),
   };
   run.rows = run.suites;
