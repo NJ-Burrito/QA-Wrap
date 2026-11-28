@@ -22,6 +22,7 @@ import { problemCounts } from '../core/finding-count.js';
 import { liteProblem, sanitiseEvent } from '../core/events.js';
 import { PSL } from '../vendor/psl-data.js';
 import { readHookData } from './build-psl.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (...p) => fs.readFileSync(path.join(EXT, ...p), 'utf8');
@@ -486,7 +487,7 @@ await test('D6: the panel groups on the incremental poll too, and redraws once w
   assert.match(read('devtools', 'netfilter-panel.js'), /leadOf/);
 });
 await test('D5: the popup applies recovery before it counts rows, tiers and the live number', async () => {
-  const pop = read('popup', 'popup.js');
+  const pop = surfaceSource('popup/popup.js');
   assert.match(pop, /FC\?\.withRecovery\?\.\(events\)/);
   const { withRecovery } = await import('../core/finding-count.js');
   const rec = markRecovered([{ kind: 'net', method: 'GET', url: 'https://a.test/x', status: 503, ts: 1000 }, { kind: 'net', method: 'GET', url: 'https://a.test/x', status: 200, ts: 2000 }]);
@@ -530,8 +531,8 @@ await test('D5: a GraphQL failure is recovered only by a clean answer of the SAM
   assert.match(src, /operation: context\.graphql\?\.operationName/, 'the page hook names the operation on a clean answer');
 });
 await test('D5: a recovered row is visible amber at the default Problems level in the popup, the panel and the report, and is not counted as a problem', async () => {
-  for (const f of [['popup', 'popup.js'], ['report', 'report.js'], ['devtools', 'panel.js']]) assert.match(read(...f), /r\.r === 'n-recovered'/, f.join('/'));
-  assert.match(read('report', 'report.js'), /FC\?\.withRecovery\?\.\(events\)/, 'the report rows use the same recovery as the headline');
+  for (const f of [['popup', 'popup.js'], ['report', 'report.js'], ['devtools', 'panel.js']]) assert.match(surfaceSource(f.join('/')), /r\.r === 'n-recovered'/, f.join('/'));
+  assert.match(surfaceSource('report/report.js'), /FC\?\.withRecovery\?\.\(events\)/, 'the report rows use the same recovery as the headline');
   const { withRecovery } = await import('../core/finding-count.js');
   const ev = [{ kind: 'net', method: 'GET', url: 'https://a.test/x', status: 503, ok: false, ts: 1000 }, { kind: 'net', method: 'GET', url: 'https://a.test/x', status: 200, ok: true, ts: 2000 }];
   const sig = visibleProblems(withRecovery(ev), 'all');

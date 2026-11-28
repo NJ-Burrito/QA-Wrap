@@ -18,9 +18,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readZipBuffer } from './lib-zip.mjs';
 import { buildBundleZip } from '../core/presets.js';
 import { buildMarkdown } from '../core/artifact-docs.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const src = fs.readFileSync(path.join(root, 'offscreen/offscreen.js'), 'utf8');
+const src = surfaceSource('offscreen/offscreen.js');
 const start = src.indexOf('async function offExport');
 const end = src.indexOf('\nlet trackersMod', start);
 assert.ok(start > 0 && end > start, 'offExport and shotHashes are not where this test cuts them');

@@ -1,8 +1,8 @@
 {
   "_doc": "GATE LOOSENED detector baseline (council-1012 spec 2.9 and 3). ceilings = the tsc error ceilings of test-types and test-types-wide; hashes = sha256 of the parsed QUARANTINE table, the KNOWN_RED table, the allow-list files, the line-ratchet values and pipeline-budgets.json (recipe: lib-select.mjs gateState); detail repeats the values so a diff can say raised or lowered; assertions = the observed assertion count per suite (ok lines, else the N passed summary) as of the recorded run, so a suite that silently loses assertions reads as loosened. A raise, an added quarantine or allow-list entry, or a count below baseline prints GATE LOOSENED and makes the tier INCOMPLETE until accepted with `node tools/lib-select.mjs write-baseline \"<reason>\"` (or --accept-gate in the runner). assertions holds only the suites measured on the first rehearsal run; the first full pass seeds the rest.",
   "version": 1,
-  "acceptedReason": "3.9.1 release pass: the headed network-filter fixture suite (test-netfilter-fixture) is by-hand like the other headed live suites; its row, test-netfilter, test-netfilter-sim and test-profile-tab were missing from the manifest",
-  "acceptedOn": "2026-11-10",
+  "acceptedReason": "QW-split: popup/report/options split into parts; line ratchet lowered for the three mains and the new part files added at their actual size (no ceiling raised)",
+  "acceptedOn": "2026-11-28",
   "ceilings": {
     "types": 152,
     "typesWide": {
@@ -20,7 +20,7 @@
     "quarantine": "e05ae19e7cbc7f4721697939bb9cfdb21d2ffc93f02ca76da529b4c36ae04150",
     "knownRed": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
     "allowLists": "dc36d1c79a9d43ba06844ab3b117dfa5a6d11c4296f9bd49190dc8b3380085a4",
-    "lineRatchet": "763586b3e128bbd778b1b4be0993657fdad288e24854167299207e5352723d00",
+    "lineRatchet": "3e4cf1c8de82ba8107ae938dabbda9e985cc547b67cb3da163cc2c42dabc2894",
     "budgets": "078affdfd27d50e89123d49f26e8d3c5ee179586ce02e112aa4e7f50ab8d641e"
   },
   "detail": {
@@ -198,9 +198,9 @@
         "background/worker-scrub.js": 125,
         "background/worker-session.js": 1067,
         "background/worker-tabs.js": 367,
-        "popup/popup.js": 4289,
-        "report/report.js": 3746,
-        "options/options.js": 1775,
+        "popup/popup.js": 874,
+        "report/report.js": 865,
+        "options/options.js": 396,
         "tools/lib-suites.mjs": 346,
         "tools/lib-verdict.mjs": 239,
         "tools/lib-teardown.mjs": 166,
@@ -253,7 +253,20 @@
         "tools/lib-sweep.mjs": 490,
         "tools/test-buttons-all.mjs": 600,
         "tools/clickthrough.mjs": 2320,
-        "tools/test-pipeline-sweep.mjs": 160
+        "tools/test-pipeline-sweep.mjs": 160,
+        "popup/popup-session.js": 818,
+        "popup/popup-panels.js": 744,
+        "popup/popup-tools.js": 608,
+        "popup/popup-switch.js": 549,
+        "popup/popup-notes.js": 701,
+        "report/report-chains.js": 862,
+        "report/report-media.js": 803,
+        "report/report-save.js": 611,
+        "report/report-boot.js": 609,
+        "options/options-state.js": 56,
+        "options/options-base.js": 197,
+        "options/options-panels.js": 642,
+        "options/options-paint.js": 508
       },
       "swallows": {
         "background/service-worker.js": 20,
@@ -267,9 +280,9 @@
         "background/worker-scrub.js": 0,
         "background/worker-session.js": 15,
         "background/worker-tabs.js": 3,
-        "popup/popup.js": 3,
-        "report/report.js": 5,
-        "options/options.js": 3,
+        "popup/popup.js": 1,
+        "report/report.js": 1,
+        "options/options.js": 0,
         "tools/lib-suites.mjs": 0,
         "tools/lib-verdict.mjs": 0,
         "tools/lib-teardown.mjs": 0,
@@ -322,7 +335,20 @@
         "tools/lib-sweep.mjs": 6,
         "tools/test-buttons-all.mjs": 29,
         "tools/clickthrough.mjs": 26,
-        "tools/test-pipeline-sweep.mjs": 5
+        "tools/test-pipeline-sweep.mjs": 5,
+        "popup/popup-session.js": 0,
+        "popup/popup-panels.js": 0,
+        "popup/popup-tools.js": 0,
+        "popup/popup-switch.js": 0,
+        "popup/popup-notes.js": 2,
+        "report/report-chains.js": 1,
+        "report/report-media.js": 1,
+        "report/report-save.js": 0,
+        "report/report-boot.js": 2,
+        "options/options-state.js": 0,
+        "options/options-base.js": 0,
+        "options/options-panels.js": 3,
+        "options/options-paint.js": 0
       },
       "deadExportAllowlist": []
     }

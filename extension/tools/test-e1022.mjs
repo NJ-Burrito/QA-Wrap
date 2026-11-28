@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createStack, wheelSideways, MAX_LINES } from '../popup/action-stack.js';
 import { envLine, checkNow, WEBSITE_URL } from '../options/e1022.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (...p) => fs.readFileSync(path.join(root, ...p), 'utf8');
@@ -16,7 +17,7 @@ const en = JSON.parse(read('platform/i18n/en.json'));
 const ar = JSON.parse(read('platform/i18n/ar.json'));
 
 // 1. session line: the panel hides time, events and problems (the title stays)
-assert.match(read('popup/popup.css'), /html\[data-surface='panel'\] #step-live > \.meta \{ display: none; \}/);
+assert.match(surfaceSource('popup/popup.css'), /html\[data-surface='panel'\] #step-live > \.meta \{ display: none; \}/);
 
 // 2. wheel over the note box scrolls sideways, only when the text overflows
 {
@@ -40,10 +41,10 @@ assert.match(read('popup/popup.css'), /html\[data-surface='panel'\] #step-live >
   assert.equal(s.total(), 5, 'the badge shows the total, not the visible three');
   s.reset();
   assert.equal(s.total(), 0);
-  const js = read('popup/popup.js');
+  const js = surfaceSource('popup/popup.js');
   assert.match(js, /globalThis\.UQAActions\?\.add\(lastSaid, tone\)/);
   assert.match(js, /if \(!live \|\| SURFACE === 'panel'\) return null;/);
-  assert.match(read('popup/popup.css'), /\.action-badge \{[^}]*border-radius: 10px;[^}]*background: var\(--fail\)/);
+  assert.match(surfaceSource('popup/popup.css'), /\.action-badge \{[^}]*border-radius: 10px;[^}]*background: var\(--fail\)/);
   assert.match(read('popup/popup.html'), /<script type="module" src="action-stack\.js">/);
 }
 
@@ -53,7 +54,7 @@ assert.match(read('popup/popup.css'), /html\[data-surface='panel'\] #step-live >
   assert.match(html, /id="tab-updates" data-rail="updates"/);
   assert.match(html, /id="sec-updates"/);
   for (const id of ['upd-build', 'upd-id', 'upd-env', 'upd-checked', 'upd-check', 'upd-now', 'check-updates']) assert.match(html, new RegExp(`id="${id}"`), id);
-  assert.match(read('options/options.js'), /updates: \['sec-updates'\]/);
+  assert.match(surfaceSource('options/options.js'), /updates: \['sec-updates'\]/);
   const mod = read('options/e1022.js');
   assert.match(mod, /\$\('upd-check'\)\.addEventListener\('click'/);
   assert.match(mod, /backoffUntil: 0/, 'a press always asks');

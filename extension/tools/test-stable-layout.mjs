@@ -13,12 +13,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EXT } from './lib-paths.mjs';
 import { launchPopupHarness } from './test-next-primary.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 let passed = 0;
 const failures = [];
 const check = (ok, name, detail = '') => { if (ok) { passed++; console.log(`  ok  ${name}`); } else { failures.push(name); console.log(`  FAIL  ${name}${detail ? `\n        ${detail}` : ''}`); } };
 
-const js = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+const js = surfaceSource('popup/popup.js');
 const html = fs.readFileSync(path.join(EXT, 'popup', 'popup.html'), 'utf8');
 check(!/AWAKE_CARD_MS|AWAKE_MANUAL_MS|armAwakeCard|setAwakeCard/.test(js), 'popup.js has no Awake-card shrink timer');
 check(!/awake-pill/.test(html), 'popup.html has no Awake pill');

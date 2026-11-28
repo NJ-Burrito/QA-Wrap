@@ -1,6 +1,7 @@
 // T-020: the report never says "passed" from absence; one definition of "a problem" on the report page.
 // Run from extension/: node tools/test-verdict-honesty.mjs
 import fs from 'node:fs';
+import { surfaceSource } from './lib-src.mjs';
 const read = (f) => fs.readFileSync(f, 'utf8');
 const en = JSON.parse(read('platform/i18n/en.json'));
 const ar = JSON.parse(read('platform/i18n/ar.json'));
@@ -22,17 +23,17 @@ ok(/\{steps\}/.test(en['report.v.clean']) && /\{requests\}/.test(en['report.v.cl
 ok(/\{steps\}/.test(ar['report.v.clean']) && /\{requests\}/.test(ar['report.v.clean']) && /\{pages\}/.test(ar['report.v.clean']), 'ar wording carries steps, requests and pages');
 ok(en['report.v.seenNone'] && ar['report.v.seenNone'] && !('report.v.passed' in en) && !('report.v.passed' in ar), 'badge key renamed in the pair');
 
-const rep = read('report/report.js');
+const rep = surfaceSource('report/report.js');
 ok(!/report\.v\.passed/.test(rep), 'report.js no longer reads report.v.passed');
 ok(/seenNone[\s\S]{0,400}v-cov[\s\S]{0,80}common\.signal\.coverage/.test(rep), 'coverage line sits beside the no-problems verdict');
 ok(/common\.signal\.coverage/.test(rep.slice(rep.indexOf("t('report.team.clean')") - 60, rep.indexOf("t('report.team.clean')") + 120)), 'team view clean cell carries the coverage clause');
 ok(/const isFailure = \(e\) => \(SIG \? SIG\.classify\(e\)\.c === 'D'/.test(rep), "report's chip, list and timeline use the signal.js problem definition");
 ok(!/\bisFailure = m\.isFailure/.test(rep), 'report.js does not take core isFailure as its problem test');
 ok(/const bad = !!\(lead \|\| num\)/.test(rep), 'badge reads the one number');
-ok(/\.v-cov/.test(read('report/report.css')), 'coverage line has style');
+ok(/\.v-cov/.test(surfaceSource('report/report.css')), 'coverage line has style');
 // the headline formula is the same text as the popup's
 const f = (s) => (s.match(/const num = FC \? FC\.problemCounts\(events\)\.groups : sig\.problems;/) || [''])[0]; // ui-1016 H2: the one number, core/finding-count.js
-ok(f(rep) && f(rep) === f(read('popup/popup.js')), 'report and popup count problems with the same expression');
+ok(f(rep) && f(rep) === f(surfaceSource('popup/popup.js')), 'report and popup count problems with the same expression');
 
 // 5 Oct 2026: the verdict card shows a short headline, the path first, the query collapsed; exports keep the full line.
 {

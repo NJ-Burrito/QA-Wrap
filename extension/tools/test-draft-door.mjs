@@ -19,6 +19,7 @@ import { title } from '../core/formats.js';
 import { draft, pickIssueType, KINDS } from '../core/jira-templates.js';
 import { problemEvents } from '../core/events.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => fs.readFileSync(path.join(root, p), 'utf8');
@@ -46,7 +47,7 @@ const events = [
 ];
 
 /** Cut `offDraft` out of the offscreen document (which cannot load in Node) and load it against a stub database. */
-const src = read('offscreen/offscreen.js');
+const src = surfaceSource('offscreen/offscreen.js');
 const start = src.indexOf('export async function offDraft');
 assert.ok(start > 0, 'offDraft is missing from offscreen/offscreen.js');
 const end = src.indexOf('\nasync function offExport', start);

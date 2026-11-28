@@ -28,6 +28,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import * as Shapes from '../core/shapes.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXT = path.resolve(HERE, '..');
@@ -392,7 +393,7 @@ test('the companion is read by the parent id and drawn from its own video', () =
 
 /* ── the report obeys the same contract ───────────────────────────────────── */
 
-const report = fs.readFileSync(path.join(EXT, 'report', 'report.js'), 'utf8');
+const report = surfaceSource('report/report.js');
 
 test("a webcam companion is never its own card, count, row or export part", () => {
   assert.match(report, /const isCompanion = \(m\) => m\.role === 'webcam'/, 'nothing in the report knows what a companion is');

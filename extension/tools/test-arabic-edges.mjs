@@ -17,6 +17,7 @@ import { toMarkdownIssue } from '../core/formats-export.js';
 import { buildMarkdown } from '../core/artifact-docs.js';
 import { DOC_LABELS, docLabels } from '../core/doc-labels.js';
 import { buildXlsx } from '../core/xlsx.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(EXT, f), 'utf8');
@@ -94,7 +95,7 @@ await test('xlsx sheets are right-to-left on request only', () => {
 });
 
 await test('locator and code text keep their own direction inside Arabic', () => {
-  const css = read('popup/popup.css');
+  const css = surfaceSource('popup/popup.css');
   const block = css.slice(css.indexOf('.ll-code {'), css.indexOf('}', css.indexOf('.ll-code {')));
   assert.match(block, /direction:\s*ltr/);
   assert.match(block, /unicode-bidi:\s*isolate/);

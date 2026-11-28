@@ -10,6 +10,7 @@ import { problemCounts } from '../core/finding-count.js';
 import { visibleProblems } from '../core/signal.js';
 import { countFindings } from '../core/sessions.js';
 import { buildMarkdown, buildJson } from '../core/artifact-docs.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const ext = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(ext, f), 'utf8');
@@ -55,8 +56,8 @@ test('the toast counts through the same function, behind the offscreen door, not
   assert.match(w, /failures: \(await problemCounts\(rows\)\)\.groups/);
   assert.doesNotMatch(w.slice(w.indexOf('The session is over, said where')), /countFailures\(/);
   assert.match(read('background/media.js'), /problemCounts = pureCall\('UQA_OFF_PROBLEMS'\)\('problemCounts'\)/);
-  assert.match(read('offscreen/offscreen.js'), /problems: \(\) => import\('\.\.\/core\/finding-count\.js'\)/);
-  assert.match(read('offscreen/offscreen.js'), /case 'UQA_OFF_PROBLEMS':\s+return offPure\('problems', msg\)/);
+  assert.match(surfaceSource('offscreen/offscreen.js'), /problems: \(\) => import\('\.\.\/core\/finding-count\.js'\)/);
+  assert.match(surfaceSource('offscreen/offscreen.js'), /case 'UQA_OFF_PROBLEMS':\s+return offPure\('problems', msg\)/);
 });
 
 /* ---- 2. paragraph text ---- */

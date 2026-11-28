@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { answer, BRIDGE_TOOLS, MAX_ANSWER_CHARS } from '../offscreen/agent-bridge.js';
 import { buildSessionJson } from '../core/ai-brief.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => fs.readFileSync(path.join(EXT, p), 'utf8');
@@ -158,7 +159,7 @@ await test('wiring: worker handler and boot call exist; the offscreen page serve
   assert.match(sw, /UQA_BRIDGE_SYNC: \(msg\) => draftDoor\.bridgeSync\(msg\.wait\)/);
   assert.match(sw, /\); draftDoor\.bridgeSync\(\); \/\/ the agent bridge port/);
   assert.ok(!/UQA_BRIDGE_SYNC/.test(sw.slice(sw.indexOf('const CONTENT_SCRIPT_TYPES'), sw.indexOf('async function guardSender'))), 'a web page cannot send it');
-  assert.match(read('offscreen/offscreen.js'), /op === 'bridge'\) return \(await import\('\.\/agent-bridge\.js'\)\)\.answer\(request\)/);
+  assert.match(surfaceSource('offscreen/offscreen.js'), /op === 'bridge'\) return \(await import\('\.\/agent-bridge\.js'\)\)\.answer\(request\)/);
   assert.ok(!/\bimport\(/.test(read('background/draft-door.js').replace(/\/\*[\s\S]*?\*\//g, '')));
 });
 

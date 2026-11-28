@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { thumbModel, scrollForFraction } from '../popup/note-slider.js';
 import { rateUrl, RATE_TARGETS, GITHUB_REPO } from '../core/rate-links.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (...p) => fs.readFileSync(path.join(EXT, ...p), 'utf8');
@@ -58,6 +59,6 @@ test('rating link: one map per dist, empty placeholder falls back to GitHub', ()
 test('the build stamps BUILD_DIST per dist and the links read rateUrl()', () => {
   assert.match(read('tools', 'build-browsers.mjs'), /BUILD_DIST = '\$\{id\}'/);
   assert.match(read('core', 'rate-links.js'), /^export const BUILD_DIST = 'chrome';/m);
-  assert.match(read('options', 'options.js'), /rateUrl\(\)/);
+  assert.match(surfaceSource('options/options.js'), /rateUrl\(\)/);
   assert.match(read('welcome', 'welcome.js'), /rateUrl\(\)/);
 });

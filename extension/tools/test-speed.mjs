@@ -47,6 +47,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { lift } from './lib-lift.mjs';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -355,7 +356,7 @@ test('r7-07-2: kinds:[export] over 10k events returns only export rows; two MEDI
 });
 
 test('r4-09-3: the ticker guard compares session ids, so a refresh() that swaps the state object does not drop the paint', () => {
-  const popup = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+  const popup = surfaceSource('popup/popup.js');
   const tick = popup.slice(popup.indexOf('const sessionTicker = makeTicker('), popup.indexOf('const clipTicker'));
   assert.ok(!/state\.session !== live/.test(tick), 'the guard still compares object identity');
   const guard = tick.match(/if \(state\.session\?\.id !== live\.id\) return;/)?.[0];
@@ -367,7 +368,7 @@ test('r4-09-3: the ticker guard compares session ids, so a refresh() that swaps 
 });
 
 test('the popup ticker asks for what is new since the last seq, never the whole session again', () => {
-  const popup = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+  const popup = surfaceSource('popup/popup.js');
   const tick = popup.slice(popup.indexOf('const sessionTicker = makeTicker('), popup.indexOf('const clipTicker'));
   const read = popup.slice(popup.indexOf('async function readWorkLive('), popup.indexOf('async function readWorkLive(') + 900);
   assert.match(read, /fetchTimeline\(live\.id, since \? \{ sinceSeq: since \} : \{\}\)/);
@@ -376,7 +377,7 @@ test('the popup ticker asks for what is new since the last seq, never the whole 
 });
 
 test('popup workEvents: duplicate, overlapping and back-dated batches give unique seq in (ts, seq) order (r2-07-2, r2-09-1)', () => {
-  const popup = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+  const popup = surfaceSource('popup/popup.js');
   const make = () => new Function(`let workTimeline = { sessionId: null, events: [], maxSeq: 0 };
     ${lift(popup, 'workEvents')}
     return { workEvents, get tl() { return workTimeline; } };`)();
@@ -409,7 +410,7 @@ test('popup workEvents: duplicate, overlapping and back-dated batches give uniqu
 });
 
 test('the popup work-pane read has a single read in flight (r2-09-1)', () => {
-  const popup = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+  const popup = surfaceSource('popup/popup.js');
   const at = popup.indexOf('async function readWorkLive(');
   const read = popup.slice(at, popup.indexOf('\n}\n', at));
   assert.match(read, /workReadBusy\) return/);
@@ -418,7 +419,7 @@ test('the popup work-pane read has a single read in flight (r2-09-1)', () => {
 });
 
 test('r5-07-4: an unanswered timeline read times out after 10 s, frees the pane, and a late answer paints nothing', async () => {
-  const popup = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+  const popup = surfaceSource('popup/popup.js');
   const timers = [];
   const painted = [];
   let release;

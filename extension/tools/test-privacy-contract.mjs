@@ -21,6 +21,7 @@ import { lift } from './lib-lift.mjs';
 import { sync, block } from './gen-privacy-names.mjs';
 import { LEAKS, KEEPS, NAMES } from './fixtures/privacy-corpus.mjs';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(EXT, f), 'utf8');
@@ -137,7 +138,7 @@ test('wiring: the worker never imports the engine; chat, Reporter and export go 
   assert.ok(/UQA_SCAN: \(msg\) => scanOutbound\(msg\.fields\)/.test(sw), 'Reporter and .eml ask the worker');
   assert.ok(/type: 'UQA_SCAN'/.test(read('report/filing.js')), 'the page really sends UQA_SCAN (behaviour: tools/test-now-fixes.mjs)');
   assert.ok(!/secret-scan/.test(sw), 'no inline import of the scanner in the worker');
-  assert.ok(/UQA_OFF_SCAN/.test(read('background/media.js')) && /case 'UQA_OFF_SCAN'/.test(read('offscreen/offscreen.js')));
+  assert.ok(/UQA_OFF_SCAN/.test(read('background/media.js')) && /case 'UQA_OFF_SCAN'/.test(surfaceSource('offscreen/offscreen.js')));
   assert.ok(/scanOutbound\(\{ content: out\.content \}\)/.test(read('background/export-build.js')), 'every text export is scanned');
 });
 

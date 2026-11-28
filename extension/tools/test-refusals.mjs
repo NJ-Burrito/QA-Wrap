@@ -11,13 +11,14 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(EXT, f), 'utf8');
 const cat = (l) => JSON.parse(read(`platform/i18n/${l}.json`));
 const en = cat('en');
 const ar = cat('ar');
-const popup = read('popup/popup.js');
+const popup = surfaceSource('popup/popup.js');
 let passed = 0;
 const test = (name, fn) => { fn(); passed++; console.log(`  ok  ${name}`); };
 
@@ -105,7 +106,7 @@ test('no UQA_ message name reaches a user-facing string', () => {
     const bad = Object.entries(cat_).filter(([, v]) => /UQA_[A-Z]/.test(v)).map(([k]) => k);
     assert.deepEqual(bad, [], `${l}.json strings name a message type`);
   }
-  const opts = read('options/options.js');
+  const opts = surfaceSource('options/options.js');
   assert.match(opts, /options\.msg\.slow/, 'options send() must scrub a raw UQA_ error');
   assert.match(opts, /\bUQA_\[A-Z_\]\+/, 'options send() must test for a UQA_ name');
   for (const k of ['options.msg.slow']) assert.ok(en[k] && ar[k] && en[k] !== ar[k]);

@@ -35,6 +35,7 @@ import {
   DEFAULT_CAUSAL_WINDOW_MS,
 } from '../core/correlate.js';
 import * as artifact from '../core/artifact.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXT = path.resolve(HERE, '..');
@@ -201,7 +202,7 @@ const REDEFINED = [
 
 for (const file of ['report/report.js', 'devtools/panel.js']) {
   test(`${file} imports the rule instead of restating it`, () => {
-    const src = read(file);
+    const src = surfaceSource(file);
     assert.ok(
       /import\(\s*'\.\.\/core\/correlate\.js'\s*\)/.test(src),
       `${file} must pull the rule from core/correlate.js`
@@ -213,7 +214,7 @@ for (const file of ['report/report.js', 'devtools/panel.js']) {
 }
 
 test('the shared rule is awaited before either page renders', () => {
-  assert.match(read('report/report.js'), /await rulesReady;/, 'report/report.js must await the import in boot()');
+  assert.match(surfaceSource('report/report.js'), /await rulesReady;/, 'report/report.js must await the import in boot()');
   assert.match(read('devtools/panel.js'), /await rulesReady;/, 'devtools/panel.js must await the import in boot()');
 });
 

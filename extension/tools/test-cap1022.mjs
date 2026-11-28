@@ -9,6 +9,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { WINDOW_MS, SLOTS, dueRestarts, pickSave, reconcileDuration } from '../core/rolling-buffer.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (...p) => fs.readFileSync(path.join(EXT, ...p), 'utf8');
@@ -179,7 +180,7 @@ await test('Settings > About links LinkedIn, EN and AR', () => {
 });
 
 await test('side panel: tools are as tall as what they hold, at most 60% of the room; the session has the rest; the island toolbar is untouched', () => {
-  const css = read('popup', 'popup.css');
+  const css = surfaceSource('popup/popup.css');
   assert.match(css, /data-surface='panel'\] \.app-grid \{ grid-template-rows: var\(--header-h\) minmax\(0, 1fr\) auto auto auto/);
   assert.match(css, /data-surface='panel'\] \.app \.tools \{ flex: 0 1 auto/);
   assert.match(css, /data-surface='panel'\] \.app:not\(:has\(#step-done:not\(\[hidden\]\)\)\) \.tools,\s+html\[data-surface='panel'\] \.app:has\(#break-panel:not\(\[hidden\]\)\) \.work \{ max-block-size: calc\(\(100vh - var\(--header-h\) - var\(--strip-h\)\) \* 0\.6\)/);

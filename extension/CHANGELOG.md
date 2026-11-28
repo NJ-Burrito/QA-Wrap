@@ -6,6 +6,14 @@ All notable changes, newest first. Versions are `major.minor.patch`.
 
 Not shown to users: a release copies its own `## <version>` section only. Rename this heading to the new version when it is cut.
 
+## 3.10.4, 2026-11-28
+
+### Changed
+
+- Every extension page that opens in a tab (the report, settings, welcome, what's new, video editor, annotate, API, reporter and practice faults pages) now shows the QA Wrap mark as its tab icon instead of the browser's blank one.
+- The site's 404 page gets the same Content-Security-Policy and referrer policy as every other page.
+- Inside: the six largest sources (popup, report, offscreen, options and the popup and report style sheets) are split into smaller files. Nothing you see or do changes.
+
 ## 3.10.3, 2026-11-23
 
 ### Security

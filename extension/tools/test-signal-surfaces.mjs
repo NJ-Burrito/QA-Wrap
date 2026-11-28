@@ -12,6 +12,7 @@ import { buildSessionManifest } from '../core/docs.js';
 import { countFindings } from '../core/sessions.js';
 import { loadDocFonts } from '../core/docshell.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const ext = path.resolve(here, '..');
@@ -66,19 +67,19 @@ for (const f of cases) {
 ok(exportsChecked === cases.length, 'every tune fixture exported, with and without tool findings', `${exportsChecked}/${cases.length}`);
 
 // the surfaces read the one function (popup = panel = report = filing)
-ok(/SIG\.visibleProblems\((FC\?\.withRecovery\?\.\(events\) \?\? )?events, 'all'\)/.test(read('popup/popup.js')) && /sg.num/.test(read('popup/popup.js')), 'popup reads visibleProblems');
+ok(/SIG\.visibleProblems\((FC\?\.withRecovery\?\.\(events\) \?\? )?events, 'all'\)/.test(surfaceSource('popup/popup.js')) && /sg.num/.test(surfaceSource('popup/popup.js')), 'popup reads visibleProblems');
 ok(/sgView\(events, session\.id\)/.test(read('devtools/panel.js')) && /sg.num/.test(read('devtools/panel.js')), 'panel reads visibleProblems');
-ok(/sg.num/.test(read('report/report.js')) && /sgv.num/.test(read('report/report.js')), 'report reads visibleProblems');
-ok(/signal: sgv && \{ problems: sgv.num/.test(read('report/report.js')) && /X\.signal/.test(read('report/filing.js')) && /s\.problems/.test(read('report/filing.js')), 'filing takes the report number');
-ok(!/qaw\.sg\.level/.test(read('popup/popup.js')) && !/common\.signal\.show/.test(read('popup/popup.js')), 'popup has no Problems/Everything switch (removed 5 Oct 2026; report and DevTools keep theirs)');
-ok(!/paintProcess/.test(read('popup/popup.js')), 'popup no longer paints a process meter');
-ok(/common\.signal\.hiding/.test(read('report/report.js')), 'the report keeps the hiding breakdown');
-ok(/common\.signal\.coverage/.test(read('report/report.js')), 'report has the coverage line');
-ok(/ev-preroll/.test(read('report/report.js')), 'report marks pre-roll events');
+ok(/sg.num/.test(surfaceSource('report/report.js')) && /sgv.num/.test(surfaceSource('report/report.js')), 'report reads visibleProblems');
+ok(/signal: sgv && \{ problems: sgv.num/.test(surfaceSource('report/report.js')) && /X\.signal/.test(read('report/filing.js')) && /s\.problems/.test(read('report/filing.js')), 'filing takes the report number');
+ok(!/qaw\.sg\.level/.test(surfaceSource('popup/popup.js')) && !/common\.signal\.show/.test(surfaceSource('popup/popup.js')), 'popup has no Problems/Everything switch (removed 5 Oct 2026; report and DevTools keep theirs)');
+ok(!/paintProcess/.test(surfaceSource('popup/popup.js')), 'popup no longer paints a process meter');
+ok(/common\.signal\.hiding/.test(surfaceSource('report/report.js')), 'the report keeps the hiding breakdown');
+ok(/common\.signal\.coverage/.test(surfaceSource('report/report.js')), 'report has the coverage line');
+ok(/ev-preroll/.test(surfaceSource('report/report.js')), 'report marks pre-roll events');
 
 // the popup's real state-to-headline path: the popup's own popupProblems(), lifted from its source, fed the UQA_GET_STATE reply shape.
 {
-  const src = read('popup/popup.js');
+  const src = surfaceSource('popup/popup.js');
   const a = src.indexOf('function popupProblems(');
   const m = a < 0 ? null : [src.slice(a, src.indexOf('\n}\n', a) + 3)];
   ok(!!m, 'popup.js defines popupProblems');
@@ -107,11 +108,11 @@ ok(/ev-preroll/.test(read('report/report.js')), 'report marks pre-roll events');
 // Now-review fault 3 (T-020): the REPORT's own headline (its real sgView, lifted) and the BAR's chip, against the badge and the popup,
 // on every fixture. Badge and bar read the same worker field (findingTotals(...).problems); the geometry test shows the chip prints it.
 {
-  const rsrc = read('report/report.js');
+  const rsrc = surfaceSource('report/report.js');
   const ra = rsrc.indexOf('function sgView(');
   ok(ra >= 0, 'report.js defines sgView');
   const sgViewReport = new Function('SIG', 'SESS', 'FC', 'sgLevel', 'sgPromoted', `${rsrc.slice(ra, rsrc.indexOf('\n}\n', ra) + 3)}; return sgView;`)({ visibleProblems }, { countFindings }, { problemCounts }, () => 'problems', () => new Set());
-  const psrc = read('popup/popup.js');
+  const psrc = surfaceSource('popup/popup.js');
   const pa = psrc.indexOf('function sgView(');
   const sgViewPopup = new Function('SIG', 'SESS', 'FC', 'sgLevel', 'sgPromoted', `${psrc.slice(pa, psrc.indexOf('\n}\n', pa) + 3)}; return sgView;`)({ visibleProblems }, { countFindings }, { problemCounts }, () => 'problems', () => new Set());
   const popupProblems2 = new Function(`${psrc.slice(psrc.indexOf('function popupProblems('), psrc.indexOf('\n}\n', psrc.indexOf('function popupProblems(')) + 3)}; return popupProblems;`)();

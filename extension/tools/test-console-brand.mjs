@@ -2,6 +2,7 @@
 // The console voice: one banner per context, styled chip, caller arguments untouched, absent from content scripts.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { surfaceSource } from './lib-src.mjs';
 
 const calls = [];
 const real = { info: console.info, warn: console.warn };
@@ -39,7 +40,7 @@ t('no content script loads or mentions it', () => {
 });
 t('no watermark code in capture, screenshot or recording paths', () => {
   for (const f of ['background/media.js', 'background/capture.js', 'offscreen/offscreen.js']) {
-    try { assert.ok(!/QAConsole|console-brand|watermark/i.test(fs.readFileSync(new URL('../' + f, import.meta.url), 'utf8')), f); }
+    try { assert.ok(!/QAConsole|console-brand|watermark/i.test(surfaceSource(f)), f); }
     catch (e) { if (e.code !== 'ENOENT') throw e; }
   }
 });

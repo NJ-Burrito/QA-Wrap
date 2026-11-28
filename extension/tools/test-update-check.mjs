@@ -10,6 +10,7 @@ import vm from 'node:vm';
 import { badgeFor } from '../background/action-icon.js';
 import { parseVersion, isNewer, checkLatest, pickRelease, validRepo } from '../core/update-check.js';
 import { EXT, El, read, makeDocument, makeStorage, runClassic, settle, translator } from './test-site-powers.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 // the shared fake DOM lacks three things the card uses
 El.prototype.prepend ||= function prepend(node) { node.parent = this; this.children.unshift(node); };
@@ -329,7 +330,7 @@ await test('worker: switch off -> zero requests and no write; on -> one door cal
   assert.equal((await run({}, null)).st.writes.n, 0, 'a silent failure writes nothing');
   assert.ok(src.includes("chrome.alarms?.create?.('qaw-update'"));
   assert.match(read('background', 'service-worker.js'), /alarm\.name === 'qaw-update'.*checkUpdates\(\)/);
-  assert.match(read('offscreen', 'offscreen.js'), /op === 'update'\) return \(await import\('\.\.\/core\/update-check\.js'\)\)\.run\(request\)/);
+  assert.match(surfaceSource('offscreen/offscreen.js'), /op === 'update'\) return \(await import\('\.\.\/core\/update-check\.js'\)\)\.run\(request\)/);
 });
 
 await test('badge: NEW only when idle - the recording dot, count, low disk and the done mark outrank it, and it returns when they clear', () => {

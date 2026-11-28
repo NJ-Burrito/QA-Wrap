@@ -354,7 +354,7 @@ test('the fine print gives MANUAL a mark of its own', () => {
   const report = surfaceSource('report/report.js');
   assert.ok(/check\.status === 'MANUAL'/.test(report), 'MANUAL falls through to the pass tone');
   assert.ok(/sev-unknown/.test(report), 'MANUAL has no class of its own');
-  assert.ok(/\.sev-unknown\s*\{[^}]*dashed/.test(read('report/report.css')), 'sev-unknown is not drawn, or reads as a pass');
+  assert.ok(/\.sev-unknown\s*\{[^}]*dashed/.test(surfaceSource('report/report.css')), 'sev-unknown is not drawn, or reads as a pass');
   assert.ok(/c\.unmeasured/.test(report), 'the headline counts declared, observed and gaps but not the unmeasured');
 });
 
@@ -656,7 +656,7 @@ test('a session where nothing failed but tools found things is not reported as c
  */
 const SELCOPY_HTML = read('report/report.html');
 const SELCOPY_JS = surfaceSource('report/report.js');
-const SELCOPY_CSS = read('report/report.css');
+const SELCOPY_CSS = surfaceSource('report/report.css');
 const EN_I18N = JSON.parse(read('platform/i18n/en.json'));
 const AR_I18N = JSON.parse(read('platform/i18n/ar.json'));
 
@@ -806,7 +806,7 @@ test('r2-02-2: no report page script sets an href from a record address unfilter
 
 test('r2-08-1 / r2-08-3: evidence thumbnails are real buttons with a labelled opener, and the lightbox keeps the alt and the focus', () => {
   const report = surfaceSource('report/report.js');
-  const css = read('report/report.css');
+  const css = surfaceSource('report/report.css');
   assert.ok(report.includes('function evidenceOpener('), 'the opener helper exists');
   assert.equal((report.match(/evidenceOpener\(img,/g) || []).length, 2, 'both timeline thumbnails use it');
   assert.ok(report.includes("const stage = el('button', 'shot-stage');"), 'the gallery stage is a button');
@@ -821,12 +821,12 @@ test('r2-08-1 / r2-08-3: evidence thumbnails are real buttons with a labelled op
 test('r2-08-2: the diagram frame is a focusable, named region with a focus ring', () => {
   const html = read('report/report.html');
   assert.match(html, /<div class="diagram-frame" id="diagram-frame" tabindex="0" role="region" aria-labelledby="tab-diagram">/);
-  assert.match(read('report/report.css'), /\.diagram-frame:focus-visible \{ outline:/);
+  assert.match(surfaceSource('report/report.css'), /\.diagram-frame:focus-visible \{ outline:/);
 });
 
 test('r2-08-6: report and settings read a failure through the shared localizer', () => {
   const report = surfaceSource('report/report.js');
-  const options = read('options/options.js');
+  const options = surfaceSource('options/options.js');
   assert.ok(report.includes("import('../platform/worker-errors.js')") && options.includes("import('../platform/worker-errors.js')"));
   assert.ok((report.match(/werr\(/g) || []).length >= 20, 'the failure sinks go through werr');
   assert.ok(options.includes("res.code === 'VAULT_LOCKED' ? werr(res)"));

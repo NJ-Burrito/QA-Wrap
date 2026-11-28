@@ -2,11 +2,12 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { sanitiseEvent, LOCATOR_WARN_CODES } from '../core/events.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const read = (p) => readFileSync(new URL(p, import.meta.url), 'utf8');
 const en = JSON.parse(read('../platform/i18n/en.json'));
 const ar = JSON.parse(read('../platform/i18n/ar.json'));
-const report = read('../report/report.js');
+const report = surfaceSource('../report/report.js');
 let n = 0; const ok = (m) => { n++; console.log(`  ok  ${m}`); };
 
 const dom = (extra) => sanitiseEvent({ kind: 'dom', action: 'click', ...extra });

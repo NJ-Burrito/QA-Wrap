@@ -41,6 +41,7 @@ import {
   STEP_MS,
 } from '../background/action-icon.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXT = path.resolve(HERE, '..');
@@ -358,7 +359,7 @@ test('every surface that loads vfx also loads motion', () => {
   const pages = ['popup/popup.html', 'options/options.html', 'report/report.html', 'diagram/diagram.html', 'tutorials/tutorials.html'];
   const missing = [];
   for (const rel of pages) {
-    const text = read(path.join(EXT, rel.replace('/', path.sep)));
+    const text = surfaceSource(rel);
     if (!text.includes('ui/motion.css')) missing.push(`${rel}: no motion.css`);
     if (!text.includes('ui/motion.js')) missing.push(`${rel}: no motion.js`);
     // The palette still has to come first, same rule as every other sheet.
@@ -448,7 +449,7 @@ test('the leading edge is a token, so Arabic mirrors without a second rule', () 
 test('every surface spends the tokens instead of inventing a timing', () => {
   const offenders = [];
   for (const [rel] of SURFACES) {
-    const block = motionBlock(read(path.join(EXT, rel.replace('/', path.sep))));
+    const block = motionBlock(surfaceSource(rel));
     assert.ok(block, `${rel} has no motion block`);
     for (const [i, line] of block.split('\n').entries()) {
       if (!/(?:^|[;{\s])(?:transition|animation)(?:-duration|-delay|-timing-function)?\s*:/.test(line)) continue;
@@ -469,7 +470,7 @@ test('every surface spends the tokens instead of inventing a timing', () => {
 });
 
 test('the key state changes each have an animation, on the shared keyframes', () => {
-  const popup = read(path.join(EXT, 'popup', 'popup.css'));
+  const popup = surfaceSource('popup/popup.css');
   const block = motionBlock(popup);
   const wanted = [
     ['the tool cards enter with a stagger', /\.tiles > \.tool-row \{ animation: qaw-in-up/],
@@ -494,7 +495,7 @@ test('the height animation is behind @supports, and never fills forwards', () =>
   // inside it. Every unfold in the product fills backwards.
   const forwards = [];
   for (const [rel] of [...SURFACES, ['ui/motion.css']]) {
-    const text = read(path.join(EXT, rel.replace('/', path.sep)));
+    const text = surfaceSource(rel);
     for (const [i, line] of motionBlock(text).split('\n').entries()) {
       if (/qaw-unfold/.test(line) && /\b(forwards|both)\b/.test(line)) forwards.push(`${rel}:${i + 1} ${line.trim()}`);
     }
@@ -508,7 +509,7 @@ test('nothing animates a layout property in a loop', () => {
   // else. A one-shot may animate a height; a loop may not.
   const offenders = [];
   for (const [rel] of [...SURFACES, ['ui/motion.css'], ['ui/vfx.css']]) {
-    const text = read(path.join(EXT, rel.replace('/', path.sep)));
+    const text = surfaceSource(rel);
     const looping = new Set(
       [...text.matchAll(/animation:[^;]*?\b([a-z-]+)\b[^;]*infinite/g)].map((m) => m[1])
         .concat([...text.matchAll(/animation-name:\s*([a-z-]+)[^;]*;[^}]*infinite/g)].map((m) => m[1]))
@@ -529,7 +530,7 @@ test('every surface with motion still promises reduced motion', () => {
   const missing = [];
   for (const [rel, wants] of SURFACES) {
     if (!wants) continue;
-    const text = read(path.join(EXT, rel.replace('/', path.sep)));
+    const text = surfaceSource(rel);
     if (!/@media \(prefers-reduced-motion: reduce\)/.test(text)) missing.push(`${rel}: no block at all`);
   }
   // The system's own block has to turn the stagger off too — a delay is the
@@ -568,11 +569,11 @@ test('ui/motion.js is the single entry point for motion a script drives', () => 
     ['options/options.js', /window\.UQAMotion\?\.notice\(el\)/],
   ];
   for (const [rel, re] of callers) {
-    assert.match(read(path.join(EXT, rel.replace('/', path.sep))), re, `${rel} does not go through UQAMotion`);
+    assert.match(surfaceSource(rel), re, `${rel} does not go through UQAMotion`);
   }
   // A toned status message already gets pop or shake from vfx.js, and two
   // animations on one element is the second one winning.
-  assert.match(read(path.join(EXT, 'popup', 'popup.js')), /if \(!tone\) window\.UQAMotion\?\.notice\(line\)/);
+  assert.match(surfaceSource('popup/popup.js'), /if \(!tone\) window\.UQAMotion\?\.notice\(line\)/);
 });
 
 test('no :active rule on report/replay/motion sets a press transform outside --press-scale', () => {
@@ -584,7 +585,7 @@ test('no :active rule on report/replay/motion sets a press transform outside --p
   const offenders = [];
   const OWNED = ['report/report.css', 'replay/replay.css', 'ui/motion.css', 'ui/tokens.css'];
   for (const rel of OWNED) {
-    const text = read(path.join(EXT, rel.replace('/', path.sep)));
+    const text = surfaceSource(rel);
     // A rule whose selector names :active, whose body sets `transform` to
     // something other than `none`/`none !important` (a reduced-motion or
     // disabled override) without `var(--press-scale)` inside it — the exact
@@ -608,7 +609,7 @@ test('no :active rule on report/replay/motion sets a press transform outside --p
 });
 
 test('08-2: the popup spotlight scrolls instantly under reduced motion', () => {
-  const code = read(path.join(EXT, 'popup', 'popup.js'));
+  const code = surfaceSource('popup/popup.js');
   const fn = code.slice(code.indexOf('function spotlight('), code.indexOf('function spotlight(') + 700);
   assert.match(fn, /behavior: matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches \? 'auto' : 'smooth'/, 'scrollIntoView must not be smooth when the person asked for reduced motion');
   assert.ok(!/behavior: 'smooth' \}\)/.test(fn), 'an unconditional smooth scroll is left in spotlight()');

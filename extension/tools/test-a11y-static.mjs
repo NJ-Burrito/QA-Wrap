@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const read = (p) => fs.readFileSync(path.join(EXT, p), 'utf8');
@@ -81,7 +82,7 @@ const danglingRefs = (html, allowed = []) => {
 for (const p of [...pages, 'api/api.html', 'sidepanel/sidepanel.html', 'tutorials/tutorials.html', 'offscreen/offscreen.html', 'devtools/devtools.html']) {
   assert.deepEqual(danglingRefs(read(p), RUNTIME_IDS[p]), [], `${p}: an ARIA id reference points at no element`);
 }
-const reportJs = ['report/report.js', 'report/filing.js'].map(read).join('\n');
+const reportJs = ['report/report.js', 'report/filing.js'].map((p) => surfaceSource(p)).join('\n');
 for (const id of RUNTIME_IDS['report/report.html']) assert.match(reportJs, new RegExp(`\\bid\\s*=\\s*["'\`]${id}["'\`]`), `report script no longer creates ${id}: drop it from the allow-list`);
 // negative self-check: the real options page with one reference broken must be caught, and so must an unlisted run-time id
 assert.deepEqual(danglingRefs(read('options/options.html').replace('aria-labelledby="h-sec-safe"', 'aria-labelledby="tab-sec-safe"')), ['aria-labelledby="tab-sec-safe"'], 'the id-reference check cannot see a dangling aria-labelledby');
@@ -133,7 +134,7 @@ assert.match(en['replay.controls.scrubValue'], /\{at\}.*\{total\}/);
 
 // lightbox is a modal dialog; replay scrubber speaks time
 assert.match(read('report/report.html'), /<dialog class="lightbox" id="lightbox"[^>]*aria-label/);
-assert.match(read('report/report.js'), /showModal\(\)/);
+assert.match(surfaceSource('report/report.js'), /showModal\(\)/);
 assert.match(read('replay/replay.js'), /setAttribute\('aria-valuetext'/);
 
 // r5-08-1: every scrollable <pre> in the API page is reachable by keyboard and named
@@ -153,7 +154,7 @@ for (const m of repHtml.matchAll(/<button\b[^>]*\brole="tab"[^>]*>/gi)) {
   const c = (/\baria-controls="([^"]+)"/.exec(m[0]) || [])[1];
   assert.ok(!c || !tablists.has(c), `a tab's aria-controls names a tablist (${c})`);
 }
-assert.match(read('report/report.js'), /setAttribute\('aria-controls', `panel-\$\{id\}`\)/, 'showTab points each view tab at its panel');
+assert.match(surfaceSource('report/report.js'), /setAttribute\('aria-controls', `panel-\$\{id\}`\)/, 'showTab points each view tab at its panel');
 
 // D-1010-109 (WCAG 2.4.2 / 3.1.1): every page title is i18n-driven, or is the bare brand name. Pages that are not a tester's surface, or
 // that have no i18n yet, are named here with the reason; the list is never widened to pass.
@@ -178,20 +179,20 @@ assert.match(read('report/report.js'), /setAttribute\('aria-controls', `panel-\$
   assert.ok(titled >= 12, `the title scan found only ${titled} pages; the walk is broken`);
   for (const [p] of Object.entries(TITLE_EXEMPT)) assert.ok(fs.existsSync(path.join(EXT, p)), `${p} is exempt but gone; delete the entry`);
   // A page that sets its title in code goes through the one keyed template, with the brand kept Latin in Arabic.
-  for (const f of ['report/report.js', 'annotate/annotate.js', 'videoedit/videoedit.js']) assert.match(read(f), /document\.title = t\('common\.pageTitle'/, `${f} sets its title through common.pageTitle`);
-  assert.doesNotMatch(read('report/report.js') + read('annotate/annotate.js') + read('videoedit/videoedit.js'), /document\.title = `QA Wrap/, 'no hard-coded English title template');
+  for (const f of ['report/report.js', 'annotate/annotate.js', 'videoedit/videoedit.js']) assert.match(surfaceSource(f), /document\.title = t\('common\.pageTitle'/, `${f} sets its title through common.pageTitle`);
+  assert.doesNotMatch(surfaceSource('report/report.js') + read('annotate/annotate.js') + read('videoedit/videoedit.js'), /document\.title = `QA Wrap/, 'no hard-coded English title template');
 }
 
 // D-1010-110 (APG tabs): arrow keys on the section bar move selection and keep focus on the section tab; focus is set after the row's `hidden`.
 {
-  const rep = read('report/report.js');
+  const rep = surfaceSource('report/report.js');
   assert.match(rep, /roving\(\$\('secbar'\), '\[data-sec\]', \(b\) => \{ openSection\(b, false\); b\.focus\(\); \}\)/, 'roving the section bar opens without focus, then focuses the section tab');
   assert.ok(rep.indexOf('if (toFocus && !row.hidden) toFocus.focus();') > rep.indexOf('row.hidden = TABS.filter('), 'showTab focuses only after row.hidden is settled');
 }
 
 // D-1010-111: the popup's live regions are in the HTML, empty, and code only toggles `hidden` / sets text.
 {
-  const html = read('popup/popup.html'), js = read('popup/popup.js');
+  const html = read('popup/popup.html'), js = surfaceSource('popup/popup.js');
   for (const id of ['live-loss', 'tech-cover-live', 'mask-broken']) assert.match(html, new RegExp(`id="${id}"[^>]*role="status"[^>]*aria-live="polite"[^>]*>\\s*</p>`), `#${id} is a persistent empty polite status region`);
   assert.doesNotMatch(js, /p\.setAttribute\('role', 'status'\)|chip\.setAttribute\('role', 'status'\)/, 'no live region is created already holding its text');
   assert.match(js, /requestAnimationFrame\(\(\) => \{ if \(node\.dataset\.liveText === want\)/, 'text is cleared, then set in a frame');

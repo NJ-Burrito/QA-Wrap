@@ -255,7 +255,7 @@ test('a resting health mark is never the warning colour', () => {
    * Read out of the sheet rather than asserted by hand, so a future edit that
    * repaints `asks` amber fails here rather than in a frame six weeks later.
    */
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   const paint = (state) => {
     const m = css.match(new RegExp(`\\.tool-health\\[data-health='${state}'\\][^{]*\\{([^}]*)\\}`));
     return m ? m[1] : null;
@@ -294,7 +294,7 @@ test('the Record card carries no yellow banner, in either mode', () => {
    * holds in Simple and in Expert by construction, which is the property mode
    * parity actually needs.
    */
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   assert.ok(!/data-needs-invoke/.test(code), 'popup.js is stamping the amber record card again');
   assert.ok(!/'tool-invoke'/.test(code), 'the amber note is being drawn on the record card again');
   assert.ok(
@@ -448,7 +448,7 @@ test('the rail keeps the class names the harnesses and the film safety scan read
 });
 
 test('the header wordmark is never cut: no ellipsis, no clipping, no shrink, no hiding', () => {
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   const rules = [...css.matchAll(/([^{}]*\.brand-name[^{},]*(?:,[^{}]*)?)\{([^}]*)\}/g)].map((m) => ({ sel: m[1].trim(), body: m[2] }));
   assert.ok(rules.length >= 1, 'no .brand-name rule found');
   const base = rules.find((r) => /^\.brand-name$/.test(r.sel.split('\n').pop().trim()));
@@ -465,7 +465,7 @@ test('the header wordmark is never cut: no ellipsis, no clipping, no shrink, no 
 });
 
 test('one page, three widths: the menu, the fixed tools list and the strip', () => {
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   assert.ok(!/max-width:\s*392px/.test(css), 'the 392 cap is back');
   assert.ok(!/\bid="mode-/.test(html), 'a Simple/Expert control is back');
   assert.ok(!/transition:[^;]*max-height/.test(css), 'the sheet animates max-height again (a layout property)');
@@ -595,7 +595,7 @@ test('the header status chip and the restricted/worker banner exist', () => {
   assert.match(html, /id="state-banner"[^>]*role="status"/, '#state-banner is gone, or is not role=status');
   assert.match(code, /function paintBanner\(/, 'nothing paints the banner');
   // §4.7: warn colours, never red — the S1 rule this stage must not break.
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   const rule = css.match(/\.state-banner\s*\{[^}]*\}/);
   assert.ok(rule, '.state-banner has no rule at all');
   assert.doesNotMatch(rule[0], /--fail|--danger/, 'the banner is painted a failure colour, not a warning one');
@@ -605,7 +605,7 @@ test('the live-session work pane exists, wide-gated, inside the work pane', () =
   const body = html.slice(html.indexOf('id="body"'), html.indexOf('id="tpl-shot-panel"'));
   assert.match(body, /id="work-live"[^>]*hidden/, '#work-live is gone, or starts visible with no state to hide it');
   assert.match(code, /function paintWorkLive\(/, 'nothing paints the work pane');
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   assert.match(css, /@container app \(width >= 720px\) \{\s*\.work-live/, 'the work pane is not gated to wide');
 });
 
@@ -750,7 +750,7 @@ test('r3-09-4: the stopped card shows a duration through {time}, as an en/ar pai
 });
 
 test('r3-10-3: the settings search folds the term and the row text through normaliseArabic', () => {
-  const code = fs.readFileSync(path.join(EXT, 'options', 'options.js'), 'utf8');
+  const code = surfaceSource('options/options.js');
   assert.match(code, /import \{ normaliseArabic \} from '\.\.\/core\/fingerprint\.js'/);
   assert.match(code, /const term = fold\(q\.value\.trim\(\)\);/);
   assert.match(code, /fold\(`\$\{r\.textContent\} \$\{r\.dataset\.kw \|\| ''\}`\)\.includes\(term\)/);

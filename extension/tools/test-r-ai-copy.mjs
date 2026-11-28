@@ -12,6 +12,7 @@ import { buildAiBlock, buildSessionJson, notCaptured, maskOutbound, SESSION_JSON
 import { buildMarkdown } from '../core/artifact-docs.js';
 import { FORMATS } from '../core/filing.js';
 import { SESSION, JWT, GH, click, net, logline, fortyFiveHundreds } from './lib-r-fixture.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => fs.readFileSync(path.join(EXT, rel), 'utf8');
@@ -119,7 +120,7 @@ test('it is documented and saved under its own format', () => {
   for (const f of ['expectedResult', 'notCaptured', 'occurrences', 'count', 'triggeredBy']) assert.ok(doc.includes(f), f);
   assert.ok(FORMATS['session-json']);
   assert.match(read('report/report.html'), /value="session-json"/);
-  assert.match(read('report/report.js'), /format === 'session-json'/);
+  assert.match(surfaceSource('report/report.js'), /format === 'session-json'/);
 });
 
 test('the button and the strings exist in both languages', () => {

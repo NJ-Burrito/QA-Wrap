@@ -36,6 +36,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { workerSrc as allWorkerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => fs.readFileSync(path.join(EXT, rel), 'utf8');
@@ -51,10 +52,10 @@ const manifest = JSON.parse(read('manifest.json'));
 const siteAccessSrc = read('background/site-access.js');
 const armedSrc = read('background/armed.js');
 const workerSrc = allWorkerSrc();
-const popupJs = read('popup/popup.js');
+const popupJs = surfaceSource('popup/popup.js');
 const popupHtml = read('popup/popup.html');
-const popupCss = read('popup/popup.css');
-const optionsJs = read('options/options.js');
+const popupCss = surfaceSource('popup/popup.css');
+const optionsJs = surfaceSource('options/options.js');
 const optionsHtml = read('options/options.html');
 const settingsSrc = read('platform/settings.js');
 const schema = JSON.parse(read('managed-schema.json'));
@@ -296,7 +297,7 @@ await test('"All sites" and "Wake only" are gone: the card is one switch, awake 
 await test('no all-sites grant is requested, and the dead drop-grant code is gone', () => {
   const sa = read('background/site-access.js');
   assert.ok(!/dropAllSitesGrant|allSitesDropped/.test(sa), '<all_urls> is required in the manifest, so a removal was a no-op');
-  assert.ok(!/permissions\.request\(\{ origins: \['<all_urls>'\]/.test(read('options/options.js')), 'Settings has no Allow all sites');
+  assert.ok(!/permissions\.request\(\{ origins: \['<all_urls>'\]/.test(surfaceSource('options/options.js')), 'Settings has no Allow all sites');
 });
 
 await test('granting tells the worker, so the tab in front of the tester is covered', () => {

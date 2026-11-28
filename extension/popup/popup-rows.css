@@ -1,0 +1,708 @@
+/* QA Wrap — split from popup.css: loaded right after it, same cascade order. */
+/* The tiles (v4) card wall is gone with UI round 2 (S6): rows, a rail and a grid, at the end of this sheet. */
+/* ── how many tools ─────────────────────────────────────────────────────
+   Both states visible at once. A single button reading "Simple" could be the
+   state or the destination, and either way it does not say that most of the
+   tools are hidden behind it — which is the question it actually provoked. */
+
+html:not([data-surface='float']) #dock { display: none; }
+
+/* The capture row: tags first, then the words, then the two actions. */
+.tags button[aria-pressed='true'] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+.note-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--sp-2); }
+
+/* ── the one-time pointer to the films ──────────────────────────────────── */
+.pointer { display: none; grid-template-columns: auto 1fr; gap: var(--sp-1) var(--sp-3); align-items: center; margin: var(--sp-2) 0 var(--sp-1); padding: var(--sp-3); border: 1px solid var(--border-strong); border-radius: var(--r-lg); background: var(--surface-raised); }
+.pointer.is-on { display: grid; }
+.pointer p { grid-column: 2; margin: 0; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: 1.45; }
+.pointer-actions { grid-column: 2; display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
+.tool-scene { display: flex; justify-content: center; margin: 2px 0 var(--sp-half); }
+.tool-scene svg { width: 120px; height: 72px; }
+
+/* The footer belongs under the scroll, not at the bottom of the fixed topper,
+   where it read as a line stranded in the middle of the window. */
+/* "Timeline" was a 43x18 target. The link keeps its look and gets the row's
+   full height to be hit in. */
+/* "Timeline" is disabled until there is a session to show, and a disabled
+   control that looks exactly like a live one is a worse answer than the dead
+   link it replaced. Muted and not dimmed: opacity would take the text with it,
+   which `tools/test-styles.mjs` refuses for good reason. */
+
+/* ── expert mode looks different, because it is ──────────────────────────
+
+   Simple and Expert were visually identical, so the only way to know which one
+   you were in was to count the cards. The first answer to that was a 4%-accent
+   wash fading down 220px, a 3px accent rail beside every activity heading, and
+   cards that lifted a pixel under the pointer. Three effects for one bit of
+   information, and each is a thing generated interfaces reach for by reflex:
+   an ambient gradient, a coloured left stripe, a hover lift.
+
+   The bit is now carried by typography and by air, which is where a mode
+   difference belongs. Expert sets the activity headings smaller, heavier and
+   in caps, and gives each group more room above it — so a screenshot of Expert
+   is recognisable as Expert from the rhythm of the page, at any zoom, in
+   greyscale, and with the pointer nowhere near it. */
+
+/* ── the options disclosure ──────────────────────────────────────────────
+   A word, then the chevron. This is the only route to the recording scope,
+   the viewport sizes and the break rules; as a bare 26px caret at 0.72
+   opacity, it was not found. */
+.tool-more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  width: auto;
+  min-height: 28px;
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font: 600 var(--t-micro)/1 var(--font);
+  opacity: 1;
+}
+.tool-more .more-caret { font-size: var(--t-body); font-weight: var(--weight-body); letter-spacing: var(--track-body); line-height: 1; transition: transform var(--dur-tap) var(--ease); }
+.tool-more[aria-expanded='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.tool-more[aria-expanded='true'] .more-caret { transform: rotate(180deg); }
+.tool-row:hover .tool-more { border-color: var(--accent); }
+
+/* ── can this tool actually run? ─────────────────────────────────────────
+   The used-mark says what happened this session. This says whether pressing
+   it will do anything at all — the missing answer behind "I don't think
+   screen record works". */
+.tool-health {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-inline-start: 2px;
+  border-radius: 50%;
+}
+.tool-health[data-health='ready'] { background: var(--ok); opacity: 0.5; }
+/* Information, not a warning: the browser will ask, nothing is wrong, and the
+   sentence on the card says so. This dot used to be amber with a ring, on the
+   one tool in the wall that is meant to read as ready. Muted and ringless, it
+   is still a mark that distinguishes "the browser gates this" from "ready",
+   which is what it was added for, without claiming anything went wrong. */
+.tool-health[data-health='asks'] { background: var(--text-muted); opacity: 0.65; }
+/* Amber, and only here: the browser refused after a press, which is a thing
+   the tester can put right and has to know about. */
+.tool-health[data-health='warned'] { background: var(--warn); box-shadow: 0 0 0 2px color-mix(in oklab, var(--warn) 24%, transparent); }
+.tool-health[data-health='blocked'] { background: var(--text-muted); opacity: 0.45; }
+.tool-health[data-health='running'] { background: var(--accent); }
+.tool-health[data-health='ok'] { background: var(--ok); }
+.tool-health[data-health='failed'] { background: var(--danger); }
+@media (prefers-reduced-motion: reduce) { .tool-health[data-health='running'] { animation: none; } }
+
+/* The amber note and border that used to sit on the Record card, when Chrome
+   had not yet granted `activeTab`, were removed on 8 September 2026. The reason
+   is written where the code was, in popup.js beside `UQA_CAN_RECORD`; the short
+   version is that it warned about a limitation that does not apply to half of
+   what that card does, and its cure was to press the button it was drawn on.
+   The fact survives as the quiet health mark and its tooltip. Nothing else ever
+   set `data-needs-invoke` or `.tool-invoke`, so both rules went with it. */
+
+/*
+ * While a session is running, the topper gives the wall its room back.
+ *
+ * At the real popup size (392x660) the mode switch, the wake card, the process
+ * meter and the status line took 350px, leaving 308px for sixteen tools: six
+ * screens of scrolling for the beat the demo calls "the wall of tools". None of
+ * that top matter is telling the tester anything new once a session is live —
+ * the session card below it already says the recording is running, for how long
+ * and with how many events — so while `#step-live` is on screen the wake card
+ * drops its explanatory sentence and tightens, and the meter loses its outer
+ * margins. Nothing is removed and nothing shrinks below 44px: the Sleep button
+ * keeps its target, the meter keeps its seven segments and its sentence.
+ */
+body:has(#step-live:not([hidden])) .status:empty { display: none; }
+
+/* ══════════════════════════════════════════════════════ touch targets ══ */
+/*
+ * Apple's 44pt minimum, applied once and late.
+ *
+ * Three generations of tool-row rules above left the ⓘ at 22px and the options
+ * pill at 26px tall — the two smallest controls in the popup and the two
+ * hardest to hit, on a panel people drive with a trackpad while reading a bug.
+ * Both keep exactly the look they had: the button itself becomes 44px of hit
+ * area, and the ring or pill you can see is drawn by ::before inside it. That
+ * is what "widen the hit area, not the control" means in CSS.
+ *
+ * `isolation: isolate` on each host keeps its `z-index: -1` chip inside the
+ * button instead of sending it behind the card the button sits on.
+ */
+
+.tools .tool-info {
+  position: relative;
+  isolation: isolate;
+  width: var(--sz-hit);
+  height: var(--sz-hit);
+  margin: 0;
+  border: 0;
+  background: none;
+}
+.tools .tool-info::before {
+  content: '';
+  position: absolute;
+  /* 44 − 2×11 = 22px: the ring is exactly the size it has always been. */
+  inset: 11px;
+  z-index: -1;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.tools .tool-info:hover { background: none; color: var(--accent-ink); }
+.tools .tool-info:hover::before { border-color: var(--accent); background: var(--surface-sunken); }
+.tools .tool-info[aria-expanded='true'] { background: none; color: var(--n-0); }
+.tools .tool-info[aria-expanded='true']::before { background: var(--accent); border-color: var(--accent); }
+.tools .tool-info:focus-visible { outline: 2px solid var(--accent); outline-offset: -9px; }
+
+.tools .tool-more {
+  position: relative;
+  isolation: isolate;
+  min-height: var(--sz-hit);
+  padding: 0 var(--sp-3);
+  border: 0;
+  background: none;
+}
+.tools .tool-more::before {
+  content: '';
+  position: absolute;
+  /* 44 − 2×8 = 28px: the pill keeps its height, centred in the target. */
+  inset: var(--sp-2) 0;
+  z-index: -1;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+}
+.tools .tool-more:hover { background: none; color: var(--accent-ink); }
+.tools .tool-row:hover .tool-more::before { border-color: var(--accent); }
+.tools .tool-more[aria-expanded='true'] { background: none; color: var(--accent-text); }
+.tools .tool-more[aria-expanded='true']::before { background: var(--accent); border-color: var(--accent); }
+.tools .tool-more:focus-visible { outline: 2px solid var(--accent); outline-offset: -6px; }
+
+/* The bar's own padding comes off, because each button now carries 8px of
+   transparent inset of its own and the two together read as a gutter twice the
+   size it looks. */
+.tools .tool-bar { padding: 0 var(--sp-1); }
+
+/*
+ * Every button in the popup clears 44px tall.
+ *
+ * `.btn` is 34 and `.btn-sm` 28 in ui/tokens.css, which is right for the
+ * Settings page's dense forms and wrong for a panel used one-handed beside the
+ * application under test. Scoped to this stylesheet, so nothing else moves.
+ */
+.btn { min-height: var(--sz-hit); }
+
+/*
+ * So does every field the tester types into.
+ *
+ * `ui/tokens.css` gives a text input 8px of padding on a 13px line, which
+ * measured 37.1px on `#charter` — the first control in the popup and the one
+ * every session starts with. This is height by padding: the border radius
+ * (--r-md), the border and the type scale are untouched, the box just stops
+ * being smaller than a fingertip. Scoped to the popup, so the Settings page's
+ * dense forms keep their own density.
+ */
+input[type='text'], select, textarea { min-height: var(--sz-hit); }
+
+/* ══════════════════════════════════════════════════════════ Hick's law ══ */
+/*
+ * Four bordered buttons in a row are four decisions; one segmented control
+ * with a default already chosen is one. Nothing is removed — the same four
+ * tags, the same `[data-tag]` hooks, the same aria-pressed state — but the
+ * frame now says "pick which of these", and Bug is already picked.
+ */
+.tags {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+}
+.tags button {
+  /* 44 in the segment, 2px of frame either side: the control is 48 tall, the
+     same as the Simple/Expert switch it echoes. */
+  min-height: var(--sz-hit);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: none;
+}
+.tags button:hover { background: var(--surface); border: 0; }
+.tags button[aria-pressed='true'] {
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.tags button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ═══════════════════════════ painted, not yet confirmed ══ */
+/*
+ * `popup.js`'s `optimistic()` paints what a press is about to do, sends the
+ * message, and reconciles when the worker answers. In between, whatever it
+ * painted wears `.is-pending`. This is what that looks like, and it is one
+ * rule because the five things it lands on have nothing else in common: a
+ * bordered card (`#switch-card`), two borderless sections (`#step-live`,
+ * `#step-done`), a list row, and a 15px status dot.
+ *
+ * An `outline` is what lets one rule reach all five. It needs no border to
+ * modify, it takes no space in the layout, it cannot be confused with the
+ * accent BORDER the same card already uses for "awake", and it does not
+ * disturb the `:focus-visible` ring, which is solid where this is dashed.
+ *
+ * It is deliberately NOT `opacity`. The whole point of painting early is that
+ * the tester can read the new state before the round trip finishes; dimming it
+ * would make the one thing they are trying to read harder to read than the
+ * state it replaced. Dashes are the vocabulary this stylesheet already uses
+ * for "not settled yet": an asleep tool row and an unavailable one are both
+ * dashed, and neither costs a character of contrast.
+ *
+ * `optimistic()` removes the class on both exits, so this is short-lived by
+ * construction and never has to survive being stared at.
+ */
+.is-pending {
+  outline: 1px dashed var(--accent);
+  outline-offset: 3px;
+  cursor: progress;
+}
+/* The used-mark is 15px and sits in a tile's corner, so its dashes come in
+   closer or they land on the tile's own edge. */
+.tool-state.is-pending { outline-offset: 2px; }
+
+/* ══════════════════════════════════ the note receipts ══ */
+/*
+ * What this session has been told, newest first, capped at ten by `popup.js`.
+ *
+ * The two spans were laid out by nothing at all, so a bug note read
+ * "BugSubmit stays disabled": one word, no seam, and the tag looked like the
+ * first syllable of the sentence. They are a label and its subject, so they
+ * are set as one. The tag is small, upper-case and in the mono face at a fixed
+ * 58px, which is the width of "QUESTION" at that size; the note sits in body
+ * type beside it. Holding the column constant is what makes ten receipts read
+ * as a list rather than as ten ragged lines.
+ *
+ * A hairline above separates the list from the buttons that write into it, and
+ * a hairline between rows is what makes a note that wraps to two lines
+ * obviously one note.
+ */
+#note-echo {
+  display: grid;
+  gap: 0;
+  margin: var(--sp-2) 0 0;
+  padding: var(--sp-2) 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.note-echo-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: var(--sp-2);
+  align-items: baseline;
+  padding: var(--sp-1) 0;
+}
+.note-echo-row + .note-echo-row { border-top: 1px solid var(--border); }
+
+.note-echo-tag {
+  font: 700 9.5px/1.6 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.note-echo-text {
+  min-width: 0;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: 1.4;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/*
+ * The one-time sign to the films is for somebody who has not started yet.
+ * Once a session is running it is one more thing to read past on the busiest
+ * screen the popup has, so it goes — answered or not. `#step-idle` is hidden
+ * exactly when a session is live or just finished, which is the same question
+ * asked of the markup that already exists.
+ */
+body:has(#step-idle[hidden]) .pointer.is-on { display: none; }
+
+/*
+ * The microphone line, before the first recording of a session.
+ *
+ * Deliberately not a dialog and deliberately not amber. It is not a warning
+ * about something that has gone wrong; it is one fact and two ways forward, in
+ * the panel that already holds the mic tick, where the tester's eye already is.
+ * The left border is the only colour it gets, so the panel does not start
+ * shouting at somebody who has already decided.
+ */
+.mic-consent {
+  margin: 0 var(--sp-3h) var(--sp-2h);
+  padding: var(--sp-2h) var(--sp-3);
+  border-inline-start: 3px solid var(--accent);
+  border-start-start-radius: 0;
+  border-start-end-radius: 6px;
+  border-end-end-radius: 6px;
+  border-end-start-radius: 0;
+  background: var(--surface-sunken);
+}
+.mic-consent p { margin: 0 0 var(--sp-2); }
+.mic-consent-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* ═════════════════════════════════════════════ the popup in motion (v5) ══ */
+/*
+  Nader, 9 September 2026: "the new design of the UI is lacking a lot in
+  animations, fix that."
+
+  Every rule below spends a duration and a curve from `ui/motion.css` and
+  invents neither. The keyframes are that file's too — `qaw-in-up`,
+  `qaw-unfold`, `qaw-tick`, `qaw-breathe-soft` — so the popup, Settings, the
+  side panel, the welcome sheet and the report all move the same way. What is
+  here is only the mapping: which of this surface's state changes gets which
+  piece of the vocabulary.
+
+  The one thing this block is careful about is the popup's own open. A popup is
+  drawn from nothing every single time the toolbar button is pressed, several
+  hundred times a day, and an entrance that is even slightly too long turns
+  into the product feeling slow. So: 180 ms on the topper, 160 ms on the wall
+  of cards, and a stagger capped at 90 ms — 250 ms from blank to settled, and
+  nothing on the page waits for any of it.
+*/
+
+/* ── the popup arrives ───────────────────────────────────────────────── */
+
+.topper { animation: qaw-in-down 180ms var(--motion-ease) both; }
+.scroll { animation: qaw-fade-in 160ms var(--motion-ease) both; }
+
+/* ── the wall of cards ───────────────────────────────────────────────── */
+
+/*
+  The tiles are rebuilt from scratch by renderTools(), which runs on boot, on a
+  language change and on the Simple/Expert switch — and nowhere else. So this
+  one rule covers both things rule 1 asks for: the cards entering with a short
+  stagger, and the mode switch reading as the wall being rebuilt rather than as
+  a page swapping under the pointer.
+
+  160 ms, not 200: nineteen of them are on screen at once in Expert, and the
+  last one has to be finished before the first press could land.
+*/
+.tiles > .tool-row { animation: qaw-in-up 160ms var(--motion-ease) backwards; }
+.tiles > .tool-row { animation-delay: calc(var(--motion-step) * 5); }
+.tiles > .tool-row:nth-child(1) { animation-delay: 0ms; }
+.tiles > .tool-row:nth-child(2) { animation-delay: var(--motion-step); }
+.tiles > .tool-row:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+.tiles > .tool-row:nth-child(4) { animation-delay: calc(var(--motion-step) * 3); }
+.tiles > .tool-row:nth-child(5) { animation-delay: calc(var(--motion-step) * 4); }
+
+/* Expert draws six groups; they arrive in order, on the same cap. */
+.tools > .activity { animation: qaw-in-up 160ms var(--motion-ease) backwards; }
+.tools > .activity { animation-delay: calc(var(--motion-step) * 3); }
+.tools > .activity:nth-child(1) { animation-delay: 0ms; }
+.tools > .activity:nth-child(2) { animation-delay: var(--motion-step); }
+.tools > .activity:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+
+/*
+  Hover and press, on one timing.
+
+  The earlier design took the hover lift off the cards deliberately, because it
+  was one of three things all saying "you are in Expert mode" at once. It comes
+  back here as what it actually is — the answer to a pointer, on every card in
+  every mode — and it is the only thing saying it. 1px and a single soft
+  shadow: the edge still carries the accent, the lift only says the card is
+  live under the cursor.
+*/
+.tools .tool-row {
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+}
+/* A card holding an open panel has stopped being a target and become a
+   container, so it stops answering the pointer with a lift. */
+/* An asleep or unrunnable card must not pretend to be pressable. */
+
+.tools .tool-icon { transition: opacity var(--motion-fast) var(--motion-ease); }
+/* The used-mark going on is the one small piece of good news on a card. */
+.tool-state[data-used='true'] { animation: qaw-tick var(--motion-base) var(--motion-ease); }
+.tool-more .more-caret { transition: transform var(--motion-fast) var(--motion-ease); }
+
+/* ── unfolding: help, options, and the extra fields inside them ──────── */
+
+/*
+  Opening reads as the card growing, because that is what the layout does —
+  the panel is a grid item of the card, not a thing that appears under it. The
+  wipe plus the fade is the growth; where the browser can interpolate to
+  `height: auto` (ui/motion.css, @supports) the height grows too.
+
+  Closing is instant, and deliberately. `hidden` is the state every one of this
+  popup's suites reads a moment after the press, and holding it back by 200 ms
+  to play an animation would mean the state on screen and the state in the DOM
+  disagree for exactly as long as a harness needs to be wrong.
+*/
+.tool-row .tool-help:not([hidden]),
+.tool-row .opts-tool:not([hidden]),
+.opts:not([hidden]),
+#mic-consent:not([hidden]),
+#record-state:not([hidden]),
+#break-redirect-field:not([hidden]),
+#break-header-field:not([hidden]),
+#break-delay-field:not([hidden]) {
+  animation: qaw-unfold var(--motion-base) var(--motion-ease) backwards;
+}
+@supports (interpolate-size: allow-keywords) {
+  .tool-row .tool-help:not([hidden]),
+  .tool-row .opts-tool:not([hidden]),
+  .opts:not([hidden]),
+  #mic-consent:not([hidden]),
+  #record-state:not([hidden]),
+  #break-redirect-field:not([hidden]),
+  #break-header-field:not([hidden]),
+  #break-delay-field:not([hidden]) {
+    animation-name: qaw-unfold-h;
+  }
+}
+
+/* ── the session: idle, live, done ───────────────────────────────────── */
+
+/* Three sections, one at a time, and the switch between them is the biggest
+   state change the popup has. `--motion-base` and a rise: the new step comes
+   up into the place the old one was. */
+#step-idle:not([hidden]),
+#step-live:not([hidden]),
+#step-done:not([hidden]),
+#consent-card:not([hidden]) {
+  animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards;
+}
+
+/* ── what the popup just said ────────────────────────────────────────── */
+
+/*
+  The status line is one element that gets new text over and over, so a CSS
+  rule can never replay: an animation only starts when the element starts
+  matching. `ui/motion.js` restarts it by hand from `say()` — but only when the
+  message has no tone, because a tone already gets `pop` or `shake` from
+  ui/vfx.js and two animations on one element is the second one winning.
+*/
+.status-fix { animation: qaw-in-trail var(--motion-base) var(--motion-ease) backwards; }
+
+.pointer.is-on { animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards; }
+
+/* ── being awake ─────────────────────────────────────────────────────── */
+
+/* Waking is a whole-surface change: the tool wall comes back with it. */
+body[data-awake='true'] .tools .tool-row {
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) var(--motion-ease);
+}
+
+/* ── working, and running ────────────────────────────────────────────── */
+
+/*
+  A tool that is actually running right now.
+
+  The dot beside the name already pulses; this is the card. An `::after` ring
+  rather than an animated `box-shadow`, because a box-shadow loop repaints the
+  card sixty times a second for as long as a harvest takes, and an opacity loop
+  on a borrowed layer costs nothing.
+*/
+.tools .tool-row:has(.tool-health[data-health='running'])::after,
+.tools .tool-row:has(.tool.is-recording)::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--accent);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.tools .tool-row:has(.tool.is-recording)::after { border-color: var(--live); }
+
+/* ══════════════════════════════════════ M2: popup + icon motion (MOTION.md) ══
+   Rule: transform/opacity/stroke-dashoffset only, one moving part per icon,
+   200-320ms, once per hover, transform-box: fill-box so a path inside a 24x24
+   viewBox rotates/scales about its own shape, not the SVG's corner. */
+.tools .tool-icon svg .mv,
+.hdr-icon .mv {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.tools .tool-row:hover .tool-icon svg .mv,
+.tools .tool-row:focus-within .tool-icon svg .mv {
+  animation-duration: var(--motion-slow);
+  animation-timing-function: var(--motion-ease);
+  animation-fill-mode: both;
+}
+/* Per-icon move, keyed by data-tool (rule: literal, one small meaningful
+   move — MOTION.md "Icons in motion" + ICONS.md metaphors). */
+@keyframes qaw-mv-scale { 0%, 100% { transform: scale(1); } 50% { transform: scale(.86); } }
+@keyframes qaw-mv-scale-up { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+@keyframes qaw-mv-blink { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.2); } }
+@keyframes qaw-mv-rotate25 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(25deg); } }
+@keyframes qaw-mv-nudge-x { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(1px); } }
+@keyframes qaw-mv-nudge-xy { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1px, 1px); } }
+@keyframes qaw-mv-drop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+@keyframes qaw-mv-lift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes qaw-mv-diag { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1px, -1px); } }
+@keyframes qaw-mv-flip { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(-1); } }
+@keyframes qaw-mv-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes qaw-mv-apart { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1.5px, -1.5px); } }
+
+.tool-row[data-tool='shot'] .mv,        /* shutter ring closes a little */
+.tool-row[data-tool='api'] .mv,         /* the two arrows nudge apart */
+.tool-row[data-tool='record'] .mv       /* dot pulses once */
+{ animation-name: qaw-mv-scale; }
+.tool-row[data-tool='viewport'] .mv { animation-name: qaw-mv-scale-up; } /* other-size frame grows */
+.tool-row[data-tool='perf'] .mv { animation-name: qaw-mv-rotate25; transform-origin: 12px 18px; } /* needle swings */
+.tool-row[data-tool='a11y'] .mv { animation-name: qaw-mv-blink; } /* eye blinks once */
+.tool-row[data-tool='links'] .mv,       /* the two links nudge apart */
+.tool-row[data-tool='partitions'] .mv,  /* the shaded class nudges */
+.tool-row[data-tool='coverage'] .mv     /* the lit line nudges */
+{ animation-name: qaw-mv-nudge-x; }
+.tool-row[data-tool='pick'] .mv { animation-name: qaw-mv-nudge-xy; } /* cursor taps */
+.tool-row[data-tool='inject'] .mv,      /* the value drops into the field */
+.tool-row[data-tool='harvest'] .mv      /* the basket's items settle */
+{ animation-name: qaw-mv-drop; }
+.tool-row[data-tool='break-toggle'] .mv { animation-name: qaw-mv-apart; } /* the plug halves separate */
+.tool-row[data-tool='mask'] .mv { animation-name: qaw-mv-nudge-xy; } /* the strike bar slides across */
+.tool-row[data-tool='fineprint'] .mv { animation-name: qaw-mv-diag; } /* the magnifier sweeps */
+.tool-row[data-tool='rtl'] .mv { animation-name: qaw-mv-flip; } /* the arrows swap */
+.tool-row[data-tool='diagram'] .mv,     /* the connector draws on */
+.tool-row[data-tool='spec'] .mv,        /* the written lines draw on */
+.tool-row[data-tool='autofill'] .mv     /* the check draws on */
+{ stroke-dasharray: 1; animation-name: qaw-mv-draw; animation-direction: alternate; }
+
+/* Header icons: dock, theme, settings (MOTION.md "UI motion by surface"). */
+.hdr-icon .mv { animation-duration: var(--motion-base); animation-timing-function: var(--motion-ease); animation-fill-mode: both; }
+#dock:hover .hdr-icon .mv, #dock:focus-visible .hdr-icon .mv { animation-name: qaw-mv-nudge-x; }
+#theme:hover .hdr-icon .mv, #theme:focus-visible .hdr-icon .mv { animation-name: qaw-mv-rotate25; animation-timing-function: linear; }
+@keyframes qaw-mv-rotate45 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(45deg); } }
+#open-options:hover .hdr-icon .mv, #open-options:focus-visible .hdr-icon .mv { animation-name: qaw-mv-rotate45; transform-origin: 12px 12px; }
+
+/* the tool wall staggers once when the sheet opens, capped at 8 steps */
+.app .tiles > .tool-row {
+  animation: qaw-in-up var(--motion-base) var(--motion-ease) backwards;
+}
+.app .tiles > .tool-row:nth-child(n+9) { animation-delay: calc(var(--motion-step) * 8); }
+.app .tiles > .tool-row:nth-child(1) { animation-delay: calc(var(--motion-step) * 0); }
+.app .tiles > .tool-row:nth-child(2) { animation-delay: calc(var(--motion-step) * 1); }
+.app .tiles > .tool-row:nth-child(3) { animation-delay: calc(var(--motion-step) * 2); }
+.app .tiles > .tool-row:nth-child(4) { animation-delay: calc(var(--motion-step) * 3); }
+.app .tiles > .tool-row:nth-child(5) { animation-delay: calc(var(--motion-step) * 4); }
+.app .tiles > .tool-row:nth-child(6) { animation-delay: calc(var(--motion-step) * 5); }
+.app .tiles > .tool-row:nth-child(7) { animation-delay: calc(var(--motion-step) * 6); }
+.app .tiles > .tool-row:nth-child(8) { animation-delay: calc(var(--motion-step) * 7); }
+/* Rows inside the closed fold are not on screen: they rise when the fold opens, not by themselves a second after the popup (R7). */
+.app .tools-fold:not([open]) .tiles > .tool-row { animation: none; }
+
+/* Activation: pane to .28 with the emphasis ease (MOTION.md "Icons in motion"). */
+.tools .tool[aria-pressed='true'] .tool-icon svg [opacity='.16'] {
+  opacity: .28;
+  transition: opacity var(--motion-base) var(--motion-ease);
+}
+
+/* ── reduced motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .tools .tool-icon svg .mv, .hdr-icon .mv { animation: none !important; transform: none !important; }
+  .app .tiles > .tool-row { animation: none !important; opacity: 1 !important; }
+  .topper, .scroll,   .tools .tool-row,
+  .tools .tool-row:hover,
+  .tools .tool-row:has(.tool:active),
+  .tools .tool-icon, .tool-state, .tool-more .more-caret,
+  .wake-track, .wake-thumb, .wake-thumb::after,
+  .status { transition: none !important; }
+  .tools .tool-row:hover, .tools .tool-row:has(.tool:active) { transform: none !important; }
+  .tools .tool-row:has(.tool-health[data-health='running'])::after,
+  .tools .tool-row:has(.tool.is-recording)::after,
+  .tools .tool-row:has(.tool-health[data-health='running']) .tool-icon { animation: none !important; }
+}
+
+/* Copy a locator: the four purposes, as a wrapping row of buttons. */
+.pick-purposes { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-block-start: var(--sp-1); }
+
+/* ═══════════════════════════════════ UI round 2 (S6): one page, three widths ══ */
+/*
+ * DESIGN-SPEC §3, ported from the prototype (work/ui-rework-0927/prototype/
+ * float.css). `.app` is the container, so the float, the side panel and the
+ * bare popup each take the layout their own width asks for:
+ *   below 440   the session stacks, the tools are a fixed list under it;
+ *   440-719     one scroller under the header, the tools an in-flow grid;
+ *   720 and up  a rail of tools beside the session and the work pane.
+ * Start and Stop sit in the session strip, the last grid row, outside every
+ * scroller: nothing is ever drawn over them.
+ */
+.app {
+  --header-h: 52px;
+  --rail-w: 320px; /* 280 left "accessibility" no room beside the health dots, star and chevron */
+  --strip-h: 0px;
+  --work-top: var(--header-h);
+  --z-strip: 21;
+  --z-head: 22;
+  --z-menu: 30;
+  container: app / inline-size;
+  position: relative;
+  block-size: 100%;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--backdrop);
+}
+.app-grid {
+  display: grid;
+  block-size: 100%;
+  overflow: clip;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--header-h) minmax(0, 1fr) auto;
+}
+.app-body { display: contents; }
+
+/* Glass on the floating layers only (§9): the header and the ⋯ menu. */
+.app .glass {
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--shadow-glass);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .app .glass { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+[data-icon] { display: inline-grid; place-items: center; flex: none; }
+[dir='rtl'] .app svg.mirror { transform: scaleX(-1); }
+
+/* ── the edge rule (fix round 6) is retired (r1-08-1, D-F1-01) ───────────────────────────────────────────
+      It faded a control as it neared the scrollport's edge. axe measured what that costs: at the 0.45 floor a control's
+      name read 2.4 to 3.8:1, at 0.75 a primary button 3.5:1 and at 0.9 a quiet button 4.23:1, all against the 4.5:1
+      AA floor, on every row that rests at an edge (every first and last tool, and the buttons of an opened panel).
+      Scroll position changed a pass into a fail, so the fade went; a clipped row already says it is clipped.
+      `--dim` keeps the one static opacity: disabled controls (exempt from the contrast rule) are shown at 0.45. */
+@property --dim { syntax: '<number>'; inherits: false; initial-value: 1; }
+.app-body :is(button, a[href], input, select, textarea, summary, [tabindex]:not([tabindex='-1'])) { opacity: var(--dim); }
+.app-body :is(button, input, select, textarea):is(:disabled, [aria-disabled='true']) { --dim: 0.45; }
+.app .work, .app .tools, .app .tools-body, .app .app-body { scroll-padding-block: var(--sp-4); }
+
+/* ── header (52, glass, all widths) ─────────────────────────────────────── */
+.app-head {
+  position: relative;
+  z-index: var(--z-head);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-width: 0;
+  block-size: var(--header-h);
+  padding-inline: var(--sp-3);
+}
+.app .app-head.glass { border: 0; border-block-end: 1px solid var(--glass-line); box-shadow: none; border-radius: 0; }
+.brand-mark { flex: none; }
+.brand-name {
+  /* The wordmark is never cut, ellipsised or shortened (5 Oct 2026): it does not
+     shrink, and the Awake pill and the timer give way to it instead. */
+  flex: none;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: var(--t-title);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.head-actions { display: flex; align-items: center; gap: var(--sp-1); margin-inline-start: auto; flex: none; }

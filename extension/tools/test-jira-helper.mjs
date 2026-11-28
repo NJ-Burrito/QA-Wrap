@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { buildQueries, normalise, pickNotes, cleanHost, searchPath, withSeen, DEFAULTS } from '../core/jira-helper-core.js';
 import { poll, check } from '../core/jira-notifier.js';
 import { jiraPage } from '../background/site-access.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = (p) => fs.readFileSync(new URL(p, root), 'utf8');
@@ -148,7 +149,7 @@ await test('wiring: worker hook is tiny, the notifier is not in the boot graph, 
   assert.match(sw, /jiraOp\('poll'/);
   assert.match(sw, /notifications\?\.onClicked/);
   assert.ok(!/from '[^']*jira-(helper-core|notifier)/.test(sw), 'no static import of the Jira poll');
-  assert.match(read('offscreen/offscreen.js'), /import\('\.\.\/core\/jira-notifier\.js'\)/);
+  assert.match(surfaceSource('offscreen/offscreen.js'), /import\('\.\.\/core\/jira-notifier\.js'\)/);
   const mf = JSON.parse(read('manifest.json'));
   assert.equal(mf.content_scripts, undefined, 'nothing declared in the manifest (tools/test-permissions.mjs): the worker registers the scripts');
   const sa = read('background/site-access.js');

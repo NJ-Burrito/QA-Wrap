@@ -102,7 +102,7 @@ const KNOWN = [
       + 'with a lazy import() on first use; nothing is imported at load, the service worker never loads either file, and a test replaces the source with setProfileSource().',
   },
   {
-    from: 'report/report.js',
+    from: 'report/report-boot.js',
     to: 'background/notify.js',
     why: 'report.js lazily imports summarise() to build a chat summary. notify.js '
       + 'calls chrome.notifications, so it cannot move to core/, and lifting the '

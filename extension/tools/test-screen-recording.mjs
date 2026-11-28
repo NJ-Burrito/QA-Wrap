@@ -45,13 +45,14 @@ import { fileURLToPath } from 'node:url';
 import { lift } from './lib-lift.mjs';
 import { workerSrc } from './lib-worker-src.mjs';
 import { tabVideo, videoBitrate, CAPTURE_EDGE } from '../core/file-probe.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXT = path.resolve(HERE, '..');
 const read = (p) => fs.readFileSync(path.join(EXT, p), 'utf8');
 
 const MEDIA = read('background/media.js');
-const OFF = read('offscreen/offscreen.js');
+const OFF = surfaceSource('offscreen/offscreen.js');
 const WORKER = workerSrc();
 
 let passed = 0;
@@ -282,7 +283,7 @@ test('the encoder bitrate is sized to the captured frame', () => {
 });
 
 test('a double-click on a save button saves once', () => {
-  const REPORT = read('report/report.js');
+  const REPORT = surfaceSource('report/report.js');
   assert.match(REPORT, /\$\('save-go'\)\.addEventListener\('click', async \(e\) => \{ if \(e\.detail > 1\) return;/, 'Save selected runs twice on a double-click');
   assert.match(REPORT, /\$\('media-save'\)\.addEventListener\('click', async \(e\) => \{ if \(e\.detail > 1\) return;/, 'Save all media runs twice on a double-click');
   assert.match(REPORT, /save\.addEventListener\('click', \(e\) => e\.detail > 1 \|\| saveOne\(item, save\)\)/, 'a clip Save button runs twice on a double-click');

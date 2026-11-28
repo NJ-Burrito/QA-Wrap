@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { partWriter } from '../offscreen/part-writer.js';
 import { decodeFailure, encodeWav } from '../offscreen/wav.js';
+import { surfaceSource } from './lib-src.mjs';
 
 let n = 0;
 const test = async (name, fn) => { await fn(); n++; console.log(`  ok  ${name}`); };
@@ -56,9 +57,9 @@ await test('windowed WAV equals a single pass', async () => {
 });
 
 await test('offscreen wires the writer, the warning and the cap; report renders the pre-roll label', () => {
-  const off = fs.readFileSync(new URL('../offscreen/offscreen.js', import.meta.url), 'utf8');
+  const off = surfaceSource('offscreen/offscreen.js');
   assert.ok((off.match(/partWriter\(/g) || []).length === 2 && off.includes("reason: 'ram-cap'") && off.includes("reason: 'disk-warn'"));
-  const rep = fs.readFileSync(new URL('../report/report.js', import.meta.url), 'utf8');
+  const rep = surfaceSource('report/report.js');
   assert.match(rep, /if \(ev\.preRoll\) body\.append\(el\('span', 'ev-preroll', t\('report\.ev\.preRoll'\)\)\)/);
   for (const c of ['en', 'ar']) assert.ok(JSON.parse(fs.readFileSync(new URL(`../platform/i18n/${c}.json`, import.meta.url), 'utf8'))['report.ev.preRoll']);
 });

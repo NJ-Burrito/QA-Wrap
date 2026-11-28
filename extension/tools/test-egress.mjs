@@ -14,6 +14,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { installIdbStub } from './lib-idb-stub.mjs';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (r) => fs.readFileSync(path.join(EXT, r), 'utf8');
@@ -148,7 +149,7 @@ await t('Settings shows the ledger as plain lines with no content, and the copy 
   assert.ok(lines[0].startsWith('1970-01-01 00:00:01'), 'newest first');
   const html = read('options/options.html');
   for (const id of ['egress-list', 'egress-copy', 'egress-empty']) assert.match(html, new RegExp(`id="${id}"`));
-  assert.match(read('options/options.js'), /wireEgress\(document, t\)/);
+  assert.match(surfaceSource('options/options.js'), /wireEgress\(document, t\)/);
 });
 
 await t('every send path is ledgered (webhook in the fetch, jira and tracker at the seam, clipboard in the copy handler), the registry knows the key, the file stays small', () => {
@@ -442,7 +443,7 @@ await t('r6-03-1: every fetchT under background/ and platform/ passes a kind, or
   assert.ok(seen.includes('background/notify.js') && seen.includes('platform/chat-mattermost.js'), 'the scan found the kinded callers, so it is not vacuous');
   assert.ok(seen.includes('background/jira.js') && seen.includes('background/trackers.js'), 'and the allow-listed ones');
   for (const rel of Object.keys(SEAM_LEDGERED)) assert.ok(!/recordEgress|ledgerRow/.test(read(rel)), `${rel} is allow-listed because it writes no ledger row itself`);
-  const off = read('offscreen/offscreen.js');
+  const off = surfaceSource('offscreen/offscreen.js');
   assert.match(off, /import\('\.\.\/background\/jira\.js'\)/, 'the allow-list reason is true: jira.js loads only in the offscreen document');
   assert.match(off, /import\('\.\.\/background\/trackers\.js'\)/);
   assert.ok(!/^import .*'\.\/(jira|trackers)\.js'/m.test(workerSrc()), 'the worker never imports them, so a worker-side ledger write could not see these fetches');

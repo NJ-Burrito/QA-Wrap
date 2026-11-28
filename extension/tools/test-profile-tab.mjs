@@ -20,6 +20,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { recycle } from './lib-trash.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => fs.readFileSync(path.join(EXT, p), 'utf8');
@@ -35,7 +36,7 @@ const profileCard = card('sec-profile');
 const sessionsCard = card('sec-sessions');
 check(/<a href="#sec-profile" id="tab-profile" data-rail="profile" role="tab"/.test(html), 'Profile has its own tab in the rail');
 check(/data-i18n="options\.rail\.profile"/.test(html) && EN['options.rail.profile'] === 'Profile' && AR['options.rail.profile'] === 'الملف الشخصي', 'the tab is named Profile / الملف الشخصي');
-check(/profile: \['sec-profile'\]/.test(read('options/options.js')), 'the tab owns the Profile card');
+check(/profile: \['sec-profile'\]/.test(surfaceSource('options/options.js')), 'the tab owns the Profile card');
 for (const id of ['profile-picture-pick', 'profile-picture-file', 'profileNameEn', 'profileNameAr', 'verify-pick', 'verify-result']) {
   check(profileCard.includes(`id="${id}"`), `the Profile card holds #${id}`);
   check(!sessionsCard.includes(`id="${id}"`), `the Sessions card no longer holds #${id}`);
