@@ -5979,6 +5979,26 @@
    "assertMode": "counted"
   },
   {
+   "id": "test-vibium-gate",
+   "path": "tools/test-vibium-gate.mjs",
+   "kind": "test",
+   "lane": "gate",
+   "stage": "static",
+   "features": [
+    "report"
+   ],
+   "tags": [
+    "assertMode:counted",
+    "stage:static"
+   ],
+   "headed": false,
+   "python": "none",
+   "net": "none",
+   "timeout": null,
+   "timeoutSource": "guess",
+   "assertMode": "counted"
+  },
+  {
    "id": "test-videoedit",
    "path": "tools/test-videoedit.mjs",
    "kind": "test",
