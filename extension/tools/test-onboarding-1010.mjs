@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { endOfBlock } from './lib-lift.mjs';
 import * as remember from '../background/remember.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (...p) => fs.readFileSync(path.join(EXT, ...p), 'utf8');
@@ -147,7 +148,7 @@ test('a window woken once stays asleep after a deliberate sleep; sub-frames neve
 });
 
 /* ── the popup: one press, inside the gesture ───────────────────────────────────────────────────── */
-const popupJs = read('popup', 'popup.js');
+const popupJs = surfaceSource('popup/popup.js');
 const onboardJs = read('popup', 'onboard.js');
 test('Test this site asks Chrome for the site before the first await, in the click handler and in startOneTap', () => {
   const at = popupJs.indexOf("$('start').addEventListener('click', async () => {");

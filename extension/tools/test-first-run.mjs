@@ -10,6 +10,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { PRODUCT } from '../core/product.js';
 import { REGISTRY } from '../core/store-registry.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const REPO = path.resolve(EXT, '..');
@@ -49,7 +50,7 @@ test('the practice page worker answers the save POST with a 500 and leaves every
 });
 test('the popup pointer opens the packaged practice page', () => {
   const html = read(EXT, 'popup', 'popup.html');
-  const js = read(EXT, 'popup', 'popup.js');
+  const js = surfaceSource('popup/popup.js');
   assert.ok(html.includes('id="pointer-practice"') && html.includes('data-i18n="popup.pointer.try"'));
   assert.ok(read(EXT, 'popup', 'onboard.js').includes("getURL('practice/practice.html')"), 'openPractice does not open the packaged practice page');
   assert.ok(!js.includes('countFilms'));
@@ -68,7 +69,7 @@ test('the welcome page links the practice page, names the 30-day auto-delete; th
 });
 test('Settings About has the rating link, hidden under any managed policy', () => {
   const html = read(EXT, 'options', 'options.html');
-  const js = read(EXT, 'options', 'options.js');
+  const js = surfaceSource('options/options.js');
   assert.ok(html.includes('id="about-rate"'));
   assert.ok(/about-rate[\s\S]{0,700}storage\.managed[\s\S]{0,300}about-rate-dd/.test(js));
 });
@@ -81,7 +82,7 @@ test('the rating link is passive: no popup, report, worker or page script reads 
 });
 test('firstReportOpenedAt is written once by the report and registered', () => {
   assert.ok(REGISTRY.some((r) => r.key === 'firstReportOpenedAt'));
-  const js = read(EXT, 'report', 'report.js');
+  const js = surfaceSource('report/report.js');
   assert.ok(/get\('firstReportOpenedAt'\)[\s\S]{0,200}if \(!r\.firstReportOpenedAt\)/.test(js));
 });
 test('the listing says the 30-day auto-delete under what it does not do', () => {

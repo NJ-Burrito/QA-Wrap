@@ -16,6 +16,7 @@ import { dupeKey, groupChains } from '../core/dupes.js';
 import { correlate } from '../core/correlate.js';
 import * as BF from '../report/bugfirst.js';
 import { SESSION, click, net, logline, T0 } from './lib-r-fixture.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => fs.readFileSync(path.join(EXT, rel), 'utf8');
@@ -28,7 +29,7 @@ function test(name, fn) {
 }
 
 const html = read('report/report.html');
-const js = read('report/report.js');
+const js = surfaceSource('report/report.js');
 const t = (k, p = {}) => ({ 'popup.session.untitled': 'Untitled session', 'report.hero.untitled': 'QA session', 'report.ev.networkError': 'network error' }[k] ?? k).replace(/\{(\w+)\}/g, (_, n) => p[n]);
 const el = (tag, cls, text) => ({ tag, cls, text });
 
@@ -47,7 +48,7 @@ await test('P1-13: header order is picker, Save, Copy, a separator, Delete; Dele
 await test('P1-13: the header Copy is switched on and off with the other session-only controls, and wired to the bugfirst module', () => {
   assert.match(js, /\$\('copy-report'\)\.disabled/);
   assert.match(js, /\$\('copy-report'\)\.addEventListener\('click', \(\) => BF\.headerCopy\(/);
-  assert.match(read('report/report.css'), /\.bar-sep \{[^}]*margin-inline/, 'the gap uses logical properties so Arabic mirrors it');
+  assert.match(surfaceSource('report/report.css'), /\.bar-sep \{[^}]*margin-inline/, 'the gap uses logical properties so Arabic mirrors it');
 });
 
 await test('P1-13: the Jira tab reads «File a ticket» before the language file loads, no tab is hidden, Arabic is «قدّم تذكرة»', () => {
@@ -154,7 +155,8 @@ await test('header Copy puts the worker\'s Markdown on the clipboard, inline ima
 
 await test('line ceiling: report.js stays within tools/line-ratchet.json', () => {
   const ratchet = JSON.parse(read('tools/line-ratchet.json'));
-  const lines = js.split('\n').length - (js.endsWith('\n') ? 1 : 0);
+  const own = read('report/report.js'); // the ceiling is for the file itself; its split parts have their own entries
+  const lines = own.split('\n').length - (own.endsWith('\n') ? 1 : 0);
   assert.ok(lines <= ratchet.lines['report/report.js'], `${lines} lines > ${ratchet.lines['report/report.js']}`);
 });
 

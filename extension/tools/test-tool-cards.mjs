@@ -287,7 +287,7 @@ test('E2: an error carries the way out of itself', () => {
   const say = code.match(/function say\(text[\s\S]{0,1800}/);
   assert.match(say[0], /fixBtn = null;/, 'the action button is never taken away');
   assert.match(say[0], /tone === 'err'/, 'an action is offered on messages that are not refusals');
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   assert.match(css, /\.status-fix\s*\{/, 'the action button has no paint');
   assert.match(css, /\.is-spotlit\s*\{/, 'the highlight has no paint');
 });

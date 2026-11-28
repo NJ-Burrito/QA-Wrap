@@ -1,4 +1,4 @@
-# Opera add-ons: permission justifications for QA Wrap 3.10.3
+# Opera add-ons: permission justifications for QA Wrap 3.10.4
 
 Read from the built `dist/opera/manifest.json`; every permission the package declares has a row. Copy a row into the store's per-permission box.
 

@@ -476,7 +476,7 @@ await test('every configure() site in the pages passes the scope', () => {
   const files = ['popup/popup.js', 'options/options.js', 'report/report.js', 'annotate/annotate.js', 'devtools/panel.js', 'diagram/diagram.js', 'tutorials/tutorials.js', 'videoedit/videoedit.js'];
   let sites = 0;
   for (const rel of files) {
-    const hits = read(rel).split('\n').filter((l) => /UQASound\?\.configure\(/.test(l) && /soundVolume/.test(l));
+    const hits = surfaceSource(rel).split('\n').filter((l) => /UQASound\?\.configure\(/.test(l) && /soundVolume/.test(l));
     assert.ok(hits.length, `${rel} has no configure call`);
     for (const l of hits) { sites++; assert.match(l, /scope:/, `${rel}: ${l.trim().slice(0, 90)}`); }
   }
@@ -593,7 +593,7 @@ await test('the in-page toolbar has no sound.js and no sound files; the manifest
 await test('the offscreen document gains no AUDIO_PLAYBACK reason and plays cues through the one route', () => {
   const bg = fs.readdirSync(path.join(EXT, 'background')).filter((n) => n.endsWith('.js')).map((n) => read(`background/${n}`)).join('\n');
   assert.ok(!/AUDIO_PLAYBACK/.test(bg), 'a background module asks for AUDIO_PLAYBACK');
-  const off = read('offscreen/offscreen.js');
+  const off = surfaceSource('offscreen/offscreen.js');
   assert.match(off, /case 'UQA_OFF_CUE':[\s\S]{0,400}UQASound\?\.play\(msg\.name\)/);
   assert.match(off, /UQASound\?\.ready\?\.\(\)/, 'the offscreen cue waits for the files to decode');
   assert.ok(read('offscreen/offscreen.html').includes('ui/sound.js'));

@@ -1,0 +1,707 @@
+/* QA Wrap — split from popup.css: loaded right after it, same cascade order. */
+.icon-btn {
+  position: relative;
+  flex: none;
+  inline-size: 36px;
+  block-size: 36px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.icon-btn:hover { color: var(--text); background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.icon-btn:active { background: color-mix(in srgb, currentColor calc(var(--state-press) * 100%), transparent); }
+.icon-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.icon-btn[aria-expanded='true'] { color: var(--text); }
+#dock { display: none; }
+html[data-surface='float'] #dock { display: inline-grid; }
+#dock[hidden], html[data-surface='float'] #dock[hidden] { display: none; } /* no chrome.sidePanel here (popup/guards.js) */
+/* Give way, in order: the timer pill tightens. Icons stay. */
+@container app (width < 400px) {
+  .status-chip { padding-inline: var(--sp-half); gap: var(--sp-1); }
+}
+
+/* ── the ⋯ menu ─────────────────────────────────────────────────────────── */
+.app .menu {
+  position: absolute;
+  inset-block-start: calc(var(--header-h) + 4px);
+  inset-inline-end: 8px;
+  inline-size: min(280px, 100% - 16px);
+  max-block-size: calc(100% - var(--header-h) - var(--strip-h) - 12px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--sp-half);
+  border-radius: var(--r-lg);
+  z-index: var(--z-menu);
+  transform-origin: top right;
+}
+[dir='rtl'] .app .menu { transform-origin: top left; }
+.app .menu[hidden] { display: none; }
+.menu.is-entering { animation: qaw-menu-in var(--motion-base) var(--motion-ease) both; }
+@keyframes qaw-menu-in { from { opacity: 0; transform: translateY(-4px); } }
+.menu-group { display: block; }
+.menu-label {
+  display: block;
+  padding: var(--sp-2) var(--sp-3) var(--sp-1);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  color: var(--text-muted);
+}
+.menu-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-inline: var(--sp-3);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-label);
+  text-align: start;
+  cursor: pointer;
+}
+a.menu-row { text-decoration: none; }
+.menu-row:hover, .menu-row:focus-visible { background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.menu-row:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.menu-row:disabled { color: var(--text-muted); cursor: default; }
+.menu-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu-slot { inline-size: 20px; flex: none; }
+.menu-check { visibility: hidden; color: var(--accent-ink); }
+.menu-row[aria-checked='true'] .menu-check { visibility: visible; }
+.menu-divider { block-size: 1px; background: var(--border); margin: var(--sp-half); }
+.menu-foot { display: flex; gap: var(--sp-2); align-items: flex-start; padding: var(--sp-2) var(--sp-3) var(--sp-1); }
+.menu-foot img { flex: none; margin-block-start: 2px; }
+.menu-lines { display: flex; flex-direction: column; gap: 2px; font-size: var(--t-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+/* ── the session region ─────────────────────────────────────────────────── */
+.app section.session { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; margin: 0; padding: var(--sp-3) var(--sp-3) 0; }
+/* Children keep their content height and the column scrolls. Shrinkable (the
+   flex default), a child with its own min-height — `.status` has 1em — was
+   squeezed to that and its text painted over the next child: the long
+   "Chrome drops permission…" refusal over "Session saved." (29 Sept). */
+.app section.session > * { flex-shrink: 0; }
+.app .session > section { margin: 0; }
+/* The column's gap is the only spacing between its children: a row's own block margin on top of it was a second, empty band. */
+.app .session .remember, .app .session .buffer-row, .app .session .last-locator { margin-block: 0; }
+/* A locator row with no locator is a reserved empty row; it appears when there is something in it. */
+.app .session .last-locator:has(.ll-code.is-empty) { display: none; }
+.app #charter { min-block-size: 44px; }
+.app .btn-primary { min-block-size: 44px; min-inline-size: 44px; }
+.app .btn-xs { min-block-size: 32px; }
+.app .tags button { min-block-size: 32px; }
+
+/* ── the session strip: Start / Stop, pinned (Lead rule, research/56) ─────── */
+.session-strip {
+  position: relative;
+  z-index: var(--z-strip);
+  display: none;
+  grid-column: 1 / -1;
+  grid-row: 3;
+  padding: var(--sp-3);
+  background: var(--surface);
+  border-block-start: 1px solid var(--border);
+}
+body[data-consented='true'] .app:has(#step-idle:not([hidden])) .session-strip, /* asleep too: "Test this site" is the one press that wakes and starts */
+body[data-consented='true'] .app:has(#step-live:not([hidden])) .session-strip { display: flex; }
+.session-strip > .btn { flex: 1; min-block-size: 44px; }
+/* D-218: the browser shortcut chip beside the label on Start, and nothing at all when none is assigned. */
+#start kbd.cmd { margin-inline-start: var(--sp-2); font: var(--t-micro)/1 var(--mono); white-space: nowrap; } /* full opacity: 0.85 took the chip under 4.5:1 on the light button */
+.app:has(#step-idle[hidden]) #start,
+.app:has(#step-live[hidden]) #stop { display: none; }
+
+/* ── the tool list: favourites on top, then the four groups ─────────────── */
+.app .tools { min-width: 0; margin: 0; display: block; }
+.app .tools-body { display: block; min-width: 0; }
+.app .favourites,
+.app section.activity { display: block; margin: 0 0 var(--sp-3); }
+.fav-head,
+.app .activity-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  min-block-size: 32px;
+  margin: 0;
+  padding: var(--sp-2) var(--sp-1) var(--sp-1);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+  text-transform: none;
+  color: var(--text);
+}
+.app .activity-hint { color: var(--text-muted); }
+.app .activity-meter { margin-inline-start: auto; }
+.fav-empty { margin: 0; padding: var(--sp-1); }
+/* The favourites fold: the same disclosure line as "All tools" (the marker needs list-item, which the flex heading above takes away). */
+.favourites > summary.fav-head { display: list-item; cursor: pointer; color: var(--text-muted); }
+.favourites[open] > summary.fav-head { color: var(--text); }
+.favourites > summary.fav-head:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.app .tiles,
+.fav-list { display: flex; flex-direction: column; gap: var(--sp-1); }
+
+/* A row: the press (icon, name), then the star and the way one level deeper. */
+.app .tool-row,
+.fav-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: none;
+}
+.fav-item { display: flex; }
+.app .tool-row .tool,
+.fav-run {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  inline-size: 100%;
+  min-width: 0;
+  min-block-size: 44px;
+  padding-block: 0;
+  padding-inline: var(--sp-3) var(--sp-1);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-label);
+  font-weight: var(--weight-label);
+  text-align: start;
+  cursor: pointer;
+}
+.fav-run { flex: 1; }
+.app .tool-row .tool:hover,
+.fav-run:hover { background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.app .tool-row .tool:active,
+.fav-run:active { background: color-mix(in srgb, currentColor calc(var(--state-press) * 100%), transparent); }
+.app .tool-row .tool:focus-visible,
+.fav-run:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.app .tool-row .tool[aria-pressed='true'] { color: var(--accent-ink); box-shadow: inset 3px 0 0 var(--accent); }
+[dir='rtl'] .app .tool-row .tool[aria-pressed='true'] { box-shadow: inset -3px 0 0 var(--accent); }
+.app .tool-icon,
+.fav-run > svg { display: grid; place-items: center; flex: none; inline-size: 20px; block-size: 20px; color: var(--text-muted); }
+.app .tool .tool-text { flex: 1; min-width: 0; display: block; }
+.fav-name,
+/* Words wrap whole, never mid-word (Nader, 29 Sept: "Accessibilit / y"): the
+   tile grid below is sized so the longest tool word always fits. */
+.app .tool-name { display: block; min-inline-size: 0; line-height: 1.3; padding-block: 2px; }
+/* The shortcut chip lives in Settings and in the detail's words; a row this
+   narrow spends its width on the name. */
+.app .tool-row .tool kbd { display: none; }
+
+.app .tool-bar { display: flex; align-items: center; gap: 0; padding-inline-end: var(--sp-1); }
+.tool-star,
+.app .tool-bar > .tool-more {
+  inline-size: 32px;
+  block-size: 32px;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transform: none;
+}
+.tool-star:hover,
+.app .tool-bar > .tool-more:hover { color: var(--text); background: color-mix(in srgb, currentColor calc(var(--state-hover) * 100%), transparent); }
+.tool-star:focus-visible,
+.app .tool-bar > .tool-more:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.tool-star[aria-pressed='true'] { color: var(--accent); }
+.fav-item .tool-star { margin-inline-end: var(--sp-1); }
+/* The unstarred star shows on hover or focus, or always where there is no
+   hover (§3.6). Through --dim, so the edge rule still applies. */
+.app .tool-row .tool-star[aria-pressed='false'] { --dim: 0; }
+.app .tool-row:hover .tool-star,
+.app .tool-row:focus-within .tool-star { --dim: 1; }
+@media (hover: none) { .app .tool-row .tool-star { --dim: 1; } }
+.app .tool-bar > .tool-more[aria-expanded='true'] { color: var(--accent-ink); transform: rotate(calc(90deg * var(--motion-dir))); }
+
+/* The detail: one level deeper (§3.7.5). Under its row in the sheet and the
+   grid; over the work pane on the wide float. */
+.app .tool-row .tool-help {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: var(--sp-3) var(--sp-3) var(--sp-4);
+  border: 0;
+  border-block-start: 1px solid var(--border);
+  border-radius: 0;
+  background: none;
+  opacity: 1;
+}
+.app .tool-row .tool-help[hidden] { display: none; }
+.app .tool-row.is-open { border-color: var(--accent); }
+.app .tool-row.is-open::after { display: none; }
+.detail-head { display: none; align-items: center; gap: var(--sp-2); }
+.detail-title { flex: 1; min-width: 0; margin: 0; font-family: var(--display); font-size: var(--t-head); font-weight: 700; line-height: var(--lead-head); }
+.app .tool-help .tool-scene {
+  inline-size: min(100%, 320px);
+  aspect-ratio: 240 / 144;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.app .tool-help .tool-scene svg { display: block; inline-size: 100%; block-size: auto; }
+.app .tool-help > p { max-inline-size: 65ch; }
+.app .tool-help .tool-what { font-size: var(--t-body); line-height: var(--lead-body); }
+.app .tool-help .opts-tool { margin: 0; }
+
+/* ── the tools heading: a plain label and count, not a control ─────────── */
+.tools-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  color: var(--text);
+  font-size: var(--t-label);
+  font-weight: var(--weight-label);
+}
+.tools-head .badge {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 24px;
+  block-size: 20px;
+  padding-inline: var(--sp-half);
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-label);
+}
+@container app (width >= 720px) { .tools-head { display: none; } }
+
+/* ── narrow: the session, then the tools as a fixed list down to the strip ─ */
+@container app (width < 440px) {
+  /* Rows: header, session (its own height, scrolls past its share), the work
+     pane (only while the break panel is open), the tools (all that is left,
+     scrolling inside themselves), the strip. Nothing slides, nothing overlaps. */
+  .app-grid { grid-template-rows: var(--header-h) minmax(0, auto) auto minmax(0, 1fr) auto; }
+  .app section.session { grid-row: 2; min-block-size: 0; max-block-size: 62vh; overflow-y: auto; padding-block-end: var(--sp-3); }
+  .app .work { grid-row: 3; min-block-size: 0; overflow-y: auto; max-block-size: 40vh; padding: var(--sp-3); }
+  .app .work:not(:has(#break-panel:not([hidden]))) { display: none; }
+  .session-strip { grid-row: 5; }
+  .app .tools {
+    grid-row: 4;
+    display: flex;
+    flex-direction: column;
+    min-block-size: 0;
+    margin: 0;
+    overflow: hidden;
+    background: var(--surface);
+    border-block-start: 1px solid var(--border);
+  }
+  .tools-head { flex: none; }
+  .app .tools-body { display: block; flex: 1; min-block-size: 0; overflow-y: auto; padding: 0 var(--sp-2) var(--sp-3); }
+  .app .activity-head { flex-direction: column; align-items: flex-start; gap: 0; }
+  .app .activity-meter { display: none; }
+}
+
+/* ── medium: one scroller, an in-flow grouped grid (the 560 window, §3.5) ── */
+@container app (440px <= width < 720px) {
+  /* A fixed column: the session at its own height, the tools directly under it
+     taking all that is left down to the strip and scrolling inside themselves. */
+  .app-body {
+    display: flex;
+    flex-direction: column;
+    grid-row: 2;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+  .app section.session { flex: 0 1 auto; min-block-size: 0; overflow-y: auto; padding: var(--sp-4) var(--sp-4) 0; }
+  .app .tools { flex: 1 1 12rem; min-block-size: 8rem; overflow-y: auto; overscroll-behavior: contain; padding: var(--sp-3) var(--sp-4) 0; }
+  .app .work { flex: none; overflow: visible; min-block-size: 0; padding: 0 var(--sp-4) var(--sp-4); background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .app .work:not(:has(#break-panel:not([hidden]))) { display: none; }
+  .session-strip { padding-inline: var(--sp-4); }
+  .app .tiles,
+  .fav-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-auto-flow: row dense;
+    gap: var(--sp-2);
+  }
+  .app .tiles > .tool-row.is-open { grid-column: 1 / -1; }
+}
+
+/* ── wide: a rail of tools beside the session and the work pane (§3.6) ──── */
+@container app (width >= 720px) {
+  .app-grid {
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    grid-template-rows: var(--header-h) auto minmax(0, 1fr) auto;
+    grid-template-areas: "head head" "tools session" "tools work" "tools strip";
+  }
+  .app-head { grid-area: head; }
+  .app .tools {
+    grid-area: tools;
+    position: static;
+    min-block-size: 0;
+    overflow-y: auto;
+    padding: var(--sp-2) var(--sp-2) var(--sp-4);
+    background: var(--surface);
+    border-inline-end: 1px solid var(--border);
+  }
+  .app section.session { grid-area: session; padding: var(--sp-4) var(--sp-5) 0; max-inline-size: 60rem; }
+  .app .work { grid-area: work; min-block-size: 0; overflow-y: auto; padding: var(--sp-4) var(--sp-5) var(--sp-5); max-inline-size: 60rem; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .session-strip { grid-area: strip; padding-inline: var(--sp-5); }
+  .app .activity-head { flex-direction: column; align-items: flex-start; gap: 0; }
+  .app .tiles > .tool-row { border-color: transparent; background: none; }
+  /* The detail replaces the work pane, beside the rail and under the session
+     card; everything between it and .app stays unpositioned so .app is its
+     containing block, not the rail that scrolls. */
+  .app .tools-body, .app .activity, .app .tiles, .app .tool-row.is-open { position: static; }
+  .app .tool-row.is-open > .tool-help {
+    position: absolute;
+    inset-block: var(--work-top) var(--strip-h);
+    inset-inline: var(--rail-w) 0;
+    z-index: 2;
+    overflow-y: auto;
+    padding: var(--sp-4) var(--sp-5) var(--sp-5);
+    background: var(--surface);
+    border: 0;
+  }
+  .app .tool-row.is-open .detail-head { display: flex; }
+  .app:has(.tool-row.is-open) .work { visibility: hidden; }
+}
+.detail-back { display: none; }
+@container app (width < 440px) {
+  .app .tool-row.is-open .detail-head { display: flex; }
+  .app .tool-row.is-open .detail-head > :not(.detail-back) { display: none; }
+  .detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-block-size: 44px;
+    padding-inline: var(--sp-2);
+    border: 0;
+    border-radius: var(--r-md);
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: var(--t-label);
+    cursor: pointer;
+  }
+  .detail-back:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+}
+.app .status-fix { min-block-size: 24px; }
+
+/* ══════════════════════════════════ S7: session states (DESIGN-SPEC §4) ══ */
+
+/* ── the header status chip (live only; paintChip in popup.js) ──────────── */
+/* Shown or hidden by JS (paintChip in popup.js), which knows "recording"
+   before the stylesheet could derive it from any attribute on .app. */
+.status-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-half);
+  block-size: 32px;
+  padding-inline: var(--sp-2h);
+  border: 0;
+  border-radius: var(--r-pill, 999px);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font: inherit;
+  cursor: pointer;
+}
+.status-chip .chip-dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--live); flex: none; }
+.status-chip .timer { font-variant-numeric: tabular-nums; font-size: var(--t-small); font-weight: var(--weight-small); }
+
+/* ── restricted / worker banner (§4.7): warn colours, never red ─────────── */
+.state-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  margin-block-end: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--warn-soft);
+  color: var(--warn-ink);
+}
+.state-banner-icon { flex: none; inline-size: 20px; block-size: 20px; color: var(--warn-ink); }
+.state-banner-text { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.state-banner-line { margin: 0; font-size: var(--t-small); font-weight: var(--weight-small); line-height: var(--lead-small); }
+.state-banner-sub { color: var(--warn-ink); opacity: 0.85; }
+.state-banner .btn { flex: none; align-self: center; }
+
+/* Last locator (idle and live; DESIGN-SPEC §3.7.3): the quick row that sat above it is gone, Tools carries Copy a locator and Screenshot. */
+/*
+ * The classic popup surface (no ?surface=) is hard-capped at 348×580
+ * (`body` rule at the top of this file — Chrome's own action-popup box, kept
+ * because clickthrough/diagnose/uat still open it bare). [V, a scratch
+ * measurement script]: the live session card's own content (title, meta,
+ * tags, note composer) already used ~390-440px of that before the quick row
+ * or the last locator existed; adding both left only 64px — the peek's own
+ * floor — for the whole tool sheet, so the tool list rendered
+ * under the strip instead of inside it (clickthrough: "session-strip
+ * subtree intercepts pointer events" on a chevron press).
+ *
+ * A `(max-height)` media query looks like the right tool, but it reads the
+ * *viewport* the harness gave the page, not this `body`'s own 348×580 —
+ * measured the same way and still 64px [V, same script, re-run]. `body` is
+ * what is actually capped (float/panel override it to 100dvh, just above),
+ * so this keys off the same attribute `#dock` already does for the reverse
+ * question. Below it, Copy a locator and Screenshot are still one press away
+ * on the rail; only the idle echo of the last
+ * locator is what goes.
+ */
+html:not([data-surface]) .last-locator { display: none; }
+
+.last-locator {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-block-size: 32px;
+  margin-block-start: var(--sp-2);
+  padding-inline: var(--sp-1);
+}
+.ll-label { flex: none; color: var(--text-muted); font-size: var(--t-micro); font-weight: var(--weight-micro); }
+.ll-code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  color: var(--text);
+  /* T-053: a locator, verb or status code keeps its own order inside Arabic text. */
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+.ll-code.is-empty { color: var(--text-muted); font-family: inherit; }
+.ll-copy { flex: none; }
+.ll-copy.is-done { color: var(--ok); }
+
+/* ── the live-session work pane (wide only; DESIGN-SPEC §3.6/§4.4) ──────── */
+/* JS sets [hidden] by state (live or not); this gates it by width on top —
+   ":not([hidden])" so the wide rule cannot out-cascade the state JS set. */
+.work-live { display: none; }
+@container app (width >= 720px) {
+  .work-live:not([hidden]) { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--sp-4); }
+}
+.wl-col { display: grid; align-content: start; gap: var(--sp-3); min-width: 0; }
+.work-live .section-head { margin: 0; font-size: var(--t-label); font-weight: 600; color: var(--text-muted); }
+.wl-list {
+  display: grid;
+  gap: 1px;
+  max-block-size: 15rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+.wl-list > div { display: flex; align-items: center; gap: var(--sp-2); min-block-size: 36px; padding-inline: var(--sp-3); font-size: var(--t-body); }
+.wl-list > div > svg { flex: none; inline-size: 16px; block-size: 16px; }
+.wl-list .wl-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wl-list .wl-time { flex: none; font-variant-numeric: tabular-nums; font-size: var(--t-micro); color: var(--text-muted); }
+.wl-list .wl-empty { color: var(--text-muted); font-size: var(--t-small); }
+.wl-list .wl-problem svg { color: var(--fail-ink); }
+
+/* ── the review pane (§4.5): #step-done, restyled in place ──────────────── */
+.review-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  font-family: var(--display);
+  font-size: var(--t-title);
+  font-weight: 700;
+}
+.review-heading .tick { flex: none; inline-size: 20px; block-size: 20px; border-radius: 50%; background: var(--ok); }
+.review-heading:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); margin-block-start: var(--sp-3); }
+@container app (width >= 440px) {
+  .stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.stat-tile { display: grid; gap: 2px; padding: var(--sp-2); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); }
+.stat-num { font-family: var(--display); font-size: var(--t-title); font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-label { font-size: var(--t-micro); font-weight: var(--weight-micro); color: var(--text-muted); }
+
+.section-head { font-size: var(--t-label); font-weight: 600; margin: var(--sp-4) 0 var(--sp-1); }
+.key-findings[hidden] { display: none; }
+.key-findings .section-head { margin-block-start: var(--sp-3); }
+.finding-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-block-size: 44px;
+  padding-inline: var(--sp-2);
+  border-radius: var(--r-md);
+}
+.finding-row:nth-child(odd) { background: var(--surface-sunken); }
+.finding-row svg { flex: none; inline-size: 16px; block-size: 16px; color: var(--fail-ink); }
+.finding-row .fr-text { flex: 1; min-width: 0; font-size: var(--t-body); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.finding-row .fr-time { flex: none; font-variant-numeric: tabular-nums; font-size: var(--t-micro); color: var(--text-muted); }
+.finding-row.is-empty svg { color: var(--ok); }
+
+#view-report { margin-block-start: var(--sp-3); }
+.row-4 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-1); }
+.row-4 .btn svg { inline-size: 16px; block-size: 16px; }
+
+/* the one problem number's companions: control, hiding line, rows (spec §7) */
+.sg { display: grid; gap: var(--sp-2); margin-block: var(--sp-2); }
+.sg-btn { font: inherit; font-size: var(--t-small); padding: 2px var(--sp-2h); border: 0; border-radius: 999px; background: transparent; color: var(--text-muted); cursor: pointer; }
+.sg-line { margin: 0; font-size: var(--t-small); color: var(--text-muted); }
+.sg-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-half); min-inline-size: 0; padding: var(--sp-1) var(--sp-half); font-size: var(--t-small); } /* wraps: three chips and a button no longer push a narrow panel sideways */
+.sg-row.is-d { color: var(--text); }
+.sg-chip { flex: none; padding: 0 var(--sp-half); border: 1px solid var(--border); border-radius: 999px; font-size: var(--t-micro); color: var(--text-muted); }
+.sg-warn { color: var(--warn-ink, var(--text-muted)); }
+.sg-msg { flex: 1 1 8ch; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sg-n { flex: none; font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.sg-induced summary { font-size: var(--t-small); color: var(--text-muted); cursor: pointer; }
+
+/* r3-06-1: the capture-loss line and the technique-coverage line. */
+.loss-line { margin: 0 0 var(--sp-2); color: var(--warn); font-weight: 500; }
+.tech-cover { margin: 0 0 var(--sp-2); font-variant-numeric: tabular-nums; }
+.part-cut { color: var(--warn); }
+.part-own { display: flex; gap: var(--sp-2); margin: 0 0 var(--sp-2); }
+.part-own input { flex: 1; min-width: 0; }
+
+/* r3-08-1 (D-1010-60): under forced colours a lit activity dot and a pressed tool keep an outline, since background and
+   border colours are replaced. One rule per selector (tools/test-styles.mjs asserts it). */
+@media (forced-colors: active) {
+  .activity-meter i.on { outline: 2px solid Highlight; outline-offset: 0; }
+  .tool[aria-pressed='true'] { outline: 2px solid Highlight; outline-offset: -2px; }
+  .tool:focus-within { outline: 2px solid Highlight; outline-offset: -2px; } /* D-1010-159 / r7-08-4 */
+}
+
+/* Onboarding: "Remember this site" (opt-in) and the name asked after the stop. */
+.remember { display: flex; align-items: center; gap: var(--sp-2); margin-block: var(--sp-2); font-size: var(--t-micro); color: var(--text-muted); cursor: pointer; }
+.remember[hidden], .done-name[hidden] { display: none; }
+.remember input { inline-size: 16px; block-size: 16px; }
+.done-name { display: flex; gap: var(--sp-2); margin-block: var(--sp-2); }
+.done-name input { flex: 1; min-inline-size: 0; }
+.buffer-row { margin-block: var(--sp-2); }
+.buffer-row[hidden] { display: none; }
+.buffer-row .fine { margin-block: var(--sp-1); }
+
+/* ── autopilot-1011 lane POP ───────────────────────────────────────────────
+   One filled button per screen, a note row of three controls, a done card that leads with Copy report, the tool list behind
+   one disclosure, and a way back from a tool. Logical properties only, so it mirrors in Arabic. */
+.state-banner[hidden] { display: none; }
+.state-banner.is-info { background: var(--surface-sunken); color: var(--text); }
+.tags[hidden] { display: none; }
+.note-row { display: flex; align-items: center; gap: var(--sp-2); }
+.note-row #note-text { flex: 1; min-inline-size: 0; }
+.note-row #note-add { flex: none; }
+.note-row { position: relative; }
+.note-slider { position: absolute; block-size: 4px; border-radius: 2px; background: var(--surface-sunken); cursor: pointer; touch-action: none; }
+.note-slider[hidden] { display: none; }
+.note-slider-thumb { position: absolute; inset-block: 0; border-radius: 2px; background: var(--text-muted, var(--border)); }
+.note-shot { justify-self: start; margin-block-start: var(--sp-1); }
+#copy-report { margin-block-start: var(--sp-2); min-block-size: 44px; }
+#copy-report[hidden], .done-clean[hidden] { display: none; }
+.done-clean { margin: var(--sp-2) 0 0; color: var(--ok); font-size: var(--t-small); }
+.done-more { margin-block-start: var(--sp-3); }
+.done-more > summary { cursor: pointer; color: var(--text-muted); font-size: var(--t-small); padding: var(--sp-1) 0; }
+.done-more[open] > summary { color: var(--text); }
+.tools-fold > summary { cursor: pointer; font-size: var(--t-small); color: var(--text-muted); padding: var(--sp-2) 0; }
+.tools-fold[open] > summary { color: var(--text); }
+.back-to-session { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); inline-size: 100%; min-block-size: 36px; padding: var(--sp-1) var(--sp-2); border: 0; border-radius: var(--r-md); background: var(--surface-sunken); color: var(--text); font: inherit; font-size: var(--t-small); cursor: pointer; }
+.back-to-session:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.back-to-session .back-timer { font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.back-to-session .back-timer[hidden] { display: none; }
+
+/* Rule 5: the Keep row under More on the finished-session card. */
+.keep-row { display: flex; gap: var(--sp-2); align-items: center; margin-block: var(--sp-2); }
+
+/* ── lane A, 15 Oct 2026 ─────────────────────────────────────────────────── */
+
+/* Break a request: a view of its own with a way back. The Tools list is hidden while it is open (narrow and medium), so
+   nothing is squeezed to 12px any more; Back, Escape and the row all close it (tool-rows.js setBreakPanel). */
+.panel-head { display: flex; align-items: center; gap: var(--sp-2); margin-block-end: var(--sp-2); }
+.panel-head strong { font-family: var(--display); font-size: var(--t-head); font-weight: var(--weight-head); }
+.panel-back {
+  display: inline-flex; align-items: center; gap: var(--sp-2); min-block-size: 36px; padding-inline: var(--sp-2);
+  border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface); color: var(--text);
+  font: inherit; font-size: var(--t-small); cursor: pointer;
+}
+.panel-back:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.panel-back [data-icon] { display: inline-grid; inline-size: 16px; block-size: 16px; }
+@container app (width < 720px) {
+  .app:has(#break-panel:not([hidden])) .tools { display: none; }
+  .app:has(#break-panel:not([hidden])) .work { grid-row: 4; flex: 1 1 auto; max-block-size: none; overflow-y: auto; }
+}
+
+/* The note row is one row: the field, the Note split button (Note + type chevron), and the screenshot icon. */
+.note-split { display: inline-flex; flex: none; }
+.note-split #note-add { border-start-end-radius: 0; border-end-end-radius: 0; padding-inline: var(--sp-3); }
+.note-split #note-type, .note-row .note-shot {
+  block-size: 44px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-muted);
+}
+.note-split #note-type { border-inline-start: 0; border-start-start-radius: 0; border-end-start-radius: 0; inline-size: 30px; }
+.note-row .note-shot { inline-size: 44px; }
+.note-row .note-shot.is-done { color: var(--ok); border-color: var(--ok); }
+
+/* While a session records: the session line is one line, and the room goes to the Tools list. */
+#step-live:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-2); row-gap: var(--sp-2); }
+#step-live > * { flex: 1 1 100%; min-inline-size: 0; }
+#step-live > .live { flex: 0 1 auto; font-size: var(--t-body); }
+#step-live > .live strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#step-live > .meta { flex: 1 1 0; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* The notes and bugs are in the report; the panel shows the count (in the line above), never the list. */
+html[data-surface='panel'] .work-live { display: none !important; }
+/* e1022: the panel's session line is the test title only; time, events and problems stay in the header chip and the report. */
+html[data-surface='panel'] #step-live > .meta { display: none; }
+/* e1022: the last three actions as status lines (green saved, red failed), with a round count of all of them on the box. popup/action-stack.js */
+.action-stack { position: relative; margin-block-start: var(--sp-3); padding: var(--sp-2); border: 1px solid var(--border); border-radius: var(--r-md, 8px); }
+.action-stack ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-1); }
+.action-stack li { padding: var(--sp-1) var(--sp-2); border-radius: 6px; font-size: var(--t-small); overflow-wrap: anywhere; }
+.action-stack li.is-ok { background: var(--ok-soft); color: var(--text); border-inline-start: 3px solid var(--ok); }
+.action-stack li.is-err { background: var(--fail-soft); color: var(--fail-ink); border-inline-start: 3px solid var(--fail); }
+.action-badge { position: absolute; inset-block-start: -9px; inset-inline-end: -7px; min-inline-size: 20px; block-size: 20px; padding-inline: 5px; box-sizing: border-box; border-radius: 10px; background: var(--fail); color: #fff; font: 700 11px/20px var(--font); text-align: center; font-variant-numeric: tabular-nums; }
+
+/* The tool panel shows no paragraph: what it does, why, its technique and principle sit behind this one disclosure. */
+.tool-about { margin-block: var(--sp-2); }
+.tool-about > summary { cursor: pointer; padding: var(--sp-1) 0; color: var(--text-muted); font-size: var(--t-small); }
+.tool-about[open] > summary { color: var(--text); }
+
+/* The finished card and the tools are ONE column that scrolls together (ui-1016 H2). Two scrollers stacked in a fixed-height popup cut the
+   first finding line under the first tool row; here nothing is cut at a seam, the card is simply followed by the tools. Wide keeps its rail. */
+@container app (width < 720px) {
+  .app:has(#step-done:not([hidden])) .app-body { display: block; grid-row: 2 / 5; min-block-size: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .app:has(#step-done:not([hidden])) section.session { max-block-size: none; overflow: visible; }
+  .app:has(#step-done:not([hidden])) .tools { overflow: visible; padding-block-end: var(--sp-3); }
+  .app:has(#step-done:not([hidden])) .tools-body { overflow: visible; }
+}
+
+/* cap1022, dynamic since 1116: in the side panel the tools are as tall as what they hold (the favourites, the open list) and stop at 60% of
+   the room between the header and the strip; the session (title, status, notes) has everything else. A folded list with no favourites used
+   to hold its 60% empty while the session scrolled in the other 40%. The island toolbar is not this page. */
+@container app (width < 440px) {
+  html[data-surface='panel'] .app-grid { grid-template-rows: var(--header-h) minmax(0, 1fr) auto auto auto; }
+  html[data-surface='panel'] .app section.session { max-block-size: none; }
+  html[data-surface='panel'] .app .tools-body { padding-inline: var(--sp-3); }
+}
+@container app (440px <= width < 720px) {
+  html[data-surface='panel'] .app section.session { flex: 2 1 0; }
+  html[data-surface='panel'] .app .tools { flex: 0 1 auto; }
+  html[data-surface='panel'] .tools-head { padding-inline: 0; }
+}
+@container app (width < 720px) {
+  /* Not on the finished card: there the card and the tools are one scroller (ui-1016 H2). Break a request sits in the tools' row, so it has the same cap. */
+  html[data-surface='panel'] .app:not(:has(#step-done:not([hidden]))) .tools,
+  html[data-surface='panel'] .app:has(#break-panel:not([hidden])) .work { max-block-size: calc((100vh - var(--header-h) - var(--strip-h)) * 0.6); }
+  /* 1116: one gutter. «Tools», the group labels and the rows all start on the session cards' line (12px narrow, 16px medium);
+     the rows sat 4px outside it and the labels 4px inside. The two width blocks above set the row and heading insets. */
+  html[data-surface='panel'] .fav-head, html[data-surface='panel'] .app .activity-head { padding-inline: 0; }
+}

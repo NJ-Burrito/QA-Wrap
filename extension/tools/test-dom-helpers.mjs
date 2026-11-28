@@ -12,6 +12,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { escHtml } from '../core/docshell.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(EXT, f), 'utf8');
@@ -58,7 +59,7 @@ ok(order('devtools/panel.html', 'src="panel.js"'), 'devtools panel loads dom.js 
 ok(order('options/options.html', 'src="options.js"'), 'options loads dom.js before options.js');
 ok(order('tutorials/tutorials.html', 'src="tutorials.js"'), 'tutorials loads dom.js before tutorials.js');
 for (const f of ['popup/popup.js', 'report/report.js', 'devtools/panel.js', 'devtools/audit.js']) {
-  ok(!/^\s*function el\(/m.test(read(f)) && /const \{ el \} = window\.UQADom/.test(read(f)), `${f} takes el from UQADom`);
+  ok(!/^\s*function el\(/m.test(surfaceSource(f)) && /const \{ el \} = window\.UQADom/.test(surfaceSource(f)), `${f} takes el from UQADom`);
 }
 for (const f of ['report/filing.js', 'options/integrations.js']) {
   ok(/const \{ esc \} = window\.UQADom/.test(read(f)), `${f} takes esc from UQADom`);

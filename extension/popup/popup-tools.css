@@ -1,0 +1,711 @@
+/* QA Wrap — split from popup.css: loaded right after it, same cascade order. */
+/* Only the name stretches. This used to be `.tool span`, which caught the icon
+   and the used-mark too and stretched a 14px circle into a wide green ellipse
+   while squeezing the label to "Check acc…". */
+.tool > span { flex: none; }
+.tool .tool-text { flex: 1; }
+.tool:hover { border-inline-start-color: var(--accent); background: var(--surface-sunken); }
+.tool[aria-pressed='true'] { border-inline-start-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.tool[aria-expanded='true'] { border-inline-start-color: var(--accent); }
+
+.tool kbd {
+  font: var(--t-micro)/1 var(--mono);
+  color: var(--text-muted);
+  border: 0;
+  background: none;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* ───────────────────────────────────────────────────── inline option panes */
+
+.opts {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-2h);
+  margin-bottom: var(--sp-3);
+  border-inline-start: 1px solid var(--border);
+  background: var(--surface-sunken);
+  border-start-start-radius: 0;
+  border-start-end-radius: var(--r-md);
+  border-end-end-radius: var(--r-md);
+  border-end-start-radius: 0;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+}
+
+.check { display: flex; align-items: center; gap: var(--sp-2); cursor: pointer; }
+.field { display: grid; gap: var(--sp-1); }
+.field > span { font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: var(--lead-micro); color: var(--text-muted); }
+
+/* ─────────────────────────────────────────────────────────────── footer */
+
+
+
+.status { unicode-bidi: plaintext; font-size: var(--t-small); font-weight: var(--weight-small); letter-spacing: var(--track-small); line-height: var(--lead-small); color: var(--text-muted); min-height: 1em; }
+.status.err { color: var(--danger); }
+.status.ok { color: var(--ok); }
+/* No empty reservation: with nothing to say the line leaves the flow (a flex item still costs its gap), stays in the accessibility tree
+   so the live region is there when the next message lands, and takes its space only while it has words (1014 B1, bug 2). */
+.app .session > .status:empty { position: absolute; inline-size: 1px; block-size: 1px; min-block-size: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+
+.links { display: flex; gap: var(--sp-3h); }
+
+.link {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: var(--lead-small);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.link:hover { text-decoration: underline; }
+
+.tagline {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: 0.06em;
+  /* `--text-muted` is already the quiet end of the ramp and is tuned to pass
+     against the surfaces. Multiplying it by 0.75 took a 10px monospace line
+     below AA — the smallest type in the popup, dimmed hardest. The colour does
+     the quietening; the opacity only removed the contrast. */
+  color: var(--text-muted);
+}
+
+/* Shown only when the loaded worker does not match the extension on disk. */
+.stale-bar {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-2h) var(--sp-3);
+  margin: 0 -14px var(--sp-3);
+  background: var(--warn-soft);
+  border-bottom: 2px solid var(--warn);
+  font-size: var(--t-small);
+  font-weight: var(--weight-small);
+  letter-spacing: var(--track-small);
+  line-height: 1.45;
+}
+
+.stale-bar strong { color: var(--warn); }
+
+/* ══════════════════════════════════════════ the test process, drawn ══ */
+/*
+   Everything in this block exists to answer one question the popup could not
+   answer before: what have I actually done on this run? It answers it three
+   times over, at two distances — a pip row per activity and a mark on each tool. That repetition is
+   deliberate; a tester glancing at a popup is not reading it.
+
+   Nothing here carries meaning by colour alone. Every state also changes shape
+   or weight, so it survives a high-contrast mode, a colour-blind reader and a
+   printed screenshot.
+*/
+
+/* ── an activity group ───────────────────────────────────────────────── */
+
+.activity { display: grid; margin-bottom: var(--sp-2h); }
+
+.activity-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-1);
+  padding: 0 2px;
+  font-size: var(--t-micro);
+  font-weight: 700;
+  line-height: var(--lead-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* The step number, because the activities are a sequence and the order is
+   information the tester is meant to read. */
+.activity-n {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  font-size: var(--t-micro);
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.activity.is-touched .activity-n {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.activity.is-touched .activity-label { color: var(--text); }
+
+.activity-label { flex: 1; }
+
+.activity-meter { display: flex; gap: 2px; flex: none; }
+.activity-meter i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.activity-meter i.on { background: var(--accent); }
+
+/* The group's one-line description used to sit under every heading — eleven
+   sentences of explanation before a single tool. Each tool still explains
+   itself behind its own ?; the group needs only its name. */
+.activity-what { display: none; }
+
+/* ── a tool row ──────────────────────────────────────────────────────── */
+
+.tool-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+}
+.tool:hover .tool-icon,
+.tool[aria-pressed='true'] .tool-icon { color: var(--text); }
+
+/* The name and the one line under it, as a column.
+
+   The card used to be a row of nouns and nothing else: eighteen names, each a
+   ⓘ press away from the sentence that says what it is for, and that is a press
+   nobody makes about a tool they have not yet decided to use. The line is on
+   the card now. It wraps to at most two lines and then clips, so a long
+   sentence cannot push a card to four times its height. */
+.tool-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* A tool's name is never cut short: it wraps inside its column instead of
+   eliding. Arabic names run about half again as wide as the English ones, so
+   at the rail's narrowest a longer one takes a second line and the row grows
+   (min-block-size, not a fixed height). See tools/i18n-shots.mjs. */
+.tool-name { min-inline-size: 0; }
+.tool-one {
+  font-size: var(--t-micro);
+  font-weight: 400;
+  letter-spacing: var(--track-micro);
+  line-height: 1.35;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tool-row.is-unavailable .tool-one { opacity: 0.7; }
+/* One more line in Arabic: Arabic type measured about half again as wide per
+   character at 11px, so the same sentence wraps to three. Keyed on the
+   language and not on the direction, because this is about the script rather
+   than about which way it runs. See tools/i18n-shots.mjs. */
+:root[lang='ar'] .tool-one { -webkit-line-clamp: 3; }
+
+/* The one thing on the status line that is a control, and the ring it puts
+   round whatever it is sending the tester to.
+
+   E2: an error that names a problem and offers no way to it is a dead end. The
+   button appears only with the message it belongs to and goes when that
+   message does, so there is never a fix on screen for a problem that has been
+   fixed. */
+.status-fix {
+  display: inline-block;
+  margin-inline-start: var(--sp-half);
+  padding: 2px var(--sp-2);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--t-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+  cursor: pointer;
+}
+.status-fix:hover { background: var(--surface-sunken); }
+.is-spotlit {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+  border-radius: var(--r-md);
+  /* M04 (2026-09-17), Nader decision 120: shortened, not replaced — was
+     effectively 1.4 breathe cycles cleared late by JS; now one pass on the
+     slow duration, cleared right after it finishes. */
+  animation: qaw-spotlight var(--motion-slow) var(--motion-ease) 1;
+}
+@keyframes qaw-spotlight {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  20%, 60% { box-shadow: 0 0 0 5px var(--accent-soft); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-spotlit { animation: none; }
+}
+
+/*
+   Used, or not used, on THIS run.
+
+   An empty ring reads as "nothing here yet" at a glance without needing a
+   legend; a filled disc with a tick reads as done. The count only appears from
+   the second use, because "1" beside a tick is noise.
+*/
+.tool-state {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+  font: 600 var(--t-micro)/1 var(--mono);
+  color: transparent;
+  
+}
+
+.tool-state[data-used='true'] {
+  border-color: var(--pass);
+  background: var(--pass);
+  color: var(--n-0);
+}
+
+/* The tick, drawn rather than typed, so it sits on the same pixel grid as the
+   icons and does not depend on a font having a glyph for it. */
+.tool-state[data-used='true']:empty::after {
+  content: '';
+  width: 6px;
+  height: 3px;
+  border: 1.5px solid var(--n-0);
+  border-top: 0;
+  border-right: 0;
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+.tool-row.is-used .tool-name { color: var(--text); }
+
+/* The disclosure for a tool that has options of its own. */
+.tool-more {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--t-body);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--track-body);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform var(--dur-tap) var(--ease);
+}
+.tool-more:hover { border-color: var(--accent); color: var(--accent-ink); }
+/* Rotating the whole control was right when it was a bare chevron. It now
+   carries a word, and rotating that renders "Scope" as "ǝdoɔS" — which is
+   exactly what it did. Only the caret turns. */
+.tool-more[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Three controls on the right now, not two. */
+.tool-row { grid-template-columns: 1fr auto auto; }
+.tool-row:not(:has(.tool-more)) { grid-template-columns: 1fr auto; }
+.tool-row .tool-help,
+.tool-row .opts-tool { grid-column: 1 / -1; }
+
+/* ── what the syllabus calls it ──────────────────────────────────────── */
+
+.tool-istqb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  margin-top: var(--sp-2) !important;
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--border);
+}
+
+.tool-technique,
+.tool-type {
+  padding: 2px var(--sp-2);
+  border-radius: var(--r-pill);
+  font-size: var(--t-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  line-height: var(--lead-micro);
+}
+.tool-technique { background: var(--accent-soft); color: var(--accent-ink); }
+.tool-type { border: 1px solid var(--border-strong); color: var(--text-muted); }
+
+.tool-principle {
+  margin-top: var(--sp-1) !important;
+  font-size: var(--t-micro) !important;
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1.45;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── options that belong to one tool ─────────────────────────────────── */
+
+.opts-tool {
+  margin: 0 0 var(--sp-2);
+  border-inline-start-color: var(--border);
+}
+
+.opts-head {
+  margin: 0;
+  font-size: var(--t-micro);
+  font-weight: 700;
+  line-height: var(--lead-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.chip-icon { display: grid; place-items: center; }
+
+/* A recording in progress is the one state that gets the full glow, because it
+   is the one state where being wrong about it matters most. */
+.tool.is-recording { box-shadow: var(--ring-live); border-radius: var(--r-sm); }
+
+/* ── choosing a scope ─────────────────────────────────────────────────── */
+/*
+   Two cards with a small drawing each, rather than two words in a dropdown.
+   "Visible part" and "Whole page" are the same length and mean very different
+   things; the drawing is what makes the difference land before the label does.
+*/
+
+.scope { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+
+.scope-opt {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-2) var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow var(--dur-tap) var(--ease);
+}
+
+.scope-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.scope-art { color: var(--text-muted); line-height: 0; }
+.scope-opt b { font-size: var(--t-small); font-weight: 600; letter-spacing: var(--track-small); line-height: var(--lead-small); }
+.scope-opt em { font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: 1.35; color: var(--text-muted); }
+
+.scope-opt:hover { border-color: var(--border-strong); }
+
+.scope-opt:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: var(--ring-quiet);
+}
+.scope-opt:has(input:checked) .scope-art,
+.scope-opt:has(input:checked) b { color: var(--accent-ink); }
+
+/* Keyboard users get the same ring the rest of the popup uses. */
+.scope-opt:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ── designed values, and sizes ───────────────────────────────────────── */
+/*
+   Valid and invalid classes are separated by colour AND by a rail on the left,
+   because the distinction is the technique: several valid partitions can share
+   one test, while each invalid one needs its own or the first rejection masks
+   the rest. A reader who cannot tell them apart at a glance has a list, not a
+   design.
+*/
+
+.part-list { display: grid; gap: var(--sp-1); margin: var(--sp-1) 0 var(--sp-2); }
+
+.part {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px var(--sp-2);
+  width: 100%;
+  padding: var(--sp-half) var(--sp-2) var(--sp-2);
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  
+}
+.part:hover { background: var(--surface-sunken); }
+.part b { font-size: var(--t-small); font-weight: 600; letter-spacing: var(--track-small); line-height: var(--lead-small); }
+.part em { grid-column: 1 / -1; font-style: normal; font-size: var(--t-micro); font-weight: var(--weight-micro); letter-spacing: var(--track-micro); line-height: 1.4; color: var(--text-muted); }
+
+.part-sample {
+  justify-self: end;
+  padding: 1px var(--sp-half);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font: var(--t-micro)/1.5 var(--mono);
+  color: var(--text-muted);
+  max-width: 46%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.part.is-valid { border-inline-start-color: var(--ok); }
+.part.is-invalid { border-inline-start-color: var(--danger); }
+/* Neither: the field declares no limit, so nobody knows which side this is on
+   — and pretending to know would be the whole failure this case reports. */
+.part.is-unknown { border-inline-start-color: var(--warn); border-inline-start-style: dashed; }
+.part.is-plain { border-inline-start-color: var(--accent); }
+
+.part.is-valid:hover { border-color: var(--ok); }
+.part.is-invalid:hover { border-color: var(--danger); }
+.part.is-plain:hover { border-color: var(--accent); }
+
+/* A tool this browser cannot run. Disabled and explained, never silently
+   broken — "chrome.offscreen is undefined" reads as a broken extension rather
+   than a platform limit. */
+/* Not `opacity: 0.5`. The row's own explanation of WHY the browser cannot run
+   this tool sits directly underneath, and halving the contrast of the name
+   above it is the one thing that makes that explanation harder to reach. */
+.tool-row.is-unavailable .tool { cursor: not-allowed; color: var(--text-muted); }
+.tool-row.is-unavailable .tool-name { text-decoration: line-through; text-decoration-thickness: 1px; }
+
+.tool-unavailable {
+  margin-top: var(--sp-2) !important;
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--border);
+  font-size: var(--t-micro) !important;
+  font-weight: var(--weight-micro);
+  letter-spacing: var(--track-micro);
+  line-height: 1.5;
+  color: var(--warn);
+}
+
+/* ══════════════════════════════ tools, as buttons that look like it ══ */
+/*
+   The problem this replaces: a tool was a borderless row of text with a hairline
+   under it, which reads as a table of contents rather than as something you can
+   press. Worse, the only things on the row that DID look pressable — the round
+   "?" and the chevron — were the two least important controls, so the eye went
+   to them first.
+
+   The fix is affordance, in the plain sense: the whole row is a raised surface
+   with an edge, it lifts on hover, and it moves when pressed. The secondary
+   controls are ghosted until you reach for them, so they stop competing with
+   the thing they belong to.
+
+   Every rule here is written last on purpose — it overrides the earlier
+   list-styled version rather than editing it in place, so the two treatments
+   can be compared by deleting this block.
+*/
+
+.tools { display: grid; gap: 0; margin-bottom: var(--sp-3); border-top: 0; }
+
+/* The card. Everything about a tool lives inside it, including its help panel
+   and its options — so opening either reads as the card growing, not as a
+   separate thing appearing underneath. */
+.tool-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0;
+  margin-bottom: var(--sp-half);
+  border: 1px solid var(--border-strong);
+  /* The rail carries the used/unused state, which is status and not a control —
+     so it never competes with the buttons for attention. */
+  border-inline-start: 3px solid transparent;
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  transition: transform var(--dur-tap) var(--ease);
+}
+
+/* Hover moves the edge, not the card. The row used to carry `--shadow-1` at
+   rest and swap to `--shadow-2` under the pointer, which on a list of a dozen
+   rows is a dozen drop shadows and one of them growing. The press still moves,
+   because a press is a thing the tester did. */
+.tool-row:hover { border-color: var(--accent); }
+.tool-row:has(.tool:active) { transform: translateY(1px); }
+.tool-row:has(.tool:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tool-row.is-used { border-inline-start-color: var(--ok); }
+.tool-row.is-open { border-color: var(--accent); }
+
+/* The primary target: the whole left side of the card, edge to edge. */
+.tool {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding-block: var(--sp-3);
+  padding-inline: var(--sp-3) var(--sp-1);
+  border: 0;
+  border-start-start-radius: var(--r-md);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-end-start-radius: var(--r-md);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-body);
+  font-weight: 600;
+  letter-spacing: var(--track-body);
+  text-align: start;
+  cursor: pointer;
+}
+.tool:focus-visible { outline: none; } /* the card takes the ring, not the button */
+.tool:hover { background: none; }
+.tool:disabled { cursor: not-allowed; }
+.is-managed:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.tool-icon { color: var(--accent-ink); opacity: 0.85; }
+.tool-row:hover .tool-icon { opacity: 1; }
+
+.tool-name { font-weight: 600; }
+
+/* A toggle that is ON is the loudest thing in the list, because it is the one
+   state where being wrong costs something. */
+.tool[aria-pressed='true'] {
+  color: var(--accent-ink);
+}
+.tool-row:has(.tool[aria-pressed='true']) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.tool-row:has(.tool.is-recording) {
+  border-color: var(--live);
+  background: var(--accent-soft);
+  box-shadow: var(--ring-live);
+}
+.tool.is-recording { color: var(--live); }
+
+/* Status, not a control: no border, no button shape, just a mark. */
+.tool-state {
+  width: 15px;
+  height: 15px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  box-shadow: none;
+  color: var(--text-muted);
+  font: 600 var(--t-micro)/1 var(--mono);
+}
+.tool-state[data-used='false'] { background: none; box-shadow: none; }
+.tool-state[data-used='false']::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.tool-state[data-used='true'] { background: var(--ok); color: var(--n-0); box-shadow: none; }
+
+/* Secondary controls: present, findable, and quiet until reached for. */
+.tool-info,
+.tool-more {
+  width: 26px;
+  height: 26px;
+  margin: 0 var(--sp-1);
+  border: 0;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--text-muted);
+  /* Visible enough to be discovered at rest, quiet enough not to compete with
+     the tool it belongs to. At 0.55 it read as decoration. */
+  opacity: 0.72;
+  transition: opacity var(--dur-tap) var(--ease);
+}
+.tool-row:hover .tool-info,
+.tool-row:hover .tool-more { opacity: 1; }
+.tool-info:hover,
+.tool-more:hover { background: var(--surface-sunken); color: var(--accent-ink); border-color: transparent; }
+.tool-info[aria-expanded='true'] {
+  opacity: 1;
+  background: var(--accent);
+  color: var(--n-0);
+}
+.tool-more[aria-expanded='true'] { opacity: 1; color: var(--accent-ink); background: var(--surface-sunken); }
+.tool-info:focus-visible,
+.tool-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* The shortcut belongs to the tool but is not part of the sentence, so it sits
+   apart rather than inline with the name. */
+.tool kbd {
+  padding: 2px var(--sp-half);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font: 500 var(--t-micro)/1.4 var(--mono);
+  color: var(--text-muted);
+}
+
+/* The help and the options grow the card rather than appearing beneath it. */
+.tool-row .tool-help,
+.tool-row .opts-tool {
+  grid-column: 1 / -1;
+  margin: 0;
+  border-top: 1px solid var(--border);
+  border-inline-start: 0;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  box-shadow: none;
+}
+.tool-row .tool-help { padding: var(--sp-3); background: var(--surface-sunken); }
+.tool-row .opts-tool { padding: var(--sp-3); background: var(--surface-sunken); }
+
+/*
+ * Asleep: unmistakably not available, and still fully readable.
+ *
+ * `opacity: 0.72` on the row multiplied every colour inside it — including the
+ * tool names and the one-line explanations — and dropped the whole list to
+ * between 2.5:1 and 4.0:1. That fails AA for body text, and it fails it for the
+ * one screen a new tester spends longest on: reading about the tools is
+ * precisely what somebody does BEFORE deciding to wake the extension, so the
+ * state that most needs to be legible was the state that was dimmed.
+ *
+ * The affordance is carried by the border and the ground instead. A dashed
+ * edge and a sunken, unlit surface say "not yet" without touching a single
+ * character's contrast, and the stripe down the left says which switch turns it
+ * on. Text stays at full opacity, explicitly, so a future rule cannot inherit
+ * a dimming from an ancestor.
+ */
+body[data-awake='false'] .tool-row {
+  border-style: dashed;
+  border-color: var(--border);
+  background: var(--surface-sunken);
+  box-shadow: none;
+}
+body[data-awake='false'] .tool-row > * { opacity: 1; }
+body[data-awake='false'] .tool-row .tool-icon { opacity: 0.55; }
+body[data-awake='false'] .tool-row:hover { border-color: var(--border-strong); box-shadow: none; }
+
+/*
+ * A tool this browser cannot run: plainly not available, and still readable.
+ *
+ * The same fault as the asleep state above — `opacity: 0.6` on the row dimmed
+ * the tool's name and its explanation along with everything else, and the
+ * explanation is the whole point: it is what tells the tester why the row is
+ * greyed and what to do instead. The edge and the ground carry it now.
+ */
+.tool-row.is-unavailable {
+  border-style: dashed;
+  background: var(--surface-sunken);
+}
+.tool-row.is-unavailable:hover { border-color: var(--border-strong); box-shadow: var(--shadow-1); }
+
+/* Activity headings get room, since the cards below them now carry weight. */
+.activity { margin-bottom: var(--sp-4); }
+.activity-head { margin-bottom: var(--sp-1); padding: 0; }
+.activity-what { margin-bottom: var(--sp-2); padding: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-row { transition: none; }
+  .tool-row:has(.tool:active) { transform: none; }
+}

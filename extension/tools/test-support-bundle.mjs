@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { buildBundle } from '../core/support-bundle.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 let passed = 0; const failures = [];
 const test = (name, fn) => { try { fn(); passed++; console.log(`  ok  ${name}`); } catch (e) { failures.push(name); console.log(`  FAIL  ${name}\n        ${e.message}`); } };
@@ -66,7 +67,7 @@ test('T-063: the worker writes both rows (boot time at the end of boot, a tick a
   assert.match(sw, /const next = await resetSettings\(\);\n\s+await chrome\.storage\.local\.remove\(resetLocalKeys\(\)\)/);
 });
 test('options builds it from local reads only: no fetch, no XHR, no sendBeacon', () => {
-  const s = fs.readFileSync(new URL('../options/options.js', import.meta.url), 'utf8');
+  const s = surfaceSource('options/options.js');
   const block = s.slice(s.indexOf("$('bundle-open')"), s.indexOf("$('bundle-close')"));
   assert.ok(block.length > 300);
   assert.doesNotMatch(block, /fetch\(|XMLHttpRequest|sendBeacon|WebSocket/);
@@ -80,7 +81,7 @@ test('options builds it from local reads only: no fetch, no XHR, no sendBeacon',
   const os = await import('node:os');
   const path = await import('node:path');
   const { RING_KEY } = await import('../core/on.js');
-  const src = fs.readFileSync(new URL('../popup/popup.js', import.meta.url), 'utf8');
+  const src = surfaceSource('popup/popup.js');
   const a = src.indexOf('const MAIL_MAX'), b = src.indexOf('/* T-019: accepting happens on the welcome tab', a);
   assert.ok(a > 0 && b > a, 'paintMailLink is not where this test cuts it');
   const base = pathToFileURL(path.resolve(fileURLToPath(import.meta.url), '..', '..')).href;

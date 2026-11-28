@@ -24,6 +24,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXT = path.resolve(HERE, '..');
@@ -680,7 +681,7 @@ test('no bare font-size px without a scale-exception marker, on the converted sh
   for (const rel_ of SCALED_SHEETS) {
     const full = path.join(EXT, rel_.replace(/\//g, path.sep));
     if (!fs.existsSync(full)) continue;
-    const text = fs.readFileSync(full, 'utf8');
+    const text = surfaceSource(rel_);
     for (const [i, line] of text.split('\n').entries()) {
       // 10–19.x px only, same as research/89's own sweep for R09: the small
       // steps the type scale actually ties over. A display heading at 22px,
@@ -876,7 +877,7 @@ test('r3-08-1: each state that is only a colour has exactly one forced-colors ru
     ],
   };
   for (const [file, rules] of Object.entries(want)) {
-    const blocks = forcedBlocks(fs.readFileSync(path.join(EXT, file), 'utf8')).join('\n');
+    const blocks = forcedBlocks(surfaceSource(file)).join('\n');
     for (const [selector, ...needles] of rules) {
       const hits = [...blocks.matchAll(/(^|\n)\s*([^{}\n]+)\{([^}]*)\}/g)].filter((m) => m[2].trim() === selector);
       assert.equal(hits.length, 1, `${file}: ${hits.length} forced-colors rules for ${selector}, want exactly 1`);

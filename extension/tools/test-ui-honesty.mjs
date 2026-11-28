@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import { filingState } from '../ui/outcome.js';
 import { erasedText, erasedSays } from '../core/store-registry.js';
 import { describeFootprint } from '../core/sessions.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const rd = (p) => fs.readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 const en = JSON.parse(rd('platform/i18n/en.json'));
@@ -14,7 +15,7 @@ const test = (name, fn) => { fn(); n++; console.log(`  ok  ${name}`); };
 const tr = (dict) => (k, v = {}) => (dict[k] ?? `MISSING:${k}`).replace(/\{(\w+)\}/g, (_, x) => v[x]);
 
 test('T-016 a failed save keeps the patch and shows the error with retry', () => {
-  const js = rd('options/options.js');
+  const js = surfaceSource('options/options.js');
   assert.match(js, /else \{[^}]*pending = mergeDeep\(body, pending\);\s*saveFailed\([^;]*res\.error\);/s);
   assert.match(js, /retry\.addEventListener\('click'/);
   // behaviour: replay the commit logic against a rejecting send
@@ -39,14 +40,14 @@ for (const [lang, dict] of [['en', en], ['ar', ar]]) {
   });
 }
 test('T-017/T-054 both Reset buttons and Erase read the registry, not a hand list', () => {
-  const js = rd('options/options.js');
+  const js = surfaceSource('options/options.js');
   assert.equal((js.match(/erasedText\(t, 'reset'\)/g) || []).length, 2);
   assert.match(js, /erasedText\(t, 'eraseAll'\)/);
   assert.match(js, /erasedText\(t, 'eraseAll', \{ gone: true \}\)/);
   assert.ok(!/resetConfirmText|RESET_ERASES/.test(js));
 });
 test('T-054 the footprint line the options page paints says total, oldest and the 80 percent warning in both languages', () => {
-  const js = rd('options/options.js');
+  const js = surfaceSource('options/options.js');
   assert.match(js, /describeFootprint\(res\.result, t\)/, 'the page paints the worker answer through describeFootprint');
   const answer = { sessions: 2, mb: 1.5, oldest: Date.UTC(2026, 8, 1), bytes: 1572864, totalBytes: 90 * 1048576, quotaWarn: true };
   for (const dict of [en, ar]) {
@@ -77,7 +78,7 @@ test('T-018 welcome: no timer closes the tab; live confirmation and a close butt
 });
 
 test('T-019 consentedAt change repaints the popup out of the gated state', () => {
-  const js = rd('popup/popup.js');
+  const js = surfaceSource('popup/popup.js');
   const fn = js.match(/function onConsentChanged[\s\S]*?\n\}/)[0];
   assert.match(js, /chrome\.storage\.onChanged\.addListener\(onConsentChanged\)/);
   const seen = [];

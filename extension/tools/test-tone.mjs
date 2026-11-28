@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 const read = (f) => fs.readFileSync(f, 'utf8');
 let pass = 0, fail = 0;
 const ok = (c, n, d = '') => { if (c) pass++; else { fail++; console.log(`FAIL ${n} ${d}`); } };
@@ -27,17 +28,17 @@ for (const k of ['common.signal.tier.error', 'common.signal.tier.warning', 'comm
 
 // every row the pages colour by tier carries the chip
 for (const f of ['popup/popup.js', 'report/report.js', 'devtools/panel.js']) {
-  const s = read(f);
+  const s = surfaceSource(f);
   ok(/function sgRow[\s\S]{0,700}UQATone\.chip/.test(s), `${f}: signal rows carry the tone chip`);
 }
-ok(/isFailure\(ev\)[\s\S]{0,200}UQATone\.chip/.test(read('report/report.js')), 'report timeline problem rows carry the tone chip');
+ok(/isFailure\(ev\)[\s\S]{0,200}UQATone\.chip/.test(surfaceSource('report/report.js')), 'report timeline problem rows carry the tone chip');
 for (const f of ['popup/popup.html', 'report/report.html', 'devtools/panel.html']) {
   const s = read(f);
   ok(s.includes('ui/tone.css') && s.includes('ui/tone.js'), `${f} loads the tone module`);
 }
 // grep gate: no class that colours a problem row red is left without a glyph at its creation site
-ok(/\.ev\.tone-bad/.test(read('report/report.css')) && /isFailure\(ev\)[\s\S]{0,200}UQATone\.chip/.test(read('report/report.js')), 'gate: .ev.tone-bad rows have a glyph');
-ok(/has-problems/.test(read('popup/popup.css')) && /function paintTone[\s\S]{0,800}UQATone\.chip|T\.chip/.test(read('popup/popup.js')), 'gate: popup has-problems count has a glyph');
+ok(/\.ev\.tone-bad/.test(surfaceSource('report/report.css')) && /isFailure\(ev\)[\s\S]{0,200}UQATone\.chip/.test(surfaceSource('report/report.js')), 'gate: .ev.tone-bad rows have a glyph');
+ok(/has-problems/.test(surfaceSource('popup/popup.css')) && /function paintTone[\s\S]{0,800}UQATone\.chip|T\.chip/.test(surfaceSource('popup/popup.js')), 'gate: popup has-problems count has a glyph');
 
 // the bar chip
 const bar = read('content/bar.js'), css = read('content/overlay.css');
@@ -57,7 +58,7 @@ ok(/Errors'\}: \$\{t\.errors\}/.test(sw) || /'Errors'/.test(sw), 'badge title ca
 ok(/why === 'off' && timed && Date\.now\(\) - startedAt >= 5000/.test(sw), 'visual twin: sound off and job over 5 s');
 ok(/UQA_CUE: async[\s\S]{0,200}why === 'off'\) signalDone/.test(sw), 'visual twin: hidden-page cue with sound off');
 ok(/DONE_KEY in c && !c\[DONE_KEY\]\.newValue\) paintBadge/.test(sw), 'the mark clears when the popup acknowledges');
-ok(/uqa\.doneJob[\s\S]{0,200}popup\.done\.finishedAway/.test(read('popup/popup.js')) && en['popup.done.finishedAway'] && ar['popup.done.finishedAway'], 'popup says it once in the status line (role=status)');
+ok(/uqa\.doneJob[\s\S]{0,200}popup\.done\.finishedAway/.test(surfaceSource('popup/popup.js')) && en['popup.done.finishedAway'] && ar['popup.done.finishedAway'], 'popup says it once in the status line (role=status)');
 ok(/id="status" role="status"/.test(read('popup/popup.html')), 'popup status line is role=status');
 
 // behaviour of the worker pair, run for real: with sound off one job over 5 s leaves exactly one mark

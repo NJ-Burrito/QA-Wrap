@@ -47,6 +47,7 @@ import {
   refusedCredentialsMessage,
   resolveAuthMode,
 } from '../core/jira-auth.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -341,7 +342,7 @@ await test('the settings page offers all four values and no others', () => {
 });
 
 await test('the settings page reads the mode from the same module the client does', () => {
-  const js = fs.readFileSync(path.join(EXT, 'options/options.js'), 'utf8');
+  const js = surfaceSource('options/options.js');
   assert.match(js, /from '\.\.\/core\/jira-auth\.js'/, 'a second detector on the page would drift');
   assert.ok(!/atlassian\.net/.test(js), 'the host rule lives in core/jira-auth.js and nowhere else');
 });

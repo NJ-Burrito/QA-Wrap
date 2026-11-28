@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { surfaceSource } from './lib-src.mjs';
 globalThis.btoa ??= (s) => Buffer.from(s, 'binary').toString('base64');
 globalThis.atob ??= (s) => Buffer.from(s, 'base64').toString('binary');
 const { stampPng } = await import('../core/provenance-stamp.js');
@@ -50,10 +51,10 @@ assert.equal((await stampDocument({ content: '{broken' }, { format: 'json', hash
 assert.equal(await stampDocument(md, { format: 'markdown', hashes: {} }), md); ok('no hashes, nothing appended');
 assert.equal((await withSha256({ content: 'abc' })).sha256, createHash('sha256').update('abc').digest('hex')); ok('every text result names the SHA-256 of its bytes');
 assert.equal((await withSha256({ content: Buffer.from('abc').toString('base64'), encoding: 'base64' })).sha256, createHash('sha256').update('abc').digest('hex')); ok('a workbook or gzip result names the hash of the decoded bytes');
-const off = readFileSync(new URL('../offscreen/offscreen.js', import.meta.url), 'utf8');
+const off = surfaceSource('offscreen/offscreen.js');
 assert.match(off, /stampDocument\(out, \{ format: request\.format/); assert.match(off, /return withSha256\(out\)/); ok('the offscreen export door stamps before it compresses and hashes what it returns');
 // T-066: the Origin button in the report runs the same check on the stored bytes and says it in words, en and ar.
-const rep = readFileSync(new URL('../report/report.js', import.meta.url), 'utf8');
+const rep = surfaceSource('report/report.js');
 assert.match(rep, /import\('\.\.\/core\/integrity\.js'\)\)\.originCheck\(await got\.blob\.arrayBuffer\(\)\)/); assert.match(rep, /'content changed': 'report\.media\.contentChanged'/); ok('the report Origin button hashes the stored bytes with originCheck');
 const words = { en: JSON.parse(readFileSync(new URL('../platform/i18n/en.json', import.meta.url), 'utf8')), ar: JSON.parse(readFileSync(new URL('../platform/i18n/ar.json', import.meta.url), 'utf8')) };
 assert.match(words.en['report.media.contentChanged'], /content changed/); assert.match(words.ar['report.media.contentChanged'], /المحتوى تغير/);

@@ -19,6 +19,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -642,7 +643,7 @@ await test('the filing route names the screenshots, and the door reads them', as
   assert.match(filing, /sessionId: msg\.sessionId/, 'the tracker payload does not name the session to read evidence from');
   assert.match(filing, /attach: msg\.attach \?\? \{ screenshots: true \}/, 'the tracker payload does not ask for the screenshots');
 
-  const off = fs.readFileSync(path.join(EXT, 'offscreen', 'offscreen.js'), 'utf8');
+  const off = surfaceSource('offscreen/offscreen.js');
   assert.match(off, /async function sessionFiles\(sessionId, attach\)/, 'the shared evidence reader is gone');
   assert.match(
     off,

@@ -138,11 +138,11 @@ const CONFIRM_ALLOW = [
   "popup/popup.js :: confirm(t('popup.reload.confirmRecording'))",
   "report/istqb.js :: confirm(ask)",
   "report/istqb.js :: confirm(t('report.istqb.chatConfirm'))",
-  "report/report.js :: confirm(t('report.media.deleteConfirm', { label: iso(item.label) }))",
-  "report/report.js :: confirm(t('report.mm.confirm', { where }))",
-  "report/report.js :: confirm(t('report.mm.forgetConfirm'))",
-  "report/report.js :: confirm(t('report.trackers.confirm', { name: tr.label }))",
-  "report/report.js :: window.confirm(t('report.session.deleteConfirm', { name, count: events.length }))",
+  "report/report-media.js :: confirm(t('report.media.deleteConfirm', { label: iso(item.label) }))",
+  "report/report-boot.js :: confirm(t('report.mm.confirm', { where }))",
+  "report/report-boot.js :: confirm(t('report.mm.forgetConfirm'))",
+  "report/report-save.js :: confirm(t('report.trackers.confirm', { name: tr.label }))",
+  "report/report-boot.js :: window.confirm(t('report.session.deleteConfirm', { name, count: events.length }))",
 ];
 /** Every `confirm(...)` call in code (comments stripped), the whole call to its closing paren. */
 function confirmCalls(code) {

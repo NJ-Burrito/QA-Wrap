@@ -29,6 +29,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const rootArg = process.argv.indexOf('--root');
@@ -44,7 +45,7 @@ async function test(name, fn) {
 
 const media = read('background/media.js');
 const worker = workerSrc();
-const offscreen = read('offscreen/offscreen.js');
+const offscreen = surfaceSource('offscreen/offscreen.js');
 
 // The op string, taken from the sender. A rename anywhere else must not match it.
 const opMatch = media.match(/export const cookieFormatsOp\s*=\s*\(fn, args = \[\]\)\s*=>\s*offscreen\('([A-Z_]+)'/);

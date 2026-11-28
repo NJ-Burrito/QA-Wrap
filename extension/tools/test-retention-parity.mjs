@@ -7,6 +7,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { lift } from './lib-lift.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const sync = {}; const local = {};
 const area = (b) => ({ get: async (k) => (k === null ? { ...b } : { [k]: b[k] }), set: async (o) => Object.assign(b, o), remove: async (k) => { for (const x of [].concat(k)) delete b[x]; } });
@@ -32,11 +33,11 @@ await test('an upgraded profile that chose a value keeps that value', async () =
 });
 await test('the delete-session confirm names the count, in English and Arabic, and report.js passes it', () => {
   for (const f of ['en', 'ar']) assert.match(JSON.parse(read(`platform/i18n/${f}.json`))['report.session.deleteConfirm'], /\{count\}/, f);
-  assert.match(read('report/report.js'), /report\.session\.deleteConfirm', \{ name, count: events\.length \}/);
+  assert.match(surfaceSource('report/report.js'), /report\.session\.deleteConfirm', \{ name, count: events\.length \}/);
 });
 
 await test('the call site fills the confirm with the real event count (the argument object is evaluated, not grepped)', () => {
-  const m = read('report/report.js').match(/t\('report\.session\.deleteConfirm', (\{[^}]*\})\)/);
+  const m = surfaceSource('report/report.js').match(/t\('report\.session\.deleteConfirm', (\{[^}]*\})\)/);
   assert.ok(m, 'call site not found');
   const events = new Array(7).fill({});
   const vars = new Function('name', 'events', `return (${m[1]});`)('Checkout run', events);

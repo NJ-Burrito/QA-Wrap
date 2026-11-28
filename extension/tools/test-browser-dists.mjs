@@ -22,6 +22,7 @@ import { chromium } from 'playwright';
 import { DIST, EXT } from './lib-paths.mjs';
 import { TARGETS } from './targets.mjs';
 import { CAPABILITIES } from '../core/capabilities.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const SRC = JSON.parse(fs.readFileSync(path.join(EXT, 'manifest.json'), 'utf8'));
 const CHROMIUM = ['chrome', 'chrome-managed', 'edge', 'brave', 'opera', 'operagx', 'duckduckgo'];
@@ -228,7 +229,7 @@ await t('keyboard chords: every suggested key is Alt+Shift+letter, unique, none 
 });
 
 await t('popup is touch-sized and RTL-safe: hit-size token >= 44 px or a coarse-pointer rule, and logical properties', () => {
-  const css = fs.readFileSync(path.join(EXT, 'popup', 'popup.css'), 'utf8');
+  const css = surfaceSource('popup/popup.css');
   assert.ok(/--sz-hit:\s*(4[4-9]|[5-9]\d)px/.test(fs.readFileSync(path.join(EXT, 'ui', 'tokens.css'), 'utf8') + css + fs.readFileSync(path.join(EXT, 'ui', 'scale.css'), 'utf8')) || /pointer:\s*coarse/.test(css), 'hit target');
   assert.match(fs.readFileSync(path.join(EXT, 'popup', 'popup.html'), 'utf8'), /name="viewport"/);
 });

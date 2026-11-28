@@ -38,12 +38,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lift, liftAll } from './lib-lift.mjs';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXT = path.resolve(HERE, '..');
 const read = (p) => fs.readFileSync(path.join(EXT, p), 'utf8');
 
-const OFF = read('offscreen/offscreen.js');
+const OFF = surfaceSource('offscreen/offscreen.js');
 const DB = read('core/db.js');
 const WORKER = workerSrc();
 const HTML = read('offscreen/offscreen.html');
@@ -348,7 +349,7 @@ test('the offscreen document says what its cam element is now for', () => {
     assert.deepEqual(asked.map((o) => !!o?.companions), [true, false]);
   });
   test('both report lists that feed setMedia (and so webcamTrackOf) ask for companions', () => {
-    const REPORT = read('report/report.js');
+    const REPORT = surfaceSource('report/report.js');
     const feeds = REPORT.match(/send\(\{ type: 'UQA_MEDIA_LIST', sessionId(, companions: true)? \}\);\s*(\/\/[^\n]*\n\s*)?(if \(!res\.ok\) return;\s*)?setMedia\(/g) || [];
     assert.equal(feeds.length, 2, 'a setMedia caller was added or moved');
     for (const f of feeds) assert.ok(f.includes('companions: true'), `the report asks without companions: ${f.split('\n')[0]}`);

@@ -16,6 +16,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(EXT, f), 'utf8');
@@ -218,16 +219,16 @@ await test('timeline-md is also reachable from the bundle (the zip option): one 
 
 await test('both download options offer it: the popup Export row and the report Save sheet (which also feeds the zip), through the one UQA_EXPORT door', () => {
   assert.match(read('popup/popup.html'), /data-format="timeline-md"/);
-  assert.match(read('popup/popup.js'), /type: 'UQA_EXPORT', sessionId: target\.id, format: btn\.dataset\.format/);
-  assert.match(read('report/report.js'), /\['timeline-md', t\('seal\.part\.timelineMd'\)/);
-  assert.match(read('report/report.js'), /format: 'bundle', parts: formats/);
+  assert.match(surfaceSource('popup/popup.js'), /type: 'UQA_EXPORT', sessionId: target\.id, format: btn\.dataset\.format/);
+  assert.match(surfaceSource('report/report.js'), /\['timeline-md', t\('seal\.part\.timelineMd'\)/);
+  assert.match(surfaceSource('report/report.js'), /format: 'bundle', parts: formats/);
   assert.match(read('core/filing.js'), /'timeline-md': \{ category: 'sheet', ext: 'md'/);
 });
 
 await test('Verify file is on the Settings page and wired: file picker, result region, the verdict words exist in both languages', async () => {
   const html = read('options/options.html');
   for (const id of ['verify-pick', 'verify-file', 'verify-result', 'profile-picture-pick', 'profile-picture-file', 'profile-picture-remove', 'profile-picture-preview']) assert.ok(html.includes(`id="${id}"`), `${id} missing`);
-  assert.match(read('options/options.js'), /wireProfile\(\{ \$, t, save, getSettings/);
+  assert.match(surfaceSource('options/options.js'), /wireProfile\(\{ \$, t, save, getSettings/);
   const en = JSON.parse(read('platform/i18n/en.json'));
   const ar = JSON.parse(read('platform/i18n/ar.json'));
   const { verdictLines } = await import('../options/profile-ui.js');

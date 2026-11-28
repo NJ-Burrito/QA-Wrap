@@ -3,8 +3,9 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 const sw = workerSrc();
-const pj = fs.readFileSync('popup/popup.js', 'utf8');
+const pj = surfaceSource('popup/popup.js');
 const ph = fs.readFileSync('popup/popup.html', 'utf8');
 const loc = { en: JSON.parse(fs.readFileSync('platform/i18n/en.json', 'utf8')), ar: JSON.parse(fs.readFileSync('platform/i18n/ar.json', 'utf8')) };
 const keys = ['popup.record.diskWarn', 'common.worker.disk.title', 'common.worker.disk.body', 'common.worker.clip.failed', 'common.worker.clip.ramCap', 'common.worker.clip.gifFull', 'common.worker.clip.sharingStopped'];

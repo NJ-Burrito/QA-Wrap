@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { FORMATS, KEEP_FORMATS, isMoreFormat } from '../core/filing.js';
+import { surfaceSource } from './lib-src.mjs';
 
 let failed = 0;
 const test = (n, f) => { try { f(); console.log(`  ok  ${n}`); } catch (e) { failed++; console.log(`  FAIL ${n}\n       ${e.message}`); } };
@@ -19,7 +20,7 @@ test('every format in the raw-report picker is in the keep-list or under More, n
   for (const [, id] of sel.matchAll(/<option value="([^"]+)"/g)) assert.equal(inMore(id), isMoreFormat(id), id);
 });
 test('the Save sheet puts More unticked (source check)', () => {
-  const js = readFileSync(new URL('../report/report.js', import.meta.url), 'utf8');
+  const js = surfaceSource('report/report.js');
   assert.ok(js.includes("box.checked = g.id !== 'more'") && js.includes('isMoreFormat'));
 });
 console.log(`\n${5 - failed} passed, ${failed} failed`);

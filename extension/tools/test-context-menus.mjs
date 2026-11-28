@@ -31,6 +31,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8');
@@ -92,7 +93,7 @@ function entries(literal, keys) {
   return out;
 }
 
-const popup = read('popup/popup.js');
+const popup = surfaceSource('popup/popup.js');
 const menu = read('background/context-menus.js');
 const catalogue = JSON.parse(read('core/tool-catalogue.json'));
 

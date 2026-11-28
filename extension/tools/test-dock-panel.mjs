@@ -16,13 +16,14 @@ import path from 'node:path';
 import { EXT } from './lib-paths.mjs';
 import { workerSrc } from './lib-worker-src.mjs';
 import { launchPopupHarness } from './test-next-primary.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 let passed = 0;
 const failures = [];
 const check = (ok, name, detail = '') => { if (ok) { passed++; console.log(`  ok  ${name}`); } else { failures.push(name); console.log(`  FAIL  ${name}${detail ? `\n        ${detail}` : ''}`); } };
 
 /* Part 1: the source. */
-const js = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+const js = surfaceSource('popup/popup.js');
 const at = js.indexOf("$('dock')?.addEventListener('click'");
 const body = js.slice(at, js.indexOf("$('view-report')", at));
 check(at > 0 && /chrome\.sidePanel\.open\(\{ windowId \}\)/.test(body), 'the Dock button calls sidePanel.open with a window id');

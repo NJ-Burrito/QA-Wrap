@@ -15,6 +15,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { scanOutbound } from '../core/secret-scan-text.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(EXT, f), 'utf8');
@@ -100,7 +101,7 @@ await test('the vault card says the vault is unreadable (key pair), instead of a
       assert.equal(els['vault-mode'].textContent, unreadable ? cat['options.vault.unreadable'] : cat['options.vault.modeOff'], `${lang} ${unreadable}`);
     }
   }
-  const opt = read('options/options.js');
+  const opt = surfaceSource('options/options.js');
   assert.match(opt, /res\.code === 'VAULT_UNREADABLE' \? t\('options\.vault\.unreadable'\) : res\.error/, 'a refused credential save shows the translated refusal');
   assert.match(opt, /unreadable: \(\) => !!\/\*\* @type \{any\} \*\/ \(settings\)\.vaultUnreadable/);
 });

@@ -32,9 +32,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const js = fs.readFileSync(path.join(EXT, 'options/options.js'), 'utf8');
+const js = surfaceSource('options/options.js');
 const html = fs.readFileSync(path.join(EXT, 'options/options.html'), 'utf8');
 const settings = fs.readFileSync(path.join(EXT, 'platform/settings.js'), 'utf8');
 const read = (p) => fs.readFileSync(path.join(EXT, p), 'utf8');
@@ -172,7 +173,7 @@ test('D-1010-92: an invalid mask pattern is refused (never saved), keyed, and fl
   assert.equal(run('(bad', {}), false, 'a stored pattern that does not compile shows the error on load');
   assert.equal(saved.length, 1, 'without saving anything');
   assert.match(js, /if \(settings\.maskExtraPattern\) checkMaskPattern\(settings\.maskExtraPattern\)/, 'boot checks the stored value');
-  assert.match(read('popup/popup.js'), /function paintMaskNotice/, 'and the popup says why every field is masked');
+  assert.match(surfaceSource('popup/popup.js'), /function paintMaskNotice/, 'and the popup says why every field is masked');
 });
 
 test('D-1010-103: an erase whose stores failed shows the partial line and never the done or gone text', () => {

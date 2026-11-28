@@ -13,6 +13,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { surfaceSource } from './lib-src.mjs';
 
 globalThis.chrome = { runtime: { getURL: (p) => p, id: 'x' }, storage: { local: {}, session: {}, sync: {}, managed: {} } };
 const { cueOp } = await import('../background/media.js');
@@ -123,7 +124,7 @@ await test('the real caller: the worker wires the handler and the three finish c
 
 await test('the offscreen document plays it, and the justification says so', () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-  const off = fs.readFileSync(path.join(root, 'offscreen/offscreen.js'), 'utf8');
+  const off = surfaceSource('offscreen/offscreen.js');
   const html = fs.readFileSync(path.join(root, 'offscreen/offscreen.html'), 'utf8');
   const media = fs.readFileSync(path.join(root, 'background/media.js'), 'utf8');
   assert.match(off, /case 'UQA_OFF_CUE'/);

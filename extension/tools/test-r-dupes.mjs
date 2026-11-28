@@ -12,6 +12,7 @@ import { dupeKey, groupFailures, groupChains } from '../core/dupes.js';
 import { correlate } from '../core/correlate.js';
 import { buildMarkdown } from '../core/artifact-docs.js';
 import { SESSION, click, net, logline, fortyFiveHundreds, T0 } from './lib-r-fixture.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => fs.readFileSync(path.join(EXT, rel), 'utf8');
@@ -74,7 +75,7 @@ test('Markdown shows the group once with the count, and says the Raw JSON keeps 
 });
 
 test('the report draws the folded cards with the count and an expandable list of every occurrence', () => {
-  const js = read('report/report.js');
+  const js = surfaceSource('report/report.js');
   const bf = read('report/bugfirst.js');
   assert.match(js, /BF\.groups\(chains, shownEvents\(events\)\)/);
   assert.match(js, /BF\.occurrences\(/);

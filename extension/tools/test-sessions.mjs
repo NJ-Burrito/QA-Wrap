@@ -20,6 +20,7 @@ import {
 } from '../core/sessions.js';
 import { REGISTRY } from '../core/store-registry.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 let passed = 0;
 const failures = [];
@@ -444,7 +445,7 @@ test('the footprint line says whether the data is safe from eviction', () => {
     const popup = fs.readFileSync(new URL('../popup/guards.js', import.meta.url), 'utf8');
     assert.ok(popup.includes('/\\bOPR\\//') && popup.includes('/opera/i') && popup.includes('!isOpera'), 'popup/guards.js keeps the user-agent test, the brand test and the gate');
     for (const f of ['../options/options.js', '../background/worker-lifecycle.js', '../background/service-worker.js', '../background/handlers-session.js']) {
-      const src = fs.readFileSync(new URL(f, import.meta.url), 'utf8');
+      const src = surfaceSource(f);
       assert.match(src, /hasSidePanel[^;]*\} from '\.\.\/platform\/settings\.js'/, `${f} imports the shared predicate`);
       assert.doesNotMatch(src, /chrome\.sidePanel\?\.open/, `${f} no longer tests the bare API`);
     }

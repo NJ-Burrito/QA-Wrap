@@ -53,7 +53,8 @@ for (const file of pages) {
     assert.ok(csp, 'no meta CSP');
     assert.equal(csp[1], cspFor(h, rel));
     assert.ok(/<meta name="referrer" content="strict-origin-when-cross-origin">/.test(h), 'no referrer meta');
-    assert.ok(h.indexOf('Content-Security-Policy') < h.search(/<script/i), 'the CSP must precede every script');
+    const firstScript = h.search(/<script/i); // a page with no script at all (404.html) has nothing to precede
+    assert.ok(firstScript === -1 || h.indexOf('Content-Security-Policy') < firstScript, 'the CSP must precede every script');
     assert.ok(!/unsafe-eval|script-src[^;]*'unsafe-inline'/.test(csp[1]));
   });
 }

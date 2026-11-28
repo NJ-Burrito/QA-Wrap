@@ -14,6 +14,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildMarkdown } from '../core/artifact-docs.js';
 import { SESSION, click, net, logline } from './lib-r-fixture.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (rel) => fs.readFileSync(path.join(EXT, rel), 'utf8');
@@ -26,13 +27,13 @@ function test(name, fn) {
 console.log('\nbug-first report');
 
 test('with no #hash the report opens on «What broke», and it is the first tab of the first section', () => {
-  const js = read('report/report.js');
+  const js = surfaceSource('report/report.js');
   assert.match(js, /showTab\(TABS\.includes\(want\) \? want : bySection \? bySection\[1\]\[0\] : 'broke'\)/);
   assert.match(js, /\['findings', \['broke', /);
 });
 
 test('the verdict card has ONE primary action: Copy as Markdown; Copy for AI, the File menu and the rest are not primary', () => {
-  const js = read('report/report.js');
+  const js = surfaceSource('report/report.js');
   const bf = read('report/bugfirst.js');
   assert.match(bf, /make\('btn btn-primary', 'report\.v\.copyMarkdown'/);
   assert.match(bf, /make\('btn btn-secondary', 'report\.ai\.copy'/);

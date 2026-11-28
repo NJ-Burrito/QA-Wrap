@@ -20,9 +20,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lift } from './lib-lift.mjs';
 import { lockFrame, fitRect } from '../core/file-probe.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const OFF = fs.readFileSync(path.join(HERE, '..', 'offscreen', 'offscreen.js'), 'utf8');
+const OFF = surfaceSource('offscreen/offscreen.js');
 
 let passed = 0;
 const failures = [];
@@ -166,7 +167,7 @@ await test('the no-picture refusal has a code and a sentence in both languages',
   assert.match(OFF, /code: 'NO_PICTURE'/);
   assert.match(OFF, /\.\.\.\(err\?\.code \? \{ code: err\.code \} : \{\}\)/, 'the offscreen reply drops the code');
   assert.match(read('background/media.js'), /res\.code \? \{ code: res\.code \}/, 'media.js drops the code');
-  assert.match(read('popup/popup.js'), /NO_PICTURE: \{ key: 'popup\.refusal\.noPicture'/);
+  assert.match(surfaceSource('popup/popup.js'), /NO_PICTURE: \{ key: 'popup\.refusal\.noPicture'/);
   for (const lang of ['en', 'ar']) {
     const cat = JSON.parse(read(`platform/i18n/${lang}.json`));
     assert.ok(cat['popup.refusal.noPicture'], `${lang}: popup.refusal.noPicture missing`);
@@ -430,7 +431,7 @@ await test('the worker: a Stop with a start in flight cancels it, waits, answers
   const SW = fs.readFileSync(path.join(HERE, '..', 'background', 'service-worker.js'), 'utf8');
   assert.ok(SW.includes('if (state.recording || state.starting) {'), 'the shortcut starts a second clip while one is starting');
   for (const lang of ['en', 'ar']) assert.ok(JSON.parse(fs.readFileSync(path.join(HERE, '..', 'platform', 'i18n', `${lang}.json`), 'utf8'))['popup.refusal.recCancelled'], lang);
-  assert.ok(fs.readFileSync(path.join(HERE, '..', 'popup', 'popup.js'), 'utf8').includes("REC_CANCELLED: { key: 'popup.refusal.recCancelled'"));
+  assert.ok(surfaceSource('popup/popup.js').includes("REC_CANCELLED: { key: 'popup.refusal.recCancelled'"));
   assert.ok(OFF.includes(".replace(/\\.$/, '')}. ` +"), 'the store refusal doubles its full stop again');
 });
 

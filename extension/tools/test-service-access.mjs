@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let held = new Set();
@@ -75,7 +76,7 @@ await test('every connect/file path asks or checks: worker guard, report, option
   assert.match(sw, /hasServiceAccess\(service\)/);
   assert.match(sw, /UQA_JIRA_\(TEST\|PROJECTS/);
   assert.match(read('report/istqb.js'), /askServiceAccess\(\(await savedSettings\(\)\)\.jira\?\.baseUrl\)/);
-  const rep = read('report/report.js');
+  const rep = surfaceSource('report/report.js');
   assert.match(rep, /askServiceAccess\(tr\.url\)/);
   // Round 3: the File menu lives in report/filing.js; Jira, trackers and chat each ask before they send.
   const fil = read('report/filing.js');
@@ -91,7 +92,7 @@ await test('every connect/file path asks or checks: worker guard, report, option
 });
 
 await test('the settings page never writes a stored secret back into an input', () => {
-  const opt = fs.readFileSync(path.join(EXT, 'options/options.js'), 'utf8');
+  const opt = surfaceSource('options/options.js');
   assert.doesNotMatch(opt, /input\.value = settings\.jira\?\.\[f\] \|\| \(f/.source ? /a^/ : /a^/);
   assert.match(opt, /secretView\(input, settings\.jira\?\.token/);
   // Integrations screens: a secret input is drawn empty (its placeholder says "Saved ••••last4") and never carries value=.

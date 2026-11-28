@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { badgeFor, BADGE_DOT, BADGE } from '../background/action-icon.js';
 import * as remember from '../background/remember.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sw = workerSrc();
@@ -106,7 +107,7 @@ await test('the disk flag is dropped when the clip ends, and the badge repaints'
 console.log('one clock (P0-4)');
 
 await test('the card timer and the header chip both read state.session.startedAt through the one shipped fmtElapsed', () => {
-  const popup = fs.readFileSync(path.join(EXT, 'popup', 'popup.js'), 'utf8');
+  const popup = surfaceSource('popup/popup.js');
   assert.match(popup, /\$\('live-time'\)\.textContent = fmtElapsed\(state\.session\.startedAt\)/, 'the card');
   assert.match(popup, /paintChip\(true, state\.session\.startedAt\)/, 'the chip is fed the same record field');
   assert.match(popup, /const timer = \$\('chip-timer'\);\s*if \(timer\) timer\.textContent = fmtElapsed\(startedAt\)/, 'and prints it with the same function');

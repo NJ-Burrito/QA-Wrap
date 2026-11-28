@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (r) => fs.readFileSync(path.join(EXT, r), 'utf8');
@@ -118,8 +119,8 @@ await t('the worker seam and every last line are in the source', () => {
   assert.match(read('background/media.js'), /export async function trackerOp[\s\S]{0,260}assertPolicy\('integrations', trackerUrl\(tracker, cfg\)\)/, 'the offscreen door, with the host');
   assert.match(read('background/media.js'), /export async function jiraOp[\s\S]{0,160}assertPolicy\('integrations', \(await getSettings\(\)\)\.jira\?\.baseUrl\)/, 'the Jira door, with the host');
   // T-068 fault 4: the popup and the report disable what the organisation took away
-  assert.match(read('popup/popup.js'), /debuggerToolsAllowed === false\) for \(const b of document\.querySelectorAll\('\.tool-row\[data-tool="whitebox"\] button'\)\) \{ b\.disabled = true/);
-  const rep = read('report/report.js');
+  assert.match(surfaceSource('popup/popup.js'), /debuggerToolsAllowed === false\) for \(const b of document\.querySelectorAll\('\.tool-row\[data-tool="whitebox"\] button'\)\) \{ b\.disabled = true/);
+  const rep = surfaceSource('report/report.js');
   assert.match(rep, /managed\(btn, 'replayAllowed'\)/);
   assert.match(rep, /managed\(\$\(id\), 'integrationsAllowed'\)/);
   assert.match(read('background/notify.js'), /assertPolicy\('integrations', url\)/);
@@ -137,7 +138,7 @@ await t('the options panel lists every key, says default | managed | not reachab
   assert.equal(await managedStatus(() => new Promise(() => {}), 20), 'unreachable', 'a read that never answers');
   assert.match(read('options/options.html'), /id="policy-list"/);
   assert.match(read('options/options.html'), /id="policy-status"/);
-  assert.match(read('options/options.js'), /paintPolicy\(document, \{ \.\.\.DEFAULTS_POLICY, \.\.\.settings\.policy \}/);
+  assert.match(surfaceSource('options/options.js'), /paintPolicy\(document, \{ \.\.\.DEFAULTS_POLICY, \.\.\.settings\.policy \}/);
 });
 
 console.log(`\n${n} passed, 0 failed`);

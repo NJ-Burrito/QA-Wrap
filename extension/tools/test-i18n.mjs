@@ -40,6 +40,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TABLES = path.join(EXT, 'platform', 'i18n');
@@ -931,7 +932,7 @@ ok();
   const settingsSrc = fs.readFileSync(path.join(EXT, 'platform', 'settings.js'), 'utf8');
   if (!settingsSrc.includes("throw Object.assign(new Error('Unlock QA Wrap to change saved connections'), { code: 'VAULT_LOCKED' })")) bad('platform/settings.js', 'the locked-vault write must throw with code VAULT_LOCKED');
   for (const f of ['report/report.js', 'options/options.js']) {
-    if (!fs.readFileSync(path.join(EXT, f), 'utf8').includes("import('../platform/worker-errors.js')")) bad(f, 'must load platform/worker-errors.js lazily');
+    if (!surfaceSource(f).includes("import('../platform/worker-errors.js')")) bad(f, 'must load platform/worker-errors.js lazily');
   }
 }
 ok();
@@ -999,7 +1000,7 @@ ok();
   const sinkFiles = ['popup/popup.js', 'options/options.js', 'report/report.js', 'api/api.js', 'annotate/annotate.js', 'videoedit/videoedit.js'];
   let scannedSinks = 0;
   for (const f of sinkFiles) {
-    const lines = fs.readFileSync(path.join(EXT, f), 'utf8').split('\n');
+    const lines = surfaceSource(f).split('\n');
     lines.forEach((line, i) => {
       const code = line.trim();
       if (code.startsWith('*') || code.startsWith('//') || code.startsWith('/*')) return;
@@ -1027,7 +1028,7 @@ ok();
   if (chars(1000, '1,000') !== '1,000 حرف') bad('platform/i18n.js plural', `count 1000 with n "1,000" gave "${chars(1000, '1,000')}", wanted "1,000 حرف"`);
   if (chars(0, '0') !== 'لا أحرف') bad('platform/i18n.js plural', `count 0 gave "${chars(0, '0')}", wanted "لا أحرف"`);
   if (chars(1, '1') !== 'حرف واحد') bad('platform/i18n.js plural', `count 1 gave "${chars(1, '1')}"`);
-  if (!/count: queryParts\.query\.length, n: /.test(fs.readFileSync(path.join(EXT, 'report', 'report.js'), 'utf8'))) bad('report/report.js', 'queryChars no longer passes the raw count beside the formatted n');
+  if (!/count: queryParts\.query\.length, n: /.test(surfaceSource('report/report.js'))) bad('report/report.js', 'queryChars no longer passes the raw count beside the formatted n');
 }
 ok();
 
@@ -1083,16 +1084,16 @@ ok();
   }
   if (I.impactWord('weird') !== 'weird') bad('platform/i18n.js impactWord', 'an unknown band must come back as it came');
   for (const f of ['popup/popup.js', 'devtools/panel.js', 'report/report.js']) {
-    const src = fs.readFileSync(path.join(EXT, f), 'utf8');
+    const src = surfaceSource(f);
     if (!/impactWord\(/.test(src)) bad(f, 'the impact pill no longer goes through impactWord()');
   }
-  if (/function impactWord/.test(fs.readFileSync(path.join(EXT, 'report', 'report.js'), 'utf8'))) bad('report/report.js', 'impactWord() is copied here again; platform/i18n.js owns the one copy');
+  if (/function impactWord/.test(surfaceSource('report/report.js'))) bad('report/report.js', 'impactWord() is copied here again; platform/i18n.js owns the one copy');
   // r9-10-5: a page's own text is wrapped in U+2068..U+2069, and empty stays empty.
   if (I.iso('example.com') !== '⁨example.com⁩') bad('platform/i18n.js iso', 'iso() must wrap in U+2068..U+2069');
   if (I.iso('') !== '' || I.iso(null) !== '' || I.iso(undefined) !== '') bad('platform/i18n.js iso', 'iso() of nothing must be the empty string');
   if (I.iso(0) !== '⁨0⁩') bad('platform/i18n.js iso', 'iso(0) is a value, not nothing');
   for (const f of ['popup/popup.js', 'report/report.js']) {
-    if (!/QAWi18n\.iso\(/.test(fs.readFileSync(path.join(EXT, f), 'utf8'))) bad(f, 'the page data in sentences no longer goes through iso()');
+    if (!/QAWi18n\.iso\(/.test(surfaceSource(f))) bad(f, 'the page data in sentences no longer goes through iso()');
   }
   // r9-10-4: an Arabic value with Latin letters must also hold an Arabic letter, unless the key is a placeholder, unit, brand, format or language name.
   const LATIN_ONLY_OK = {

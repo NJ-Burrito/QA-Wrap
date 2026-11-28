@@ -10,6 +10,7 @@ import zlib from 'node:zlib';
 import { EXT } from './lib-paths.mjs';
 import { exportPath, evidencePath, filePath, notesPath, sessionTitle, testFolder, useTitle } from '../core/filing.js';
 import { notesMarkdown, notesDocx, noteRows } from '../report/notes-file.js';
+import { surfaceSource } from './lib-src.mjs';
 
 let passed = 0;
 const test = (name, fn) => { fn(); passed++; console.log(`  ok  ${name}`); };
@@ -87,7 +88,7 @@ test('docx: valid parts, Arabic paragraph is bidi + rtl, real numbering, Thmanya
 });
 
 test('Save sheet wiring: Notes checkbox in Evidence, strings in EN and AR', () => {
-  const js = fs.readFileSync(path.join(EXT, 'report', 'report.js'), 'utf8');
+  const js = surfaceSource('report/report.js');
   assert.match(js, /\['media:notes', t\('report\.part\.exp1022Notes'/);
   assert.match(js, /chosen\.includes\('media:notes'\)/);
   for (const l of ['en', 'ar']) {

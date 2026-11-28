@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { normalisePolicy, POLICY_DEFAULTS } from '../platform/policy.js';
 import { workerSrc } from './lib-worker-src.mjs';
+import { surfaceSource } from './lib-src.mjs';
 
 const EXT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (...p) => fs.readFileSync(path.join(EXT, ...p), 'utf8');
@@ -42,7 +43,7 @@ await test('managed storage unreadable at install: no tab (the popup card is the
   assert.match(worker, /unreadable twice: no tab/);
 });
 await test('the organisation wording is bound to its i18n key, so a language switch keeps it (T-071 fault 12)', () => {
-  assert.match(read('popup', 'popup.js'), /body\.dataset\.i18n = 'popup\.consent\.orgBody'/);
+  assert.match(surfaceSource('popup/popup.js'), /body\.dataset\.i18n = 'popup\.consent\.orgBody'/);
 });
 await test('an update never opens a tab either way', async () => {
   assert.deepEqual(await run({}, { reason: 'update' }), []);
@@ -62,7 +63,7 @@ await test('the popup card links the notice from the worker answer, https only, 
   const html = read('popup', 'popup.html');
   assert.match(html, /id="consent-org"[^>]*rel="noopener noreferrer"/);
   assert.match(html, /id="consent-open"/);
-  const js = read('popup', 'popup.js');
+  const js = surfaceSource('popup/popup.js');
   assert.match(js, /paintOrgNotice\(gotConsent\?\.ok \? gotConsent\.result\.consentUrl : ''\)/);
   assert.match(js, /\^https:/);
 });

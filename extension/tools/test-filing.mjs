@@ -31,6 +31,7 @@ import {
   ROOT, CATEGORIES, FORMATS, withFolder, pathInside, exportPath, evidencePath,
   ensureTree, writeToDirectory, destination, describeDestination, describeSaved, splitExtension,
 } from '../core/filing.js';
+import { surfaceSource } from './lib-src.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const read = (rel) => readFileSync(join(here, '..', rel), 'utf8');
@@ -281,9 +282,9 @@ test('the save goes where the tester chose (2026-11-16)', () => {
   }
   // No page writes a file past saveFiled.
   for (const f of ['report/notes-export.js', 'report/notes-tab.js', 'report/report.js', 'popup/popup.js', 'devtools/panel.js']) {
-    assert.ok(!read(f).includes('UQADownload.downloadText(') && !read(f).includes('UQADownload.downloadBlob('), `${f} bypasses saveFiled`);
+    assert.ok(!surfaceSource(f).includes('UQADownload.downloadText(') && !surfaceSource(f).includes('UQADownload.downloadBlob('), `${f} bypasses saveFiled`);
   }
-  assert.ok(read('report/report.js').includes("$('save-go').disabled = true; await window.UQAFolder?.usable({ prompt: true })"), 'Save everything asks for the folder after the click has expired');
+  assert.ok(surfaceSource('report/report.js').includes("$('save-go').disabled = true; await window.UQAFolder?.usable({ prompt: true })"), 'Save everything asks for the folder after the click has expired');
 });
 
 /* ── rule 5: one document, one filename ─────────────────────────────────── */
@@ -320,7 +321,7 @@ test('the specification read from the page has its own name', () => {
 });
 
 test('the report saves them under those ids, not under srs', () => {
-  const report = read('report/report.js');
+  const report = surfaceSource('report/report.js');
   assert.match(report, /saveExport\('fine-print',/);
   assert.match(report, /saveExport\('spec-reverse',/);
   // The regression, exactly: both used to be saveExport('srs', …) with only a
@@ -378,7 +379,7 @@ test('failures are counted separately from what was written', () => {
 });
 
 test('the report announces a finished save outside the page', () => {
-  const report = read('report/report.js');
+  const report = surfaceSource('report/report.js');
   assert.match(report, /UQADownload\.announce\(/, 'nothing tells the tester who switched windows');
   const download = read('ui/download.js');
   assert.match(download, /chrome\.notifications\?\.create/, 'the notification is not guarded on the API');
@@ -389,7 +390,7 @@ test('the report announces a finished save outside the page', () => {
 console.log('\nThe save sheet, and the shapes the real session produced');
 
 test('the save sheet closes on a click outside it', () => {
-  const report = read('report/report.js');
+  const report = surfaceSource('report/report.js');
   assert.match(report, /save-dialog'\)\.addEventListener\('click'/, 'no outside-click handler');
   assert.match(report, /e\.target === \$\('save-dialog'\)/, 'the backdrop test is not the identity one');
 });
@@ -412,7 +413,7 @@ test('every surface that saves passes the tester’s folder', () => {
     ['devtools/panel.js', /exportPath\(format, tl\.result\.session, \{[\s\S]{0,120}?folder:/],
     ['diagram/diagram.js', /withFolder\(p, settings\?\.result\?\.downloadFolder/],
   ]) {
-    assert.match(read(file), pattern, `${file} builds a path without the folder`);
+    assert.match(surfaceSource(file), pattern, `${file} builds a path without the folder`);
   }
 });
 

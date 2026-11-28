@@ -18,6 +18,7 @@ import {
   RELATIONS,
 } from '../core/suite.js';
 import { techniqueCoverage, techniqueLine, captureGap, captureGapLine, toMarkdownIssue } from '../core/formats-export.js';
+import { surfaceSource } from './lib-src.mjs';
 
 let pass = 0;
 let fail = 0;
@@ -425,7 +426,7 @@ test('D-1010-95: priority is medium whatever the defects; a defect marks the sui
 });
 
 test('D-1010-93/94: the popup designs the pattern-field valid row, keys by locator and rebuilds from the notes (source pins)', () => {
-  const popup = fs.readFileSync(new URL('../popup/popup.js', import.meta.url), 'utf8');
+  const popup = surfaceSource('popup/popup.js');
   ok(!/filter\(\(p\) => !p\.needsInput\)/.test(popup), 'the needsInput valid row is in the designed set');
   ok(/f\.selector \|\| f\.name/.test(popup), 'the key is the locator first');
   ok(/rebuildTechnique\(events, sid\)/.test(popup) && /function rebuildTechnique/.test(popup), 'the applied set is rebuilt from the session notes');
