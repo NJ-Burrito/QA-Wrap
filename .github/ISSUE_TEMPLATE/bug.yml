@@ -1,0 +1,70 @@
+name: "Bug"
+description: "Something in QA-Wrap does not work as described"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Never paste client data, credentials, tokens or real user data from the site under test.
+  - type: input
+    id: version
+    attributes:
+      label: "Version"
+      description: "From chrome://extensions (QA-Wrap card)"
+      placeholder: "3.10.4"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: "OS"
+      options:
+        - "Windows"
+        - "macOS"
+        - "Linux"
+        - "ChromeOS"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Area"
+      options:
+        - "Recording"
+        - "Timeline"
+        - "Bug report / export"
+        - "Jira"
+        - "Settings"
+        - "Website"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps"
+      description: "The smallest set of steps that shows it."
+      placeholder: |
+        1.
+        2.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "What you expected"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: "What happened"
+      description: "Paste the error text, and attach a screenshot if it helps."
+    validations:
+      required: true
+  - type: checkboxes
+    id: clean
+    attributes:
+      label: "Private data"
+      options:
+        - label: "I removed client data, credentials, tokens or real user data from the site under test."
+          required: true
