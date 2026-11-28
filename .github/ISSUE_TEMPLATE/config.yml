@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Website and guide"
+    url: https://nj-burrito.github.io/QA-Wrap/
+    about: "Read the page first; most answers are there."
+  - name: "Security problem"
+    url: https://github.com/NJ-Burrito/QA-Wrap/blob/main/SECURITY.md
+    about: "Report it privately, never in a public issue."

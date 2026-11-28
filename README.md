@@ -25,6 +25,12 @@ By [Nader Alzghoul (NJ-Burrito)](https://nj-burrito.github.io/), an AI QA automa
 
 </div>
 
+**Install:** Edge and Firefox in one click from [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) or [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/qa-wrap/). Chrome, one line to fetch the release, then **Load unpacked** ([steps](#install)):
+
+```bash
+gh release download --repo NJ-Burrito/QA-Wrap --pattern "qa-wrap-*-chrome.zip"
+```
+
 ## ⚡ In 10 seconds
 
 - 🎯 **What:** a browser extension that records your test and writes the bug report.

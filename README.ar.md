@@ -17,6 +17,12 @@
 
 🌐 [الموقع](https://nj-burrito.github.io/QA-Wrap/) · ⬇️ [تنزيل آخر إصدار](https://github.com/NJ-Burrito/QA-Wrap/releases/latest) · ✨ [الجديد](#الجديد) · 📥 [احصل عليها](#احصل-عليها) · ⚖️ [مقارنة](#مقارنة) · ❓ [أسئلة](#أسئلة) · 🚀 [التثبيت](#التثبيت) · 🔄 [التحديثات](#التحديثات) · 🔒 [الخصوصية](#الخصوصية) · 🧰 [أدوات أخرى](#عن-المشروع)
 
+**التثبيت:** على Edge وFirefox بنقرة واحدة من [إضافات Edge](https://microsoftedge.microsoft.com/addons/detail/nidbfaeniiaagkecgkiapcebojbjfbha) أو [إضافات Firefox](https://addons.mozilla.org/firefox/addon/qa-wrap/). وعلى Chrome سطر واحد يجلب الإصدار، ثم **تحميل الإضافة غير المضغوطة** ([الخطوات](#التثبيت)):
+
+```bash
+gh release download --repo NJ-Burrito/QA-Wrap --pattern "qa-wrap-*-chrome.zip"
+```
+
 ## ⚡ في 10 ثوانٍ
 
 - 🎯 **ما هي:** إضافة للمتصفح تسجّل اختبارك وتكتب تقرير الخلل.

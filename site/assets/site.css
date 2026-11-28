@@ -414,8 +414,9 @@ main:not(.home) .hero .lead { margin-top: 1rem; }
 }
 
 /* Film */
-.film-box { max-width: 52rem; border: 1px solid var(--border-strong); border-radius: var(--r-lg); padding: 0.4rem; background: var(--surface); }
-.film-box video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: var(--r-md); background: var(--band); }
+/* Concentric corners: inner radius = outer radius - padding - border. */
+.film-box { --film-pad: 0.4rem; --film-inner-r: max(0px, calc(var(--r-lg) - var(--film-pad) - 1px)); max-width: 52rem; border: 1px solid var(--border-strong); border-radius: var(--r-lg); padding: var(--film-pad); background: var(--surface); }
+.film-box video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: var(--film-inner-r); background: var(--band); }
 .film .note { margin-top: 0.75rem; }
 
 /* Gallery: a swipe row that bleeds to the screen edge */
@@ -621,7 +622,7 @@ p, li, figcaption { text-wrap: pretty; }
 /* In-page film player (assets/site.js): one <dialog>, and the commercial's click-anywhere play button. */
 .film-box { position: relative; }
 .film-box video:not([controls]) { cursor: pointer; }
-.film-play { position: absolute; inset: 0.4rem; display: flex; align-items: center; justify-content: center; border: 0; padding: 0; background: transparent; cursor: pointer; border-radius: var(--r-md); color: var(--band-accent-text); }
+.film-play { position: absolute; inset: var(--film-pad, 0.4rem); display: flex; align-items: center; justify-content: center; border: 0; padding: 0; background: transparent; cursor: pointer; border-radius: var(--film-inner-r, var(--r-md)); color: var(--band-accent-text); }
 .film-play svg { box-sizing: content-box; width: 34px; height: 34px; padding: 1.4rem; border-radius: 50%; background: var(--band-accent); fill: currentColor; stroke: currentColor; box-shadow: var(--shadow-2); }
 .film-play:hover svg { background: var(--band-accent-hover); }
 .film-play:focus-visible { outline: 2px solid var(--band-accent); outline-offset: -4px; }
